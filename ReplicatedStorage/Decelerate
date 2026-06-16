@@ -1,0 +1,518 @@
+local t = {}
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Data = require(ReplicatedStorage.Data)
+local Currencies = require(ReplicatedStorage.Currencies)
+
+require(ReplicatedStorage.Format)
+
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local Resets = require(ReplicatedStorage.Resets)
+local Multipliers = require(ReplicatedStorage.Multipliers)
+local TabManager = require(ReplicatedStorage.TabManager)
+local ChangeVisual = require(ReplicatedStorage.ChangeVisual)
+
+require(ReplicatedStorage.Soundificator)
+
+local Upgrades = require(ReplicatedStorage.Upgrades)
+local CurrencyTypes = require(ReplicatedStorage.CurrencyTypes)
+local v1 = true
+local v2 = 0
+
+function t.decelerateWrapper() --[[ decelerateWrapper | Line: 18 | Upvalues: Data (copy), v1 (ref), v2 (ref), Resets (copy), t (copy), Currencies (copy), Multipliers (copy) ]]
+    if Data.ImportantData.Stats.pDif > 0 then
+        return
+    end
+
+    if not v1 then
+        return
+    end
+
+    local currentLevel = Data.ImportantData.Stats.currentLevel
+    local currentTier = Data.ImportantData.Stats.currentTier
+
+    v1 = false
+    v2 = v2 + 1
+    Resets.ToggleDecelerate()
+    t.decelerate("decelerated")
+    Currencies.getDisplay().decelerateButton.Text = "<b>Wait</b>"
+    Currencies.getDisplay().recelerateButton.Text = "<b>Wait</b>"
+    Resets.ToggleDecelerate()
+    task.wait(0.1)
+    Resets.ToggleDecelerate()
+    wait(0.1)
+
+    if Data.ImportantData.Stats.currentSGJ <= 0 then
+        if Data.ImportantData.Stats.realm == "decelerated" then
+            Data.ImportantData.Stats.currentLevel = Data.ImportantData.Stats.antiLevel
+            Data.ImportantData.Stats.currentTier = Data.ImportantData.Stats.antiTier
+        end
+
+        if Data.ImportantData.Stats.realm == "normal" then
+            Data.ImportantData.Stats.antiLevel = currentLevel
+            Data.ImportantData.Stats.antiTier = currentTier
+        end
+    end
+
+    Multipliers.updateAllMultis()
+    Multipliers.calculateMulti()
+    Resets.UpdateStuff()
+    task.wait(1)
+
+    local decelerateButton = Currencies.getDisplay().decelerateButton
+
+    decelerateButton.Text = if Data.ImportantData.Stats.realm == "decelerated" then "<b>Accelerate</b>" else "<b>Decelerate</b>"
+
+    local recelerateButton = Currencies.getDisplay().recelerateButton
+
+    recelerateButton.Text = if Data.ImportantData.Stats.realm == "recelerated" then "<b>Accelerate</b>" else "<b>Recelerate</b>"
+
+    if v2 > 1 then
+        Resets.ToggleDecelerate()
+    end
+
+    v2 = 0
+    v1 = true
+end
+
+local v3 = true
+
+function t.recelerateWrapper() --[[ recelerateWrapper | Line: 66 | Upvalues: Data (copy), v3 (ref), v2 (ref), Resets (copy), t (copy), Currencies (copy), Multipliers (copy) ]]
+    if Data.ImportantData.Stats.pDif > 0 then
+        return
+    end
+
+    if not v3 then
+        return
+    end
+
+    local currentLevel = Data.ImportantData.Stats.currentLevel
+    local currentTier = Data.ImportantData.Stats.currentTier
+
+    v3 = false
+    v2 = v2 + 1
+    Resets.ToggleDecelerate()
+    t.decelerate("recelerated")
+    Currencies.getDisplay().decelerateButton.Text = "<b>Wait</b>"
+    Currencies.getDisplay().recelerateButton.Text = "<b>Wait</b>"
+    Resets.ToggleDecelerate()
+    task.wait(0.1)
+    Resets.ToggleDecelerate()
+    wait(0.1)
+
+    if Data.ImportantData.Stats.currentSGJ <= 0 then
+        if Data.ImportantData.Stats.realm == "recelerated" then
+            Data.ImportantData.Stats.currentLevel = Data.ImportantData.Stats.unnaturalLevel
+            Data.ImportantData.Stats.currentTier = Data.ImportantData.Stats.unnaturalTier
+        end
+
+        if Data.ImportantData.Stats.realm == "normal" then
+            Data.ImportantData.Stats.unnaturalLevel = currentLevel
+            Data.ImportantData.Stats.unnaturalTier = currentTier
+        end
+    end
+
+    Multipliers.updateAllMultis()
+    Multipliers.calculateMulti()
+    Resets.UpdateStuff()
+    task.wait(1)
+
+    local decelerateButton = Currencies.getDisplay().decelerateButton
+
+    decelerateButton.Text = if Data.ImportantData.Stats.realm == "decelerated" then "<b>Accelerate</b>" else "<b>Decelerate</b>"
+
+    local recelerateButton = Currencies.getDisplay().recelerateButton
+
+    recelerateButton.Text = if Data.ImportantData.Stats.realm == "recelerated" then "<b>Accelerate</b>" else "<b>Recelerate</b>"
+
+    if v2 > 1 then
+        Resets.ToggleDecelerate()
+    end
+
+    v2 = 0
+    v3 = true
+end
+function t.Checker() --[[ Checker | Line: 113 | Upvalues: Data (copy), Multipliers (copy), t (copy) ]]
+    if not (Data.ImportantData.Stats.currentSGJ <= 0) then
+        return
+    end
+
+    if Data.ImportantData.Stats.realm ~= "normal" and not (Multipliers.getUpgradeLevel("value1") > 0 or (Multipliers.getUpgradeLevel("colliderSize1") > 0 or (Multipliers.getUpgradeLevel("xp1") > 0 or (Multipliers.getUpgradeLevel("xp2") > 0 or Multipliers.getUpgradeLevel("xp3") > 0)))) then
+        local _ = Multipliers.getUpgradeLevel("spawnSpd1") > 0
+    end
+
+    if Data.ImportantData.Stats.pDif > 0 then
+        if Multipliers.getUpgradeLevel("colliderSize1") > 0 or (Multipliers.getUpgradeLevel("spawnSpd1") > 0 or (Multipliers.getUpgradeLevel("xp1") > 0 or (Multipliers.getUpgradeLevel("xp2") > 0 or (Multipliers.getUpgradeLevel("xp3") > 0 or (Multipliers.getUpgradeLevel("spawnSpdAG") > 0 or (Multipliers.getUpgradeLevel("capAP") > 0 or Multipliers.getUpgradeLevel("colliderSize2") > 0)))))) then
+            t.ResetStats()
+        end
+    else
+        if Multipliers.getUpgradeLevel("PTggs") > 0 or (Multipliers.getUpgradeLevel("P2ggs") > 0 or Multipliers.getUpgradeLevel("ASgs") > 0) then
+            return
+        end
+
+        local _ = Multipliers.getUpgradeLevel("Qgs") > 0
+    end
+end
+function t.decelerate(p1) --[[ decelerate | Line: 158 | Upvalues: Data (copy), Resets (copy), LethalNum (copy), ChangeVisual (copy), Multipliers (copy), TabManager (copy), Currencies (copy), t (copy) ]]
+    Data.ImportantData.Stats.realm = if Data.ImportantData.Stats.realm == p1 then "normal" else p1
+    Resets.ToggleDecelerate()
+
+    if Data.ImportantData.Stats.currentSGJ <= 0 then
+        Data.ImportantData.Stats.currentLevel = 1
+        Data.ImportantData.Stats.currentTier = "basic"
+        Data.ImportantData.Currencies.levelProgress = LethalNum.new(0, 0)
+        Data.ImportantData.Currencies.tierProgress = LethalNum.new(0, 0)
+    end
+
+    if Data.ImportantData.Stats.location == "normal" or (Data.ImportantData.Stats.location == "anti" or Data.ImportantData.Stats.location == "un") then
+        ChangeVisual.ToEarth()
+    end
+
+    Multipliers.updateAllMultis()
+    Multipliers.calculateMulti()
+    TabManager.ShowHideTabs()
+    Data.ImportantData.Stats.tempGPS = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.gps = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.gpsTime = 0
+    Currencies.updateGrass()
+    Currencies.updatePP()
+    Currencies.updateCrystals()
+    Currencies.updateLevelProgressBar()
+    Currencies.updateTierProgressBar()
+    Currencies.updateNextTierDisplay()
+    Currencies.updateNextRankDisplay()
+    t.delecerateVisual()
+end
+function t.delecerateVisual() --[[ delecerateVisual | Line: 189 | Upvalues: ChangeVisual (copy), Currencies (copy), Data (copy) ]]
+    ChangeVisual.UpdateVisual()
+
+    local decelerateButton = Currencies.getDisplay().decelerateButton
+
+    decelerateButton.Text = if Data.ImportantData.Stats.realm == "decelerated" then "<b>Accelerate</b>" else "<b>Decelerate</b>"
+
+    local recelerateButton = Currencies.getDisplay().recelerateButton
+
+    recelerateButton.Text = if Data.ImportantData.Stats.realm == "recelerated" then "<b>Accelerate</b>" else "<b>Recelerate</b>"
+end
+function t.ResetStats() --[[ ResetStats | Line: 195 | Upvalues: CurrencyTypes (copy), LethalNum (copy), Data (copy), t (copy) ]]
+    CurrencyTypes.Levels.level.progress = LethalNum.new(0, 0)
+    Data.ImportantData.Currencies.tierProgress = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.currentTier = "basic"
+    CurrencyTypes.Levels.level.level = 1
+    Data.ImportantData.Stats.unnaturalTier = "basic"
+    CurrencyTypes.Levels.antiLevel.level = 1
+    Data.ImportantData.Stats.antiTier = "basic"
+    CurrencyTypes.Levels.unLevel.level = 1
+    CurrencyTypes.SetCurrency("grass", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("agrass", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("ugrass", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("pp", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("crystals", LethalNum.new(0, 0))
+    t.ClearUpgrades()
+end
+function t.ClearUpgrades() --[[ ClearUpgrades | Line: 222 | Upvalues: Upgrades (copy), Multipliers (copy) ]]
+    for k, v in pairs(Upgrades.Basic) do
+        if (v.tier == "basic" or (v.tier == "prestige" or (v.tier == "crystal" or (v.tier == "antigrass" or (v.tier == "anonymity" or v.tier == "liquefy"))))) and v.shopType ~= "automation" then
+            v.object.Variables.Level.Value = 0
+        end
+    end
+
+    Multipliers.updateAllMultis()
+end
+function t.ForceTeleport(p1) --[[ ForceTeleport | Line: 231 | Upvalues: Data (copy), Resets (copy), t (copy), ChangeVisual (copy) ]]
+    if p1 == "normal" then
+        if Data.ImportantData.Stats.pDif > 0 then
+            Resets.ResetPlanetTele()
+        end
+
+        if Data.ImportantData.Stats.realm == "decelerated" then
+            t.decelerateWrapper()
+        end
+
+        if Data.ImportantData.Stats.realm == "recelerated" then
+            t.recelerateWrapper()
+        end
+
+        ChangeVisual.ToEarth()
+    end
+
+    if p1 == "normal2" then
+        if Data.ImportantData.Stats.pDif > 0 then
+            Resets.ResetPlanetTele()
+        end
+
+        ChangeVisual.ToEarth()
+    end
+
+    if p1 == "normal3" then
+        ChangeVisual.ToEarth()
+    end
+
+    if p1 == "space" then
+        ChangeVisual.ToSpace()
+    end
+
+    if p1 == "anti" then
+        if Data.ImportantData.Stats.pDif > 0 then
+            Resets.ResetPlanetTele()
+        end
+
+        if Data.ImportantData.Stats.realm == "normal" then
+            t.decelerateWrapper()
+        end
+
+        if Data.ImportantData.Stats.realm == "recelerated" then
+            t.decelerateWrapper()
+        end
+
+        ChangeVisual.ToEarth()
+    end
+
+    if p1 == "unnatural" then
+        if Data.ImportantData.Stats.pDif > 0 then
+            Resets.ResetPlanetTele()
+        end
+
+        if Data.ImportantData.Stats.realm == "decelerated" then
+            t.recelerateWrapper()
+        end
+
+        if Data.ImportantData.Stats.realm == "normal" then
+            t.recelerateWrapper()
+        end
+
+        ChangeVisual.ToEarth()
+    end
+
+    if p1 ~= "planetoid" then
+        return
+    end
+
+    if Data.ImportantData.Stats.pDif <= 0 then
+        Resets.ResetPlanetTele()
+    end
+
+    ChangeVisual.ToEarth()
+end
+
+local v4 = false
+
+function t.FeatureTeleport(p1, p2) --[[ FeatureTeleport | Line: 294 | Upvalues: v4 (ref), t (copy), Currencies (copy) ]]
+    if v4 then
+        return
+    end
+
+    v4 = true
+
+    local t2 = {
+        grassskip = function(p1) --[[ Line: 299 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(100.5, -22.25, 133.499) * CFrame.Angles(0, -1.5707963267948966, 0))
+            t.ForceTeleport("anti")
+        end,
+        accomplishments = function(p1) --[[ Line: 303 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(-12, -22.5, 102.5) * CFrame.Angles(0, -3.141592653589793, 0))
+            t.ForceTeleport("normal")
+        end,
+        liquefy = function(p1) --[[ Line: 307 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(-264.669, -22.749, 72.311) * CFrame.Angles(0, 1.1868238913561442, 0))
+            t.ForceTeleport("anti")
+        end,
+        anonymity = function(p1) --[[ Line: 311 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(-287.671, -22.749, 112.147) * CFrame.Angles(0, 1.1868238913561442, 0))
+            t.ForceTeleport("anti")
+        end,
+        decelerator = function(p1) --[[ Line: 315 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(258.786, -24, -0.204) * CFrame.Angles(0, -1.53588974175501, 0))
+            t.ForceTeleport("normal2")
+        end,
+        assembler = function(p1) --[[ Line: 319 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(258.786, -24, 77.796) * CFrame.Angles(0, -1.53588974175501, 0))
+            t.ForceTeleport("normal2")
+        end,
+        charger = function(p1) --[[ Line: 323 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(257.786, -24, 150.796) * CFrame.Angles(0, -1.8151424220741028, 0))
+            t.ForceTeleport("normal2")
+        end,
+        antigrass = function(p1) --[[ Line: 327 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(-13, -22.5, -24.5) * CFrame.Angles(0, 0, 0))
+            t.ForceTeleport("anti")
+        end,
+        starchart = function(p1) --[[ Line: 331 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(723.529, 4091.829, 416.469) * CFrame.Angles(0, -1.53588974175501, 0))
+            t.ForceTeleport("space")
+        end,
+        refinery = function(p1) --[[ Line: 335 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(215.917, -24.5, 112.535) * CFrame.Angles(0, 1.8151424220741028, 0))
+            t.ForceTeleport("normal2")
+        end,
+        generator = function(p1) --[[ Line: 339 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(266.176, 2.75, 268.645) * CFrame.Angles(0, -1.3089969389957472, 0))
+            t.ForceTeleport("normal")
+        end,
+        grasshop = function(p1) --[[ Line: 343 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(100.5, -22.25, 133.499) * CFrame.Angles(0, -1.5707963267948966, 0))
+            t.ForceTeleport("normal")
+        end,
+        grassfield = function(p1) --[[ Line: 347 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(-13, -22.5, 29.5) * CFrame.Angles(0, 0, 0))
+            t.ForceTeleport("normal3")
+        end,
+        astral = function(p1) --[[ Line: 351 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(566.572, 4092.329, 552.456) * CFrame.Angles(0, -2.0420352248333655, 0))
+            t.ForceTeleport("space")
+        end,
+        arcs = function(p1) --[[ Line: 355 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(1.676, -8.036, 212.348) * CFrame.Angles(0, 2.897246558310587, 0))
+            t.ForceTeleport("planetoid")
+        end,
+        stellar = function(p1) --[[ Line: 359 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(-129.885, 4091.599, -14.562) * CFrame.Angles(0, 1.6929693744344996, 0))
+            t.ForceTeleport("space")
+        end,
+        quadrant = function(p1) --[[ Line: 363 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(212.25, -21.5, -26.5) * CFrame.Angles(0, -0.17453292519943295, 0))
+            t.ForceTeleport("planetoid")
+        end,
+        unnaturalgrass = function(p1) --[[ Line: 367 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(-13, -22.5, -24.5) * CFrame.Angles(0, 0, 0))
+            t.ForceTeleport("unnatural")
+        end,
+        recelerator = function(p1) --[[ Line: 371 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(209.755, -24.5, -91.491) * CFrame.Angles(0, 1.3089969389957472, 0))
+            t.ForceTeleport("normal2")
+        end,
+        sfrgt = function(p1) --[[ Line: 375 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(266.176, 2.75, 268.645) * CFrame.Angles(0, -1.3089969389957472, 0))
+            t.ForceTeleport("anti")
+        end,
+        funify = function(p1) --[[ Line: 379 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(129.5, -22.25, 208.999) * CFrame.Angles(0, -1.1519173063162575, 0))
+            t.ForceTeleport("anti")
+        end,
+        fundry = function(p1) --[[ Line: 383 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(260.173, 2.75, 305.127) * CFrame.Angles(0, -2.111848394913139, 0))
+            t.ForceTeleport("anti")
+        end,
+        darkcharger = function(p1) --[[ Line: 387 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(257.786, -24, 150.796) * CFrame.Angles(0, -1.8151424220741028, 0))
+            t.ForceTeleport("unnatural")
+        end,
+        grassupgrades = function(p1) --[[ Line: 391 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(-13, -22.5, -24.5) * CFrame.Angles(0, 0, 0))
+            t.ForceTeleport("normal")
+        end,
+        launchpad = function(p1) --[[ Line: 395 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(212.848, -21.002, -161.739) * CFrame.Angles(0, 0.5410520681182421, 0))
+            t.ForceTeleport("normal2")
+        end,
+        lunar = function(p1) --[[ Line: 399 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(-113.728, 4091.765, -42.863) * CFrame.Angles(0, 0.8203047484373349, 0))
+            t.ForceTeleport("space")
+        end,
+        momentum = function(p1) --[[ Line: 403 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(273, -24.75, -93.999) * CFrame.Angles(0, -1.5533430342749532, 0))
+            t.ForceTeleport("normal2")
+        end,
+        galactic = function(p1) --[[ Line: 407 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(247.796, -21.252, -163.927) * CFrame.Angles(0, -0.47123889803846897, 0))
+            t.ForceTeleport("normal2")
+        end,
+        moonstone = function(p1) --[[ Line: 411 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(674.604, 4089.829, 506.131) * CFrame.Angles(0, -2.3387411976724017, 0))
+            t.ForceTeleport("space")
+        end,
+        agh = function(p1) --[[ Line: 415 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(663.593, 4090.829, 312.688) * CFrame.Angles(0, -0.767944870877505, 0))
+            t.ForceTeleport("space")
+        end,
+        perks2 = function(p1) --[[ Line: 419 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(61.788, -23.5, -17.167) * CFrame.Angles(0, -0.5235987755982988, 0))
+            t.ForceTeleport("planetoid")
+        end,
+        planetarium = function(p1) --[[ Line: 423 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(-13, -22.5, -24.5) * CFrame.Angles(0, 0, 0))
+            t.ForceTeleport("planetoid")
+        end,
+        observatorium = function(p1) --[[ Line: 427 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(-300.5, -21.5, 155.75) * CFrame.Angles(0, 1.6057029118347832, 0))
+            t.ForceTeleport("planetoid")
+        end,
+        darktree = function(p1) --[[ Line: 431 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(330.415, 4090.326, 117.047) * CFrame.Angles(0, 0.8552113334772214, 0))
+            t.ForceTeleport("space")
+        end,
+        constellation = function(p1) --[[ Line: 435 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(1.676, -8.036, 212.348) * CFrame.Angles(0, 2.897246558310587, 0))
+            t.ForceTeleport("planetoid")
+        end,
+        rings = function(p1) --[[ Line: 439 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(-111, -22.5, 22.75) * CFrame.Angles(0, math.rad(7), 0))
+            t.ForceTeleport("planetoid")
+        end,
+        astrolabe = function(p1) --[[ Line: 443 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(-225.878, -5.46, 254.83) * CFrame.Angles(0, 2.792526803190927, 0))
+            t.ForceTeleport("planetoid")
+        end,
+        breakring = function(p1) --[[ Line: 447 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(208.419, 4092.997, 147.35) * CFrame.Angles(0, 2.6878070480712677, 0))
+            t.ForceTeleport("space")
+        end,
+        sacrifice = function(p1) --[[ Line: 451 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(453.784, 4091.344, 174.325) * CFrame.Angles(0, -0.7155849933176751, 0))
+            t.ForceTeleport("space")
+        end,
+        steelie = function(p1) --[[ Line: 455 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(129.5, -22.25, 208.999) * CFrame.Angles(0, -1.1519173063162575, 0))
+            t.ForceTeleport("normal")
+        end,
+        levelperks = function(p1) --[[ Line: 459 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(61.788, -23.5, -17.167) * CFrame.Angles(0, -0.5235987755982988, 0))
+            t.ForceTeleport("normal")
+        end,
+        crystallize = function(p1) --[[ Line: 463 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(-264.669, -22.749, 72.311) * CFrame.Angles(0, 1.1868238913561442, 0))
+            t.ForceTeleport("normal")
+        end,
+        prestige = function(p1) --[[ Line: 467 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(-287.671, -22.749, 112.147) * CFrame.Angles(0, 1.1868238913561442, 0))
+            t.ForceTeleport("normal")
+        end,
+        foundry = function(p1) --[[ Line: 471 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(260.173, 2.75, 305.127) * CFrame.Angles(0, -2.111848394913139, 0))
+            t.ForceTeleport("normal")
+        end,
+        grassjump = function(p1) --[[ Line: 475 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(100.5, -22.25, 133.499) * CFrame.Angles(0, -1.5707963267948966, 0))
+            t.ForceTeleport("unnatural")
+        end,
+        planetary = function(p1) --[[ Line: 479 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(-239, -22.5, 42.75) * CFrame.Angles(0, 1.1519173063162575, 0))
+            t.ForceTeleport("planetoid")
+        end,
+        tiers = function(p1) --[[ Line: 483 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(-13, -22.5, 29.5) * CFrame.Angles(0, 0, 0))
+            t.ForceTeleport("normal3")
+        end,
+        platinum = function(p1) --[[ Line: 487 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(-240.069, -22.5, 17.876) * CFrame.Angles(0, 1.0995574287564276, 0))
+            t.ForceTeleport("normal2")
+        end,
+        normality = function(p1) --[[ Line: 491 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(-287.671, -22.749, 112.147) * CFrame.Angles(0, 1.1868238913561442, 0))
+            t.ForceTeleport("unnatural")
+        end,
+        vaporizer = function(p1) --[[ Line: 495 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(-264.669, -22.749, 72.311) * CFrame.Angles(0, 1.1868238913561442, 0))
+            t.ForceTeleport("unnatural")
+        end,
+        planetoid = function(p1) --[[ Line: 499 | Upvalues: p2 (copy), t (ref) ]]
+            p2:PivotTo(CFrame.new(568.184, 4090.829, 466.178) * CFrame.Angles(0, 0.7330382858376184, 0))
+            t.ForceTeleport("space")
+        end
+    }
+
+    Currencies.getDisplay().FeaturesList.Visible = false
+    t2[p1]()
+    v4 = false
+end
+
+return t
