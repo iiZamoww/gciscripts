@@ -1,0 +1,1041 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Lighting = game:GetService("Lighting")
+local Data = require(ReplicatedStorage.Data)
+local Soundificator = require(ReplicatedStorage.Soundificator)
+local TabManager = require(ReplicatedStorage.TabManager)
+local PlanetRun = require(ReplicatedStorage.PlanetRun)
+local t = {
+    Skies = {
+        grass = ReplicatedStorage.Skies.GrasslandSky,
+        evil = ReplicatedStorage.Skies.EvilSky,
+        desert = ReplicatedStorage.Skies.Desert,
+        cloudy = ReplicatedStorage.Skies.Cloudy,
+        empyrean = ReplicatedStorage.Skies.EmpyreanSky,
+        empyrean2 = ReplicatedStorage.Skies.EmpyreanSkyCloudy,
+        empyrean3 = ReplicatedStorage.Skies.EmpyreanSkyChaos,
+        fire = ReplicatedStorage.Skies.FireSky,
+        gray = ReplicatedStorage.Skies.Gray,
+        white = ReplicatedStorage.Skies.White,
+        blue = ReplicatedStorage.Skies.Blue,
+        black = ReplicatedStorage.Skies.Black,
+        hub = ReplicatedStorage.Skies.Hub,
+        question = ReplicatedStorage.Skies.Question,
+        unnatural = ReplicatedStorage.Skies.Unnatural,
+        sky = ReplicatedStorage.Skies.Sky,
+        space = ReplicatedStorage.Skies.Space,
+        night = ReplicatedStorage.Skies.Night,
+        nightBright = ReplicatedStorage.Skies.NightBright,
+        lol1 = ReplicatedStorage.Skies.Lol1,
+        lol2 = ReplicatedStorage.Skies.Lol2,
+        lol3 = ReplicatedStorage.Skies.Lol3,
+        lol4 = ReplicatedStorage.Skies.Lol4,
+        lol5 = ReplicatedStorage.Skies.Lol5,
+        doom = ReplicatedStorage.Skies.Doom
+    }
+}
+
+function t.ToEarth() --[[ ToEarth | Line: 38 | Upvalues: Data (copy), t (copy) ]]
+    if Data.ImportantData.Stats.realm == "normal" then
+        Data.ImportantData.Stats.location = "normal"
+    end
+
+    if Data.ImportantData.Stats.realm == "decelerated" then
+        Data.ImportantData.Stats.location = "anti"
+    end
+
+    if Data.ImportantData.Stats.realm == "recelerated" then
+        Data.ImportantData.Stats.location = "un"
+    end
+
+    t.UpdateVisual()
+end
+function t.ToPlanet() --[[ ToPlanet | Line: 51 | Upvalues: Data (copy), t (copy) ]]
+    Data.ImportantData.Stats.location = "planet"
+    t.UpdateVisual()
+end
+function t.ToSpace() --[[ ToSpace | Line: 56 | Upvalues: Data (copy), t (copy) ]]
+    Data.ImportantData.Stats.location = "space"
+    t.UpdateVisual()
+end
+function t.ToStar() --[[ ToStar | Line: 61 | Upvalues: Data (copy), t (copy) ]]
+    Data.ImportantData.Stats.location = "star"
+    t.UpdateVisual()
+end
+function t.ToVoid() --[[ ToVoid | Line: 66 | Upvalues: Data (copy), t (copy) ]]
+    Data.ImportantData.Stats.location = "void"
+    t.UpdateVisual()
+end
+function t.ToGrassland() --[[ ToGrassland | Line: 71 | Upvalues: Data (copy), t (copy) ]]
+    Data.ImportantData.Stats.location = "grassland"
+    t.UpdateVisual()
+end
+function t.ToDarkland() --[[ ToDarkland | Line: 76 | Upvalues: Data (copy), t (copy) ]]
+    Data.ImportantData.Stats.location = "darkland"
+    t.UpdateVisual()
+end
+function t.ToNull() --[[ ToNull | Line: 81 | Upvalues: Data (copy), t (copy) ]]
+    Data.ImportantData.Stats.location = "null"
+    t.UpdateVisual()
+end
+function t.ToDungeon() --[[ ToDungeon | Line: 86 | Upvalues: Data (copy), t (copy) ]]
+    Data.ImportantData.Stats.location = "dungeon"
+    t.UpdateVisual()
+end
+function t.ToCastle() --[[ ToCastle | Line: 91 | Upvalues: Data (copy), t (copy) ]]
+    Data.ImportantData.Stats.location = "castle"
+    t.UpdateVisual()
+end
+function t.ToLoop() --[[ ToLoop | Line: 96 | Upvalues: Data (copy), t (copy) ]]
+    Data.ImportantData.Stats.location = "loop"
+    t.UpdateVisual()
+end
+function t.ToBlue() --[[ ToBlue | Line: 101 | Upvalues: Data (copy), t (copy) ]]
+    Data.ImportantData.Stats.location = "blue"
+    t.UpdateVisual()
+end
+function t.Change(p1) --[[ Change | Line: 106 | Upvalues: Data (copy), t (copy) ]]
+    Data.ImportantData.Stats.location = p1
+    t.UpdateVisual()
+end
+
+local Terrain = workspace.Terrain
+local Clouds = Terrain:WaitForChild("Clouds")
+local Bloom = Lighting.Bloom
+local Atmosphere = Lighting.Atmosphere
+
+function t.UpdateVisual() --[[ UpdateVisual | Line: 115 | Upvalues: Data (copy), PlanetRun (copy), t (copy), Lighting (copy), Clouds (copy), Bloom (copy), Atmosphere (copy), Terrain (copy), Soundificator (copy), ReplicatedStorage (copy), TabManager (copy) ]]
+    local location = Data.ImportantData.Stats.location
+
+    if Data.ImportantData.Stats.mapLocation ~= "none" then
+        location = Data.ImportantData.Stats.mapLocation
+    end
+
+    if location == "pr" then
+        local v1 = PlanetRun.Levels[Data.ImportantData.Stats.planetRun]
+
+        if v1 then
+            local v2 = v1.levels["" .. Data.ImportantData.Stats.planetRunLevel]
+
+            location = if v2 and v2.visual then v2.visual else v1.visual
+        else
+            location = "normal"
+        end
+    end
+
+    t.ClearSky()
+    Lighting.Brightness = 2
+    Data.ImportantData.Misc.lighting.ExposureCompensation = 0
+    Data.ImportantData.Misc.lighting.OutdoorAmbient = Color3.new(0.501961, 0.501961, 0.501961)
+    Clouds.Cover = 0.67
+    Clouds.Density = 0.239
+    Clouds.Color = Color3.new(255/255, 255/255, 255/255)
+    Bloom.Enabled = false
+    Atmosphere.Density = 0.2
+    Atmosphere.Offset = 0.25
+    Atmosphere.Glare = 0
+    Atmosphere.Haze = 0
+    Atmosphere.Color = Color3.new(0.780392, 0.780392, 0.780392)
+    Atmosphere.Decay = Color3.new(0.415686, 0.439216, 0.490196)
+
+    local v3 = Lighting
+
+    Terrain.WaterColor = Color3.new(0.0901961, 0.647059, 0.709804)
+    Terrain.WaterReflectance = 1
+
+    if location == "normalS" then
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.756863, 0.756863, 0.756863)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.752941, 0.752941, 0.752941)
+        Data.ImportantData.Misc.lighting.FogEnd = 2000
+        Data.ImportantData.Misc.lighting.FogStart = 800
+        Data.ImportantData.Misc.lighting.ClockTime = 14
+        Lighting.Brightness = 3
+        t.Skies.sky.Parent = Lighting
+        Soundificator.SwitchMusic("cool")
+    end
+
+    if location == "brick" then
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.756863, 0.756863, 0.756863)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.752941, 0.752941, 0.752941)
+        Data.ImportantData.Misc.lighting.FogEnd = 2000
+        Data.ImportantData.Misc.lighting.FogStart = 800
+        Data.ImportantData.Misc.lighting.ClockTime = 14
+        Lighting.Brightness = 3
+        t.Skies.sky.Parent = Lighting
+        Soundificator.SwitchMusic("cool")
+    end
+
+    if Data.ImportantData.Stats.world == 9 then
+        if location == "9_F1" then
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.756863, 0.756863, 0.756863)
+            Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.752941, 0.752941, 0.752941)
+            Data.ImportantData.Misc.lighting.FogEnd = 2000
+            Data.ImportantData.Misc.lighting.FogStart = 800
+            Data.ImportantData.Misc.lighting.ClockTime = 14
+            Lighting.Brightness = 5
+            t.Skies.sky.Parent = Lighting
+            Soundificator.SwitchMusic("nr")
+        end
+
+        if location == "9_F2" then
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.415686, 0.415686, 0.415686)
+            Data.ImportantData.Misc.lighting.FogColor = Color3.new(0/255, 0/255, 0/255)
+            Data.ImportantData.Misc.lighting.FogEnd = 2000
+            Data.ImportantData.Misc.lighting.FogStart = 800
+            Data.ImportantData.Misc.lighting.ClockTime = 0
+            Lighting.Brightness = 1
+            t.Skies.sky.Parent = Lighting
+            Soundificator.SwitchMusic("ar")
+        end
+
+        if location == "9_F3" then
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.439216, 0.952941, 1)
+            Data.ImportantData.Misc.lighting.FogColor = Color3.new(0, 0.984314, 1)
+            Data.ImportantData.Misc.lighting.FogEnd = 2000
+            Data.ImportantData.Misc.lighting.FogStart = 800
+            Data.ImportantData.Misc.lighting.ClockTime = 12
+            Lighting.Brightness = 3
+            t.Skies.sky.Parent = Lighting
+            Soundificator.SwitchMusic("lForest")
+        end
+
+        if location == "9_F4" then
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.694118, 0.694118, 0.694118)
+            Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.211765, 0.388235, 0.352941)
+            Data.ImportantData.Misc.lighting.FogEnd = 2000
+            Data.ImportantData.Misc.lighting.FogStart = 800
+            Data.ImportantData.Misc.lighting.ClockTime = 0
+            Lighting.Brightness = 1
+            t.Skies.sky.Parent = Lighting
+            Soundificator.SwitchMusic("temple2")
+        end
+
+        if location == "9_F5" then
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.694118, 0, 0)
+            Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.87451, 0, 0)
+            Data.ImportantData.Misc.lighting.FogEnd = 2000
+            Data.ImportantData.Misc.lighting.FogStart = 800
+            Data.ImportantData.Misc.lighting.ClockTime = 12
+            Lighting.Brightness = 1
+            t.Skies.fire.Parent = Lighting
+            Soundificator.SwitchMusic("dd1")
+        end
+    end
+
+    if location == "lol" then
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.541176, 0.541176, 0.541176)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.752941, 0.752941, 0.752941)
+        Data.ImportantData.Misc.lighting.FogEnd = 200000
+        Data.ImportantData.Misc.lighting.FogStart = 80000
+        Data.ImportantData.Misc.lighting.ClockTime = 12
+        Clouds.Cover = 0
+        Clouds.Density = 0
+        Lighting.Brightness = 2
+        t.Skies.sky.Parent = Lighting
+        Soundificator.SwitchMusic("nr")
+    end
+
+    if location == "lol2" then
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.541176, 0.541176, 0.541176)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.752941, 0.752941, 0.752941)
+        Data.ImportantData.Misc.lighting.FogEnd = 200000
+        Data.ImportantData.Misc.lighting.FogStart = 80000
+        Data.ImportantData.Misc.lighting.ClockTime = 12
+        Clouds.Cover = 0
+        Clouds.Density = 0
+        Lighting.Brightness = 2
+        t.Skies.lol2.Parent = Lighting
+        Soundificator.SwitchMusic("ar")
+    end
+
+    if location == "lol3" then
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.541176, 0.541176, 0.541176)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.752941, 0.752941, 0.752941)
+        Data.ImportantData.Misc.lighting.FogEnd = 200000
+        Data.ImportantData.Misc.lighting.FogStart = 80000
+        Data.ImportantData.Misc.lighting.ClockTime = 12
+        Clouds.Cover = 0
+        Clouds.Density = 0
+        Lighting.Brightness = 2
+        t.Skies.lol3.Parent = Lighting
+        Soundificator.SwitchMusic("rr")
+    end
+
+    if location == "lol4" then
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.541176, 0.541176, 0.541176)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.752941, 0.752941, 0.752941)
+        Data.ImportantData.Misc.lighting.FogEnd = 200000
+        Data.ImportantData.Misc.lighting.FogStart = 80000
+        Data.ImportantData.Misc.lighting.ClockTime = 12
+        Clouds.Cover = 0
+        Clouds.Density = 0
+        Lighting.Brightness = 2
+        t.Skies.lol4.Parent = Lighting
+        Soundificator.SwitchMusic("rr2")
+    end
+
+    if location == "lol5" then
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.541176, 0.541176, 0.541176)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.752941, 0.752941, 0.752941)
+        Data.ImportantData.Misc.lighting.FogEnd = 200000
+        Data.ImportantData.Misc.lighting.FogStart = 80000
+        Data.ImportantData.Misc.lighting.ClockTime = 12
+        Clouds.Cover = 0
+        Clouds.Density = 0
+        Lighting.Brightness = 2
+        t.Skies.lol5.Parent = Lighting
+        Soundificator.SwitchMusic("understand")
+    end
+
+    if location == "lol6" then
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.541176, 0.541176, 0.541176)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.752941, 0.752941, 0.752941)
+        Data.ImportantData.Misc.lighting.FogEnd = 200000
+        Data.ImportantData.Misc.lighting.FogStart = 80000
+        Data.ImportantData.Misc.lighting.ClockTime = 12
+        Clouds.Cover = 0
+        Clouds.Density = 0
+        Lighting.Brightness = 2
+        t.Skies.lol5.Parent = Lighting
+        Soundificator.SwitchMusic("void")
+    end
+
+    if location == "normal" then
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.756863, 0.756863, 0.756863)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.752941, 0.752941, 0.752941)
+        Data.ImportantData.Misc.lighting.FogEnd = 2000
+        Data.ImportantData.Misc.lighting.FogStart = 800
+        Data.ImportantData.Misc.lighting.ClockTime = 14
+        Lighting.Brightness = 5
+        t.Skies.sky.Parent = Lighting
+        Soundificator.SwitchMusic("nr")
+        v3 = ReplicatedStorage
+    end
+
+    if location == "snow" then
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.756863, 0.756863, 0.756863)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.752941, 0.752941, 0.752941)
+        Data.ImportantData.Misc.lighting.FogEnd = 2000
+        Data.ImportantData.Misc.lighting.FogStart = 800
+        Data.ImportantData.Misc.lighting.ClockTime = 12
+        Lighting.Brightness = 0
+        t.Skies.cloudy.Parent = Lighting
+        Soundificator.SwitchMusic("nrc", 0.9)
+        v3 = ReplicatedStorage
+    end
+
+    if location == "anti" or (location == "anti2" or location == "anti3") then
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0/255, 0/255, 255/255)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0/255, 0/255, 255/255)
+        Data.ImportantData.Misc.lighting.FogEnd = 2000
+        Data.ImportantData.Misc.lighting.FogStart = 200
+        Data.ImportantData.Misc.lighting.ClockTime = 0
+        v3 = ReplicatedStorage
+
+        if location == "anti2" then
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.54902, 0.580392, 1)
+            Lighting.Brightness = 10
+        end
+
+        if location == "anti3" then
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.988235, 1, 0.27451)
+            Data.ImportantData.Misc.lighting.ClockTime = 12
+            v3 = Lighting
+        end
+
+        Terrain.WaterColor = Color3.new(255/255, 0/255, 0/255)
+        Terrain.WaterReflectance = 0.5
+        t.Skies.sky.Parent = Lighting
+        Soundificator.SwitchMusic("ar")
+    end
+
+    if location == "un" then
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.541176, 0.541176, 0.541176)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.660121, 1, 0.0344396)
+        Data.ImportantData.Misc.lighting.FogEnd = 2000
+        Data.ImportantData.Misc.lighting.FogStart = 500
+        Data.ImportantData.Misc.lighting.ClockTime = 12
+        t.Skies.unnatural.Parent = Lighting
+
+        if Data.ImportantData.Stats.evil > 0 and not Data.ImportantData.Misc.toggles.evil.state then
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(0/255, 0/255, 0/255)
+            Data.ImportantData.Misc.lighting.FogColor = Color3.new(0/255, 0/255, 0/255)
+            Data.ImportantData.Misc.lighting.FogEnd = 2000
+            Data.ImportantData.Misc.lighting.FogStart = 500
+            Data.ImportantData.Misc.lighting.ClockTime = 12
+            Lighting.Brightness = 0
+            t.Skies.evil.Parent = Lighting
+            Soundificator.SwitchMusic("rr2")
+        else
+            Soundificator.SwitchMusic("rr")
+        end
+
+        v3 = ReplicatedStorage
+    end
+
+    if location == "planet" then
+        if Data.ImportantData.Stats.pTrial > 0 then
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.529412, 0, 0.00784314)
+            Soundificator.SwitchMusic("ptr")
+        else
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.552941, 0.0705882, 0.72549)
+            Soundificator.SwitchMusic("pt")
+        end
+
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0/255, 0/255, 0/255)
+        Data.ImportantData.Misc.lighting.FogEnd = 20000
+        Data.ImportantData.Misc.lighting.FogStart = 5000
+        Data.ImportantData.Misc.lighting.ClockTime = 0
+        Clouds.Cover = 0
+        Clouds.Density = 0
+    end
+
+    if location == "space" or (location == "space2" or location == "spaceR") then
+        Data.ImportantData.Misc.lighting.ClockTime = 0
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0/255, 0/255, 0/255)
+        Data.ImportantData.Misc.lighting.FogEnd = 15000
+        Data.ImportantData.Misc.lighting.FogStart = 8000
+        Lighting.Brightness = 0
+        Clouds.Cover = 0
+        Clouds.Density = 0
+
+        if location == "space2" then
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(255/255, 255/255, 255/255)
+        end
+
+        if location == "spaceR" then
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(255/255, 0/255, 0/255)
+            Data.ImportantData.Misc.lighting.ClockTime = 12
+            Data.ImportantData.Misc.lighting.FogColor = Color3.new(255/255, 0/255, 0/255)
+            Lighting.Brightness = 4
+            t.Skies.fire.Parent = Lighting
+        end
+
+        if location == "space" then
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(0/255, 0/255, 0/255)
+        end
+
+        Soundificator.SwitchMusic("spc")
+    end
+
+    if location == "darkForest" or location == "darkForest2" then
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.627451, 0.180392, 0.686275)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0/255, 0/255, 0/255)
+        Data.ImportantData.Misc.lighting.FogEnd = 15000
+        Data.ImportantData.Misc.lighting.FogStart = 8000
+        Data.ImportantData.Misc.lighting.ClockTime = 0
+        Clouds.Cover = 0
+        Clouds.Density = 0
+
+        if location == "darkForest2" then
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.988235, 0.847059, 1)
+            Lighting.Brightness = 6
+        end
+
+        Soundificator.SwitchMusic("dForest")
+    end
+
+    if location == "lightForest" then
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.690196, 0.690196, 0.690196)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0/255, 0/255, 0/255)
+        Data.ImportantData.Misc.lighting.FogEnd = 15000
+        Data.ImportantData.Misc.lighting.FogStart = 8000
+        Data.ImportantData.Misc.lighting.ClockTime = 0
+        Clouds.Cover = 0
+        Clouds.Density = 0
+        Soundificator.SwitchMusic("lForest")
+    end
+
+    if location == "star" then
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0/255, 0/255, 0/255)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0/255, 0/255, 0/255)
+        Data.ImportantData.Misc.lighting.FogEnd = 1500
+        Data.ImportantData.Misc.lighting.FogStart = 800
+        Data.ImportantData.Misc.lighting.ClockTime = 0
+        Data.ImportantData.Misc.lighting.ExposureCompensation = 1
+        Clouds.Cover = 0
+        Clouds.Density = 0
+        Soundificator.SwitchMusic("star")
+    end
+
+    if location == "grassland" then
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.541176, 0.541176, 0.541176)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.752941, 0.752941, 0.752941)
+        Data.ImportantData.Misc.lighting.FogEnd = 2000
+        Data.ImportantData.Misc.lighting.FogStart = 800
+        Data.ImportantData.Misc.lighting.ClockTime = 12
+        Lighting.Brightness = 3
+        t.Skies.grass.Parent = Lighting
+        Soundificator.SwitchMusic("gl")
+        v3 = ReplicatedStorage
+    end
+
+    if location == "darkland" then
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0/255, 0/255, 0/255)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0/255, 0/255, 0/255)
+        Data.ImportantData.Misc.lighting.FogEnd = 2000
+        Data.ImportantData.Misc.lighting.FogStart = 500
+        Data.ImportantData.Misc.lighting.ClockTime = 0
+        Lighting.Brightness = 0
+        t.Skies.evil.Parent = Lighting
+        v3 = ReplicatedStorage
+        Soundificator.SwitchMusic("rr2")
+    end
+
+    if location == "void" then
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0/255, 0/255, 0/255)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0/255, 0/255, 0/255)
+        Data.ImportantData.Misc.lighting.FogEnd = 1500
+        Data.ImportantData.Misc.lighting.FogStart = 800
+        Data.ImportantData.Misc.lighting.ClockTime = 0
+        Soundificator.SwitchMusic("void")
+        v3 = ReplicatedStorage
+    end
+
+    if location == "null" then
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0/255, 0/255, 0/255)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0/255, 0/255, 0/255)
+        Data.ImportantData.Misc.lighting.FogEnd = 450
+        Data.ImportantData.Misc.lighting.FogStart = 0
+        Data.ImportantData.Misc.lighting.ClockTime = 0
+        Soundificator.SwitchMusic("nrc", 0.5)
+        v3 = ReplicatedStorage
+    end
+
+    if location == "castle" then
+        Lighting.Brightness = 0
+        Data.ImportantData.Misc.lighting.OutdoorAmbient = Color3.new(0.501961, 0.501961, 0.501961)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.247059, 0.247059, 0.247059)
+        Data.ImportantData.Misc.lighting.FogEnd = 600
+        Data.ImportantData.Misc.lighting.FogStart = 200
+        Data.ImportantData.Misc.lighting.ClockTime = 12
+        t.Skies.empyrean2.Parent = Lighting
+        Soundificator.SwitchMusic("d10")
+        Data.ImportantData.Misc.toggles.ui.Visible = false
+        v3 = ReplicatedStorage
+    end
+
+    if location == "loop" then
+        Lighting.Brightness = 0
+        Data.ImportantData.Misc.lighting.FogEnd = 1200
+        Data.ImportantData.Misc.lighting.FogStart = 800
+        Data.ImportantData.Misc.lighting.OutdoorAmbient = Color3.new(0.411765, 0.411765, 0.411765)
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.411765, 0.411765, 0.411765)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0/255, 0/255, 0/255)
+        Data.ImportantData.Misc.lighting.ClockTime = 12
+        Clouds.Cover = 0
+        Clouds.Density = 0
+        t.Skies.black.Parent = Lighting
+        Soundificator.SwitchMusic("loop")
+    end
+
+    if location == "blue" then
+        Lighting.Brightness = 10
+        Data.ImportantData.Misc.lighting.OutdoorAmbient = Color3.new(0, 0.109804, 0.411765)
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0, 0.109804, 0.411765)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0, 0.243137, 1)
+        Data.ImportantData.Misc.lighting.FogEnd = 2000
+        Data.ImportantData.Misc.lighting.FogStart = 800
+        Data.ImportantData.Misc.lighting.ClockTime = 0
+        Soundificator.SwitchMusic("blue")
+        t.Skies.blue.Parent = Lighting
+        v3 = ReplicatedStorage
+    end
+
+    if location == "hub" then
+        Lighting.Brightness = 3
+        Data.ImportantData.Misc.lighting.OutdoorAmbient = Color3.new(255/255, 255/255, 255/255)
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(255/255, 255/255, 255/255)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(255/255, 255/255, 255/255)
+        Data.ImportantData.Misc.lighting.FogEnd = 20000
+        Data.ImportantData.Misc.lighting.FogStart = 8000
+        Data.ImportantData.Misc.lighting.ClockTime = 12
+        Bloom.Enabled = true
+        Bloom.Threshold = 0.8
+        Bloom.Size = 4
+        Soundificator.SwitchMusic("gl")
+        t.Skies.hub.Parent = Lighting
+    end
+
+    if location == "temp" then
+        Lighting.Brightness = 3
+        Data.ImportantData.Misc.lighting.OutdoorAmbient = Color3.new(255/255, 255/255, 255/255)
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(255/255, 255/255, 255/255)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(255/255, 255/255, 255/255)
+        Data.ImportantData.Misc.lighting.FogEnd = 20000
+        Data.ImportantData.Misc.lighting.FogStart = 8000
+        Data.ImportantData.Misc.lighting.ClockTime = 15.5
+        Soundificator.SwitchMusic("gl")
+    end
+
+    if location == "jungle" then
+        Soundificator.SwitchMusic("jungle")
+        v3 = ReplicatedStorage
+
+        if Data.ImportantData.Stats.event == "none" then
+            Lighting.Brightness = 1
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(102/255, 102/255, 102/255)
+            Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.752941, 0.752941, 0.752941)
+            Data.ImportantData.Misc.lighting.FogEnd = 1000
+            Data.ImportantData.Misc.lighting.FogStart = 600
+            Data.ImportantData.Misc.lighting.ClockTime = 12
+            workspace.Terrain.WaterColor = Color3.new(0, 0.639216, 0.403922)
+            workspace.Terrain.WaterReflectance = 1
+            workspace.Terrain.WaterWaveSize = 0
+            workspace.Terrain.WaterWaveSpeed = 80
+            workspace.Terrain.WaterTransparency = 0.1
+        end
+
+        if Data.ImportantData.Stats.event == "storm" then
+            Lighting.Brightness = 0.4
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(102/255, 102/255, 102/255)
+            Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.752941, 0.752941, 0.752941)
+            Data.ImportantData.Misc.lighting.FogEnd = 600
+            Data.ImportantData.Misc.lighting.FogStart = 200
+            Data.ImportantData.Misc.lighting.ClockTime = 12
+            workspace.Terrain.WaterColor = Color3.new(0, 0.639216, 0.403922)
+            workspace.Terrain.WaterReflectance = 1
+            workspace.Terrain.WaterWaveSize = 3
+            workspace.Terrain.WaterWaveSpeed = 80
+            workspace.Terrain.WaterTransparency = 0.1
+            t.Skies.cloudy.Parent = Lighting
+        end
+
+        if Data.ImportantData.Stats.event == "grow" then
+            Lighting.Brightness = 0
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(0, 0.121569, 0.364706)
+            Data.ImportantData.Misc.lighting.FogColor = Color3.new(0, 0.4, 0.752941)
+            Data.ImportantData.Misc.lighting.FogEnd = 400
+            Data.ImportantData.Misc.lighting.FogStart = 50
+            Data.ImportantData.Misc.lighting.ClockTime = 12
+            workspace.Terrain.WaterColor = Color3.new(0, 0.192157, 0.639216)
+            workspace.Terrain.WaterReflectance = 1
+            workspace.Terrain.WaterWaveSize = 10
+            workspace.Terrain.WaterWaveSpeed = 80
+            workspace.Terrain.WaterTransparency = 0.1
+            t.Skies.cloudy.Parent = Lighting
+        end
+
+        if Data.ImportantData.Stats.event == "ruby" then
+            Lighting.Brightness = 2
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.831373, 0, 0)
+            Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.752941, 0.752941, 0.752941)
+            Data.ImportantData.Misc.lighting.FogEnd = 1000
+            Data.ImportantData.Misc.lighting.FogStart = 600
+            Data.ImportantData.Misc.lighting.ClockTime = 12
+            workspace.Terrain.WaterColor = Color3.new(0, 0.639216, 0.403922)
+            workspace.Terrain.WaterReflectance = 1
+            workspace.Terrain.WaterWaveSize = 0
+            workspace.Terrain.WaterWaveSpeed = 80
+            workspace.Terrain.WaterTransparency = 0.1
+        end
+    end
+
+    if location == "temple" then
+        Soundificator.SwitchMusic("temple1")
+        Lighting.Brightness = 0
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(102/255, 102/255, 102/255)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.752941, 0.752941, 0.752941)
+        Data.ImportantData.Misc.lighting.FogEnd = 10000
+        Data.ImportantData.Misc.lighting.FogStart = 6000
+        Data.ImportantData.Misc.lighting.ClockTime = 12
+    end
+
+    if location == "upperTemple" then
+        Soundificator.SwitchMusic("temple2")
+        Lighting.Brightness = 0.4
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.478431, 0.607843, 0.709804)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.752941, 0.752941, 0.752941)
+        Data.ImportantData.Misc.lighting.FogEnd = 10000
+        Data.ImportantData.Misc.lighting.FogStart = 6000
+        Data.ImportantData.Misc.lighting.ClockTime = 12
+        Clouds.Cover = 0
+        Clouds.Density = 0
+
+        if Data.ImportantData.Stats.event == "storm" or Data.ImportantData.Stats.event == "ruby" then
+            Lighting.Brightness = 0.5
+            t.Skies.nightBright.Parent = Lighting
+        else
+            t.Skies.night.Parent = Lighting
+        end
+    end
+
+    if location == "doom" then
+        Soundificator.SwitchMusic(nil)
+        Lighting.Brightness = 3
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(255/255, 0/255, 0/255)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(255/255, 0/255, 0/255)
+        Data.ImportantData.Misc.lighting.FogEnd = 10000
+        Data.ImportantData.Misc.lighting.FogStart = 6000
+        Data.ImportantData.Misc.lighting.ClockTime = 12
+        Clouds.Cover = 0.82
+        Clouds.Density = 0.21
+        Clouds.Color = Color3.new(0.121569, 0, 0)
+        t.Skies.doom.Parent = Lighting
+    end
+
+    if location == "cavern" then
+        Soundificator.SwitchMusic("cavern")
+        Lighting.Brightness = 0
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.482353, 0.32549, 0.615686)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0/255, 0/255, 0/255)
+        Data.ImportantData.Misc.lighting.FogEnd = 1000
+        Data.ImportantData.Misc.lighting.FogStart = 600
+        Data.ImportantData.Misc.lighting.ClockTime = 12
+        v3 = ReplicatedStorage
+        workspace.Terrain.WaterColor = Color3.new(0, 0.32549, 0.298039)
+        workspace.Terrain.WaterReflectance = 1
+        workspace.Terrain.WaterWaveSize = 0.5
+        workspace.Terrain.WaterWaveSpeed = 10
+        workspace.Terrain.WaterTransparency = 0.1
+    end
+
+    if location == "depths" then
+        Soundificator.SwitchMusic(nil)
+        Lighting.Brightness = 1
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0/255, 0/255, 0/255)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0/255, 0/255, 0/255)
+        Data.ImportantData.Misc.lighting.FogEnd = 400
+        Data.ImportantData.Misc.lighting.FogStart = 200
+        Data.ImportantData.Misc.lighting.ClockTime = 0
+        v3 = ReplicatedStorage
+        workspace.Terrain.WaterColor = Color3.new(0.00784314, 0.00392157, 0.141176)
+        workspace.Terrain.WaterReflectance = 0.2
+        workspace.Terrain.WaterWaveSize = 0
+        workspace.Terrain.WaterWaveSpeed = 10
+        workspace.Terrain.WaterTransparency = 0.05
+    end
+
+    if location == "chambert" then
+        Soundificator.SwitchMusic(nil)
+        workspace.Terrain.Clouds.Cover = 0
+        Lighting.Brightness = 1
+        Data.ImportantData.Misc.lighting.FogEnd = 400
+        Data.ImportantData.Misc.lighting.FogStart = 200
+        Data.ImportantData.Misc.lighting.ClockTime = 12
+        workspace.Terrain.WaterColor = Color3.new(0/255, 0/255, 0/255)
+        workspace.Terrain.WaterReflectance = 0
+        workspace.Terrain.WaterWaveSize = 0
+        workspace.Terrain.WaterWaveSpeed = 0
+        workspace.Terrain.WaterTransparency = 0.1
+        v3 = ReplicatedStorage
+
+        if Data.ImportantData.Misc.toggles.contrast.state then
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.411765, 0.411765, 0.411765)
+            Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.411765, 0.411765, 0.411765)
+            t.Skies.gray.Parent = Lighting
+        else
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.898039, 0.898039, 0.898039)
+            Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.898039, 0.898039, 0.898039)
+            t.Skies.white.Parent = Lighting
+        end
+    end
+
+    if location == "chamber" then
+        Soundificator.SwitchMusic("intersection")
+        workspace.Terrain.Clouds.Cover = 0
+        Lighting.Brightness = 1
+        Data.ImportantData.Misc.lighting.FogEnd = 400
+        Data.ImportantData.Misc.lighting.FogStart = 200
+        Data.ImportantData.Misc.lighting.ClockTime = 12
+        workspace.Terrain.WaterColor = Color3.new(0/255, 0/255, 0/255)
+        workspace.Terrain.WaterReflectance = 0
+        workspace.Terrain.WaterWaveSize = 0
+        workspace.Terrain.WaterWaveSpeed = 0
+        workspace.Terrain.WaterTransparency = 0.1
+        v3 = ReplicatedStorage
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.764706, 0.764706, 0.764706)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.764706, 0.764706, 0.764706)
+        t.Skies.white.Parent = Lighting
+    end
+
+    if location == "chamber2" then
+        Soundificator.SwitchMusic("intersection")
+        workspace.Terrain.Clouds.Cover = 0.75
+        Lighting.Brightness = 1
+        Data.ImportantData.Misc.lighting.FogEnd = 400
+        Data.ImportantData.Misc.lighting.FogStart = 200
+        Data.ImportantData.Misc.lighting.ClockTime = 12
+        workspace.Terrain.WaterColor = Color3.new(0/255, 0/255, 0/255)
+        workspace.Terrain.WaterReflectance = 0
+        workspace.Terrain.WaterWaveSize = 0
+        workspace.Terrain.WaterWaveSpeed = 0
+        workspace.Terrain.WaterTransparency = 0.1
+        v3 = ReplicatedStorage
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.411765, 0.411765, 0.411765)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.411765, 0.411765, 0.411765)
+        t.Skies.gray.Parent = Lighting
+    end
+
+    if location == "understand" then
+        Soundificator.SwitchMusic("understand")
+        workspace.Terrain.Clouds.Cover = 0
+        Lighting.Brightness = 3
+        Data.ImportantData.Misc.lighting.ClockTime = 12
+        v3 = ReplicatedStorage
+        Lighting.FogColor = Color3.new(0.223529, 0.00392157, 0.533333)
+        t.Skies.question.Parent = Lighting
+    end
+
+    if location == "desert" then
+        Soundificator.SwitchMusic("d3")
+        workspace.Terrain.Clouds.Cover = 0
+        Lighting.Brightness = 0
+        Data.ImportantData.Misc.lighting.FogEnd = 3000
+        Data.ImportantData.Misc.lighting.FogStart = 500
+        Data.ImportantData.Misc.lighting.ClockTime = 7.4
+        workspace.Terrain.WaterColor = Color3.new(0/255, 0/255, 0/255)
+        workspace.Terrain.WaterReflectance = 0
+        workspace.Terrain.WaterWaveSize = 0
+        workspace.Terrain.WaterWaveSpeed = 0
+        workspace.Terrain.WaterTransparency = 0.1
+        Data.ImportantData.Misc.lighting.OutdoorAmbient = Color3.new(0.686275, 0.686275, 0.686275)
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.686275, 0.686275, 0.686275)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(1, 0.792157, 0.435294)
+        t.Skies.desert.Parent = Lighting
+
+        if Data.ImportantData.Stats.prog2 < 2 then
+            Atmosphere.Density = 0.4
+        else
+            Atmosphere.Density = 0.25
+        end
+
+        Lighting.SunRays.Enabled = false
+    end
+
+    if location == "desertFar" then
+        Soundificator.SwitchMusic(nil)
+        workspace.Terrain.Clouds.Cover = 0
+        Lighting.Brightness = 0
+        Data.ImportantData.Misc.lighting.FogEnd = 3000
+        Data.ImportantData.Misc.lighting.FogStart = 500
+        Data.ImportantData.Misc.lighting.ClockTime = 7.4
+        workspace.Terrain.WaterColor = Color3.new(0/255, 0/255, 0/255)
+        workspace.Terrain.WaterReflectance = 0
+        workspace.Terrain.WaterWaveSize = 0
+        workspace.Terrain.WaterWaveSpeed = 0
+        workspace.Terrain.WaterTransparency = 0.1
+        Data.ImportantData.Misc.lighting.OutdoorAmbient = Color3.new(0.686275, 0.686275, 0.686275)
+        Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.686275, 0.686275, 0.686275)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(1, 0.792157, 0.435294)
+        t.Skies.desert.Parent = Lighting
+        Atmosphere.Density = 0.8
+        Lighting.SunRays.Enabled = false
+    end
+
+    if location == "cactus" then
+        Soundificator.SwitchMusic("d3")
+        workspace.Terrain.Clouds.Cover = 0
+        Lighting.ClockTime = 0
+        Data.ImportantData.Misc.lighting.FogEnd = 10000
+        Data.ImportantData.Misc.lighting.FogStart = 5000
+        workspace.Terrain.WaterColor = Color3.new(0.0901961, 0.709804, 0.615686)
+        workspace.Terrain.WaterReflectance = 1
+        workspace.Terrain.WaterWaveSize = 0.15
+        workspace.Terrain.WaterWaveSpeed = 10
+        workspace.Terrain.WaterTransparency = 0.5
+        Data.ImportantData.Misc.lighting.OutdoorAmbient = Color3.new(0.52549, 0.596078, 0.517647)
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.52549, 0.596078, 0.517647)
+
+        if Data.ImportantData.Stats.cTrial > 0 then
+            Lighting.Brightness = 2
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.898039, 0.898039, 0.898039)
+        else
+            Lighting.Brightness = 0
+            Data.ImportantData.Misc.lighting.Ambient = Color3.new(0.541176, 0.541176, 0.541176)
+        end
+    end
+
+    if location == "dungeon" then
+        local v4 = Color3.new(0.541176, 0.541176, 0.541176)
+
+        Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.752941, 0.752941, 0.752941)
+        Data.ImportantData.Misc.lighting.OutdoorAmbient = Color3.new(0.501961, 0.501961, 0.501961)
+        Data.ImportantData.Misc.lighting.FogEnd = 2000
+        Data.ImportantData.Misc.lighting.FogStart = 800
+        v3 = ReplicatedStorage
+
+        if Data.ImportantData.Stats.currDungeon == "valley" then
+            Lighting.Brightness = 3
+            t.Skies.grass.Parent = Lighting
+            Soundificator.SwitchMusic("d1")
+        end
+
+        if Data.ImportantData.Stats.currDungeon == "valleyDark" then
+            t.Skies.fire.Parent = Lighting
+            Soundificator.SwitchMusic("dd1")
+        end
+
+        if Data.ImportantData.Stats.currDungeon == "mine" then
+            Soundificator.SwitchMusic("d2")
+        end
+
+        if Data.ImportantData.Stats.currDungeon == "mineDark" then
+            Lighting.Brightness = 0
+
+            local v5 = Color3.new(0/255, 0/255, 0/255)
+
+            Data.ImportantData.Misc.lighting.OutdoorAmbient = Color3.new(0/255, 0/255, 0/255)
+            Soundificator.SwitchMusic("dd2")
+            v4 = v5
+        end
+
+        if Data.ImportantData.Stats.currDungeon == "desert" then
+            Lighting.Brightness = 1
+
+            local v6 = Color3.new(0.619608, 0.329412, 0.176471)
+
+            t.Skies.desert.Parent = Lighting
+            Soundificator.SwitchMusic("d3")
+            v4 = v6
+        end
+
+        if Data.ImportantData.Stats.currDungeon == "desertDark" then
+            Lighting.Brightness = 0.5
+            Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.247059, 0.247059, 0.247059)
+            Data.ImportantData.Misc.lighting.FogEnd = 300
+            Data.ImportantData.Misc.lighting.FogStart = 100
+            t.Skies.cloudy.Parent = Lighting
+            Soundificator.SwitchMusic("dd3")
+        end
+
+        if Data.ImportantData.Stats.currDungeon == "sandruin" then
+            Soundificator.SwitchMusic("d4")
+        end
+
+        if Data.ImportantData.Stats.currDungeon == "sandruinDark" then
+            Lighting.Brightness = 0
+            t.Skies.cloudy.Parent = Lighting
+            Soundificator.SwitchMusic("dd4")
+        end
+
+        if Data.ImportantData.Stats.currDungeon == "mountain" then
+            Lighting.Brightness = 0.5
+            t.Skies.cloudy.Parent = Lighting
+            Soundificator.SwitchMusic("d5", 0.9)
+        end
+
+        if Data.ImportantData.Stats.currDungeon == "temple" then
+            Lighting.Brightness = 3
+            t.Skies.empyrean.Parent = Lighting
+            Soundificator.SwitchMusic("d6")
+        end
+
+        if Data.ImportantData.Stats.currDungeon == "cursed" then
+            Lighting.Brightness = 0
+            Data.ImportantData.Misc.lighting.FogColor = Color3.new(0.247059, 0.247059, 0.247059)
+            Data.ImportantData.Misc.lighting.FogEnd = 300
+            Data.ImportantData.Misc.lighting.FogStart = 50
+            t.Skies.empyrean2.Parent = Lighting
+            Soundificator.SwitchMusic("d7")
+        end
+
+        if Data.ImportantData.Stats.currDungeon == "crypt" then
+            Lighting.Brightness = 0
+
+            local v7 = Color3.new(0.0862745, 0.658824, 0)
+
+            Soundificator.SwitchMusic("d8")
+            v4 = v7
+        end
+
+        if Data.ImportantData.Stats.currDungeon == "chaos" then
+            t.Skies.empyrean3.Parent = Lighting
+
+            local v8 = Color3.new(255/255, 0/255, 0/255)
+
+            Soundificator.SwitchMusic("d9")
+            v4 = v8
+        end
+
+        if Data.ImportantData.Stats.currDungeon == "neon" then
+            Lighting.Brightness = 0
+            t.Skies.black.Parent = Lighting
+            Data.ImportantData.Misc.lighting.FogColor = Color3.new(0/255, 0/255, 0/255)
+            Data.ImportantData.Misc.lighting.FogEnd = 3000
+            Data.ImportantData.Misc.lighting.FogStart = 500
+            Soundificator.SwitchMusic("d11")
+        end
+
+        if Data.ImportantData.Stats.currDungeon == "gild" then
+            Soundificator.SwitchMusic("gl")
+        end
+
+        if Data.ImportantData.Stats.currDungeon == "challenge" then
+            Soundificator.SwitchMusic("challenge")
+        end
+
+        if Data.ImportantData.Stats.currDungeon == "infinite" then
+            Soundificator.SwitchMusic("gl")
+        end
+
+        Data.ImportantData.Misc.lighting.Ambient = v4
+    end
+
+    Atmosphere.Parent = v3
+    pcall(function() --[[ Line: 975 | Upvalues: TabManager (ref) ]]
+        TabManager.ShowHideTabs()
+    end)
+end
+
+local v1 = CFrame.Angles(0, 0, 0)
+
+function t.SetCamera(p1, p2) --[[ SetCamera | Line: 981 | Upvalues: v1 (ref), Data (copy), t (copy) ]]
+    v1 = workspace.Camera.CFrame.Rotation
+    workspace.Camera.CameraSubject = p1
+    workspace.Camera.CameraType = "Scriptable"
+    task.wait()
+    workspace.Camera.CFrame = CFrame.new(Vector3.new(p1.CFrame.Position.X, p1.CFrame.Position.Y + 1, p1.CFrame.Position.Z), p1.CFrame.Position) * p2
+
+    local UI = Data.ImportantData.Misc.player.PlayerGui.MobileUI.UI
+
+    UI.Currency.Visible = false
+    UI.Pins.Visible = false
+    UI.Pins2.Visible = false
+    UI.Pins3.Visible = false
+    UI.Pins4.Visible = false
+    Data.ImportantData.Stats.mapOpen = true
+    t.UpdateVisual()
+end
+function t.GetCurrentCamera() --[[ GetCurrentCamera | Line: 1002 ]]
+    local CameraSubject = workspace.Camera.CameraSubject
+    local Cams = workspace.Building.Structures.Cams
+
+    if CameraSubject:HasTag("Focus") then
+        return "dungeon"
+    end
+
+    if CameraSubject:HasTag("Map") then
+        return "map"
+    end
+
+    return "none"
+end
+function t.ReturnCamera() --[[ ReturnCamera | Line: 1033 | Upvalues: Data (copy), v1 (ref) ]]
+    workspace.Camera.CameraSubject = Data.ImportantData.Misc.player.Character:FindFirstChild("Humanoid")
+    workspace.Camera.CameraType = "Custom"
+    workspace.Camera.CFrame = v1
+
+    local UI = Data.ImportantData.Misc.player.PlayerGui.MobileUI.UI
+
+    UI.Currency.Visible = true
+    UI.Pins.Visible = true
+    UI.Pins2.Visible = true
+    UI.Pins3.Visible = true
+    UI.Pins4.Visible = true
+    Data.ImportantData.Stats.mapOpen = false
+end
+function t.ClearSky() --[[ ClearSky | Line: 1047 | Upvalues: Lighting (copy), ReplicatedStorage (copy) ]]
+    local v1 = Lighting:GetChildren()
+
+    if v1 == nil then
+        return
+    end
+
+    for k, v in pairs(v1) do
+        if v:IsA("Sky") then
+            v.Parent = ReplicatedStorage.Skies
+        end
+    end
+end
+
+return t
