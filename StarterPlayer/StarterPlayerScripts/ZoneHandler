@@ -1,0 +1,15 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Remotes = ReplicatedStorage.Remotes
+local EnterLocation = Remotes:WaitForChild("EnterLocation")
+local CheckZone = Remotes:WaitForChild("CheckZone")
+local Data = require(ReplicatedStorage.Data)
+local ChangeVisual = require(ReplicatedStorage.ChangeVisual)
+
+function Zone(p1) --[[ Zone | Line: 9 | Upvalues: Data (copy) ]]
+    Data.ImportantData.Stats.inField = p1
+end
+CheckZone.OnClientEvent:Connect(Zone)
+function Location(p1) --[[ Location | Line: 14 | Upvalues: ChangeVisual (copy) ]]
+    ChangeVisual.Change(p1)
+end
+EnterLocation.OnClientEvent:Connect(Location)
