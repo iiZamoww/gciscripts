@@ -1,0 +1,3165 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Data = require(ReplicatedStorage.Data)
+local LethalNum = require(ReplicatedStorage.LethalNum)
+
+require(ReplicatedStorage.Format)
+
+local CurrencyTypes = require(ReplicatedStorage.CurrencyTypes)
+local CommonFunctions = require(ReplicatedStorage.CommonFunctions)
+local InfoStore = require(ReplicatedStorage.InfoStore)
+local t = {}
+
+t.Bars = {
+    sol = {
+        rank = 0,
+        displayName = "Sol",
+        progressScalingType = 0,
+        barType = 0,
+        powerType = 0,
+        resource = "sol",
+        icon = "rbxassetid://11571897030",
+        order = 0,
+        obj = nil,
+        parent = 0,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 2),
+        progressScaling = LethalNum.new(1, 2),
+        resourceMulti = LethalNum.new(1, 0)
+    },
+    ll = {
+        rank = 0,
+        displayName = "Light Logs",
+        progressScalingType = 0,
+        barType = 0,
+        powerType = 0,
+        resource = "lightLog",
+        icon = "rbxassetid://11574001980",
+        unlockText = "Stage 3",
+        order = 1,
+        obj = nil,
+        parent = 0,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(3, 3),
+        progressScaling = LethalNum.new(1, 2),
+        resourceMulti = LethalNum.new(1, 0),
+        unlockCondition = function() --[[ unlockCondition | Line: 52 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 3
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 55 ]]
+            return p1.Stats.bestStage >= 3
+        end
+    },
+    ps = {
+        rank = 0,
+        displayName = "Portal Stones",
+        progressScalingType = 0,
+        barType = 0,
+        powerType = 0,
+        resource = "portalStones",
+        icon = "rbxassetid://11571896600",
+        unlockText = "Stage 10",
+        order = 2,
+        obj = nil,
+        parent = 0,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 6),
+        progressScaling = LethalNum.new(1, 2),
+        resourceMulti = LethalNum.new(1, 0),
+        unlockCondition = function() --[[ unlockCondition | Line: 81 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 10
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 84 ]]
+            return p1.Stats.bestStage >= 10
+        end
+    },
+    f = {
+        rank = 0,
+        displayName = "Fragments",
+        progressScalingType = 0,
+        barType = 0,
+        powerType = 0,
+        resource = "fragments",
+        icon = "rbxassetid://11785246614",
+        unlockText = "Stage 20",
+        order = 3,
+        obj = nil,
+        parent = 0,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 10),
+        progressScaling = LethalNum.new(1, 2),
+        resourceMulti = LethalNum.new(1, 0),
+        unlockCondition = function() --[[ unlockCondition | Line: 110 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 20
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 113 ]]
+            return p1.Stats.bestStage >= 20
+        end
+    },
+    ge = {
+        rank = 0,
+        displayName = "Grass Essence",
+        progressScalingType = 0,
+        barType = 0,
+        powerType = 0,
+        resource = "grassp",
+        icon = "rbxassetid://12410124012",
+        unlockText = "Stage 50",
+        order = 4,
+        obj = nil,
+        parent = 0,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 30),
+        progressScaling = LethalNum.new(1, 2),
+        resourceMulti = LethalNum.new(1, 0),
+        unlockCondition = function() --[[ unlockCondition | Line: 139 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 50
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 142 ]]
+            return p1.Stats.bestStage >= 50
+        end
+    },
+    inf = {
+        rank = 0,
+        displayName = "Infinity Loops (Uncapped)",
+        progressScalingType = 0,
+        barType = 0,
+        powerType = 0,
+        resource = "inf",
+        icon = "rbxassetid://13346325188",
+        unlockText = "Supernova Tier 11",
+        order = 4,
+        obj = nil,
+        parent = 0,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 86),
+        progressScaling = LethalNum.new(1, 2),
+        maxLevelRate = LethalNum.new(1, 99999),
+        resourceMulti = LethalNum.new(1, 0),
+        unlockCondition = function() --[[ unlockCondition | Line: 169 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.starTier.a >= 11
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 172 ]]
+            return p1.Currency.resets.starTier.a >= 10
+        end
+    },
+    off = {
+        rank = 0,
+        displayName = "Offense",
+        progressScalingType = 0,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 1,
+        resource = "sol",
+        icon = "rbxassetid://11579910576",
+        order = 0,
+        obj = nil,
+        parent = 1,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 2),
+        progressScaling = LethalNum.new(1, 2),
+        maxLevelRate = LethalNum.new(1, 4),
+        bonus = LethalNum.new(1, 0),
+        bonusScaling = LethalNum.new(1, 0),
+        rankBonusScaling = LethalNum.new(5, 0),
+        rankGoalScaling = LethalNum.new(1, 1),
+        rankReq = LethalNum.new(1, 3),
+        rankCostScaling = LethalNum.new(4, 0),
+        rankReqScaling = LethalNum.new(1, 3),
+        costs = {
+            [0] = {
+                curr = "sol",
+                scalingType = 0,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 0),
+                scaling = LethalNum.new(1, 0)
+            }
+        }
+    },
+    def = {
+        rank = 0,
+        displayName = "Defense",
+        progressScalingType = 0,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 1,
+        resource = "sol",
+        icon = "rbxassetid://11579910931",
+        order = 1,
+        obj = nil,
+        parent = 1,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 2),
+        progressScaling = LethalNum.new(1, 2),
+        maxLevelRate = LethalNum.new(1, 4),
+        bonus = LethalNum.new(1, 0),
+        bonusScaling = LethalNum.new(1, 0),
+        rankBonusScaling = LethalNum.new(5, 0),
+        rankGoalScaling = LethalNum.new(1, 1),
+        rankReq = LethalNum.new(1, 3),
+        rankCostScaling = LethalNum.new(4, 0),
+        rankReqScaling = LethalNum.new(1, 3),
+        costs = {
+            [0] = {
+                curr = "sol",
+                scalingType = 0,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 0),
+                scaling = LethalNum.new(1, 0)
+            }
+        }
+    },
+    ss = {
+        rank = 0,
+        maxRank = 25000,
+        displayName = "Solar Shards",
+        progressScalingType = 3,
+        progressScaling = 1.05,
+        bonusScaling = 2,
+        bonusScalingType = 1,
+        barType = 1,
+        powerType = 1,
+        resource = "sol",
+        icon = "rbxassetid://10985298823",
+        unlockText = "Stage 3",
+        order = 0,
+        obj = nil,
+        parent = 2,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(5, 2),
+        bonus = LethalNum.new(1, 0),
+        rankBonusScaling = LethalNum.new(5, 0),
+        rankGoalScaling = LethalNum.new(4, 1),
+        rankCostScaling = LethalNum.new(3, 0),
+        rankReq = LethalNum.new(1, 2),
+        rankReqScaling = LethalNum.new(1, 1),
+        costs = {
+            [0] = {
+                curr = "sol",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 1),
+                scaling = LethalNum.new(1, 1)
+            },
+            [1] = {
+                curr = "lightLog",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 0),
+                scaling = LethalNum.new(1, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 331 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 3
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 334 ]]
+            return p1.Stats.bestStage >= 3
+        end
+    },
+    line = {
+        rank = 0,
+        maxRank = 25000,
+        displayName = "Lines",
+        progressScalingType = 3,
+        progressScaling = 1.05,
+        bonusScaling = 3,
+        bonusScalingType = 1,
+        barType = 1,
+        powerType = 1,
+        resource = "sol",
+        icon = "rbxassetid://10427780685",
+        unlockText = "Stage 4",
+        order = 1,
+        obj = nil,
+        parent = 2,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(5, 3),
+        bonus = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(1, 1),
+        rankGoalScaling = LethalNum.new(1, 1),
+        rankCostScaling = LethalNum.new(3, 0),
+        rankReq = LethalNum.new(1, 2),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "sol",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(5, 1),
+                scaling = LethalNum.new(5, 1)
+            },
+            [1] = {
+                curr = "lightLog",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(5, 0),
+                scaling = LethalNum.new(5, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 389 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 4
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 392 ]]
+            return p1.Stats.bestStage >= 4
+        end
+    },
+    compact = {
+        rank = 0,
+        maxRank = 25000,
+        displayName = "Compaction",
+        progressScalingType = 3,
+        progressScaling = 1.05,
+        bonusScaling = 3,
+        bonusScalingType = 1,
+        barType = 1,
+        powerType = 1,
+        resource = "sol",
+        icon = "rbxassetid://9923275242",
+        unlockText = "Stage 12",
+        order = 2,
+        obj = nil,
+        parent = 2,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 5),
+        bonus = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(5, 0),
+        rankGoalScaling = LethalNum.new(1, 1),
+        rankCostScaling = LethalNum.new(3, 0),
+        rankReq = LethalNum.new(1, 2),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "sol",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 3),
+                scaling = LethalNum.new(1, 3)
+            },
+            [1] = {
+                curr = "portalStones",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 0),
+                scaling = LethalNum.new(1, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 447 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 12
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 450 ]]
+            return p1.Stats.bestStage >= 12
+        end
+    },
+    comp = {
+        rank = 0,
+        maxRank = 10000,
+        displayName = "Compression",
+        progressScalingType = 3,
+        progressScaling = 1.1,
+        bonusScaling = 1.03,
+        bonusScalingType = 2,
+        barType = 1,
+        powerType = 1,
+        resource = "sol",
+        icon = "rbxassetid://12285794024",
+        unlockText = "Stage 25",
+        order = 3,
+        obj = nil,
+        parent = 2,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 6),
+        bonus = LethalNum.new(1, 1),
+        rankBonusScaling = LethalNum.new(5, 0),
+        rankGoalScaling = LethalNum.new(5, 0),
+        rankCostScaling = LethalNum.new(5, 0),
+        rankReq = LethalNum.new(2.5, 1),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "sol",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 5),
+                scaling = LethalNum.new(1.09, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 497 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 25
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 500 ]]
+            return p1.Stats.bestStage >= 25
+        end
+    },
+    advCol = {
+        rank = 0,
+        maxRank = 25000,
+        displayName = "Twilit Collecting",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 1,
+        resource = "sol",
+        icon = "rbxassetid://11658054120",
+        order = 1,
+        obj = nil,
+        parent = 7,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 13),
+        progressScaling = LethalNum.new(1.05, 0),
+        maxLevelRate = LethalNum.new(1, 0),
+        bonus = LethalNum.new(1, 1),
+        bonusScaling = LethalNum.new(1, 1),
+        rankBonusScaling = LethalNum.new(1.5, 0),
+        rankGoalScaling = LethalNum.new(1, 1),
+        rankCostScaling = LethalNum.new(6, 0),
+        rankReq = LethalNum.new(1, 2),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "cs",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 2),
+                scaling = LethalNum.new(1.1, 0)
+            },
+            [1] = {
+                curr = "fs",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 0),
+                scaling = LethalNum.new(1.04, 0)
+            }
+        }
+    },
+    advForm = {
+        rank = 0,
+        maxRank = 25000,
+        displayName = "Twilit Forming",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 1,
+        resource = "sol",
+        icon = "rbxassetid://11658054254",
+        order = 2,
+        obj = nil,
+        parent = 7,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 13),
+        progressScaling = LethalNum.new(1.05, 0),
+        maxLevelRate = LethalNum.new(1, 0),
+        bonus = LethalNum.new(1, 1),
+        bonusScaling = LethalNum.new(1, 1),
+        rankBonusScaling = LethalNum.new(1.5, 0),
+        rankGoalScaling = LethalNum.new(1, 1),
+        rankCostScaling = LethalNum.new(6, 0),
+        rankReq = LethalNum.new(1, 2),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "fs",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(4, 0),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [1] = {
+                curr = "gb",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 0),
+                scaling = LethalNum.new(1.04, 0)
+            }
+        }
+    },
+    advSoul = {
+        rank = 0,
+        displayName = "Twilit Souls",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 1,
+        resource = "sol",
+        icon = "rbxassetid://11647954525",
+        order = 2,
+        obj = nil,
+        parent = 7,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 16),
+        progressScaling = LethalNum.new(1.05, 0),
+        maxLevelRate = LethalNum.new(1, 0),
+        bonus = LethalNum.new(1, 1),
+        bonusScaling = LethalNum.new(1, 1),
+        rankBonusScaling = LethalNum.new(1.5, 0),
+        rankGoalScaling = LethalNum.new(1, 1),
+        rankCostScaling = LethalNum.new(6, 0),
+        rankReq = LethalNum.new(1, 2),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "fs",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 2),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [1] = {
+                curr = "gb",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 1),
+                scaling = LethalNum.new(1.04, 0)
+            }
+        }
+    },
+    fm = {
+        rank = 0,
+        displayName = "Sunrise FM",
+        progressScalingType = 1,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 1,
+        resource = "sol",
+        icon = "rbxassetid://11656535697",
+        unlockText = "Stage 3",
+        order = 2,
+        obj = nil,
+        parent = 1,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 4),
+        progressScaling = LethalNum.new(1, 4),
+        maxLevelRate = LethalNum.new(1, 1),
+        bonus = LethalNum.new(1, 2),
+        bonusScaling = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(5, 0),
+        rankGoalScaling = LethalNum.new(1, 2),
+        rankCostScaling = LethalNum.new(1, 1),
+        rankReq = LethalNum.new(1, 2),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "lightLog",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 2),
+                scaling = LethalNum.new(4, 1)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 702 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 3
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 705 ]]
+            return p1.Stats.bestStage >= 3
+        end
+    },
+    fm2 = {
+        rank = 0,
+        displayName = "Magic Sunrise FM",
+        progressScalingType = 1,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 1,
+        resource = "sol",
+        icon = "rbxassetid://11656535697",
+        unlockText = "Sunset Once",
+        order = 3,
+        obj = nil,
+        parent = 1,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 7),
+        progressScaling = LethalNum.new(1, 7),
+        maxLevelRate = LethalNum.new(1, 1),
+        bonus = LethalNum.new(2, 1),
+        bonusScaling = LethalNum.new(2, 1),
+        rankBonusScaling = LethalNum.new(2, 0),
+        rankGoalScaling = LethalNum.new(1, 1),
+        rankCostScaling = LethalNum.new(1, 1),
+        rankReq = LethalNum.new(5, 1),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "magic",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 2),
+                scaling = LethalNum.new(1, 1)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 752 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+            return LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("souls2"), LethalNum.new(1, 0))
+        end
+    },
+    fm3 = {
+        rank = 0,
+        displayName = "Gold Sunrise FM",
+        progressScalingType = 1,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 1,
+        resource = "sol",
+        icon = "rbxassetid://11656535697",
+        unlockText = "Stage 120",
+        order = 4,
+        obj = nil,
+        parent = 1,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 33),
+        progressScaling = LethalNum.new(1, 33),
+        bonus = LethalNum.new(1, 2),
+        bonusScaling = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(1, 1),
+        rankGoalScaling = LethalNum.new(1, 1),
+        rankCostScaling = LethalNum.new(1, 1),
+        rankReq = LethalNum.new(2.5, 1),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "gold",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 3),
+                scaling = LethalNum.new(1, 1)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 798 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 120
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 801 ]]
+            return p1.Stats.bestStage >= 120
+        end
+    },
+    solU = {
+        rank = 0,
+        displayName = "Sol Collection",
+        progressScalingType = 1,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 1,
+        resource = "sol",
+        icon = "rbxassetid://11571897030",
+        unlockText = "Stage 10",
+        order = 0,
+        obj = nil,
+        parent = 3,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 7),
+        progressScaling = LethalNum.new(0, 0),
+        bonus = LethalNum.new(1, 2),
+        bonusScaling = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(2, 0),
+        rankGoalScaling = LethalNum.new(4.65, 0),
+        rankCostScaling = LethalNum.new(2.16, 0),
+        rankReq = LethalNum.new(1, 0),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "portalStones",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 2),
+                scaling = LethalNum.new(0, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 847 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 10
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 850 ]]
+            return p1.Stats.bestStage >= 10
+        end
+    },
+    llU = {
+        rank = 0,
+        displayName = "Light Logs Collection",
+        progressScalingType = 1,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 1,
+        resource = "sol",
+        icon = "rbxassetid://11574001980",
+        unlockText = "Stage 15",
+        order = 1,
+        obj = nil,
+        parent = 3,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 9),
+        progressScaling = LethalNum.new(0, 0),
+        bonus = LethalNum.new(1, 2),
+        bonusScaling = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(2, 0),
+        rankGoalScaling = LethalNum.new(4.65, 0),
+        rankCostScaling = LethalNum.new(2.16, 0),
+        rankReq = LethalNum.new(1, 0),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "portalStones",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 4),
+                scaling = LethalNum.new(0, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 896 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 15
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 899 ]]
+            return p1.Stats.bestStage >= 15
+        end
+    },
+    psU = {
+        rank = 0,
+        displayName = "Portal Stones Collection",
+        progressScalingType = 1,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 1,
+        resource = "sol",
+        icon = "rbxassetid://11571896600",
+        unlockText = "Stage 20",
+        order = 2,
+        obj = nil,
+        parent = 3,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 11),
+        progressScaling = LethalNum.new(0, 0),
+        bonus = LethalNum.new(1, 2),
+        bonusScaling = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(2, 0),
+        rankGoalScaling = LethalNum.new(4.65, 0),
+        rankCostScaling = LethalNum.new(2.16, 0),
+        rankReq = LethalNum.new(1, 0),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "sol",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 5),
+                scaling = LethalNum.new(0, 0)
+            },
+            [1] = {
+                curr = "fragments",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 0),
+                scaling = LethalNum.new(0, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 953 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 20
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 956 ]]
+            return p1.Stats.bestStage >= 20
+        end
+    },
+    fU = {
+        rank = 0,
+        displayName = "Fragments Collection",
+        progressScalingType = 1,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 1,
+        resource = "sol",
+        icon = "rbxassetid://11785246614",
+        unlockText = "Stage 50",
+        order = 3,
+        obj = nil,
+        parent = 3,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 17),
+        progressScaling = LethalNum.new(0, 0),
+        bonus = LethalNum.new(1, 2),
+        bonusScaling = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(2, 0),
+        rankGoalScaling = LethalNum.new(4.65, 0),
+        rankCostScaling = LethalNum.new(2, 0),
+        rankReq = LethalNum.new(1, 0),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "grassp",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 0),
+                scaling = LethalNum.new(0, 0)
+            },
+            [1] = {
+                curr = "magic",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 5),
+                scaling = LethalNum.new(0, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 1010 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 50
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 1013 ]]
+            return p1.Stats.bestStage >= 50
+        end
+    },
+    geU = {
+        rank = 0,
+        displayName = "Grass Essence Collection",
+        progressScalingType = 1,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 1,
+        resource = "sol",
+        icon = "rbxassetid://12410124012",
+        unlockText = "Supernova Tier 11",
+        order = 4,
+        obj = nil,
+        parent = 3,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 85),
+        progressScaling = LethalNum.new(0, 0),
+        bonus = LethalNum.new(1, 2),
+        bonusScaling = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(2, 0),
+        rankGoalScaling = LethalNum.new(1, 1),
+        rankCostScaling = LethalNum.new(1, 1),
+        rankReq = LethalNum.new(1, 0),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "inf",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 0),
+                scaling = LethalNum.new(0, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 1059 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.starTier.a >= 11
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 1062 ]]
+            return p1.Currency.resets.starTier.a >= 11
+        end
+    },
+    solU2 = {
+        rank = 0,
+        displayName = "Sol Collection II",
+        progressScalingType = 1,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 1,
+        resource = "sol",
+        icon = "rbxassetid://11571897030",
+        unlockText = "Supernova Tier 11",
+        order = 5,
+        obj = nil,
+        parent = 3,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 90),
+        progressScaling = LethalNum.new(0, 0),
+        bonus = LethalNum.new(1, 2),
+        bonusScaling = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(2, 0),
+        rankGoalScaling = LethalNum.new(1, 2),
+        rankCostScaling = LethalNum.new(1, 2),
+        rankReq = LethalNum.new(1, 0),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "inf",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 4),
+                scaling = LethalNum.new(0, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 1108 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.starTier.a >= 11
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 1111 ]]
+            return p1.Currency.resets.starTier.a >= 11
+        end
+    },
+    road = {
+        rank = 0,
+        maxRank = 25000,
+        displayName = "Road to Success (Mana)",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://12323089672",
+        unlockText = "T6",
+        order = 1,
+        obj = nil,
+        parent = 4,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 7),
+        progressScaling = LethalNum.new(1.05, 0),
+        bonus = LethalNum.new(2, 0),
+        bonusScaling = LethalNum.new(2, 0),
+        rankBonusScaling = LethalNum.new(2.5, 0),
+        rankGoalScaling = LethalNum.new(5, 0),
+        rankCostScaling = LethalNum.new(5, 0),
+        rankReq = LethalNum.new(2.5, 1),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "magic",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 3),
+                scaling = LethalNum.new(1.1, 0)
+            },
+            [1] = {
+                curr = "fragments",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 3),
+                scaling = LethalNum.new(1.1, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 1166 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.starTier.a >= 6
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 1169 ]]
+            return p1.Currency.resets.starTier.a >= 6
+        end
+    },
+    light = {
+        rank = 0,
+        maxRank = 25000,
+        displayName = "Luminous Lights (Compression)",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://12285794024",
+        unlockText = "Level Previous",
+        order = 2,
+        obj = nil,
+        parent = 4,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 8),
+        progressScaling = LethalNum.new(1.05, 0),
+        bonus = LethalNum.new(5, 0),
+        bonusScaling = LethalNum.new(5, 0),
+        rankBonusScaling = LethalNum.new(3, 0),
+        rankGoalScaling = LethalNum.new(5, 0),
+        rankCostScaling = LethalNum.new(5, 0),
+        rankReq = LethalNum.new(2.5, 1),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "magic",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 5),
+                scaling = LethalNum.new(1.1, 0)
+            },
+            [1] = {
+                curr = "fragments",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 4),
+                scaling = LethalNum.new(1.1, 0)
+            },
+            [2] = {
+                curr = "compSol",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 2),
+                scaling = LethalNum.new(1.1, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 1232 | Upvalues: t (copy), InfoStore (copy) ]]
+            return t.HasLeveled("road") or InfoStore.Resets.twilight.a > 0
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 1235 | Upvalues: t (copy) ]]
+            return t.HasLeveled("road", p1) or p1.Currency.resets.twilight.a > 0
+        end
+    },
+    nature = {
+        rank = 0,
+        maxRank = 25000,
+        displayName = "Purity of Nature (Compaction)",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://9923275242",
+        unlockText = "Level Previous",
+        order = 3,
+        obj = nil,
+        parent = 4,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 8),
+        progressScaling = LethalNum.new(1.05, 0),
+        bonus = LethalNum.new(1, 1),
+        bonusScaling = LethalNum.new(1, 1),
+        rankBonusScaling = LethalNum.new(1, 1),
+        rankGoalScaling = LethalNum.new(5, 0),
+        rankCostScaling = LethalNum.new(5, 0),
+        rankReq = LethalNum.new(2.5, 1),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "magic",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(5, 5),
+                scaling = LethalNum.new(1.1, 0)
+            },
+            [1] = {
+                curr = "fragments",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(7.5, 5),
+                scaling = LethalNum.new(1.1, 0)
+            },
+            [2] = {
+                curr = "grass",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 800),
+                scaling = LethalNum.new(1, 3)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 1298 | Upvalues: t (copy), InfoStore (copy) ]]
+            return t.HasLeveled("light") or InfoStore.Resets.twilight.a > 0
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 1301 | Upvalues: t (copy) ]]
+            return t.HasLeveled("light", p1) or p1.Currency.resets.twilight.a > 0
+        end
+    },
+    trees = {
+        rank = 0,
+        maxRank = 25000,
+        displayName = "Trees of Recollection (Collecting)",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://11658054120",
+        unlockText = "Level Purity of Nature",
+        order = 5,
+        obj = nil,
+        parent = 4,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 9),
+        progressScaling = LethalNum.new(1.05, 0),
+        bonus = LethalNum.new(1, 1),
+        bonusScaling = LethalNum.new(1, 1),
+        rankBonusScaling = LethalNum.new(1, 1),
+        rankGoalScaling = LethalNum.new(5, 0),
+        rankCostScaling = LethalNum.new(5, 0),
+        rankReq = LethalNum.new(2.5, 1),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "magic",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(3, 5),
+                scaling = LethalNum.new(1.1, 0)
+            },
+            [1] = {
+                curr = "sol",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 9),
+                scaling = LethalNum.new(1.1, 0)
+            },
+            [2] = {
+                curr = "lightLog",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 6),
+                scaling = LethalNum.new(1.1, 0)
+            },
+            [3] = {
+                curr = "solarFlares",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 20),
+                scaling = LethalNum.new(1.2, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 1372 | Upvalues: t (copy), InfoStore (copy) ]]
+            return t.HasLeveled("nature") or InfoStore.Resets.twilight.a > 0
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 1375 | Upvalues: t (copy) ]]
+            return t.HasLeveled("nature", p1) or p1.Currency.resets.twilight.a > 0
+        end
+    },
+    blocks = {
+        rank = 0,
+        maxRank = 25000,
+        displayName = "Blocks of Creation (Forming)",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://11658054254",
+        unlockText = "Level Purity of Nature",
+        order = 6,
+        obj = nil,
+        parent = 4,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 9),
+        progressScaling = LethalNum.new(1.05, 0),
+        bonus = LethalNum.new(1, 1),
+        bonusScaling = LethalNum.new(1, 1),
+        rankBonusScaling = LethalNum.new(1, 1),
+        rankGoalScaling = LethalNum.new(5, 0),
+        rankCostScaling = LethalNum.new(5, 0),
+        rankReq = LethalNum.new(2.5, 1),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "magic",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(3, 5),
+                scaling = LethalNum.new(1.1, 0)
+            },
+            [1] = {
+                curr = "sunstone",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(3, 12),
+                scaling = LethalNum.new(1.2, 0)
+            },
+            [2] = {
+                curr = "solarFlares",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 20),
+                scaling = LethalNum.new(1.2, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 1438 | Upvalues: t (copy), InfoStore (copy) ]]
+            return t.HasLeveled("nature") or InfoStore.Resets.twilight.a > 0
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 1441 | Upvalues: t (copy) ]]
+            return t.HasLeveled("nature", p1) or p1.Currency.resets.twilight.a > 0
+        end
+    },
+    sword = {
+        rank = 0,
+        maxRank = 25000,
+        displayName = "The Best Defense (Offense)",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://11579910576",
+        unlockText = "Level Purity of Nature",
+        order = 7,
+        obj = nil,
+        parent = 4,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(4, 9),
+        progressScaling = LethalNum.new(1.05, 0),
+        bonus = LethalNum.new(3, 1),
+        bonusScaling = LethalNum.new(3, 1),
+        rankBonusScaling = LethalNum.new(1, 1),
+        rankGoalScaling = LethalNum.new(5, 0),
+        rankCostScaling = LethalNum.new(5, 0),
+        rankReq = LethalNum.new(2.5, 1),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "magic",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(5, 5),
+                scaling = LethalNum.new(1.1, 0)
+            },
+            [1] = {
+                curr = "souls",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 5),
+                scaling = LethalNum.new(1.1, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 1496 | Upvalues: t (copy), InfoStore (copy) ]]
+            return t.HasLeveled("nature") or InfoStore.Resets.twilight.a > 0
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 1499 | Upvalues: t (copy) ]]
+            return t.HasLeveled("nature", p1) or p1.Currency.resets.twilight.a > 0
+        end
+    },
+    shield = {
+        rank = 0,
+        maxRank = 25000,
+        displayName = "The Protector (Defense)",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://11579910931",
+        unlockText = "Level Purity of Nature",
+        order = 8,
+        obj = nil,
+        parent = 4,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(4, 9),
+        progressScaling = LethalNum.new(1.05, 0),
+        bonus = LethalNum.new(3, 1),
+        bonusScaling = LethalNum.new(3, 1),
+        rankBonusScaling = LethalNum.new(1, 1),
+        rankGoalScaling = LethalNum.new(5, 0),
+        rankCostScaling = LethalNum.new(5, 0),
+        rankReq = LethalNum.new(2.5, 1),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "magic",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(5, 5),
+                scaling = LethalNum.new(1.1, 0)
+            },
+            [1] = {
+                curr = "souls",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 5),
+                scaling = LethalNum.new(1.1, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 1554 | Upvalues: t (copy), InfoStore (copy) ]]
+            return t.HasLeveled("nature") or InfoStore.Resets.twilight.a > 0
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 1557 | Upvalues: t (copy) ]]
+            return t.HasLeveled("nature", p1) or p1.Currency.resets.twilight.a > 0
+        end
+    },
+    div = {
+        rank = 0,
+        displayName = "Glimmer of Hope* (Divine Souls)",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://12323986772",
+        unlockText = "Level Purity of Nature",
+        order = 1,
+        obj = nil,
+        parent = 5,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 8),
+        progressScaling = LethalNum.new(1.05, 0),
+        bonus = LethalNum.new(1, 1),
+        bonusScaling = LethalNum.new(1, 1),
+        rankBonusScaling = LethalNum.new(2, 0),
+        rankGoalScaling = LethalNum.new(3, 1),
+        rankCostScaling = LethalNum.new(3, 1),
+        rankReq = LethalNum.new(2.5, 1),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "magic",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 6),
+                scaling = LethalNum.new(1.1, 0)
+            },
+            [1] = {
+                curr = "dark",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(5, 5),
+                scaling = LethalNum.new(1.1, 0)
+            },
+            [2] = {
+                curr = "solarFlares",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 20),
+                scaling = LethalNum.new(1.06, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 1673 | Upvalues: t (copy) ]]
+            return t.HasLeveled("nature")
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 1676 | Upvalues: t (copy) ]]
+            return t.HasLeveled("nature", p1)
+        end
+    },
+    sg = {
+        rank = 0,
+        maxRank = 25000,
+        displayName = "A Bright Star (Star Growth)",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://10985298281",
+        unlockText = "Stage 50",
+        order = 2,
+        obj = nil,
+        parent = 5,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 8),
+        progressScaling = LethalNum.new(1.05, 0),
+        bonus = LethalNum.new(1, 2),
+        bonusScaling = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(1, 1),
+        rankGoalScaling = LethalNum.new(3, 0),
+        rankCostScaling = LethalNum.new(3, 0),
+        rankReq = LethalNum.new(1, 1),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "magic",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 7),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [1] = {
+                curr = "grassp",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 0),
+                scaling = LethalNum.new(1.04, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 1731 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 50
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 1734 ]]
+            return p1.Stats.bestStage >= 50
+        end
+    },
+    dod = {
+        rank = 0,
+        maxRank = 25,
+        displayName = "The Dungeon Explorer (Cutting/Health)",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://12893403189",
+        unlockText = "Stage 150",
+        order = 3,
+        obj = nil,
+        parent = 5,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 20),
+        progressScaling = LethalNum.new(1.05, 0),
+        maxLevelRate = LethalNum.new(1, 0),
+        bonus = LethalNum.new(2, 0),
+        bonusScaling = LethalNum.new(2, 0),
+        rankBonusScaling = LethalNum.new(2, 0),
+        rankGoalScaling = LethalNum.new(1, 1),
+        rankCostScaling = LethalNum.new(3, 0),
+        rankReq = LethalNum.new(1, 2),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "dark",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 18),
+                scaling = LethalNum.new(1.1, 0)
+            },
+            [1] = {
+                curr = "cs",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 5),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [2] = {
+                curr = "fs",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 1),
+                scaling = LethalNum.new(1.01, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 1798 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 150
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 1801 ]]
+            return p1.Stats.bestStage >= 150
+        end
+    },
+    dgold = {
+        rank = 0,
+        maxRank = 25,
+        displayName = "The Swindler (Gold)",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://12688117782",
+        unlockText = "Stage 150",
+        order = 4,
+        obj = nil,
+        parent = 5,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 20),
+        progressScaling = LethalNum.new(1.05, 0),
+        maxLevelRate = LethalNum.new(1, 0),
+        bonus = LethalNum.new(5, 0),
+        bonusScaling = LethalNum.new(5, 0),
+        rankBonusScaling = LethalNum.new(2, 0),
+        rankGoalScaling = LethalNum.new(1, 1),
+        rankCostScaling = LethalNum.new(3, 0),
+        rankReq = LethalNum.new(1, 2),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "dark",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 18),
+                scaling = LethalNum.new(1.1, 0)
+            },
+            [1] = {
+                curr = "fs",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 2),
+                scaling = LethalNum.new(1.01, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 1857 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 150
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 1860 ]]
+            return p1.Stats.bestStage >= 150
+        end
+    },
+    dupg = {
+        rank = 0,
+        maxRank = 25,
+        displayName = "The Resourceful (Upgrade Shards)",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://12688117346",
+        unlockText = "Stage 150",
+        order = 5,
+        obj = nil,
+        parent = 5,
+        level = LethalNum.new(0, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 20),
+        progressScaling = LethalNum.new(1.05, 0),
+        maxLevelRate = LethalNum.new(1, 0),
+        bonus = LethalNum.new(5, 0),
+        bonusScaling = LethalNum.new(5, 0),
+        rankBonusScaling = LethalNum.new(2, 0),
+        rankGoalScaling = LethalNum.new(1, 1),
+        rankCostScaling = LethalNum.new(3, 0),
+        rankReq = LethalNum.new(1, 2),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "dark",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 18),
+                scaling = LethalNum.new(1.1, 0)
+            },
+            [1] = {
+                curr = "gb",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 1),
+                scaling = LethalNum.new(1.01, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 1916 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 150
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 1919 ]]
+            return p1.Stats.bestStage >= 150
+        end
+    },
+    p1 = {
+        rank = 0,
+        displayName = "Portal Piece 1",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://12323089672",
+        unlockText = "Stage 50",
+        clearOnLevel = true,
+        order = 1,
+        obj = nil,
+        parent = 6,
+        level = LethalNum.new(0, 0),
+        maxLevel = LethalNum.new(1, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 12),
+        progressScaling = LethalNum.new(1.05, 0),
+        bonus = LethalNum.new(1, 2),
+        bonusScaling = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(1, 1),
+        rankGoalScaling = LethalNum.new(3, 0),
+        rankCostScaling = LethalNum.new(3, 0),
+        rankReq = LethalNum.new(1, 0),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "magic",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 9),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [1] = {
+                curr = "grassp",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 1),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [2] = {
+                curr = "portalStones",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 8),
+                scaling = LethalNum.new(1, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 1984 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 50
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 1987 ]]
+            return p1.Stats.bestStage >= 50
+        end
+    },
+    p2 = {
+        rank = 0,
+        displayName = "Portal Piece 2",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://12285794024",
+        unlockText = "Level Previous",
+        clearOnLevel = true,
+        order = 2,
+        obj = nil,
+        parent = 6,
+        level = LethalNum.new(0, 0),
+        maxLevel = LethalNum.new(1, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 14),
+        progressScaling = LethalNum.new(1.05, 0),
+        bonus = LethalNum.new(1, 2),
+        bonusScaling = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(1, 1),
+        rankGoalScaling = LethalNum.new(3, 0),
+        rankCostScaling = LethalNum.new(3, 0),
+        rankReq = LethalNum.new(1, 0),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "magic",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 10),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [1] = {
+                curr = "compSol",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 7),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [2] = {
+                curr = "portalStones",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 9),
+                scaling = LethalNum.new(1, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 2051 | Upvalues: t (copy) ]]
+            return t.HasLeveled("p1")
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 2054 | Upvalues: t (copy) ]]
+            return t.HasLeveled("p1", p1)
+        end
+    },
+    p3 = {
+        rank = 0,
+        displayName = "Portal Piece 3",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://12323986772",
+        unlockText = "Level Previous",
+        clearOnLevel = true,
+        order = 3,
+        obj = nil,
+        parent = 6,
+        level = LethalNum.new(0, 0),
+        maxLevel = LethalNum.new(1, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 16),
+        progressScaling = LethalNum.new(1.05, 0),
+        bonus = LethalNum.new(1, 2),
+        bonusScaling = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(1, 1),
+        rankGoalScaling = LethalNum.new(3, 0),
+        rankCostScaling = LethalNum.new(3, 0),
+        rankReq = LethalNum.new(1, 0),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "magic",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 11),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [1] = {
+                curr = "souls",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 9),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [2] = {
+                curr = "portalStones",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 10),
+                scaling = LethalNum.new(1, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 2118 | Upvalues: t (copy) ]]
+            return t.HasLeveled("p2")
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 2121 | Upvalues: t (copy) ]]
+            return t.HasLeveled("p2", p1)
+        end
+    },
+    p4 = {
+        rank = 0,
+        displayName = "Portal Piece 4",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://12410124012",
+        unlockText = "Level Previous",
+        clearOnLevel = true,
+        order = 4,
+        obj = nil,
+        parent = 6,
+        level = LethalNum.new(0, 0),
+        maxLevel = LethalNum.new(1, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 18),
+        progressScaling = LethalNum.new(1.05, 0),
+        bonus = LethalNum.new(1, 2),
+        bonusScaling = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(1, 1),
+        rankGoalScaling = LethalNum.new(3, 0),
+        rankCostScaling = LethalNum.new(3, 0),
+        rankReq = LethalNum.new(1, 0),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "magic",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 12),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [1] = {
+                curr = "fragments",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 12),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [2] = {
+                curr = "portalStones",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 11),
+                scaling = LethalNum.new(1, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 2185 | Upvalues: t (copy) ]]
+            return t.HasLeveled("p3")
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 2188 | Upvalues: t (copy) ]]
+            return t.HasLeveled("p3", p1)
+        end
+    },
+    p5 = {
+        rank = 0,
+        displayName = "Portal Piece 5",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://12323089672",
+        unlockText = "Level Previous",
+        clearOnLevel = true,
+        order = 5,
+        obj = nil,
+        parent = 6,
+        level = LethalNum.new(0, 0),
+        maxLevel = LethalNum.new(1, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 19),
+        progressScaling = LethalNum.new(1.05, 0),
+        bonus = LethalNum.new(1, 2),
+        bonusScaling = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(1, 1),
+        rankGoalScaling = LethalNum.new(3, 0),
+        rankCostScaling = LethalNum.new(3, 0),
+        rankReq = LethalNum.new(1, 0),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "magic",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 13),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [1] = {
+                curr = "grassp",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 4),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [2] = {
+                curr = "portalStones",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 12),
+                scaling = LethalNum.new(1, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 2252 | Upvalues: t (copy) ]]
+            return t.HasLeveled("p4")
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 2255 | Upvalues: t (copy) ]]
+            return t.HasLeveled("p4", p1)
+        end
+    },
+    p6 = {
+        rank = 0,
+        displayName = "Portal Piece 6",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://12285794024",
+        unlockText = "Level Previous",
+        clearOnLevel = true,
+        order = 6,
+        obj = nil,
+        parent = 6,
+        level = LethalNum.new(0, 0),
+        maxLevel = LethalNum.new(1, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 20),
+        progressScaling = LethalNum.new(1.05, 0),
+        bonus = LethalNum.new(1, 2),
+        bonusScaling = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(1, 1),
+        rankGoalScaling = LethalNum.new(3, 0),
+        rankCostScaling = LethalNum.new(3, 0),
+        rankReq = LethalNum.new(1, 0),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "magic",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 14),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [1] = {
+                curr = "compSol",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 12),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [2] = {
+                curr = "portalStones",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 13),
+                scaling = LethalNum.new(1, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 2319 | Upvalues: t (copy) ]]
+            return t.HasLeveled("p5")
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 2322 | Upvalues: t (copy) ]]
+            return t.HasLeveled("p5", p1)
+        end
+    },
+    p7 = {
+        rank = 0,
+        displayName = "Portal Piece 7",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://12323986772",
+        unlockText = "Level Previous",
+        clearOnLevel = true,
+        order = 7,
+        obj = nil,
+        parent = 6,
+        level = LethalNum.new(0, 0),
+        maxLevel = LethalNum.new(1, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(1, 21),
+        progressScaling = LethalNum.new(1.05, 0),
+        bonus = LethalNum.new(1, 2),
+        bonusScaling = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(1, 1),
+        rankGoalScaling = LethalNum.new(3, 0),
+        rankCostScaling = LethalNum.new(3, 0),
+        rankReq = LethalNum.new(1, 0),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "magic",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 15),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [1] = {
+                curr = "souls",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 13),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [2] = {
+                curr = "portalStones",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 14),
+                scaling = LethalNum.new(1, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 2386 | Upvalues: t (copy) ]]
+            return t.HasLeveled("p6")
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 2389 | Upvalues: t (copy) ]]
+            return t.HasLeveled("p6", p1)
+        end
+    },
+    p8 = {
+        rank = 0,
+        displayName = "Portal Piece 8",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://12410124012",
+        unlockText = "Level Previous",
+        clearOnLevel = true,
+        order = 8,
+        obj = nil,
+        parent = 6,
+        level = LethalNum.new(0, 0),
+        maxLevel = LethalNum.new(1, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(3, 21),
+        progressScaling = LethalNum.new(1.05, 0),
+        bonus = LethalNum.new(1, 2),
+        bonusScaling = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(1, 1),
+        rankGoalScaling = LethalNum.new(3, 0),
+        rankCostScaling = LethalNum.new(3, 0),
+        rankReq = LethalNum.new(1, 0),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "magic",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(3, 15),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [1] = {
+                curr = "fragments",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(2, 15),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [2] = {
+                curr = "portalStones",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(3, 14),
+                scaling = LethalNum.new(1, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 2453 | Upvalues: t (copy) ]]
+            return t.HasLeveled("p7")
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 2456 | Upvalues: t (copy) ]]
+            return t.HasLeveled("p7", p1)
+        end
+    },
+    p9 = {
+        rank = 0,
+        displayName = "Portal Piece 9",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://12410124012",
+        unlockText = "Level Previous",
+        clearOnLevel = true,
+        order = 9,
+        obj = nil,
+        parent = 6,
+        level = LethalNum.new(0, 0),
+        maxLevel = LethalNum.new(1, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(8, 21),
+        progressScaling = LethalNum.new(1.05, 0),
+        bonus = LethalNum.new(1, 2),
+        bonusScaling = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(1, 1),
+        rankGoalScaling = LethalNum.new(3, 0),
+        rankCostScaling = LethalNum.new(3, 0),
+        rankReq = LethalNum.new(1, 0),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "magic",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(8, 16),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [1] = {
+                curr = "fragments",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(6, 15),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [2] = {
+                curr = "portalStones",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(8, 15),
+                scaling = LethalNum.new(1, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 2520 | Upvalues: t (copy) ]]
+            return t.HasLeveled("p8")
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 2523 | Upvalues: t (copy) ]]
+            return t.HasLeveled("p8", p1)
+        end
+    },
+    p10 = {
+        rank = 0,
+        displayName = "Portal Piece 10",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://12427321408",
+        unlockText = "Level Previous",
+        clearOnLevel = true,
+        order = 10,
+        obj = nil,
+        parent = 6,
+        level = LethalNum.new(0, 0),
+        maxLevel = LethalNum.new(1, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(2, 22),
+        progressScaling = LethalNum.new(1.05, 0),
+        bonus = LethalNum.new(1, 2),
+        bonusScaling = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(1, 1),
+        rankGoalScaling = LethalNum.new(3, 0),
+        rankCostScaling = LethalNum.new(3, 0),
+        rankReq = LethalNum.new(1, 0),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "magic",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(2, 17),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [1] = {
+                curr = "gg",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 0),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [2] = {
+                curr = "portalStones",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(2, 16),
+                scaling = LethalNum.new(1, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 2587 | Upvalues: t (copy) ]]
+            return t.HasLeveled("p9")
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 2590 | Upvalues: t (copy) ]]
+            return t.HasLeveled("p9", p1)
+        end,
+        visibleCondition = function() --[[ visibleCondition | Line: 2593 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+            return LethalNum.isGreaterE(LethalNum.new(1, 0), CurrencyTypes.GetCurrencyTotal("souls3"))
+        end
+    },
+    p10a = {
+        rank = 0,
+        displayName = "Portal Piece 10",
+        progressScalingType = 3,
+        bonusScalingType = 0,
+        barType = 1,
+        powerType = 2,
+        resource = "sol",
+        icon = "rbxassetid://12427321408",
+        unlockText = "Level Previous",
+        clearOnLevel = true,
+        order = 10,
+        obj = nil,
+        parent = 6,
+        level = LethalNum.new(0, 0),
+        maxLevel = LethalNum.new(1, 0),
+        totalLevel = LethalNum.new(0, 0),
+        progress = LethalNum.new(0, 0),
+        rankProgress = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        baseProgress = LethalNum.new(2, 22),
+        progressScaling = LethalNum.new(1.05, 0),
+        bonus = LethalNum.new(1, 2),
+        bonusScaling = LethalNum.new(1, 2),
+        rankBonusScaling = LethalNum.new(1, 1),
+        rankGoalScaling = LethalNum.new(3, 0),
+        rankCostScaling = LethalNum.new(3, 0),
+        rankReq = LethalNum.new(1, 0),
+        rankReqScaling = LethalNum.new(0, 0),
+        costs = {
+            [0] = {
+                curr = "grassp",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 6),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [1] = {
+                curr = "gb",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 0),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [2] = {
+                curr = "grass",
+                scalingType = 3,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(1, 500),
+                scaling = LethalNum.new(1.04, 0)
+            },
+            [3] = {
+                curr = "portalStones",
+                scalingType = 1,
+                obj = nil,
+                finalCost = LethalNum.new(1, 1000),
+                amount = LethalNum.new(2, 16),
+                scaling = LethalNum.new(1, 0)
+            }
+        },
+        unlockCondition = function() --[[ unlockCondition | Line: 2665 | Upvalues: t (copy) ]]
+            return t.HasLeveled("p9")
+        end,
+        unlockCondition2 = function(p1) --[[ unlockCondition2 | Line: 2668 | Upvalues: t (copy), LethalNum (copy) ]]
+            return t.HasLeveled("p9", p1) and LethalNum.isGreaterE(p1.Currency.curr.souls3.totalAmount, LethalNum.new(1, 0))
+        end,
+        visibleCondition = function() --[[ visibleCondition | Line: 2671 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+            return LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("souls3"), LethalNum.new(1, 0))
+        end
+    }
+}
+t.SoulItems = {
+    maxS = {
+        icon = "rbxassetid://11657984902",
+        display = "Solarians Power",
+        resource = "souls",
+        extra = "",
+        order = 0,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        cost = LethalNum.new(1, 0),
+        bonus = LethalNum.new(1, 0),
+        displayBonus = LethalNum.new(1, 0),
+        scalingStart = LethalNum.new(1, 5),
+        bonusDesc = function() --[[ bonusDesc | Line: 2689 | Upvalues: LethalNum (copy), Data (copy) ]]
+            return "<font color=\"#ffff00\">" .. LethalNum.getString(Data.ImportantData.Stats.solarianPower) .. "</font>"
+        end
+    },
+    coll = {
+        icon = "rbxassetid://11658054120",
+        display = "Collecting Speed",
+        resource = "souls",
+        extra = "%",
+        order = 3,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        cost = LethalNum.new(1, 0),
+        bonus = LethalNum.new(2, 0),
+        displayBonus = LethalNum.new(2, 0),
+        scalingStart = LethalNum.new(1, 5),
+        bonusDesc = function() --[[ bonusDesc | Line: 2737 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "<font color=\"#00ff00\">" .. LethalNum.getString(LethalNum.multiply(t.SolarianMultis.collecting, LethalNum.new(1, 2))) .. "%</font>"
+        end
+    },
+    form = {
+        icon = "rbxassetid://11658054254",
+        display = "Forming Speed",
+        resource = "souls",
+        extra = "%",
+        order = 4,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        cost = LethalNum.new(1, 0),
+        bonus = LethalNum.new(2, 0),
+        displayBonus = LethalNum.new(2, 0),
+        scalingStart = LethalNum.new(1, 5),
+        bonusDesc = function() --[[ bonusDesc | Line: 2753 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "<font color=\"#00ff00\">" .. LethalNum.getString(LethalNum.multiply(t.SolarianMultis.forming, LethalNum.new(1, 2))) .. "%</font>"
+        end
+    },
+    soul = {
+        icon = "rbxassetid://11647954525",
+        display = "Souls",
+        resource = "souls2",
+        extra = "%",
+        order = 0,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        cost = LethalNum.new(1, 0),
+        bonus = LethalNum.new(1, 1),
+        displayBonus = LethalNum.new(1, 1),
+        scalingStart = LethalNum.new(1, 3),
+        bonusDesc = function() --[[ bonusDesc | Line: 2769 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "<font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(t.SoulItems.soul.level, LethalNum.new(1, 1))) .. "%</font>"
+        end
+    },
+    offdef = {
+        icon = "rbxassetid://11656535697",
+        display = "Offense/Defense",
+        resource = "souls2",
+        extra = "%",
+        order = 1,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        cost = LethalNum.new(1, 0),
+        bonus = LethalNum.new(5, 1),
+        displayBonus = LethalNum.new(5, 1),
+        scalingStart = LethalNum.new(1, 3),
+        bonusDesc = function() --[[ bonusDesc | Line: 2785 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "<font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(t.SoulItems.offdef.level, LethalNum.new(5, 1))) .. "%</font>"
+        end
+    },
+    comp = {
+        icon = "rbxassetid://12285794024",
+        display = "Compression",
+        resource = "souls2",
+        extra = "%",
+        order = 2,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        cost = LethalNum.new(1, 0),
+        bonus = LethalNum.new(1, 1),
+        displayBonus = LethalNum.new(1, 1),
+        scalingStart = LethalNum.new(1, 2),
+        bonusDesc = function() --[[ bonusDesc | Line: 2801 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "<font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(t.SoulItems.comp.level, LethalNum.new(1, 1))) .. "%</font>"
+        end
+    },
+    mana = {
+        icon = "rbxassetid://12323089672",
+        display = "Mana Generation",
+        resource = "souls2",
+        extra = "%",
+        order = 3,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        cost = LethalNum.new(1, 0),
+        bonus = LethalNum.new(5, 0),
+        displayBonus = LethalNum.new(5, 0),
+        scalingStart = LethalNum.new(1, 2),
+        bonusDesc = function() --[[ bonusDesc | Line: 2817 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "<font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(t.SoulItems.mana.level, LethalNum.new(5, 0))) .. "%</font>"
+        end
+    },
+    rest = {
+        icon = "rbxassetid://13052671219",
+        display = "Restore Speed",
+        resource = "souls2",
+        extra = "%",
+        order = 4,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        cost = LethalNum.new(1, 0),
+        bonus = LethalNum.new(1, 1),
+        displayBonus = LethalNum.new(1, 1),
+        scalingStart = LethalNum.new(1, 3),
+        bonusDesc = function() --[[ bonusDesc | Line: 2833 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "<font color=\"#00ff00\">" .. LethalNum.getString(LethalNum.multiply(t.SolarianMultis.restoring, LethalNum.new(1, 2))) .. "%</font>"
+        end
+    },
+    soul2 = {
+        icon = "rbxassetid://12323986772",
+        display = "Divine Souls",
+        resource = "souls3",
+        extra = "%",
+        order = 0,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        cost = LethalNum.new(1, 0),
+        bonus = LethalNum.new(1, 1),
+        displayBonus = LethalNum.new(1, 1),
+        scalingStart = LethalNum.new(1, 3),
+        bonusDesc = function() --[[ bonusDesc | Line: 2849 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "<font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(t.SoulItems.soul2.level, LethalNum.new(1, 1))) .. "%</font>"
+        end
+    },
+    offdef2 = {
+        icon = "rbxassetid://11656535697",
+        display = "Offense/Defense II",
+        resource = "souls3",
+        extra = "%",
+        order = 1,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        cost = LethalNum.new(1, 0),
+        bonus = LethalNum.new(1, 2),
+        displayBonus = LethalNum.new(1, 2),
+        scalingStart = LethalNum.new(1, 5),
+        bonusDesc = function() --[[ bonusDesc | Line: 2865 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "<font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(t.SoulItems.offdef2.level, LethalNum.new(1, 2))) .. "%</font>"
+        end
+    },
+    syncs = {
+        icon = "rbxassetid://13037658334",
+        display = "Corrupted Shards Yield",
+        resource = "souls3",
+        extra = "%",
+        order = 2,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        cost = LethalNum.new(1, 0),
+        bonus = LethalNum.new(1, 1),
+        displayBonus = LethalNum.new(1, 1),
+        scalingStart = LethalNum.new(1, 4),
+        bonusDesc = function() --[[ bonusDesc | Line: 2881 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "<font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(t.SoulItems.syncs.level, LethalNum.new(1, 1))) .. "%</font>"
+        end
+    },
+    syngs = {
+        icon = "rbxassetid://13052729337",
+        display = "Synthesis Speed",
+        resource = "souls3",
+        extra = "%",
+        order = 2,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        cost = LethalNum.new(3, 0),
+        bonus = LethalNum.new(1, 1),
+        displayBonus = LethalNum.new(1, 1),
+        scalingStart = LethalNum.new(1, 3),
+        bonusDesc = function() --[[ bonusDesc | Line: 2897 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "<font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(t.SoulItems.syngs.level, LethalNum.new(1, 1))) .. "%</font>"
+        end
+    }
+}
+t.CompressionItems = {
+    off = {
+        displayName = "Offense",
+        icon = "rbxassetid://11579910576",
+        resource = "1",
+        order = 0,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        color = Color3.new(0.372549, 0, 0),
+        textColor = Color3.new(255/255, 0/255, 0/255),
+        totalBonus = function(p1) --[[ totalBonus | Line: 2917 | Upvalues: LethalNum (copy) ]]
+            local v1 = LethalNum.new(1, 2)
+
+            return LethalNum.divide(if LethalNum.isGreaterE(p1, LethalNum.new(1, 3)) then LethalNum.multiply(LethalNum.add(v1, LethalNum.new(1, 4)), LethalNum.pow(1.4, LethalNum.log(LethalNum.divide(p1, LethalNum.new(1, 3)), 4))) else LethalNum.add(v1, LethalNum.multiply(p1, LethalNum.new(1, 1))), LethalNum.new(1, 2))
+        end
+    },
+    def = {
+        displayName = "Defense",
+        icon = "rbxassetid://11579910931",
+        resource = "1",
+        order = 1,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        color = Color3.new(0, 0.384314, 0.462745),
+        textColor = Color3.new(0, 0.784314, 1),
+        totalBonus = function(p1) --[[ totalBonus | Line: 2939 | Upvalues: LethalNum (copy) ]]
+            local v1 = LethalNum.new(1, 2)
+
+            return LethalNum.divide(if LethalNum.isGreaterE(p1, LethalNum.new(1, 3)) then LethalNum.multiply(LethalNum.add(v1, LethalNum.new(1, 4)), LethalNum.pow(1.4, LethalNum.log(LethalNum.divide(p1, LethalNum.new(1, 3)), 4))) else LethalNum.add(v1, LethalNum.multiply(p1, LethalNum.new(1, 1))), LethalNum.new(1, 2))
+        end
+    },
+    coll = {
+        displayName = "Collecting",
+        icon = "rbxassetid://11658054120",
+        resource = "2",
+        order = 11,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        color = Color3.new(0, 0.372549, 0.235294),
+        textColor = Color3.new(0, 1, 0.717647),
+        totalBonus = function(p1) --[[ totalBonus | Line: 2961 | Upvalues: LethalNum (copy) ]]
+            local v1 = LethalNum.new(1, 2)
+
+            return LethalNum.divide(if LethalNum.isGreaterE(p1, LethalNum.new(1, 2)) then LethalNum.multiply(LethalNum.add(v1, LethalNum.new(1, 3)), LethalNum.pow(1.2, LethalNum.log(LethalNum.divide(p1, LethalNum.new(1, 2)), 4))) else LethalNum.add(v1, LethalNum.multiply(p1, LethalNum.new(1, 1))), LethalNum.new(1, 2))
+        end
+    },
+    form = {
+        displayName = "Forming",
+        icon = "rbxassetid://11658054254",
+        resource = "2",
+        order = 12,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        color = Color3.new(0.192157, 0.372549, 0),
+        textColor = Color3.new(0.45098, 1, 0),
+        totalBonus = function(p1) --[[ totalBonus | Line: 2983 | Upvalues: LethalNum (copy) ]]
+            local v1 = LethalNum.new(1, 2)
+
+            return LethalNum.divide(if LethalNum.isGreaterE(p1, LethalNum.new(1, 2)) then LethalNum.multiply(LethalNum.add(v1, LethalNum.new(1, 3)), LethalNum.pow(1.2, LethalNum.log(LethalNum.divide(p1, LethalNum.new(1, 2)), 4))) else LethalNum.add(v1, LethalNum.multiply(p1, LethalNum.new(1, 1))), LethalNum.new(1, 2))
+        end
+    },
+    soul = {
+        displayName = "Souls",
+        icon = "rbxassetid://11647954525",
+        resource = "2",
+        order = 13,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        color = Color3.new(0.0862745, 0.321569, 0.372549),
+        textColor = Color3.new(0.321569, 0.87451, 1),
+        totalBonus = function(p1) --[[ totalBonus | Line: 3005 | Upvalues: LethalNum (copy) ]]
+            local v1 = LethalNum.new(1, 2)
+
+            return LethalNum.divide(if LethalNum.isGreaterE(p1, LethalNum.new(1, 2)) then LethalNum.multiply(LethalNum.add(v1, LethalNum.new(1, 3)), LethalNum.pow(1.2, LethalNum.log(LethalNum.divide(p1, LethalNum.new(1, 2)), 5))) else LethalNum.add(v1, LethalNum.multiply(p1, LethalNum.new(1, 1))), LethalNum.new(1, 2))
+        end
+    },
+    mana = {
+        displayName = "Mana",
+        icon = "rbxassetid://12323089672",
+        resource = "3",
+        order = 21,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        color = Color3.new(0.0823529, 0.211765, 0.372549),
+        textColor = Color3.new(0.2, 0.372549, 1),
+        totalBonus = function(p1) --[[ totalBonus | Line: 3027 | Upvalues: LethalNum (copy) ]]
+            local v1 = LethalNum.new(1, 2)
+
+            return LethalNum.divide(if LethalNum.isGreaterE(p1, LethalNum.new(3, 2)) then LethalNum.multiply(LethalNum.add(v1, LethalNum.new(3, 2)), LethalNum.pow(1.2, LethalNum.log(LethalNum.divide(p1, LethalNum.new(1, 2)), 5))) else LethalNum.add(v1, LethalNum.multiply(p1, LethalNum.new(1, 0))), LethalNum.new(1, 2))
+        end
+    },
+    soul2 = {
+        displayName = "Divine Souls",
+        icon = "rbxassetid://12323986772",
+        resource = "4",
+        order = 32,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        color = Color3.new(0.388235, 0.615686, 0.666667),
+        textColor = Color3.new(0.756863, 0.980392, 1),
+        totalBonus = function(p1) --[[ totalBonus | Line: 3049 | Upvalues: LethalNum (copy) ]]
+            local v1 = LethalNum.new(1, 2)
+
+            return LethalNum.divide(if LethalNum.isGreaterE(p1, LethalNum.new(1, 2)) then LethalNum.multiply(LethalNum.add(v1, LethalNum.new(3, 2)), LethalNum.pow(1.2, LethalNum.log(LethalNum.divide(p1, LethalNum.new(1, 2)), 5))) else LethalNum.add(v1, LethalNum.multiply(p1, LethalNum.new(3, 0))), LethalNum.new(1, 2))
+        end
+    },
+    syncs = {
+        displayName = "Corruption Shards",
+        icon = "rbxassetid://13037658334",
+        resource = "5",
+        order = 33,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        color = Color3.new(0.203922, 0.203922, 0.203922),
+        textColor = Color3.new(255/255, 255/255, 255/255),
+        totalBonus = function(p1) --[[ totalBonus | Line: 3071 | Upvalues: LethalNum (copy) ]]
+            local v1 = LethalNum.new(1, 2)
+
+            return LethalNum.divide(if LethalNum.isGreaterE(p1, LethalNum.new(1, 2)) then LethalNum.multiply(LethalNum.add(v1, LethalNum.new(3, 2)), LethalNum.pow(1.2, LethalNum.log(LethalNum.divide(p1, LethalNum.new(1, 2)), 5))) else LethalNum.add(v1, LethalNum.multiply(p1, LethalNum.new(3, 0))), LethalNum.new(1, 2))
+        end
+    },
+    flares = {
+        displayName = "Solar Flares",
+        icon = "rbxassetid://11141157281",
+        resource = "6",
+        order = 38,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        color = Color3.new(0.713725, 0.415686, 0),
+        textColor = Color3.new(255/255, 255/255, 0/255),
+        totalBonus = function(p1) --[[ totalBonus | Line: 3093 | Upvalues: LethalNum (copy) ]]
+            local v1 = LethalNum.new(1, 2)
+
+            return LethalNum.divide(if LethalNum.isGreaterE(p1, LethalNum.new(1, 2)) then LethalNum.multiply(LethalNum.add(v1, LethalNum.new(3, 2)), LethalNum.pow(3, LethalNum.log(LethalNum.divide(p1, LethalNum.new(1, 2)), 5))) else LethalNum.add(v1, LethalNum.multiply(p1, LethalNum.new(1, 3))), LethalNum.new(1, 2))
+        end
+    },
+    grass = {
+        displayName = "Grass",
+        icon = "rbxassetid://8566935398",
+        resource = "7",
+        order = 41,
+        obj = nil,
+        level = LethalNum.new(0, 0),
+        allocated = LethalNum.new(0, 0),
+        color = Color3.new(0.0862745, 0.654902, 0),
+        textColor = Color3.new(255/255, 255/255, 0/255),
+        totalBonus = function(p1) --[[ totalBonus | Line: 3115 | Upvalues: LethalNum (copy) ]]
+            return LethalNum.divide(LethalNum.add(LethalNum.new(1, 2), LethalNum.multiply(p1, LethalNum.new(1, 3))), LethalNum.new(1, 2))
+        end
+    }
+}
+t.CompressionBars = {
+    ["1"] = {
+        textColor = "#ffbf00",
+        into = "2",
+        order = 1,
+        obj = nil,
+        barColorB = Color3.new(0.462745, 0.368627, 0),
+        barColor = Color3.new(1, 0.74902, 0),
+        completions = LethalNum.new(0, 0),
+        goal = LethalNum.new(1, 3),
+        progress = LethalNum.new(0, 0),
+        totalProgress = LethalNum.new(0, 0),
+        owned = LethalNum.new(0, 0),
+        totalOwned = LethalNum.new(0, 0),
+        lastProg = LethalNum.new(0, 0)
+    },
+    ["2"] = {
+        textColor = "#b3ff00",
+        into = "3",
+        order = 2,
+        obj = nil,
+        barColorB = Color3.new(0.313725, 0.552941, 0),
+        barColor = Color3.new(0.701961, 1, 0),
+        completions = LethalNum.new(0, 0),
+        goal = LethalNum.new(1, 2),
+        progress = LethalNum.new(0, 0),
+        totalProgress = LethalNum.new(0, 0),
+        owned = LethalNum.new(0, 0),
+        totalOwned = LethalNum.new(0, 0),
+        lastProg = LethalNum.new(0, 0)
+    },
+    ["3"] = {
+        textColor = "#00ff88",
+        into = "4",
+        order = 3,
+        obj = nil,
+        barColorB = Color3.new(0, 0.54902, 0.294118),
+        barColor = Color3.new(0, 1, 0.533333),
+        completions = LethalNum.new(0, 0),
+        goal = LethalNum.new(1, 3),
+        progress = LethalNum.new(0, 0),
+        totalProgress = LethalNum.new(0, 0),
+        owned = LethalNum.new(0, 0),
+        totalOwned = LethalNum.new(0, 0),
+        lastProg = LethalNum.new(0, 0)
+    },
+    ["4"] = {
+        textColor = "#66fffa",
+        into = "5",
+        order = 4,
+        obj = nil,
+        barColorB = Color3.new(0.203922, 0.505882, 0.494118),
+        barColor = Color3.new(0.4, 1, 0.980392),
+        completions = LethalNum.new(0, 0),
+        goal = LethalNum.new(1, 4),
+        progress = LethalNum.new(0, 0),
+        totalProgress = LethalNum.new(0, 0),
+        owned = LethalNum.new(0, 0),
+        totalOwned = LethalNum.new(0, 0),
+        lastProg = LethalNum.new(0, 0)
+    },
+    ["5"] = {
+        textColor = "#ffffff",
+        into = "6",
+        order = 5,
+        obj = nil,
+        barColorB = Color3.new(102/255, 102/255, 102/255),
+        barColor = Color3.new(255/255, 255/255, 255/255),
+        completions = LethalNum.new(0, 0),
+        goal = LethalNum.new(1, 15),
+        progress = LethalNum.new(0, 0),
+        totalProgress = LethalNum.new(0, 0),
+        owned = LethalNum.new(0, 0),
+        totalOwned = LethalNum.new(0, 0),
+        lastProg = LethalNum.new(0, 0)
+    },
+    ["6"] = {
+        textColor = "#ef0cff",
+        into = "7",
+        order = 6,
+        obj = nil,
+        barColorB = Color3.new(0.462745, 0.0235294, 0.494118),
+        barColor = Color3.new(0.937255, 0.0470588, 1),
+        completions = LethalNum.new(0, 0),
+        goal = LethalNum.new(1, 40),
+        progress = LethalNum.new(0, 0),
+        totalProgress = LethalNum.new(0, 0),
+        owned = LethalNum.new(0, 0),
+        totalOwned = LethalNum.new(0, 0),
+        lastProg = LethalNum.new(0, 0)
+    },
+    ["7"] = {
+        textColor = "#ff0004",
+        into = nil,
+        order = 7,
+        obj = nil,
+        barColorB = Color3.new(0.443137, 0, 0.00784314),
+        barColor = Color3.new(1, 0, 0.0156863),
+        completions = LethalNum.new(0, 0),
+        goal = LethalNum.new(1, 300),
+        progress = LethalNum.new(0, 0),
+        totalProgress = LethalNum.new(0, 0),
+        owned = LethalNum.new(0, 0),
+        totalOwned = LethalNum.new(0, 0),
+        lastProg = LethalNum.new(0, 0)
+    }
+}
+function t.GetCompBonus(p1, p2) --[[ GetCompBonus | Line: 3236 | Upvalues: t (copy), LethalNum (copy) ]]
+    local v1 = t.CompressionItems[p2]
+
+    if v1 then
+        return v1.totalBonus(p1.UpgradeLevels.compression[p2].l)
+    end
+
+    return LethalNum.new(1, 0)
+end
+t.SolarianMultis = {
+    genSpd = 1,
+    maxForm = 1,
+    fill = LethalNum.new(1, 0),
+    collecting = LethalNum.new(1, 0),
+    forming = LethalNum.new(1, 0),
+    restoring = LethalNum.new(1, 0)
+}
+function t.GetGoal(p1, p2) --[[ GetGoal | Line: 3254 | Upvalues: t (copy), LethalNum (copy), Data (copy) ]]
+    local v1 = t.Bars[p1]
+
+    if not v1 then
+        return LethalNum.new(1, 999)
+    end
+
+    if Data.ImportantData.Stats.isServer and not p2 then
+        return
+    end
+
+    local baseProgress = v1.baseProgress
+
+    if p2 and p2.UpgradeLevels.solBars[p1].bp then
+        baseProgress = p2.UpgradeLevels.solBars[p1].bp
+    end
+
+    local v2 = p2 and p2.UpgradeLevels.solBars[p1].t or v1.totalLevel
+    local v3 = baseProgress
+    local v4 = p2 and p2.UpgradeLevels.solBars[p1].r or v1.rank
+
+    if v1.progressScalingType == 1 then
+        v3 = LethalNum.add(v3, LethalNum.multiply(v2, v1.progressScaling))
+    end
+
+    if v1.progressScalingType == 2 then
+        v3 = LethalNum.multiply(v3, LethalNum.pow(LethalNum.add(v2, LethalNum.new(1, 0)), v1.progressScaling))
+    end
+
+    if v1.progressScalingType == 3 then
+        v3 = LethalNum.multiply(v3, LethalNum.pow(v1.progressScaling, v2))
+    end
+
+    if v1.barType == 1 then
+        v3 = LethalNum.multiply(v3, LethalNum.pow(v1.rankGoalScaling, v4))
+    end
+
+    return LethalNum.floor(v3)
+end
+function t.GetBonus(p1, p2) --[[ GetBonus | Line: 3287 | Upvalues: t (copy), LethalNum (copy), Data (copy) ]]
+    local v1 = t.Bars[p1]
+
+    if not v1 then
+        return LethalNum.new(0, 0)
+    end
+
+    if Data.ImportantData.Stats.isServer and not p2 then
+        return
+    end
+
+    local v2 = p2 and p2.UpgradeLevels.solBars[p1].l or v1.level
+
+    if LethalNum.isGreater(LethalNum.new(1, 0), v2) then
+        return LethalNum.new(0, 0)
+    end
+
+    local baseBonus = v1.baseBonus
+
+    if v1.bonusScalingType == 0 then
+        baseBonus = LethalNum.multiply(v2, v1.bonusScaling)
+    end
+
+    if v1.bonusScalingType == 1 then
+        baseBonus = LethalNum.multiply(v1.bonus, LethalNum.pow(LethalNum.add(v2, LethalNum.new(1, 0)), v1.bonusScaling))
+    end
+
+    if v1.bonusScalingType == 2 then
+        baseBonus = LethalNum.multiply(v1.bonus, LethalNum.pow(v1.bonusScaling, v2))
+    end
+
+    if v1.barType == 1 then
+        baseBonus = LethalNum.multiply(baseBonus, t.GetRankBonus(p1, p2))
+    end
+
+    return baseBonus
+end
+function t.GetMultBonus(p1, p2) --[[ GetMultBonus | Line: 3317 | Upvalues: Data (copy), LethalNum (copy), t (copy) ]]
+    if Data.ImportantData.Stats.isServer and not p1 then
+        return
+    end
+
+    return LethalNum.divide(LethalNum.add(t.GetBonus(p2, p1), LethalNum.new(1, 2)), LethalNum.new(1, 2))
+end
+function t.HasLeveled(p1, p2) --[[ HasLeveled | Line: 3328 | Upvalues: t (copy), LethalNum (copy) ]]
+    local v1 = t.Bars[p1]
+
+    if not v1 then
+        return false
+    end
+
+    local totalLevel = v1.totalLevel
+
+    if p2 then
+        totalLevel = p2.UpgradeLevels.solBars[p1].t
+    end
+
+    return LethalNum.isGreaterE(totalLevel, LethalNum.new(1, 0))
+end
+function t.GetRankBonus(p1, p2) --[[ GetRankBonus | Line: 3341 | Upvalues: t (copy), LethalNum (copy), Data (copy) ]]
+    local v1 = t.Bars[p1]
+
+    if not v1 then
+        return LethalNum.new(1, 0)
+    end
+
+    if Data.ImportantData.Stats.isServer and not p2 then
+        return
+    end
+
+    local v2 = LethalNum.new(1, 0)
+    local v3 = p2 and p2.UpgradeLevels.solBars[p1].r or v1.rank
+
+    if v1.maxRank then
+        v3 = math.min(v1.maxRank, v3)
+    end
+
+    if v1.barType == 1 then
+        v2 = LethalNum.multiply(v2, LethalNum.pow(v1.rankBonusScaling, v3))
+    end
+
+    return v2
+end
+function t.GetSoulBonus(p1, p2) --[[ GetSoulBonus | Line: 3363 | Upvalues: Data (copy), t (copy), LethalNum (copy) ]]
+    if Data.ImportantData.Stats.isServer and not p1 then
+        return
+    end
+
+    return LethalNum.multiply(p1.UpgradeLevels.soul[p2].l, t.SoulItems[p2].bonus)
+end
+function t.GetSoulBonusM(p1, p2) --[[ GetSoulBonusM | Line: 3372 | Upvalues: Data (copy), t (copy), LethalNum (copy) ]]
+    if Data.ImportantData.Stats.isServer and not p1 then
+        return
+    end
+
+    return LethalNum.divide(LethalNum.add(LethalNum.multiply(p1.UpgradeLevels.soul[p2].l, t.SoulItems[p2].bonus), LethalNum.new(1, 2)), LethalNum.new(1, 2))
+end
+function t.UpdateFormCost(p1) --[[ UpdateFormCost | Line: 3380 | Upvalues: t (copy), LethalNum (copy), CommonFunctions (copy), CurrencyTypes (copy) ]]
+    local v1 = t.Bars[p1]
+
+    for k, v in pairs(v1.costs) do
+        local amount = v.amount
+
+        if v.scalingType == 1 then
+            amount = LethalNum.add(amount, LethalNum.multiply(v.scaling, v1.totalLevel))
+        end
+
+        if v.scalingType == 2 then
+            amount = LethalNum.multiply(amount, LethalNum.pow(LethalNum.add(v1.totalLevel, LethalNum.new(1, 0)), v.scaling))
+        end
+
+        if v.scalingType == 3 then
+            amount = LethalNum.multiply(amount, LethalNum.pow(v.scaling, v1.totalLevel))
+        end
+
+        local v5 = LethalNum.multiply(amount, LethalNum.pow(v1.rankCostScaling, v1.rank))
+
+        v.finalCost = LethalNum.floor(v5)
+        v.amnt.Text = CommonFunctions.canAffordText(CurrencyTypes.GetCurrencyAmt(v.curr), v5) .. LethalNum.getString(v5) .. "</font>"
+    end
+end
+function t.GetFormCost(p1, p2) --[[ GetFormCost | Line: 3399 | Upvalues: Data (copy), t (copy), LethalNum (copy) ]]
+    if Data.ImportantData.Stats.isServer and not p1 then
+        return
+    end
+
+    local v1 = t.Bars[p2]
+    local v2 = p1 and p1.UpgradeLevels.solBars[p2].t or v1.totalLevel
+    local v3 = p1 and p1.UpgradeLevels.solBars[p2].r or v1.rank
+    local t2 = {}
+
+    for k, v in pairs(v1.costs) do
+        local amount = v.amount
+
+        if v.scalingType == 1 then
+            amount = LethalNum.add(amount, LethalNum.multiply(v.scaling, v2))
+        end
+
+        if v.scalingType == 2 then
+            amount = LethalNum.multiply(amount, LethalNum.pow(LethalNum.add(v2, LethalNum.new(1, 0)), v.scaling))
+        end
+
+        if v.scalingType == 3 then
+            amount = LethalNum.multiply(amount, LethalNum.pow(v.scaling, v2))
+        end
+
+        t2[k] = {
+            curr = v.curr,
+            finalCost = LethalNum.floor((LethalNum.multiply(amount, LethalNum.pow(v1.rankCostScaling, v3))))
+        }
+    end
+
+    return t2
+end
+function t.GetPerSecond(p1) --[[ GetPerSecond | Line: 3428 | Upvalues: t (copy), LethalNum (copy), Data (copy) ]]
+    local v1 = t.Bars[p1]
+
+    if not v1 then
+        return LethalNum.new(1, 0)
+    end
+
+    local v2 = t.GetGoal(p1)
+    local v3 = LethalNum.new(5, 0)
+
+    if v1.powerType == 0 then
+        v3 = LethalNum.multiply(v3, t.SolarianMultis.collecting)
+    end
+
+    if v1.powerType == 1 then
+        v3 = LethalNum.multiply(v3, t.SolarianMultis.forming)
+    end
+
+    if v1.powerType == 2 then
+        v3 = LethalNum.multiply(v3, t.SolarianMultis.restoring)
+    end
+
+    local v9 = LethalNum.divide(LethalNum.multiply(LethalNum.divide(v2, v3), Data.ImportantData.Stats.solariansPS), LethalNum.new(1, 1))
+
+    return LethalNum.ceil(if LethalNum.isGreater(LethalNum.new(1, 0), v9) then LethalNum.new(1, 0) else v9)
+end
+function t.GetCap(p1, p2) --[[ GetCap | Line: 3456 | Upvalues: t (copy), LethalNum (copy) ]]
+    local v1 = t.Bars[p2]
+
+    if not v1 then
+        return LethalNum.new(1, 0)
+    end
+
+    local v2 = t.GetGoal(p2, p1)
+    local v4 = LethalNum.multiply(LethalNum.new(1, 0), p1.Stats.solarianPower)
+    local v5 = if v1.powerType == 0 then LethalNum.multiply(v4, p1.Stats.solarianMultis.collecting) else v4
+
+    if v1.powerType == 1 then
+        v5 = LethalNum.multiply(v5, p1.Stats.solarianMultis.forming)
+    end
+
+    if v1.powerType == 2 then
+        v5 = LethalNum.multiply(v5, p1.Stats.solarianMultis.restoring)
+    end
+
+    local solarians = p1.Stats.solarians
+    local v9 = LethalNum.divide(v2, v5)
+
+    if v9.n % 0.1 ~= 0 then
+        v9.n = v9.n * 10
+        v9.n = math.ceil(v9.n)
+        v9.n = v9.n / 10
+    end
+
+    local v10 = v9
+    local v11 = LethalNum.new(6, 1)
+
+    if v1.maxLevelRate ~= nil then
+        v11 = v1.maxLevelRate
+    end
+
+    if LethalNum.isGreater(v10, solarians) then
+        return LethalNum.ceil((LethalNum.divide(v10, (LethalNum.ceil((LethalNum.divide(v10, solarians)))))))
+    end
+
+    local v16 = LethalNum.ceil((LethalNum.divide(solarians, v10)))
+    local v19 = LethalNum.ceil((LethalNum.multiply(v10, if LethalNum.isGreater(v16, v11) then v11 else v16)))
+
+    return LethalNum.ceil(if LethalNum.isGreater(LethalNum.new(1, 0), v19) then LethalNum.new(1, 0) else v19)
+end
+function t.SetX(p1) --[[ SetX | Line: 3525 | Upvalues: Data (copy), LethalNum (copy) ]]
+    if not (p1 < 1) then
+        Data.ImportantData.Stats.solariansTA = LethalNum.new(p1, 0)
+
+        return
+    end
+
+    if p1 == 0.99 then
+        Data.ImportantData.Stats.solariansTA = LethalNum.copy(Data.ImportantData.Stats.solarians)
+    else
+        Data.ImportantData.Stats.solariansTA = LethalNum.floor(LethalNum.multiply(Data.ImportantData.Stats.solarians, p1))
+    end
+end
+function t.SetXSoul(p1) --[[ SetXSoul | Line: 3538 | Upvalues: Data (copy), LethalNum (copy), CurrencyTypes (copy) ]]
+    local v1 = if Data.ImportantData.Stats.souls == 2 then "souls2" else "souls"
+
+    if Data.ImportantData.Stats.souls == 3 then
+        v1 = "souls3"
+    end
+
+    if not (p1 < 1) then
+        Data.ImportantData.Stats.soulsTS = LethalNum.new(p1, 0)
+
+        return
+    end
+
+    if p1 == 0.99 then
+        Data.ImportantData.Stats.soulsTS = LethalNum.copy(CurrencyTypes.GetCurrencyAmt(v1))
+    else
+        Data.ImportantData.Stats.soulsTS = LethalNum.floor(LethalNum.multiply(CurrencyTypes.GetCurrencyAmt(v1), p1))
+    end
+end
+
+return t
