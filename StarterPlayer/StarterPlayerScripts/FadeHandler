@@ -1,0 +1,62 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local CreateFade = ReplicatedStorage.Remotes:WaitForChild("CreateFade")
+local CommonFunctions = require(ReplicatedStorage.CommonFunctions)
+
+local function CreateFader(p1) --[[ CreateFader | Line: 7 | Upvalues: CommonFunctions (copy) ]]
+    local count = 0
+    local sum = 0
+
+    for v1, v2 in p1 do
+        sum = sum + (v2.textFadeIn + v2.textFadeOut + v2.screenFadeOut + v2.transitionTime)
+        count = count + 1
+    end
+
+    local count2 = 0
+    local v3 = nil
+
+    for v4, v5 in p1 do
+        count2 = count2 + 1
+
+        local v6 = CommonFunctions.getFadeObj()
+
+        v6.BackgroundColor3 = v5.backgroundColor or Color3.new(255/255, 255/255, 255/255)
+        CommonFunctions.fade(v6, v5.screenFadeInSpd or 3, true, "frame")
+        task.wait(v5.textFadeIn)
+
+        local TextLabel = Instance.new("TextLabel", v6)
+
+        TextLabel.Font = "Cartoon"
+        TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+        TextLabel.Position = UDim2.new(UDim.new(0.5, 0), UDim.new(0.5, 0))
+        TextLabel.Size = UDim2.new(UDim.new(0.9, 0), UDim.new(0.4, 0))
+        TextLabel.TextScaled = true
+        TextLabel.BackgroundTransparency = 1
+        TextLabel.RichText = true
+        TextLabel.TextStrokeTransparency = 0
+        TextLabel.TextTransparency = 1
+        TextLabel.TextStrokeTransparency = 1
+        TextLabel.FontFace.Bold = true
+        TextLabel.TextColor3 = v5.textColor or Color3.new(255/255, 255/255, 255/255)
+        Instance.new("UITextSizeConstraint", TextLabel).MaxTextSize = 100
+        TextLabel.Text = "" .. v5.text
+        CommonFunctions.fade(TextLabel, v5.textFadeInSpd or 2, true, "text")
+        task.wait(v5.textFadeOut)
+        CommonFunctions.fade(TextLabel, 1, false, "text")
+        task.wait(v5.screenFadeOut)
+
+        if v3 then
+            CommonFunctions.clearFadeObj(v3)
+        end
+
+        if count2 == count then
+            CommonFunctions.fade(v6, 1, false, "frame")
+        end
+
+        task.wait(v5.transitionTime)
+        v3 = v6
+    end
+
+    CommonFunctions.clearFadeObj(v3)
+end
+
+CreateFade.OnClientEvent:Connect(CreateFader)
