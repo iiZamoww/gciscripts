@@ -1,0 +1,8 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Resets = require(ReplicatedStorage.Resets)
+local ClearGrass = ReplicatedStorage.Remotes:WaitForChild("ClearGrass")
+
+function FieldClear(p1) --[[ FieldClear | Line: 7 | Upvalues: Resets (copy) ]]
+    Resets.ClearField(p1)
+end
+ClearGrass.OnClientEvent:Connect(FieldClear)
