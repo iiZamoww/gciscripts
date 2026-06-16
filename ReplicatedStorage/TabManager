@@ -1,0 +1,1273 @@
+local t = {}
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Data = require(ReplicatedStorage.Data)
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local Multipliers = require(ReplicatedStorage.Multipliers)
+local GrassTypes = require(ReplicatedStorage.GrassTypes)
+local DailyReward = require(ReplicatedStorage.DailyReward)
+
+require(ReplicatedStorage.Planets)
+
+local CurrencyTypes = require(ReplicatedStorage.CurrencyTypes)
+local Solarians = require(ReplicatedStorage.Solarians)
+local SolarChallenges = require(ReplicatedStorage.SolarChallenges)
+local InfoStore = require(ReplicatedStorage.InfoStore)
+local PlanetRun = require(ReplicatedStorage.PlanetRun)
+local CC = require(ReplicatedStorage.CC)
+local v1 = nil
+local v2 = nil
+local v3 = nil
+
+t.menus = {}
+
+local t2 = {}
+local Features = workspace.Features
+
+function GetFeature(p1) --[[ GetFeature | Line: 29 | Upvalues: t2 (copy), Features (copy) ]]
+    if not t2[p1] then
+        t2[p1] = Features:WaitForChild(p1)
+    end
+
+    return t2[p1]
+end
+function t.OpenMenu(p1) --[[ OpenMenu | Line: 36 | Upvalues: t (copy) ]]
+    t.CloseAllMenus(p1)
+    t.menus[p1].Visible = true
+end
+function t.OpenIsoMenu(p1) --[[ OpenIsoMenu | Line: 44 | Upvalues: t (copy) ]]
+    t.menus[p1].Visible = true
+end
+function t.CloseMenu(p1) --[[ CloseMenu | Line: 48 | Upvalues: t (copy) ]]
+    t.menus[p1].Visible = false
+end
+function t.CloseAllMenus(p1) --[[ CloseAllMenus | Line: 55 | Upvalues: t (copy) ]]
+    for k, v in pairs(t.menus) do
+        if k ~= p1 then
+            t.CloseMenu(k)
+        end
+    end
+end
+
+local v4 = CFrame.new(0, 200000, 0)
+local v5 = false
+
+function t.HideAll() --[[ HideAll | Line: 67 | Upvalues: t (copy) ]]
+    t.ShowHideTabs(true)
+end
+function t.ModifyDecorative() --[[ ModifyDecorative | Line: 144 | Upvalues: Data (copy), Solarians (copy), v4 (copy) ]]
+    local pDif = Data.ImportantData.Stats.pDif
+    local highestAntiLevel = Data.ImportantData.Stats.highestAntiLevel
+    local _ = Data.ImportantData.Stats.prog < 1
+    local Restore = workspace.MetalBits.SP.Restore
+    local Portal = Restore.Portal
+
+    if not Restore:FindFirstChild("Walkway") then
+        return
+    end
+
+    Restore.Walkway:PivotTo(Solarians.HasLeveled("road") and CFrame.new(-1052.956, 4397.766, -1535.221) * CFrame.Angles(0, 0, 0) or v4)
+    Restore.Lighting:PivotTo(Solarians.HasLeveled("light") and CFrame.new(-1052.956, 4397.766, -1535.221) * CFrame.Angles(0, 0, 0) or v4)
+    Restore.Railing:PivotTo(Solarians.HasLeveled("road") and CFrame.new(-1052.956, 4397.766, -1535.221) * CFrame.Angles(0, 0, 0) or v4)
+    Restore.PlantBoxes:PivotTo(Solarians.HasLeveled("nature") and CFrame.new(-1052.956, 4397.766, -1535.221) * CFrame.Angles(0, 0, 0) or v4)
+    Restore.CollectionTrees:PivotTo(Solarians.HasLeveled("trees") and CFrame.new(-1052.956, 4397.766, -1535.221) * CFrame.Angles(0, 0, 0) or v4)
+    Restore.FormingBlocks:PivotTo(Solarians.HasLeveled("blocks") and CFrame.new(-1052.956, 4397.766, -1535.221) * CFrame.Angles(0, 0, 0) or v4)
+    Restore.SwordStatue:PivotTo(Solarians.HasLeveled("sword") and CFrame.new(-1052.956, 4397.766, -1535.221) * CFrame.Angles(0, 0, 0) or v4)
+    Restore.ShieldStatue:PivotTo(Solarians.HasLeveled("shield") and CFrame.new(-1052.956, 4397.766, -1535.221) * CFrame.Angles(0, 0, 0) or v4)
+    Restore.Usamog:PivotTo(Solarians.HasLeveled("amog") and CFrame.new(-1052.956, 4397.766, -1535.221) * CFrame.Angles(0, 0, 0) or v4)
+
+    local v10 = Solarians.HasLeveled("p10") or Solarians.HasLeveled("p10a")
+
+    Portal.Part1:PivotTo(Solarians.HasLeveled("p1") and CFrame.new(-1052.956, 4397.766, -1535.221) * CFrame.Angles(0, 0, 0) or v4)
+    Portal.Part2:PivotTo(Solarians.HasLeveled("p2") and CFrame.new(-1052.956, 4397.766, -1535.221) * CFrame.Angles(0, 0, 0) or v4)
+    Portal.Part3:PivotTo(Solarians.HasLeveled("p3") and CFrame.new(-1052.956, 4397.766, -1535.221) * CFrame.Angles(0, 0, 0) or v4)
+    Portal.Part4:PivotTo(Solarians.HasLeveled("p4") and CFrame.new(-1052.956, 4397.766, -1535.221) * CFrame.Angles(0, 0, 0) or v4)
+    Portal.Part5:PivotTo(Solarians.HasLeveled("p5") and CFrame.new(-1052.956, 4397.766, -1535.221) * CFrame.Angles(0, 0, 0) or v4)
+    Portal.Part6:PivotTo(Solarians.HasLeveled("p6") and CFrame.new(-1052.956, 4397.766, -1535.221) * CFrame.Angles(0, 0, 0) or v4)
+    Portal.Part7:PivotTo(Solarians.HasLeveled("p7") and CFrame.new(-1052.956, 4397.766, -1535.221) * CFrame.Angles(0, 0, 0) or v4)
+    Portal.Part8:PivotTo(Solarians.HasLeveled("p8") and CFrame.new(-1052.956, 4397.766, -1535.221) * CFrame.Angles(0, 0, 0) or v4)
+    Portal.Part9:PivotTo(Solarians.HasLeveled("p9") and CFrame.new(-1052.956, 4397.766, -1535.221) * CFrame.Angles(0, 0, 0) or v4)
+    Portal.Part10:PivotTo(v10 and CFrame.new(-1052.956, 4397.766, -1535.221) * CFrame.Angles(0, 0, 0) or v4)
+    Portal.ITele:PivotTo(v10 and Data.ImportantData.Stats.prog < 1 and CFrame.new(-1052.956, 4397.766, -1535.221) * CFrame.Angles(0, 0, 0) or v4)
+    Portal.PTele:PivotTo(v10 and Data.ImportantData.Stats.prog >= 1 and CFrame.new(-1052.956, 4397.766, -1535.221) * CFrame.Angles(0, 0, 0) or v4)
+end
+
+local Chamber = workspace.Features.W2.Chamber
+
+function t.ShowHideTabs(p1) --[[ ShowHideTabs | Line: 183 | Upvalues: Multipliers (copy), GrassTypes (copy), Data (copy), v5 (ref), DailyReward (copy), v1 (ref), v3 (ref), v2 (ref), InfoStore (copy), t (copy), CurrencyTypes (copy), LethalNum (copy), v4 (copy), Features (copy), ReplicatedStorage (copy), Solarians (copy), SolarChallenges (copy), CC (copy), Chamber (copy) ]]
+    Multipliers.getMulti()
+
+    local _ = GrassTypes.TierLevels[Data.ImportantData.Stats.currentTier]
+
+    if not Data.ImportantData.Stats.slotLoaded then
+        return
+    end
+
+    if not GetFeature("AutomationShop") then
+        return
+    end
+
+    local v12 = if Data.ImportantData.Stats.dailyTimeRemaining <= 86400 then true else false
+
+    if v12 and not v5 then
+        v5 = true
+        DailyReward.updateDailyReward()
+    elseif v5 and not v12 then
+        v5 = false
+    end
+
+    local pDif = Data.ImportantData.Stats.pDif
+    local prog = Data.ImportantData.Stats.prog
+
+    if Data.ImportantData.Stats.tslsu >= 5 then
+        p1 = true
+    end
+
+    local location = Data.ImportantData.Stats.location
+    local world = Data.ImportantData.Stats.world
+
+    if not v1 then
+        v1 = Data.ImportantData.Misc.player.PlayerGui:WaitForChild("W1")
+    end
+
+    if not v3 then
+        v3 = Data.ImportantData.Misc.player.PlayerGui:WaitForChild("All")
+    end
+
+    if not v2 then
+        v2 = Data.ImportantData.Misc.player.PlayerGui:WaitForChild("W2")
+    end
+
+    local v22 = if InfoStore.Resets.galactic.b > 0 then true else Data.ImportantData.Stats.gameWon or (if world == 1 then false else true)
+
+    t.menus.rareFlowerLock.Visible = not v22
+    t.menus.rareFlowerM.Visible = v22
+
+    local Interface = GetFeature("RareFlowerShop").Interface
+
+    t.menus.hourlyLock.Visible = if InfoStore.Resets.prestige.b < 1 then true else false
+
+    if world == 1 or p1 then
+        local _2 = CFrame.new(15, -28.875, -49) * CFrame.Angles(0, -1.5707963267948966, 0)
+        local _3 = CFrame.new(142.222, -11.686, 70.955) * CFrame.Angles(0, -0.5235987755982988, 0.2617993877991494)
+        local v42 = if CurrencyTypes.Levels.level.highestLevel >= 31 then true else false
+        local v52 = if CurrencyTypes.Levels.antiLevel.highestLevel >= 31 then true else false
+        local v6 = if CurrencyTypes.Levels.unLevel.highestLevel >= 31 then true else false
+        local v7 = if CurrencyTypes.Levels.level.highestLevel >= 2 then true else false
+
+        t.menus.levelPerkLock.Visible = not v7
+        t.menus.perksM.Visible = v7
+        GetFeature("LevelPerks").Display.SurfaceGui.Enabled = v7
+
+        local _4 = CFrame.new(-302.892, -15.25, 101.692) * CFrame.Angles(0, -0.5235987755982988, 0)
+
+        if location == "normal" or (location == "anti" or (location == "un" or p1)) then
+            test(if InfoStore.Resets.prestige.b > 0 then true else LethalNum.isGreater(CurrencyTypes.GetCurrencyTotal("flowers"), LethalNum.new(1, 2)), GetFeature("FlowerShop"), CFrame.new(-38.363, 41.75, -149.734), CFrame.Angles(0, -1.9198621771937625, 0), 3, 0.52)
+
+            local v10 = CFrame.new(69.067, -8.75, -29.274) * CFrame.Angles(0, -2.0943951023931953, 0)
+
+            GetFeature("LevelPerks"):PivotTo(if CurrencyTypes.GetCentralized("perks") and v10 then v10 else v4)
+
+            local v13 = if CurrencyTypes.Levels.level.highestLevel >= 5 then true else false
+            local v14 = if CurrencyTypes.Levels.antiLevel.highestLevel >= 31 then true else false
+            local _5 = CurrencyTypes.Levels.unLevel.highestLevel >= 31
+
+            t.menus.autoUpgradeLock.Visible = not v13
+            t.menus.autoM.Visible = v13
+            test(CurrencyTypes.GetCentralized("steel") and v7, GetFeature("AutomationShop"), CFrame.new(-206.75, -12.251, -0.126), CFrame.Angles(0, -0.08726646259971647, 0), 3, 0.5)
+            test(if InfoStore.Resets.anonymity.b > 0 then CurrencyTypes.GetCentralized("rocketFuel") else false, GetFeature("AntiAntiAutomationShop"), CFrame.new(-16797.01, -13.5, -0.053), CFrame.Angles(0, -3.0543261909900767, 0), 3, 0.5)
+            GetFeature("AutomationShop").Display.SurfaceGui.Enabled = v13
+            GetFeature("AntiAntiAutomationShop").Display.SurfaceGui.Enabled = v14
+
+            local v17 = if Data.ImportantData.Stats.highestTier >= 3 then true else false
+
+            GetFeature("PlatinumShop"):PivotTo(v42 and CurrencyTypes.GetCentralized("platinum") and CFrame.new(-223.75, -8.75, -107.452) * CFrame.Angles(0, 0, 0) or v4)
+            GetFeature("PlatinumShop").Display.SurfaceGui.Enabled = v17
+            t.menus.platinumLock.Visible = not v17
+
+            local v20 = if CurrencyTypes.Levels.level.level >= 31 then true else false
+
+            GetFeature("Prestige").Display.SurfaceGui.Enabled = v20
+            t.menus.prestigeUpgradeLock.Visible = not v42
+            t.menus.prestigeUpgradeM.Visible = v42
+            t.menus.prestigeLock.Visible = not v20
+            t.menus.prestigeRM.Visible = v20
+            GetFeature("Prestige"):PivotTo(CurrencyTypes.GetCentralized("pp") and v13 and CFrame.new(-219.125, -15.25, 87.749) * CFrame.Angles(0, -0.3490658503988659, 0) or v4)
+            test(if v42 then CurrencyTypes.GetCentralized("pp") else v42, GetFeature("PrestigeShop"), CFrame.new(-223.375, -15.25, 166.499), CFrame.Angles(0, 0, 0), 3, 0)
+            GetFeature("PrestigeShop").Display.SurfaceGui.Enabled = v42
+
+            local v25 = if CurrencyTypes.Levels.level.level >= 101 then true else false
+            local v26 = if CurrencyTypes.Levels.level.highestLevel >= 101 then true else false
+
+            GetFeature("Crystallize").Display.SurfaceGui.Enabled = v25
+            GetFeature("CrystalShop").Display.SurfaceGui.Enabled = v26
+            t.menus.crystallizeLock.Visible = not v25
+            t.menus.crystallizeM.Visible = v25
+            t.menus.crystalUpgradeLock.Visible = not v26
+            t.menus.crystalUpgradeM.Visible = v26
+            test(if v42 then CurrencyTypes.GetCentralized("crystals") else v42, GetFeature("Crystallize"), CFrame.new(-210.125, -15.25, 242.248), CFrame.Angles(0, 0.5235987755982988, 0), 3, 1.5)
+            test(if v26 then CurrencyTypes.GetCentralized("crystals") else v26, GetFeature("CrystalShop"), CFrame.new(-141.5, -15.25, 273.874), CFrame.Angles(0, 1.4835298641951802, 0), 3, 2)
+
+            local v31 = if InfoStore.Resets.crystallize.b >= 3 then true else false
+
+            test(if InfoStore.Resets.crystallize.b >= 1 then CurrencyTypes.GetCentralized("oil") else false, GetFeature("Accomplishments"), CFrame.new(-26.5, -7.25, 281.874), CFrame.Angles(0, 1.5707963267948966, 0), 3, 2.5)
+            GetFeature("Accomplishments").Display.SurfaceGui.Enabled = v31
+            t.menus.accomplishmentLock.Visible = not v31 and InfoStore.Resets.loop1.b < 1
+
+            local v35 = if CurrencyTypes.Levels.level.level >= 201 then true else false
+
+            GetFeature("Grasshop").Display.SurfaceGui.Enabled = v35
+
+            local SurfaceGui = GetFeature("GrasshopMilestones").Display.SurfaceGui
+
+            SurfaceGui.Enabled = if InfoStore.Resets.grasshop.b > 0 then true else false
+            t.menus.grasshopLock.Visible = not v35
+            t.menus.grasshopMilestoneLock.Visible = not (if InfoStore.Resets.grasshop.b > 0 then true else false)
+            test(v31 and true, GetFeature("Grasshop"), CFrame.new(178.12, -15.25, 116.469), CFrame.Angles(0, math.pi, 0), 3, 3.5)
+            test(v31 and true, GetFeature("GrasshopMilestones"), CFrame.new(178.063, -9.75, 165.061), CFrame.Angles(0, math.pi, 0), 3, 4)
+
+            local v38 = if CurrencyTypes.Levels.level.level >= 221 then true else false
+            local v39 = if CurrencyTypes.Levels.level.highestLevel >= 221 then true else false
+            local v40 = if CurrencyTypes.Levels.antiLevel.level >= 271 then true else false
+            local v41 = if CurrencyTypes.Levels.antiLevel.highestLevel >= 271 then true else false
+
+            test(if t.getUpgradeLevel("generator") > 0 then CurrencyTypes.GetCentralized("charge") else false, workspace.MetalBits.Wall, CFrame.new(360.25, -0.621, 81.194), CFrame.Angles(0, 1.3089969389957472, 0), 3, 1.2)
+            test(if InfoStore.Resets.grasshop.b > 7 then CurrencyTypes.GetCentralized("steel") else false, GetFeature("Steelie"), CFrame.new(177.969, -15.25, 212.404), CFrame.Angles(0, -3.141592653589793, 0), 3, 3.7)
+            test(if InfoStore.Resets.grassskip.a > 7 or InfoStore.Resets.funify.b > 0 then CurrencyTypes.GetCentralized("fun") else false, GetFeature("Funify"), CFrame.new(-17181.486, -15.251, 117.22), CFrame.Angles(0, 0, 0), 3, 3.7)
+            test(if InfoStore.Resets.grasshop.b > 7 then if v39 then CurrencyTypes.GetCentralized("steel") else v39 else false, GetFeature("TheFactory"), CFrame.new(164, 16.207, 408.375), CFrame.Angles(0, 1.5707963267948966, 0), 3, 3.9)
+            test(if InfoStore.Resets.grassskip.a > 7 or InfoStore.Resets.funify.b > 0 then CurrencyTypes.GetCentralized("fun") else false, GetFeature("TheFunnyMachine"), CFrame.new(-17167.5, 16.207, 408.375), CFrame.Angles(0, 1.5707963267948966, 0), 3, 3.9)
+            test(if t.getUpgradeLevel("foundry") > 0 then CurrencyTypes.GetCentralized("steel") else false, GetFeature("Foundry"), CFrame.new(237.375, 18.457, 393.5), CFrame.Angles(0, 2.181661564992912, 0), 3, 4.1)
+            test(if t.getUpgradeLevel("generator") > 0 then CurrencyTypes.GetCentralized("crystals") else false, GetFeature("Generator"), CFrame.new(259.875, 18.457, 353.5), CFrame.Angles(0, math.pi, 0), 3, 4.2)
+
+            local v56 = if t.getUpgradeLevel("charger") > 0 or InfoStore.Resets.starTier.a >= 5 then CurrencyTypes.GetCentralized("charge") else false
+
+            test(v56, GetFeature("Charger"), CFrame.new(280.375, -13, 241.999), CFrame.Angles(0, 2.705260340591211, 0), 3, 4.3)
+            test(if t.getUpgradeLevel("assembler") > 0 then CurrencyTypes.GetCentralized("rocketFuel") else false, GetFeature("Assembler"), CFrame.new(289.875, -15.25, 163.999), CFrame.Angles(0, -3.141592653589793, 0), 3, 4.4)
+            test(t.getUpgradeLevel("decelerator") > 0 or InfoStore.Resets.starTier.a >= 5, GetFeature("Decelerator"), CFrame.new(298.697, -13, 87.671), CFrame.Angles(0, 2.792526803190927, 0), 3, 4.5)
+
+            local v61 = if t.getUpgradeLevel("oilRig") > 0 or InfoStore.Resets.starTier.a >= 5 then CurrencyTypes.GetCentralized("oil") else false
+
+            test(if t.getUpgradeLevel("refinery") > 0 or InfoStore.Resets.starTier.a >= 5 then CurrencyTypes.GetCentralized("rocketFuel") else false, GetFeature("Refinery"), CFrame.new(343.21, -13.002, -16.834), CFrame.Angles(0, 2.6179938779914944, 0), 3, 4.6)
+            test(if t.getUpgradeLevel("launchPad") > 0 or InfoStore.Resets.starTier.a >= 5 then CurrencyTypes.GetCentralized("stars") else false, GetFeature("LaunchPad"), CFrame.new(379.91, -13.002, -127.594), CFrame.Angles(0, -2.8797932657906435, 0), 3, 4.7)
+            test(v61, GetFeature("OilRig"), CFrame.new(375.647, -12.891, -76.435), CFrame.Angles(0, 2.792526803190927, 0), 3, 4.8)
+            test(if t.getUpgradeLevel("starAccumulator") > 0 or InfoStore.Resets.starTier.a >= 5 then CurrencyTypes.GetCentralized("stars") else false, GetFeature("StarAccumulator"), CFrame.new(428.875, -14, -189.001), CFrame.Angles(0, math.pi, 0), 3, 4.2)
+            test(t.getUpgradeLevel("recelerator") > 0, GetFeature("Recelerator"), CFrame.new(-17303.563, -12, 89.106), CFrame.Angles(0, 0.3490658503988659, 0), 3, 4.6)
+            test(if t.getUpgradeLevel("fundry") > 0 then CurrencyTypes.GetCentralized("fun") else false, GetFeature("Fundry"), CFrame.new(-17241.611, 18.457, 395.628), CFrame.Angles(0, 0.9599310885968813, 0), 3, 4.1)
+            test(if t.getUpgradeLevel("sfrgtGenerator") > 0 then CurrencyTypes.GetCentralized("sfrgt") else false, GetFeature("SFRGTGenerator"), CFrame.new(-17263.875, 18.457, 355), CFrame.Angles(0, 0, 0), 3, 4.2)
+            test(if InfoStore.Resets.funify.b > 0 then CurrencyTypes.GetCentralized("sfrgt") else false, GetFeature("Platform2"), CFrame.new(-17203, -3.194, 380), CFrame.Angles(0, -1.5707963267948966, 0), 3, 4.2)
+
+            if location == "un" then
+                local v76 = if Data.ImportantData.Stats.evil > 0 then not Data.ImportantData.Misc.toggles.evil.state else false
+
+                GetFeature("Unnatural").Parent = not v76 and Features or ReplicatedStorage
+                GetFeature("UnnaturalEvil").Parent = v76 and Features or ReplicatedStorage
+                GetFeature("GrassJump"):PivotTo(v76 and CFrame.new(-27368.463, 381.363, 118.094) * CFrame.Angles(0, 2.705260340591211, 0) or v4)
+                GetFeature("GrassJumpMilestones"):PivotTo(v76 and CFrame.new(-27348.389, 386.863, 75.044) * CFrame.Angles(0, 2.705260340591211, 0) or v4)
+                GetFeature("GrassJumpF"):PivotTo(not v76 and CFrame.new(-27368.463, 381.363, 118.094) * CFrame.Angles(0, 2.705260340591211, 0) or v4)
+                GetFeature("GrassJumpMilestonesF"):PivotTo(not v76 and CFrame.new(-27348.389, 386.863, 75.044) * CFrame.Angles(0, 2.705260340591211, 0) or v4)
+            end
+
+            t.menus.steelieLock.Visible = not v38
+            t.menus.steelieM.Visible = v38
+            t.menus.funifyLock.Visible = not v40
+            t.menus.funifyM.Visible = v40
+            t.menus.factoryLock.Visible = not v39
+            t.menus.factoryM.Visible = v39
+            t.menus.funnyLock.Visible = not v41
+            t.menus.funnyM.Visible = v41
+
+            local v89 = if InfoStore.Resets.loop1.b > 0 then true else InfoStore.Resets.trueEnd.a > 0
+
+            test(v7 or v89, GetFeature("Section2"), CFrame.new(-188, -56.25, 16.999), CFrame.Angles(0, 0, 0), 3, 0.5)
+            test(v42 or v89, GetFeature("Section3"), CFrame.new(-177, -56.25, 283.499), CFrame.Angles(0, 0, 0), 3, 0.5)
+            test(v26 or v89, GetFeature("Section3a"), CFrame.new(-47, 57.75, 326.999), CFrame.Angles(0, 0, 0), 3, 0.5)
+            test(v31 or v89, GetFeature("Section4"), CFrame.new(227.5, -56.25, 28.499), CFrame.Angles(0, 0, 0), 3, 0.5)
+            test(if v39 or v89 then CurrencyTypes.GetCentralized("steel") else v89, GetFeature("Platform"), CFrame.new(199, -3.194, 380), CFrame.Angles(0, 1.5707963267948966, 0), 3, 0.5)
+            test(if v56 then v56 elseif InfoStore.Resets.galactic.b > 0 then true else v89, GetFeature("Section5"), CFrame.new(348.5, -56.25, 122.499), CFrame.Angles(0, 0, 0), 3, 0.5)
+            test(Data.ImportantData.Stats.gameWon, GetFeature("IslandHubGateway"), CFrame.new(184.25, 60.5, -145.251), CFrame.Angles(0, math.pi, 0), 3, 0.5)
+
+            local v94 = CFrame.new(36.25, -21.875, 199.249) * CFrame.Angles(0, math.pi, 0)
+
+            GetFeature("Stats"):PivotTo((v26 or v89) and v94 or v4)
+            GetFeature("AntiUpgradesShop"):PivotTo(CurrencyTypes.GetCentralized("agrass") and CFrame.new(-16959.75, -28.875, -50.751) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+
+            local v99 = if CurrencyTypes.Levels.antiLevel.level >= 31 then true else false
+
+            GetFeature("Anonymity").Display.SurfaceGui.Enabled = v99
+            t.menus.anonymityUpgradeLock.Visible = not v52
+            t.menus.anonymityUpgradeM.Visible = v52
+            t.menus.anonymityLock.Visible = not v99
+            t.menus.anonymityM.Visible = v99
+            test(if v52 then CurrencyTypes.GetCentralized("ap") else v52, GetFeature("AnonymityShop"), CFrame.new(-16780.375, -15.25, 167.499), CFrame.Angles(0, math.pi, 0), 3, 0)
+            GetFeature("Anonymity"):PivotTo(CurrencyTypes.GetCentralized("ap") and CFrame.new(-16785.125, -15.25, 87.249) * CFrame.Angles(0, -2.9670597283903604, 0) or v4)
+            GetFeature("AnonymityShop").Display.SurfaceGui.Enabled = v52
+
+            local v104 = if CurrencyTypes.Levels.antiLevel.level >= 101 then true else false
+            local v105 = if CurrencyTypes.Levels.antiLevel.highestLevel >= 101 then true else false
+
+            GetFeature("Liquefy").Display.SurfaceGui.Enabled = v104
+            GetFeature("OilShop").Display.SurfaceGui.Enabled = v105
+            t.menus.liquefyLock.Visible = not v104
+            t.menus.liquefyM.Visible = v104
+            t.menus.oilUpgradeLock.Visible = not v105
+            t.menus.oilUpgradeM.Visible = v105
+            test(if InfoStore.Resets.anonymity.b > 0 or CurrencyTypes.Levels.antiLevel.highestLevel >= 101 then CurrencyTypes.GetCentralized("oil") else false, GetFeature("Liquefy"), CFrame.new(-16795.262, -15.5, 243.617), CFrame.Angles(0, 2.530727415391778, 0), 3, 1.5)
+            test(if v105 then CurrencyTypes.GetCentralized("oil") else v105, GetFeature("OilShop"), CFrame.new(-16866, -15.25, 273.874), CFrame.Angles(0, 1.6580627893946132, 0), 3, 2)
+
+            local v110 = if InfoStore.Resets.liquefy.b > 0 then true else false
+            local SurfaceGui2 = GetFeature("Grassskip").Display.SurfaceGui
+
+            SurfaceGui2.Enabled = if v110 then InfoStore.Resets.galactic.b > 0 else v110
+
+            local SurfaceGui3 = GetFeature("GrassskipMilestones").Display.SurfaceGui
+
+            SurfaceGui3.Enabled = if InfoStore.Resets.grassskip.b > 0 then true else false
+            t.menus.grassskipLock.Visible = not (if InfoStore.Resets.galactic.b > 0 then true else false)
+            t.menus.grassskipMilestoneLock.Visible = not (if InfoStore.Resets.grassskip.b > 0 then true else false)
+            test(v110, GetFeature("Grassskip"), CFrame.new(-17181.49, -15.25, 213.22), CFrame.Angles(0, 0, 0), 3, 3.5)
+            test(v110, GetFeature("GrassskipMilestones"), CFrame.new(-17181.486, -9.751, 164.716), CFrame.Angles(0, 0, 0), 3, 4)
+
+            local v115 = if CurrencyTypes.Levels.unLevel.level >= 31 then true else false
+
+            t.menus.normalityUpgradeLock.Visible = not v6
+            t.menus.normalityUpgradeM.Visible = v6
+            t.menus.normalityLock.Visible = not v115
+            t.menus.normalityM.Visible = v115
+
+            local v116 = if CurrencyTypes.Levels.unLevel.level >= 101 then true else false
+            local v117 = if CurrencyTypes.Levels.unLevel.highestLevel >= 101 then true else false
+
+            t.menus.vaporizeLock.Visible = not v116
+            t.menus.vaporizeM.Visible = v116
+            t.menus.cloudUpgradeLock.Visible = not v117
+            t.menus.cloudUpgradeM.Visible = v117
+
+            local _6 = InfoStore.Resets.pt.a >= 3
+            local SurfaceGui4 = GetFeature("GrassJumpMilestones").Display.SurfaceGui
+
+            SurfaceGui4.Enabled = if InfoStore.Resets.grassJump.b > 0 then true else false
+
+            local SurfaceGui5 = GetFeature("GrassJump").Display.SurfaceGui
+
+            SurfaceGui5.Enabled = if CurrencyTypes.Levels.unLevel.level >= 201 then true else false
+            t.menus.grassjumpLock.Visible = not (if CurrencyTypes.Levels.unLevel.level >= 201 then true else false)
+            t.menus.grassjumpMilestoneLock.Visible = not (if InfoStore.Resets.grassJump.a > 0 then true else false)
+
+            local v1222 = if InfoStore.Resets.rocketPart.a >= Data.ImportantData.Stats.partsRequired then true else false
+
+            if InfoStore.Resets.zeroghgs.a >= Data.ImportantData.Reqs.g then
+                v1222 = InfoStore.Resets.rocketPart.a > 0
+            end
+
+            t.menus.momentumLock.Visible = if InfoStore.Resets.rocketPart.a < 1 then InfoStore.Resets.galactic.b <= 0 else false
+            t.menus.momentumM.Visible = if InfoStore.Resets.rocketPart.a >= 1 then true else InfoStore.Resets.galactic.b > 0
+            test(if v1222 then CurrencyTypes.GetCentralized("stars") else v1222, GetFeature("Rocket"), CFrame.new(327.344, -10.254, -202.045), CFrame.Angles(0, -1.7453292519943295, 0), 3, 4.9)
+
+            local EarthToSpaceTeleporter = GetFeature("Tele").EarthToSpaceTeleporter
+
+            EarthToSpaceTeleporter:PivotTo(InfoStore.Resets.galactic.b > 0 and CFrame.new(-127.75, 37.886, -114.751) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+            GetFeature("COOLWORLDDOOR"):PivotTo((InfoStore.Resets.galactic.b > 0 or v89) and CFrame.new(-173, -34.824, 373.74) * CFrame.Angles(0, math.pi, 0) or v4)
+            test(CurrencyTypes.GetCentralized("ugrass"), GetFeature("UnnaturalUpgradesShop"), CFrame.new(-27409.391, 367.238, -48.501), CFrame.Angles(0, -1.5707963267948966, 0), 3, 0)
+            test(CurrencyTypes.GetCentralized("np"), GetFeature("Normality"), CFrame.new(-27514.301, 380.863, -26.911), CFrame.Angles(0, -0.7853981633974483, 0), 3, 0)
+            test(CurrencyTypes.GetCentralized("np"), GetFeature("NormalityShop"), CFrame.new(-27528.494, 380.863, 48.259), CFrame.Angles(0, 0.08726646259971647, 0), 3, 0)
+            test(CurrencyTypes.GetCentralized("clouds"), GetFeature("Vaporize"), CFrame.new(-27507.328, 381.363, 126.638), CFrame.Angles(0, 0.6981317007977318, 0), 3, 1.5)
+            test(CurrencyTypes.GetCentralized("clouds"), GetFeature("CloudShop"), CFrame.new(-27434.141, 381.363, 154.628), CFrame.Angles(0, 1.5707963267948966, 0), 3, 2)
+        end
+
+        local v130 = if Data.ImportantData.Stats.innerRingsBroken > 0 then true else false
+
+        if location == "space" or (location == "darkForest" or (location == "lightForest" or p1)) then
+            test(CurrencyTypes.GetCentralized("stars"), GetFeature("StarChart"), CFrame.new(743.701, 4106.579, 418.012), CFrame.Angles(0, math.pi, 0), 3, 4.2)
+            test(CurrencyTypes.GetCentralized("darkMatter"), GetFeature("DarkMatterManipulator"), CFrame.new(447.264, 4101.011, 134.311), CFrame.Angles(0, -2.356194490192345, 0), 3, 4.2)
+            test(CurrencyTypes.GetCentralized("darkMatter"), GetFeature("DarkMatterPlant"), CFrame.new(488.914, 4100.987, 176.34), CFrame.Angles(0, -2.356194490192345, 0), 3, 4.2)
+
+            local SurfaceGui = GetFeature("AstralBonuses").Display.SurfaceGui
+
+            SurfaceGui.Enabled = if CurrencyTypes.Levels.astral.highestLevel >= 2 then true else false
+            t.menus.astralLock.Visible = if CurrencyTypes.Levels.astral.highestLevel < 2 then true else false
+
+            local v133 = if InfoStore.Resets.galactic.b >= 1 then true else InfoStore.Resets.lowestgh.a <= 25
+
+            t.menus.aghLock.Visible = not v133
+            GetFeature("AntiGrasshopMilestones").Display.SurfaceGui.Enabled = v133
+
+            local _5 = Data.ImportantData.Stats.pDif > 0
+            local v134 = if InfoStore.Resets.zeroghgs.a >= Data.ImportantData.Reqs.pt then true else false
+
+            t.menus.planetoidsM.Visible = v134
+            t.menus.planetoidsLock.Visible = not v134
+            GetFeature("Planetoids").Display.SurfaceGui.Enabled = v134
+            GetFeature("Planetoids"):PivotTo(CurrencyTypes.GetCentralized("perks2") and CFrame.new(554.489, 4123.329, 453.182) * CFrame.Angles(0, -0.7853981633974483, 0) or v4)
+            GetFeature("PlanetoidTele"):PivotTo(v134 and CurrencyTypes.GetCentralized("perks2") and CFrame.new(555.104, 4096.455, 453.799) * CFrame.Angles(0, 0.7853981633974483, 0) or v4)
+            GetFeature("MoonstoneShop"):PivotTo(CurrencyTypes.GetCentralized("moonstone") and CFrame.new(688.199, 4106.079, 520.451) * CFrame.Angles(0, 2.356194490192345, 0) or v4)
+            GetFeature("DarkTree"):PivotTo(CurrencyTypes.GetCentralized("darkFruits") and CFrame.new(319.455, 4099.572, 106.083) * CFrame.Angles(0, -0.7853981633974483, 0) or v4)
+            GetFeature("DarkAccelerator"):PivotTo(CurrencyTypes.GetCentralized("darkFruits") and CFrame.new(235.398, 4098.06, 110.237) * CFrame.Angles(0, -2.0943951023931953, 0) or v4)
+            GetFeature("RingVisual"):PivotTo(InfoStore.Resets.zeroghgs.a >= Data.ImportantData.Reqs.tr and Data.ImportantData.Stats.innerRingsBroken <= 0 and CFrame.new(151.075, 4084.954, 94.68) * CFrame.Angles(0, 0, 0) or v4)
+            GetFeature("BrokenRingVisual"):PivotTo(v130 and CFrame.new(151.075, 4084.954, 94.68) * CFrame.Angles(0, 0, 0) or v4)
+
+            local v149 = if LethalNum.isGreaterE(Data.ImportantData.Stats.planetScore, LethalNum.new(5, 8)) and InfoStore.Resets.zeroghgs.a >= 45 then true elseif Data.ImportantData.Stats.innerRingsBroken > 0 then true else false
+
+            t.menus.innerRingLock.Visible = not v149
+            t.menus.innerRingM.Visible = v149
+            t.menus.innerRingLock.Parent.Enabled = if Data.ImportantData.Stats.innerRingsBroken <= 0 then true else false
+            t.menus.ultimateTree.Visible = if InfoStore.Resets.zeroghgs.a >= 27 then true else false
+
+            local v153 = if InfoStore.Resets.zeroghgs.a >= 18 then true else InfoStore.Resets.sacrifice.b > 0
+
+            GetFeature("DFDoor"):PivotTo(not v153 and CFrame.new(491.547, 4084.954, 239.284) * CFrame.Angles(0, 0, 0) or v4)
+
+            local v156 = if InfoStore.Resets.zeroghgs.a >= Data.ImportantData.Reqs.dt then true else false
+
+            GetFeature("DarkTree").Display.SurfaceGui.Enabled = v156
+            t.menus.dmmLock.Visible = if InfoStore.Resets.sacrifice.b < 1 then true else false
+            t.menus.dmaLock.Visible = if Data.ImportantData.Stats.innerRingsBroken < 1 then true else false
+            t.menus.sacLock.Visible = if InfoStore.Resets.zeroghgs.a < 18 then true else false
+            t.menus.dtLock.Visible = not v156
+
+            local v160 = if Data.ImportantData.Stats.innerRingsBroken > 0 then true else InfoStore.Resets.supernova.b > 0
+
+            GetFeature("LFDoor"):PivotTo(not v160 and CFrame.new(151.075, 4084.954, 94.68) * CFrame.Angles(0, 0, 0) or v4)
+            test(v160, GetFeature("StellarObelisk"), CFrame.new(-148.718, 4102.144, -13.174), CFrame.Angles(0, 0.08726646259971647, 0), 3, 1.4)
+            test(if InfoStore.Resets.grassJump.a >= Data.ImportantData.Reqs.gj.lo then true else false, GetFeature("LunarObelisk"), CFrame.new(-125.101, 4102.385, -54.819), CFrame.Angles(0, -0.7853981633974483, 0), 3, 1.6)
+            test(if InfoStore.Resets.starTier.a >= 5 then true else false, GetFeature("VoidObelisk"), CFrame.new(-82.539, 4102.144, -76.12), CFrame.Angles(0, -1.7453292519943295, 0), 3, 0.35)
+        end
+
+        local v167 = if CurrencyTypes.Levels.planetLevel.level >= 301 then true else false
+        local v168 = if InfoStore.Resets.constellation.b > 0 then true else false
+
+        if location == "planet" or p1 then
+            local v169 = if CurrencyTypes.Levels.planetLevel.level >= 31 then true else false
+            local v170 = if CurrencyTypes.Levels.planetLevel.level >= 101 then true else false
+            local _5 = InfoStore.Resets.astrolabe.b > 0
+            local v171 = if CurrencyTypes.Levels.planetLevel.level >= 201 then true else false
+            local v172 = if InfoStore.Resets.planetary.b > 0 then true else false
+
+            GetFeature("RingUpgrades"):PivotTo(LethalNum.isGreater(CurrencyTypes.GetCurrencyTotal("rings"), LethalNum.new(0, 0)) and CFrame.new(-761.247, 5074.002, 3161.979) * CFrame.Angles(0, -2.181661564992912, 0) or v4)
+
+            local v175 = GetFeature("ReservatoriumUpgrades")
+            local _ = Multipliers.getUpgradeLevel("rRS") > 0 or Data.ImportantData.Stats.innerRingsBroken > 0
+
+            v175:PivotTo(CurrencyTypes.GetCentralized("res") and CFrame.new(-852.907, 5068.252, 3481.712) * CFrame.Angles(0, 1.9198621771937625, 0) or v4)
+            t.menus.astroLock.Visible = not v169
+            t.menus.astroM.Visible = v169
+            t.menus.quadLock.Visible = not v170
+            t.menus.quadM.Visible = v170
+            t.menus.planetLock.Visible = not v171
+            t.menus.planetaryM.Visible = v171
+            t.menus.planetMLock.Visible = not v172
+            t.menus.planetUpgLock.Visible = not v172
+
+            local v177 = if InfoStore.Resets.pt.a >= 6 then true else Data.ImportantData.Stats.pTrial > 0
+
+            t.menus.trialLock.Visible = not v177
+            t.menus.trialGoalsLock.Visible = not v177
+            t.menus.trialLockM.Visible = v177
+            GetFeature("PlanetariumShop"):PivotTo(CurrencyTypes.GetCentralized("planetarium") and CFrame.new(-586.999, 5051.39, 3159.998) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            GetFeature("InnerRing"):PivotTo(CurrencyTypes.GetCentralized("rings") and CFrame.new(-695.496, 5065, 3174.626) * CFrame.Angles(0, -1.0471975511965976, 0) or v4)
+            GetFeature("InnerRing2"):PivotTo(CurrencyTypes.GetInfinity("rings") and CurrencyTypes.GetCentralized("res") and CFrame.new(-695.496, 5065, 3174.626) * CFrame.Angles(0, -1.0471975511965976, 0) or v4)
+            GetFeature("RingUpgrades"):PivotTo(CurrencyTypes.GetCentralized("rings") and CFrame.new(-774.995, 5074.251, 3184.126) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            GetFeature("Astrolabe"):PivotTo(CurrencyTypes.GetCentralized("astro") and CFrame.new(-1202.973, 5073.905, 3387.034) * CFrame.Angles(0, 0.24434609527920614, 0) or v4)
+            GetFeature("Quadrant"):PivotTo(CurrencyTypes.GetCentralized("measure") and CFrame.new(-1005.507, 5073.106, 3275.697) * CFrame.Angles(0, -1.0821041362364843, 0) or v4)
+            GetFeature("Observatory"):PivotTo(CurrencyTypes.GetCentralized("obs") and CFrame.new(-788.513, 5071.5, 3467.119) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+
+            local v192 = if InfoStore.Resets.grassJump.a >= Data.ImportantData.Reqs.gj.dc then true else false
+
+            test(if v192 then CurrencyTypes.GetCentralized("dcharge") else v192, GetFeature("DarkCharger"), CFrame.new(-718.524, 5067.25, 3481.791), CFrame.Angles(0, 1.3089969389957472, 0), 3, 4.3)
+            GetFeature("Quadrant").Display.SurfaceGui.Enabled = v170
+            GetFeature("Planetary"):PivotTo(InfoStore.Resets.quadrant.b > 0 and (v130 and CurrencyTypes.GetCentralized("planets")) and CFrame.new(-435.738, 5070, 3199.418) * CFrame.Angles(0, -0.2617993877991494, 0) or v4)
+            GetFeature("Constellation"):PivotTo(InfoStore.Resets.pt.a > 0 and v130 and CFrame.new(-391.649, 5049.411, 3427.122) * CFrame.Angles(0, 2.705260340591211, 1.5707963267948966) or v4)
+            GetFeature("PlanetRunDoor"):PivotTo(t.getUpgradeLevel("TSpr") > 0 and CFrame.new(-512.336, 5067.188, 3478.615) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            GetFeature("TheStar"):PivotTo(CurrencyTypes.GetCentralized("stardust") and CFrame.new(-617.022, 5057.876, 3497.85) * CFrame.Angles(0, 0, 0) or v4)
+            t.menus.theStarLock.Visible = if InfoStore.Resets.grassJump.a < Data.ImportantData.Reqs.gj.ts then true else false
+            GetFeature("SNDoor"):PivotTo(Data.ImportantData.Stats.starTier <= 0 and CFrame.new(-616.995, 5051.813, 3567.001) * CFrame.Angles(0, 0, 0) or v4)
+        end
+
+        if location == "normal" or p1 then
+            v1.Accomplishments.Adornee = GetFeature("Accomplishments").Interface
+        end
+
+        if location == "anti" or p1 then
+            v1.Accomplishments.Adornee = GetFeature("AccomplishmentsA").Interface
+        end
+
+        if location == "blue" or p1 then
+            v1.Accomplishments.Adornee = GetFeature("AccomplishmentsHighest").Interface
+        end
+
+        if location == "star" or (location == "planet" or p1) then
+            v1.ConstellationBoard.Adornee = Data.ImportantData.Stats.location == "star" and GetFeature("ConstellationSol").Interface or GetFeature("Constellation").Interface
+            v1.ConstellationLayouts.Adornee = Data.ImportantData.Stats.location == "star" and GetFeature("Solarians").ConstLayouts.InterfaceL or GetFeature("Constellation").InterfaceL
+            t.menus.constellationLock.Visible = not v167
+            t.menus.constellationM.Visible = v167
+            t.menus.constellationBLock.Visible = not v168
+            t.menus.constellationSLock.Visible = not v168
+            t.menus.constellationLLock.Visible = not v168
+            t.menus.constellationSLock.Parent.Enabled = CurrencyTypes.GetCentralized("lines")
+            t.menus.constellationALock.Parent.Enabled = CurrencyTypes.GetCentralized("arcs")
+
+            local v208 = LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("arcs"), LethalNum.new(1, 0))
+            local v209 = if Multipliers.getUpgradeLevel("Sprism") > 0 then true else false
+            local v210 = if Multipliers.getUpgradeLevel("Sclock") > 0 then true else false
+
+            t.menus.lineShop.Visible = if v208 or v209 then CurrencyTypes.GetCentralized("lines") else v209
+            t.menus.arcShop.Visible = if v208 then CurrencyTypes.GetCentralized("arcs") else v208
+            t.menus.advShop.Visible = v209
+            t.menus.arcShop.Parent.Layout.CellSize = UDim2.new(if v209 then 0.33 else 0.5, 0, 1, 0)
+
+            if CurrencyTypes.GetInfinity("arcs") then
+                local v215 = UDim2.new
+
+                t.menus.arcShop.Parent.Layout.CellSize = v215(if CurrencyTypes.GetInfinity("lines") then 1 else 0.5, 0, 1, 0)
+            end
+
+            t.menus.stelBar.Visible = v208
+            t.menus.constellationALock.Visible = not v208
+            t.menus.gridLock.Visible = v210
+
+            local v217
+
+            if Data.ImportantData.Stats.cLock then
+                local v218 = 60
+
+                if Data.ImportantData.Stats.Accomplish.solTicks > 0 then
+                    v218 = v218 * LethalNum.toNumber(Data.ImportantData.Stats.Accomplish.solTickSpeed)
+                end
+
+                v217 = if InfoStore.Resets.sunrise.t < v218 then "Unlock Grid" else "You can only unlock grid within a minute after a sunrise"
+            else
+                v217 = "Lock Grid"
+            end
+
+            t.menus.gridLock.Title.Text = v217
+        end
+
+        local v219 = if Multipliers.getSCLevel("sol") > 0 then true else false
+
+        if location == "planet" or (location == "star" or p1) then
+            GetFeature("StarDoor"):PivotTo(not v219 and CFrame.new(-1100.297, 4430.267, -1744.16) * CFrame.Angles(0, -2.6179938779914944, 1.5707963267948966) or v4)
+
+            local v222 = CFrame.new(-1050.751, 4420.317, -1831.833) * CFrame.Angles(0, -0.6108652381980153, 0)
+
+            if v219 then
+                v222 = CFrame.new(-1293.245, 4418.503, -1689.461) * CFrame.Angles(0, -0.8726646259971648, 0)
+            end
+
+            GetFeature("SingularityChart"):PivotTo(if LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("singularity"), LethalNum.new(1, 0)) and v222 then v222 else v4)
+            t.UpdateSob()
+        end
+
+        local v225 = LethalNum.isGreaterE(Data.ImportantData.Stats.synSpd, LethalNum.new(1, 0))
+
+        if location == "star" or p1 then
+            test(if InfoStore.Resets.starTier.a >= 2 then true else false, GetFeature("EclipseUpgrades"), CFrame.new(-1008.25, 4419.267, -1735.546), CFrame.Angles(0, 1.4835298641951802, 0), 3, 0.35)
+            test(if InfoStore.Resets.starTier.a >= 4 then true else false, GetFeature("ConstellationSol"), CFrame.new(-1007.952, 4430.354, -1669.91), CFrame.Angles(0, -2.8797932657906435, 1.0471975511965976), 3, 0.35)
+
+            local ConstLayouts = GetFeature("Solarians").ConstLayouts
+
+            ConstLayouts:PivotTo(InfoStore.Resets.starTier.a >= 5 and CFrame.new(-986.253, 4430.427, -1587.781) * CFrame.Angles(0, -2.8623399732707004, 1.0471975511965976) or v4)
+
+            local Solarian = GetFeature("Solarians").Solarian
+
+            Solarian:PivotTo(v219 and CFrame.new(-1213.707, 4418.704, -1455.583) * CFrame.Angles(0, 1.3089969389957472, 0) or v4)
+
+            local Materials = GetFeature("Solarians").Materials
+
+            Materials:PivotTo(v219 and CFrame.new(-1260.071, 4418.503, -1480.445) * CFrame.Angles(0, 0.7853981633974483, 0) or v4)
+
+            local Collecting = GetFeature("Solarians").Collecting
+
+            Collecting:PivotTo(v219 and CFrame.new(-1297.185, 4418.503, -1530.93) * CFrame.Angles(0, 0.5235987755982988, 0) or v4)
+
+            local Forming = GetFeature("Solarians").Forming
+
+            Forming:PivotTo(LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("sol"), LethalNum.new(1, 0)) and CFrame.new(-1330.903, 4418.503, -1603.183) * CFrame.Angles(0, 0.3490658503988659, 0) or v4)
+
+            local Compression = GetFeature("Solarians").Compression
+
+            Compression:PivotTo(Data.ImportantData.Stats.bestStage >= 10 and CFrame.new(-946.403, 4418.503, -1464.683) * CFrame.Angles(0, 1.9198621771937625, 0) or v4)
+
+            local Fragments = GetFeature("Solarians").Fragments
+
+            Fragments:PivotTo(Data.ImportantData.Stats.bestStage >= 20 and CFrame.new(-871.903, 4418.503, -1499.183) * CFrame.Angles(0, math.rad(120), 0) or v4)
+            GetFeature("Challenges"):PivotTo(Data.ImportantData.Stats.bestStage >= 14 and CFrame.new(-852.051, 4418.503, -1583.045) * CFrame.Angles(0, -2.8797932657906435, 0) or v4)
+
+            local v239 = LethalNum.isGreaterE(Solarians.Bars.off.level, LethalNum.new(1, 0)) or LethalNum.isGreaterE(Solarians.Bars.def.level, LethalNum.new(1, 0)) or Data.ImportantData.Stats.bestStage > 1
+            local Portaling = GetFeature("Solarians").Portaling
+
+            Portaling:PivotTo(v239 and CFrame.new(-1121.078, 4418.503, -1451.531) * CFrame.Angles(0, 1.6580627893946132, 0) or v4)
+
+            local Souls = GetFeature("Solarians").Souls
+
+            Souls:PivotTo(LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("souls"), LethalNum.new(1, 0)) and CFrame.new(-1021.519, 4418.503, -1454.044) * CFrame.Angles(0, 1.4835298641951802, 0) or v4)
+
+            local a = InfoStore.Resets.supernova.a
+            local a2 = InfoStore.Resets.starTier.a
+            local v242 = if SolarChallenges.Challenges.cycle.completions > 0 then true else LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("souls2"), LethalNum.new(1, 0)) or InfoStore.Resets.loop1.b > 0
+
+            t.menus.Sauto.Visible = if a >= 2 then true else InfoStore.Resets.loop1.b > 0
+            t.menus.Sfiller.Visible = if a >= 2 then true else InfoStore.Resets.loop1.b > 0
+            t.menus.SautoLock.Visible = if a < 2 then InfoStore.Resets.loop1.b < 1 else false
+            t.menus.SfillerLock.Visible = if a < 2 then InfoStore.Resets.loop1.b < 1 else false
+            t.menus.Ssun.Visible = if a2 >= 4 then true else false
+            t.menus.SsunLock.Visible = if a2 < 4 then true else false
+            t.menus.GoldenStars.Visible = v242
+            t.menus.GoldenStarsLock.Visible = not v242
+            t.menus.Flowers.Visible = if InfoStore.Resets.starTier.a >= 5 then true else InfoStore.Resets.loop1.b > 0
+            t.menus.FlowerSuperLock.Visible = if InfoStore.Resets.starTier.a < 5 then InfoStore.Resets.loop1.b < 1 else false
+            t.menus.capAll.Visible = if a2 >= 12 or InfoStore.Resets.loop1.b > 0 then if Data.ImportantData.Stats.bestStage >= 2 then true else false else false
+
+            local v252 = if Multipliers.getSCLevel("sc2") > 0 then true else false
+
+            t.menus.SCs.Visible = if v252 then v252 else InfoStore.Resets.loop1.b > 0
+            t.menus.SCso.Visible = v252
+            t.menus.SCma.Visible = if Multipliers.getSCLevel("s7") > 0 then true else false
+            t.menus.SCun.Visible = if Multipliers.getSCLevel("s18") > 0 then true else false
+        end
+
+        if location == "snow" or p1 then
+            t.menus.synLock.Visible = not v225 and (if prog < 2 then if Data.ImportantData.Stats.bestStage < 140 then true else false else false)
+            t.menus.synM.Visible = if v225 then if prog < 2 then if Data.ImportantData.Stats.bestStage >= 140 then true else false else false else v225
+            t.menus.synpLock.Visible = if prog < 2 then Data.ImportantData.Stats.bestStage < 140 else false
+            t.menus.synpM.Visible = if prog >= 2 then Data.ImportantData.Stats.bestStage >= 140 else false
+            t.menus.syncsLock.Visible = if prog < 2 then true else false
+            t.menus.syncsM.Visible = if prog >= 2 then true else false
+        end
+
+        if location == "grassland" or (location == "loop" or p1) then
+            local v262 = Solarians.HasLeveled("p10") or Solarians.HasLeveled("p10a")
+
+            t.menus.goldM.Visible = v262
+            t.menus.goldLock.Visible = not v262
+            GetFeature("ToCorruptedLand"):PivotTo(v225 and CFrame.new(26824.299, 9379.252, -31183.324) * CFrame.Angles(0, 0.6981317007977318, 0) or v4)
+
+            local DG = workspace.MetalBits.DG
+            local dungeonStats = Data.ImportantData.UpgradeLevels.dungeonStats
+            local v265 = dungeonStats.chaos and (if dungeonStats.chaos.highestCleared >= 4 then Data.ImportantData.Stats.bestStage >= 1000 else false)
+
+            t.menus.mapTele.GL.Container.Dungeon10.Visible = not v265
+
+            if DG:FindFirstChild("D10:FinalCastle") then
+                DG["D10:FinalCastle"]:PivotTo(v265 and CFrame.new(27280.402, 9402.504, -30897.912) * CFrame.Angles(0, -3.141592653589793, -1.5707963267948966) or v4)
+            end
+
+            local v268 = CFrame.new(27250.402, 9370.253, -30971.289) * CFrame.Angles(0, -1.5707963267948966, 0)
+
+            if InfoStore.Resets.loop1.b > 0 then
+                local v269 = CFrame.new(27341.764, 8034, -123001.328) * CFrame.Angles(0, math.pi, 0)
+
+                GetFeature("EndGame"):PivotTo(if Data.ImportantData.Stats.gameWon and v269 then v269 else v4)
+            else
+                local v272 = GetFeature("EndGame")
+
+                v272:PivotTo(if v265 and (Data.ImportantData.Stats.gameWon and v268) then v268 else v4)
+            end
+
+            GetFeature("ToLoopTower"):PivotTo(v265 and InfoStore.Resets.loop1.b > 0 and CFrame.new(27251.086, 9393.753, -30963.48) * CFrame.Angles(0, 0, 0) or v4)
+        end
+
+        if location == "loop" or p1 then
+            local v276 = if InfoStore.Resets.loop1.b >= 10 then true else false
+
+            GetFeature("Loop1Door"):PivotTo(not v276 and CFrame.new(27317.875, 8022.25, -122914.914) * CFrame.Angles(0, -2.356194490192345, 0) or v4)
+            GetFeature("Loop1to2Tele"):PivotTo(v276 and CFrame.new(27317.695, 8039.25, -122915.07) * CFrame.Angles(0, 0.7853981633974483, math.pi) or v4)
+
+            local v281 = if InfoStore.Resets.loop2.b >= 10 then true else false
+
+            GetFeature("Loop2Door"):PivotTo(not v281 and CFrame.new(27317.875, 8122.25, -122914.914) * CFrame.Angles(0, -2.356194490192345, 0) or v4)
+            GetFeature("Loop2to3Tele"):PivotTo(v281 and CFrame.new(27317.695, 8139.25, -122915.07) * CFrame.Angles(0, 0.7853981633974483, math.pi) or v4)
+            GetFeature("LimeCharger"):PivotTo(InfoStore.Resets.loop2.b > 0 and CFrame.new(27152.389, 8138.5, -123005.094) * CFrame.Angles(0, 0, 0) or v4)
+
+            local v288 = if InfoStore.Resets.loop3.b >= 10 then true else false
+
+            GetFeature("Loop3Door"):PivotTo(not v288 and CFrame.new(27317.875, 8222.25, -122914.914) * CFrame.Angles(0, -2.356194490192345, 0) or v4)
+            GetFeature("Loop3to4Tele"):PivotTo(v288 and CFrame.new(27317.695, 8239.25, -122915.07) * CFrame.Angles(0, 0.7853981633974483, math.pi) or v4)
+
+            local v293 = if InfoStore.Resets.loop4.b >= 10 then true else false
+
+            GetFeature("Loop4Door"):PivotTo(not v293 and CFrame.new(27317.875, 8322.25, -122914.914) * CFrame.Angles(0, -2.356194490192345, 0) or v4)
+            GetFeature("Loop4to5Tele"):PivotTo(v293 and CFrame.new(27317.695, 8339.25, -122915.07) * CFrame.Angles(0, 0.7853981633974483, math.pi) or v4)
+            GetFeature("BlueDoorway"):PivotTo(InfoStore.Resets.loop3.b > 0 and CFrame.new(27172.086, 8291.682, -123079.328) * CFrame.Angles(0, -2.356194490192345, 0) or v4)
+            t.menus.lLoop.Visible = if InfoStore.Resets.loop2.b > 0 then true else false
+            t.menus.lLime.Visible = if InfoStore.Resets.loop2.b > 0 then true else false
+            t.menus.lFiller.Visible = if InfoStore.Resets.loop3.b > 0 then true else false
+            t.menus.trueEndLock.Visible = if InfoStore.Resets.loop5.a < 10 then true else false
+            t.menus.loopUpgLock.Visible = if InfoStore.Resets.loop1.b < 1 then true else false
+        end
+
+        if location == "blue" or p1 then
+            t.menus.bluestigeLock.Visible = if CurrencyTypes.Levels.blevel.level < 50 then true else false
+            t.menus.plasmaLock.Visible = if CurrencyTypes.Levels.blevel.level < 150 then true else false
+            t.menus.blautoLock.Visible = if CurrencyTypes.Levels.blevel.highestLevel < 10 then true else false
+            t.menus.blueShopLock.Visible = if CurrencyTypes.Levels.blevel.level < 50 then InfoStore.Resets.bluestige.b < 1 else false
+            t.menus.plasmaShopLock.Visible = if CurrencyTypes.Levels.blevel.level < 150 then InfoStore.Resets.plasma.b < 1 else false
+            t.menus.grasstouchLock.Visible = if CurrencyTypes.Levels.blevel.level < 200 then InfoStore.Resets.plasma.b < 1 else false
+            t.menus.grasstouchMilestoneLock.Visible = if InfoStore.Resets.grassTouch.b < 1 then true else false
+            GetFeature("Plasmaficate"):PivotTo(InfoStore.Resets.bluestige.b > 0 and CFrame.new(-3626.5, 9476.6, -119915.875) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            GetFeature("PlasmaShop"):PivotTo(InfoStore.Resets.bluestige.b > 0 and CFrame.new(-3450, 9476.6, -119777.875) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+            GetFeature("IridiumShop"):PivotTo(InfoStore.Resets.bluestige.b > 0 and CFrame.new(-3527.5, 9483.1, -119778.125) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+            GetFeature("BlautomationShop"):PivotTo(CFrame.new(-3702.047, 9514.85, -119757.375) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+            GetFeature("AccomplishmentsHighest"):PivotTo(InfoStore.Resets.bluestige.b > 0 and CFrame.new(-3556, 9476.6, -119915.875) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            GetFeature("GrassTouch"):PivotTo(InfoStore.Resets.plasma.b > 0 and CFrame.new(-3484, 9477.6, -119938.625) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            GetFeature("GrassTouchMilestones"):PivotTo(InfoStore.Resets.plasma.b > 0 and CFrame.new(-3435.25, 9482.1, -119913.625) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            GetFeature("GrapeWall"):PivotTo(InfoStore.Resets.loop4.b < 1 and CFrame.new(-3368, 9614.6, -119842.25) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+        end
+    end
+
+    if world == 2 or p1 then
+        local W2 = Features.W2
+
+        if not p1 then
+            Interface = W2.RareFlowerShop.Interface
+        end
+
+        t.menus.runeLock.Visible = if CurrencyTypes.Levels.jlevel.level < 30 then true else false
+        t.menus.runeUpgLock.Visible = if CurrencyTypes.Levels.jlevel.level < 30 then InfoStore.Resets.rune.b < 1 else false
+        W2.Frog:PivotTo(InfoStore.Resets.rune.b >= 1 and CFrame.new(32785.316, 16.75, -31.602) * CFrame.Angles(0, -2.792526803190927, 0) or CFrame.new(32785.316, -32.75, -31.602) * CFrame.Angles(0, -2.792526803190927, 0))
+        t.menus.rrLock.Visible = LethalNum.isGreater(LethalNum.new(1, 0), CurrencyTypes.GetCurrencyTotal("ruby"))
+        t.menus.sapphireLock.Visible = if CurrencyTypes.Levels.jlevel.level < 120 then InfoStore.Resets.sapphire.b < 1 else false
+        t.menus.awakenLock.Visible = if CurrencyTypes.Levels.jlevel.level < 200 then InfoStore.Resets.temple.b < 1 else false
+        t.menus.templeChartM.Visible = if InfoStore.Resets.temple.a >= 1 then true else InfoStore.Resets.l4.b >= 1
+        t.menus.templeChartLock.Visible = if InfoStore.Resets.temple.a < 1 then InfoStore.Resets.l4.b < 1 else false
+        t.menus.awakenMilestoneLock.Visible = if InfoStore.Resets.temple.b < 1 then true else false
+        W2.AwakenMilestones:PivotTo(InfoStore.Resets.awaken.b >= 1 and CFrame.new(32909.152, -10.5, 129.571) * CFrame.Angles(0, 1.0471975511965976, 0) or CFrame.new(32932.152, -10.5, 136.571) * CFrame.Angles(0, 1.0471975511965976, 0))
+        W2.ConstructBlocker:PivotTo(InfoStore.Resets.awaken.a < 7 and CFrame.new(33129.426, -19.748, 137.25) * CFrame.Angles(0, 1.8325957145940461, 0) or v4)
+        W2.Construct:PivotTo(InfoStore.Resets.awaken.a >= 7 and CFrame.new(33075.426, -16.497, 123) * CFrame.Angles(0, -3.141592653589793, 0) or v4)
+        W2.AncientBridge:PivotTo(t.getUpgradeLevel("bridge") > 0 and CFrame.new(33200.176, -39.247, 59.75) * CFrame.Angles(0, 0, 0) or v4)
+        W2.AncientBridgeLock:PivotTo(t.getUpgradeLevel("bridge") <= 0 and CFrame.new(33200.176, 27.254, 5.25) * CFrame.Angles(0, 0, 0) or v4)
+        W2.Stability:PivotTo(t.getUpgradeLevel("bridge") > 0 and CFrame.new(33309.613, -10.247, -27.579) * CFrame.Angles(0, -1.8325957145940461, 0) or v4)
+        W2.InstabilityMods:PivotTo(t.getUpgradeLevel("bridge") > 0 and CFrame.new(33445.426, -13.497, -6) * CFrame.Angles(0, 0, 0) or v4)
+        W2.RareFlowerShop:PivotTo((t.getUpgradeLevel("bridge") > 0 or InfoStore.Resets.trueAwaken.a > 0) and CFrame.new(33614.309, -12, 140.75) * CFrame.Angles(0, math.pi, 0) or v4)
+        W2.CavernGate:PivotTo(t.getUpgradeLevel("bridge2") <= 0 and CFrame.new(33476.426, -10.247, 398) * CFrame.Angles(0, 0, 0) or v4)
+        W2.CavernKey:PivotTo(t.getUpgradeLevel("bridge2") > 0 and CFrame.new(33446.926, -19.512, 396.75) * CFrame.Angles(0, 0, -0.7853981633974483) or v4)
+        t.menus.opalLock.Visible = if CurrencyTypes.Levels.clevel.level < 30 then true else false
+        t.menus.opalUpgLock.Visible = if CurrencyTypes.Levels.clevel.level < 30 then InfoStore.Resets.opal.b < 1 else false
+        t.menus.bulbLock.Visible = if CurrencyTypes.Levels.clevel.level < 100 then true else false
+        t.menus.bulbUpgLock.Visible = if CurrencyTypes.Levels.clevel.level < 100 then InfoStore.Resets.bulb.b < 1 else false
+        W2.BulbDoor:PivotTo(CurrencyTypes.Levels.clevel.highestLevel < 100 and CFrame.new(33797.676, 5.003, 611.25) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+        W2.IntJungleRiftClosed:PivotTo(t.getUpgradeLevel("bridge3") <= 0 and CFrame.new(34452.684, -342.5, 26237.75) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+        W2.ToJungleRift:PivotTo(t.getUpgradeLevel("bridge3") > 0 and CFrame.new(34452.574, -319.582, 26239.801) * CFrame.Angles(0, 0, 0) or v4)
+        W2.RiftClosed:PivotTo(t.getUpgradeLevel("bridge3") <= 0 and CFrame.new(33494.426, -19.247, 188) * CFrame.Angles(0, 0, 0) or v4)
+        W2.Rift:PivotTo(t.getUpgradeLevel("bridge3") > 0 and CFrame.new(33465.926, -19.997, 252.25) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+        W2.IntCaveRiftClosed:PivotTo(t.getUpgradeLevel("b4") <= 0 and CFrame.new(34168.684, -342.5, 26406.25) * CFrame.Angles(0, 0, 0) or v4)
+        W2.ToCaveRift:PivotTo(t.getUpgradeLevel("b4") > 0 and CFrame.new(34152.934, -276, 26406.25) * CFrame.Angles(0, 0, 0) or v4)
+        W2.CaveRiftClosed:PivotTo(t.getUpgradeLevel("b4") <= 0 and CFrame.new(34000.926, 50.503, 801.25) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+        W2.CaveRift:PivotTo(t.getUpgradeLevel("b4") > 0 and CFrame.new(34016.176, 117.003, 801.25) * CFrame.Angles(0, math.pi, 0) or v4)
+        W2.IntUTRiftClosed:PivotTo(InfoStore.Resets.sandstorm.a < 15 and CFrame.new(35237.184, -102.5, 26176.25) * CFrame.Angles(0, math.pi, 0) or v4)
+        W2.ToUTRift:PivotTo(InfoStore.Resets.sandstorm.a >= 15 and CFrame.new(35259.934, -104, 26167.748) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+        W2.FDRiftClosed:PivotTo(InfoStore.Resets.midnight2.a < 6 and CFrame.new(33820.625, 3643.1, 6521.895) * CFrame.Angles(0, math.pi, 0) or v4)
+        W2.ToFDRift:PivotTo(InfoStore.Resets.midnight2.a >= 6 and CFrame.new(33802.875, 3642.599, 6530.395) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+        t.menus.treeMilestoneLock.Visible = if InfoStore.Resets.tree.b < 1 then true else false
+        W2.Linker:PivotTo(InfoStore.Resets.tree.b >= 1 and CFrame.new(34691.934, -334.75, 26458.25) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+        W2.UpperCaveDoor:PivotTo((InfoStore.Resets.tree.b < 1 or t.getUpgradeLevel("b4") <= 0) and CFrame.new(33894.926, 54.503, 708.5) * CFrame.Angles(0, 0, 0) or v4)
+
+        local instLevel = Data.ImportantData.Stats.instLevel
+        local v366 = if instLevel >= 1 then 0.1 else 0
+
+        if instLevel >= 2 then
+            v366 = 0.2
+        end
+
+        if instLevel >= 3 then
+            v366 = 0.4
+        end
+
+        if instLevel >= 4 then
+            v366 = 0.8
+        end
+
+        if instLevel >= 5 then
+            v366 = math.min(100, (instLevel - 4) * 5)
+        end
+
+        W2.Unstable.RiftInst.Parti.Rate = v366
+        W2.Unstable.RiftInst.Parti2.Rate = v366
+        W2.Unstable.RiftInst.Parti3.Rate = v366
+        W2.Unstable.RiftInst.Parti.Enabled = if instLevel >= 1 then true else false
+        W2.Unstable.RiftInst.Parti2.Enabled = if instLevel >= 1 then true else false
+        W2.Unstable.RiftInst.Parti3.Enabled = if instLevel >= 1 then true else false
+        W2.TempleDoor:PivotTo(Multipliers.getUpgradeLevel("b5") <= 0 and CFrame.new(32999.426, 65.753, 376.5) * CFrame.Angles(0, -3.141592653589793, 0) or v4)
+        W2.TempleTele:PivotTo(Multipliers.getUpgradeLevel("b5") > 0 and CFrame.new(32999.426, 33.753, 393.75) * CFrame.Angles(0, 0, 0) or v4)
+        W2.CollapseReminder:PivotTo(InfoStore.Resets.trueAwaken.a >= 1 and CFrame.new(34369.184, -339.5, 26567.625) * CFrame.Angles(0, 1.5707963267948966, -1.5707963267948966) or v4)
+
+        local v374 = if InfoStore.Resets.trueAwaken.a >= 2 then true else false
+
+        W2.Gauntlet:PivotTo(v374 and CFrame.new(30622.682, 23, 527.25) * CFrame.Angles(0, 0, 0) or v4)
+        W2.GauntletLock:PivotTo(not v374 and CFrame.new(30622.682, 23, 527.25) * CFrame.Angles(0, 0, 0) or v4)
+        t.menus.ceLock.Visible = if InfoStore.Resets.trueAwaken.a < 4 then true else false
+        W2.Creation.Display.SurfaceGui.Enabled = if InfoStore.Resets.trueAwaken.a >= 4 then true else false
+        t.menus["2_remLock"].Visible = if InfoStore.Resets.trueAwaken.a < 5 then true else false
+        t.menus["2_remUpgLock"].Visible = if InfoStore.Resets.trueAwaken.a < 5 then true else false
+        W2.Remnants2.Display.SurfaceGui.Enabled = if InfoStore.Resets.trueAwaken.a >= 5 then true else false
+        t.menus["2_stackLock"].Visible = if InfoStore.Resets.trueAwaken.a < 10 then true else false
+        t.menus["2_stackUpgLock"].Visible = if InfoStore.Resets.trueAwaken.a < 10 then true else false
+        W2.RemStacks.Display.SurfaceGui.Enabled = if InfoStore.Resets.trueAwaken.a >= 10 then true else false
+
+        local v389 = if Data.ImportantData.Stats.currentCC == "none" then 0 else CC.Creations[Data.ImportantData.Stats.currentCC].complexity or 1
+
+        t.menus["2_breakLock"].Visible = if v389 < 2 then true else false
+        t.menus["2_breakUpgLock"].Visible = if v389 < 2 then true else false
+        W2.Breakthrough.Display.SurfaceGui.Enabled = if v389 >= 2 then true else false
+        t.menus["2_discoveryLock"].Visible = if v389 < 4 then true else false
+        t.menus["2_discoveryUpgLock"].Visible = if v389 < 4 then true else false
+        W2.Discovery.Display.SurfaceGui.Enabled = if v389 >= 4 then true else false
+        W2.Discovery:PivotTo(v389 >= 3 and CFrame.new(38178.82, -102.5, 15803.949) * CFrame.Angles(0, 0, 0) or v4)
+        t.menus["2_epiphanyLock"].Visible = if v389 < 6 then true else false
+        t.menus["2_epiphanyMileLock"].Visible = if v389 < 6 then true else false
+        W2.Epiphany.Display.SurfaceGui.Enabled = if v389 >= 6 then true else false
+        W2.Epiphany:PivotTo(v389 >= 5 and CFrame.new(38298.945, -97.5, 15896.699) * CFrame.Angles(0, math.pi, 0) or v4)
+        t.menus.ccLock.Visible = if InfoStore.Resets.trueAwaken.a < 6 then true else false
+        W2.CC.Display.SurfaceGui.Enabled = if InfoStore.Resets.trueAwaken.a >= 6 then true else false
+        W2.Regeneration:PivotTo(InfoStore.Resets.trueAwaken.a >= 6 and CFrame.new(30622.307, 19.75, 373.25) * CFrame.Angles(0, 0, 0) or v4)
+        t.menus.regenLock.Visible = not InfoStore.Store.regen
+        t.menus.degenLock.Visible = not InfoStore.Store.degen
+
+        if location == "chamber" then
+            for v410, v411 in Chamber.Stairs:GetChildren() do
+                if v411:GetAttribute("stepDoor") then
+                    local v412 = if CurrencyTypes.Levels.ilevel.level < v411:GetAttribute("stepDoor") then InfoStore.Resets.trueAwaken.a > 0 else false
+
+                    v411.Transparency = if v412 then 0 else 1
+                    v411.CanCollide = v412
+
+                    continue
+                end
+
+                local v414 = if CurrencyTypes.Levels.ilevel.level >= v411:GetAttribute("step") then InfoStore.Resets.trueAwaken.a > 0 else false
+
+                v411.Transparency = if v414 then 0 else 1
+                v411.CanCollide = v414
+            end
+        end
+
+        local v416 = if InfoStore.Resets.sandstorm.a > 0 then true else CurrencyTypes.Levels.dlevel.level >= 40
+
+        t.menus["2_sandstormLock"].Visible = not v416
+        t.menus["2_sandstormMileLock"].Visible = not v416
+        t.menus["2_sandLock"].Visible = not v416
+        t.menus["2_waterLock"].Visible = if Multipliers.getUpgradeLevel("2_ctWA") <= 0 then true else false
+        t.menus["2_vaseLock"].Visible = if Multipliers.getUpgradeLevel("2_ctV") <= 0 then true else false
+        W2.Water:PivotTo((InfoStore.Resets.vase.b > 0 or Multipliers.getUpgradeLevel("2_ctWA") > 0) and CFrame.new(34709.012, -10.75, -1291.305) * CFrame.Angles(0, -1.8325957145940461, 0) or v4)
+        W2.Vases:PivotTo((InfoStore.Resets.vase.b > 0 or Multipliers.getUpgradeLevel("2_ctV") > 0) and CFrame.new(34824.934, -15.75, -1279.011) * CFrame.Angles(0, 0, 0) or v4)
+        W2.GauntletDesert:PivotTo(InfoStore.Resets.sandstorm.b >= 2 and CFrame.new(34954.434, -7, -917.75) * CFrame.Angles(0, math.pi, 0) or v4)
+        W2.Fossilize:PivotTo(InfoStore.Store.found and CFrame.new(34837.934, -15.5, -730.5) * CFrame.Angles(0, math.pi, 0) or v4)
+        W2.SandstormBlocker1:PivotTo(Data.ImportantData.Stats.prog2 < 2 and CFrame.new(34291.434, -20, -628.25) * CFrame.Angles(0, 0, 0) or v4)
+        W2.DesertBlocker:PivotTo(Data.ImportantData.Stats.prog2 < 2 and CFrame.new(33536.934, 21.75, -142.25) * CFrame.Angles(0, 0, 0) or v4)
+        W2.DestabilizeDoor:PivotTo(InfoStore.Resets.sandstorm.b < 11 and CFrame.new(34369.184, -96, 26991.252) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+        W2.DestabilizePath:PivotTo(InfoStore.Resets.sandstorm.b >= 11 and CFrame.new(34369.184, -115, 27053.75) * CFrame.Angles(0, 0, 0) or v4)
+        W2.Destabilize:PivotTo(InfoStore.Resets.sandstorm.b >= 11 and CFrame.new(35117.934, -101, 26175.75) * CFrame.Angles(0, 0, 0) or v4)
+        W2.DestabilizeShop:PivotTo((InfoStore.Resets.destabilize.a >= 1 or InfoStore.Resets.midnight2.a >= 1) and CFrame.new(35164.184, -98.5, 26100) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+        W2.Degeneration:PivotTo(InfoStore.Store.degen and CFrame.new(35163.684, -61, 26251.375) * CFrame.Angles(0, 1.5707963267948966, -1.5707963267948966) or v4)
+        W2.Twilight:PivotTo(InfoStore.Resets.trueAwaken.a >= 25 and CFrame.new(33754.375, 3620.1, 7006.395) * CFrame.Angles(0, 0, 0) or v4)
+        W2.TwilightShop:PivotTo(InfoStore.Resets.trueAwaken.a >= 25 and CFrame.new(33711.59, 3622.588, 7049.596) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+        W2.Midnight:PivotTo(InfoStore.Resets.trueAwaken.a >= 30 and CFrame.new(33951.375, 3644.1, 6720.395) * CFrame.Angles(0, 0, 0) or v4)
+        W2.MidnightMile:PivotTo(InfoStore.Resets.trueAwaken.a >= 30 and CFrame.new(33951.375, 3651.6, 6672.395) * CFrame.Angles(0, 0, 0) or v4)
+        W2.MidnightShop:PivotTo(InfoStore.Resets.trueAwaken.a >= 30 and CFrame.new(33951.375, 3651.6, 6602.395) * CFrame.Angles(0, 0, 0) or v4)
+        W2.Starshower.StarShower.ParticleEmitter.Enabled = if Data.ImportantData.Stats.event == "storm" then true else false
+        W2.UpgradesSFS:PivotTo(InfoStore.Resets.midnight2.a >= 3 and CFrame.new(33908.16, 3634.524, 6487.834) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+        W2.UpgradesCactusS:PivotTo(InfoStore.Resets.midnight2.a >= 3 and CFrame.new(34008.656, 3634.524, 6487.834) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+        W2.CactusWall:PivotTo(Data.ImportantData.Stats.prog2 < 3 and CFrame.new(34900.684, -446.25, -1287) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+        W2.TrialStuff:PivotTo(Data.ImportantData.Stats.prog2 >= 3 and CFrame.new(34563.184, -505.25, -1490.5) * CFrame.Angles(0, math.pi, 0) or v4)
+        W2.TrialChargeShop:PivotTo(InfoStore.Resets.midnight2.a >= 7 and CFrame.new(35107.461, -539.15, -1351.484) * CFrame.Angles(0, -2.0943951023931953, 0) or v4)
+        W2.CGPortal:PivotTo(Data.ImportantData.Stats.prog2 >= 4 and CFrame.new(34717.934, -509.5, -1437.75) * CFrame.Angles(0, math.pi, 0) or v4)
+        W2.CactusT1:PivotTo(InfoStore.Resets.midnight2.a >= 9 and CFrame.new(35049.84, -539, -1529.107) * CFrame.Angles(0, 0.17453292519943295, 0) or v4)
+        W2.CactusT2:PivotTo(InfoStore.Resets.midnight2.a >= 12 and CFrame.new(35008.637, -539, -1039.997) * CFrame.Angles(0, 2.9670597283903604, 0) or v4)
+        W2.CactusT3:PivotTo(InfoStore.Resets.midnight2.a >= 15 and CFrame.new(35248.258, -539, -1449.279) * CFrame.Angles(0, -1.6580627893946132, 0) or v4)
+        W2.RiftMile:PivotTo(InfoStore.Resets.rift.a >= 1 and CFrame.new(34545.934, 1044, 26200.75) * CFrame.Angles(0, 0, 0) or v4)
+        W2.SpecUpgrades:PivotTo(InfoStore.Resets.rift.a >= 1 and CFrame.new(34545.934, 1041.003, 26076.758) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+        W2.UpgradesRift:PivotTo(InfoStore.Resets.rift.a >= 1 and CFrame.new(34489.184, 1041.25, 26018.875) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+        W2.RiftRune:PivotTo(InfoStore.Resets.rift.a >= 1 and CFrame.new(34545.934, 1041, 26276.75) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+        W2.RiftEssenceShop:PivotTo(InfoStore.Resets.rift.a >= 3 and CFrame.new(34353.57, 1045.25, 26090.789) * CFrame.Angles(0, -0.2617993877991494, 0) or v4)
+        W2.GauntletRift:PivotTo(InfoStore.Resets.rift.a >= 2 and CFrame.new(34359.184, 1048.5, 26349.25) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+        W2.RiftGenerator:PivotTo(InfoStore.Resets.rift.a >= 1 and CFrame.new(34399.512, 1045.25, 26041.428) * CFrame.Angles(0, -1.0471975511965976, 0) or v4)
+        W2.Doorm:PivotTo(InfoStore.Resets.rift.a < 5 and CFrame.new(34021.434, -680, 807.75) * CFrame.Angles(0, math.pi, 0) or v4)
+        W2.EndgameText:PivotTo(InfoStore.Resets.rift.a >= 5 and CFrame.new(34014.684, -675, 751.125) * CFrame.Angles(0, 0, 0) or v4)
+        W2.ToPOD:PivotTo(InfoStore.Resets.rift.a >= 5 and CFrame.new(33992.805, -661, 425.935) * CFrame.Angles(0, math.pi, 0) or v4)
+        W2.Scam2Shop:PivotTo(InfoStore.Resets.scam2.a >= 1 and CFrame.new(48508.938, 67.8, -1035.502) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+        W2.ScamUndo:PivotTo(InfoStore.Resets.scam2.a >= 1 and CFrame.new(48501.938, 64.3, -1099.002) * CFrame.Angles(0, math.pi, 0) or v4)
+
+        local Gauntlet2 = W2.Gauntlet.Gauntlet
+        local Areas = W2.Gauntlet.Areas
+        local Artifacts = W2.Gauntlet.Artifacts
+
+        if location == "desert" then
+            Gauntlet2 = W2.GauntletDesert.Gauntlet
+            Areas = W2.GauntletDesert.Areas
+            Artifacts = W2.GauntletDesert.Artifacts
+        end
+
+        if location == "chamber2" then
+            Gauntlet2 = W2.GauntletRift.Gauntlet
+            Areas = W2.GauntletRift.Areas
+            Artifacts = W2.GauntletRift.Artifacts
+        end
+
+        v2.Gauntlet.Adornee = Gauntlet2
+        v2.GauntletAreas.Adornee = Areas
+        v2.Artifacts.Adornee = Artifacts
+    end
+
+    if world == 3 or p1 then
+        local v459 = GetFeature("HubTower")
+
+        v459:PivotTo(LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("9_F1-1"), LethalNum.new(5, 0)) and CFrame.new(19618.5, -30.7, 15739.999) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+    end
+
+    if world == 8 or p1 then
+        local Real = Features.Real
+
+        t.menus["8_autoLock"].Visible = if CurrencyTypes.Levels.levelS.highestLevel < 5 then true else false
+        t.menus["8_perkLock"].Visible = if CurrencyTypes.Levels.levelS.level < 50 then true else false
+        t.menus["8_prestigeLock"].Visible = if CurrencyTypes.Levels.levelS.level < 100 then true else false
+        t.menus["8_prestigeUpgradeLock"].Visible = if CurrencyTypes.Levels.levelS.highestLevel < 100 then true else false
+        t.menus["8_crystalLock"].Visible = if CurrencyTypes.Levels.levelS.level < 250 then true else false
+        t.menus["8_crystalUpgradeLock"].Visible = if CurrencyTypes.Levels.levelS.highestLevel < 250 then true else false
+        t.menus["8_grasshopLock"].Visible = if CurrencyTypes.Levels.levelS.level < 500 then true else false
+        t.menus["8_grasshopMilestoneLock"].Visible = if InfoStore.Resets.grasshopS.a < 1 then true else false
+        t.menus["8_steelieLock"].Visible = if CurrencyTypes.Levels.levelS.level < 1000 then true else false
+        t.menus["8_factoryLock"].Visible = if CurrencyTypes.Levels.levelS.highestLevel < 1000 then true else false
+        Real.LevelPerks2:PivotTo(InfoStore.Resets.grasshopS.a >= 2 and CFrame.new(-15162.45, 28311.15, -15404.928) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+        Real.Charger:PivotTo(Multipliers.getUpgradeLevel("8_charger") > 0 and CFrame.new(-15026.45, 28306.65, -15044.43) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+        Real.ChargeBonus:PivotTo(Multipliers.getUpgradeLevel("8_charger") > 0 and CFrame.new(-14979.575, 28313.15, -15087.552) * CFrame.Angles(0, -3.141592653589793, 0) or v4)
+        Real.Assembler:PivotTo(Multipliers.getUpgradeLevel("8_assembler") > 0 and CFrame.new(-14999.325, 28304.65, -15178.304) * CFrame.Angles(0, math.pi, 0) or v4)
+        Real.BrickHouse:PivotTo(Multipliers.getUpgradeLevel("8_brick") > 0 and CFrame.new(-14993.326, 28307.232, -15255.803) * CFrame.Angles(0, math.pi, 0) or v4)
+    end
+
+    if world == 9 or p1 then
+        local Quantity = Features.Quantity
+        local Floor1 = Quantity.Floor1
+        local Floor2 = Quantity.Floor2
+        local Floor3 = Quantity.Floor3
+        local Floor4 = Quantity.Floor4
+        local Floor5 = Quantity.Floor5
+
+        if location == "9_F1" or p1 then
+            Floor1.LevelPerks:PivotTo(CurrencyTypes.Levels.f1.highestLevel > 1 and CFrame.new(-15223.7, 28310.15, -30909.178) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor1.AutomationShop:PivotTo(CurrencyTypes.Levels.f1.highestLevel > 1 and CFrame.new(-15493.95, 28305.648, -30859.428) * CFrame.Angles(0, 0, 0) or v4)
+            Floor1.Layer1:PivotTo(CurrencyTypes.Levels.f1.highestLevel > 1 and CFrame.new(-15493.95, 28303.65, -30788.928) * CFrame.Angles(0, 0, 0) or v4)
+            Floor1.Layer1Shop:PivotTo(CurrencyTypes.Levels.f1.highestLevel > 1 and CFrame.new(-15493.95, 28303.65, -30718.428) * CFrame.Angles(0, 0, 0) or v4)
+            Floor1.Layer2:PivotTo(CurrencyTypes.Levels.f1.highestLevel >= 30 and CFrame.new(-15493.825, 28303.65, -30647.553) * CFrame.Angles(0, 0, 0) or v4)
+            Floor1.Layer2Shop:PivotTo(CurrencyTypes.Levels.f1.highestLevel >= 30 and CFrame.new(-15493.825, 28303.15, -30577.053) * CFrame.Angles(0, 0, 0) or v4)
+            Floor1.RareFieldShop:PivotTo(InfoStore.Resets.F1L1.b > 0 and CFrame.new(-15299.2, 28310.15, -30718.93) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+            Floor1.Layer3:PivotTo(CurrencyTypes.Levels.f1.highestLevel >= 100 and CFrame.new(-15174.2, 28303.65, -30909.176) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor1.Layer3Milestones:PivotTo(CurrencyTypes.Levels.f1.highestLevel >= 100 and CFrame.new(-15125.692, 28309.15, -30909.176) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor1.Layer3Reset:PivotTo(InfoStore.Resets.F1L3.b > 0 and CFrame.new(-15078.196, 28303.65, -30909.176) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor1.Layer3Shop:PivotTo(CurrencyTypes.Levels.f1.highestLevel >= 250 and CFrame.new(-15007.647, 28303.4, -30909.426) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor1.Cavern:PivotTo(InfoStore.Resets.F1L3.b >= 10 and CFrame.new(-15083.2, 28360.9, -30756.305) * CFrame.Angles(0, 0, 0) or v4)
+        end
+
+        if location == "9_F2" or p1 then
+            Floor2.LevelPerks:PivotTo(CurrencyTypes.Levels.f2.highestLevel > 1 and CFrame.new(-15223.7, 28810.15, -30909.178) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor2.AutomationShop:PivotTo(CurrencyTypes.Levels.f2.highestLevel > 1 and CFrame.new(-15493.95, 28805.648, -30859.428) * CFrame.Angles(0, 0, 0) or v4)
+            Floor2.Layer1:PivotTo(CurrencyTypes.Levels.f2.highestLevel > 1 and CFrame.new(-15493.95, 28803.65, -30788.928) * CFrame.Angles(0, 0, 0) or v4)
+            Floor2.Layer1Shop:PivotTo(CurrencyTypes.Levels.f2.highestLevel > 1 and CFrame.new(-15493.95, 28803.65, -30718.428) * CFrame.Angles(0, 0, 0) or v4)
+            Floor2.Layer2:PivotTo(CurrencyTypes.Levels.f2.highestLevel >= 30 and CFrame.new(-15493.825, 28803.65, -30647.553) * CFrame.Angles(0, 0, 0) or v4)
+            Floor2.Layer2Shop:PivotTo(CurrencyTypes.Levels.f2.highestLevel >= 30 and CFrame.new(-15493.825, 28803.15, -30577.053) * CFrame.Angles(0, 0, 0) or v4)
+            Floor2.RareFieldShop:PivotTo(InfoStore.Resets.F2L1.b > 0 and CFrame.new(-15299.2, 28810.15, -30718.93) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+            Floor2.Layer3:PivotTo(CurrencyTypes.Levels.f2.highestLevel >= 100 and CFrame.new(-15174.2, 28803.65, -30909.176) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor2.Layer3Milestones:PivotTo(CurrencyTypes.Levels.f2.highestLevel >= 100 and CFrame.new(-15125.692, 28809.15, -30909.176) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor2.Layer3Reset:PivotTo(InfoStore.Resets.F2L3.b > 0 and CFrame.new(-15078.196, 28803.65, -30909.176) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor2.Layer3Shop:PivotTo(CurrencyTypes.Levels.f2.highestLevel >= 250 and CFrame.new(-15007.647, 28803.4, -30909.426) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor2.DiamondZone:PivotTo(InfoStore.Resets.F2L3.b >= 10 and CFrame.new(-15083.2, 28860.9, -30756.305) * CFrame.Angles(0, 0, 0) or v4)
+        end
+
+        if location == "9_F3" or p1 then
+            Floor3.LevelPerks:PivotTo(CurrencyTypes.Levels.f3.highestLevel > 1 and CFrame.new(-15223.7, 29310.15, -30909.178) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor3.AutomationShop:PivotTo(CurrencyTypes.Levels.f3.highestLevel > 1 and CFrame.new(-15493.95, 29305.648, -30859.428) * CFrame.Angles(0, 0, 0) or v4)
+            Floor3.Layer1:PivotTo(CurrencyTypes.Levels.f3.highestLevel > 1 and CFrame.new(-15493.95, 29303.65, -30788.928) * CFrame.Angles(0, 0, 0) or v4)
+            Floor3.Layer1Shop:PivotTo(CurrencyTypes.Levels.f3.highestLevel > 1 and CFrame.new(-15493.95, 29303.65, -30718.428) * CFrame.Angles(0, 0, 0) or v4)
+            Floor3.Layer2:PivotTo(CurrencyTypes.Levels.f3.highestLevel >= 30 and CFrame.new(-15493.825, 29303.65, -30647.553) * CFrame.Angles(0, 0, 0) or v4)
+            Floor3.Layer2Shop:PivotTo(CurrencyTypes.Levels.f3.highestLevel >= 30 and CFrame.new(-15493.825, 29303.15, -30577.053) * CFrame.Angles(0, 0, 0) or v4)
+            Floor3.RareFieldShop:PivotTo(InfoStore.Resets.F3L1.b > 0 and CFrame.new(-15299.2, 29310.15, -30718.93) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+            Floor3.Layer3:PivotTo(CurrencyTypes.Levels.f3.highestLevel >= 100 and CFrame.new(-15174.2, 29303.65, -30909.176) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor3.Layer3Milestones:PivotTo(CurrencyTypes.Levels.f3.highestLevel >= 100 and CFrame.new(-15125.692, 29309.15, -30909.176) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor3.Layer3Reset:PivotTo(InfoStore.Resets.F3L3.b > 0 and CFrame.new(-15078.196, 29303.65, -30909.176) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor3.Layer3Shop:PivotTo(CurrencyTypes.Levels.f3.highestLevel >= 250 and CFrame.new(-15007.647, 29303.4, -30909.426) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor3.Mystical:PivotTo(InfoStore.Resets.F3L3.b >= 10 and CFrame.new(-15083.2, 29360.9, -30756.305) * CFrame.Angles(0, 0, 0) or v4)
+        end
+
+        if location == "9_F4" or p1 then
+            Floor4.LevelPerks:PivotTo(CurrencyTypes.Levels.f4.highestLevel > 1 and CFrame.new(-15223.7, 29810.15, -30909.178) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor4.AutomationShop:PivotTo(CurrencyTypes.Levels.f4.highestLevel > 1 and CFrame.new(-15493.95, 29805.648, -30859.428) * CFrame.Angles(0, 0, 0) or v4)
+            Floor4.Layer1:PivotTo(CurrencyTypes.Levels.f4.highestLevel > 1 and CFrame.new(-15493.95, 29803.65, -30788.928) * CFrame.Angles(0, 0, 0) or v4)
+            Floor4.Layer1Shop:PivotTo(CurrencyTypes.Levels.f4.highestLevel > 1 and CFrame.new(-15493.95, 29803.65, -30718.428) * CFrame.Angles(0, 0, 0) or v4)
+            Floor4.Layer2:PivotTo(CurrencyTypes.Levels.f4.highestLevel >= 30 and CFrame.new(-15493.825, 29803.65, -30647.553) * CFrame.Angles(0, 0, 0) or v4)
+            Floor4.Layer2Shop:PivotTo(CurrencyTypes.Levels.f4.highestLevel >= 30 and CFrame.new(-15493.825, 29803.15, -30577.053) * CFrame.Angles(0, 0, 0) or v4)
+            Floor4.RareFieldShop:PivotTo(InfoStore.Resets.F4L1.b > 0 and CFrame.new(-15299.2, 29810.15, -30718.93) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+            Floor4.Layer3:PivotTo(CurrencyTypes.Levels.f4.highestLevel >= 100 and CFrame.new(-15174.2, 29803.65, -30909.176) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor4.Layer3Milestones:PivotTo(CurrencyTypes.Levels.f4.highestLevel >= 100 and CFrame.new(-15125.692, 29809.15, -30909.176) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor4.Layer3Reset:PivotTo(InfoStore.Resets.F4L3.b > 0 and CFrame.new(-15078.196, 29803.65, -30909.176) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor4.Layer3Shop:PivotTo(CurrencyTypes.Levels.f4.highestLevel >= 250 and CFrame.new(-15007.647, 29803.4, -30909.426) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor4.Demonic:PivotTo(InfoStore.Resets.F4L3.b >= 10 and CFrame.new(-15083.2, 29860.9, -30756.305) * CFrame.Angles(0, 0, 0) or v4)
+        end
+
+        if location == "9_F5" or p1 then
+            Floor5.LevelPerks:PivotTo(CurrencyTypes.Levels.f5.highestLevel > 1 and CFrame.new(-15223.7, 30310.15, -30909.178) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor5.AutomationShop:PivotTo(CurrencyTypes.Levels.f5.highestLevel > 1 and CFrame.new(-15493.95, 30305.648, -30859.428) * CFrame.Angles(0, 0, 0) or v4)
+            Floor5.Layer1:PivotTo(CurrencyTypes.Levels.f5.highestLevel > 1 and CFrame.new(-15493.95, 30303.65, -30788.928) * CFrame.Angles(0, 0, 0) or v4)
+            Floor5.Layer1Shop:PivotTo(CurrencyTypes.Levels.f5.highestLevel > 1 and CFrame.new(-15493.95, 30303.65, -30718.428) * CFrame.Angles(0, 0, 0) or v4)
+            Floor5.Layer2:PivotTo(CurrencyTypes.Levels.f5.highestLevel >= 30 and CFrame.new(-15493.825, 30303.65, -30647.553) * CFrame.Angles(0, 0, 0) or v4)
+            Floor5.Layer2Shop:PivotTo(CurrencyTypes.Levels.f5.highestLevel >= 30 and CFrame.new(-15493.825, 30303.15, -30577.053) * CFrame.Angles(0, 0, 0) or v4)
+            Floor5.RareFieldShop:PivotTo(InfoStore.Resets.F5L1.b > 0 and CFrame.new(-15299.2, 30310.15, -30718.93) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+            Floor5.Layer3:PivotTo(CurrencyTypes.Levels.f5.highestLevel >= 100 and CFrame.new(-15174.2, 30303.65, -30909.176) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor5.Layer3Milestones:PivotTo(CurrencyTypes.Levels.f5.highestLevel >= 100 and CFrame.new(-15125.692, 30309.15, -30909.176) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor5.Layer3Reset:PivotTo(InfoStore.Resets.F5L3.b > 0 and CFrame.new(-15078.196, 30303.65, -30909.176) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor5.Layer3Shop:PivotTo(CurrencyTypes.Levels.f5.highestLevel >= 250 and CFrame.new(-15007.647, 30303.4, -30909.426) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+            Floor5.Demonic:PivotTo(v4)
+        end
+    end
+
+    v3.RareFlowerUpgrades.Adornee = Interface
+    t.ModifyDecorative()
+end
+function t.UpdateSob() --[[ UpdateSob | Line: 1205 | Upvalues: Multipliers (copy), InfoStore (copy), Data (copy), v4 (copy), t (copy) ]]
+    local v1 = CFrame.new(-1072.052, 4411.562, -1761.7) * CFrame.Angles(0, 0.5235987755982988, 0)
+
+    if Multipliers.getSCLevel("sol") > 0 then
+        v1 = CFrame.new(-1206.927, 4411.562, -1727.626) * CFrame.Angles(0, -1.0471975511965976, 0)
+    end
+
+    GetFeature("SolarObelisk"):PivotTo(if InfoStore.Resets.starTier.a >= 4 and (Data.ImportantData.Stats.sunrise == 1 and v1) then v1 else v4)
+    GetFeature("SolarObelisk2"):PivotTo(if Data.ImportantData.Stats.sunrise == 2 and v1 then v1 else v4)
+    GetFeature("SolarObelisk3"):PivotTo(if Data.ImportantData.Stats.sunrise == 3 and v1 then v1 else v4)
+
+    if Data.ImportantData.Stats.sunrise == 1 then
+        t.menus.sobma.Adornee = GetFeature("SolarObelisk").Interface
+    end
+
+    if Data.ImportantData.Stats.sunrise == 2 then
+        t.menus.sobma.Adornee = GetFeature("SolarObelisk2").Interface
+    end
+
+    if Data.ImportantData.Stats.sunrise ~= 3 then
+        return
+    end
+
+    t.menus.sobma.Adornee = GetFeature("SolarObelisk3").Interface
+end
+function t.UpdateSynth() --[[ UpdateSynth | Line: 1219 | Upvalues: Data (copy), InfoStore (copy), v4 (copy) ]]
+    local v1 = Data.ImportantData.Stats.prog > 0
+    local v2 = if Data.ImportantData.Stats.prog > 0 then Data.ImportantData.Stats.prog < 2 else false
+    local v3 = if Data.ImportantData.Stats.prog >= 2 then true else false
+    local v42 = if InfoStore.Resets.starTier.a >= 9 then true else false
+    local v5 = if InfoStore.Resets.starTier.a >= 10 then true else false
+    local v6 = if Data.ImportantData.Stats.bestStage >= 500 then true else false
+    local v7 = if Data.ImportantData.Stats.bestStage >= 1000 then true else false
+    local v8 = if Data.ImportantData.Stats.bestStage >= 1500 then true else false
+    local v9 = if Data.ImportantData.Stats.bestStage >= 2500 then true else false
+    local v10 = if Data.ImportantData.Stats.bestStage >= 5000 then true else false
+    local Synth = workspace.Features.CRealm.Synth
+
+    Synth.Slot1:PivotTo(v3 and CFrame.new(156.935, 5.25, 11426.898) * CFrame.Angles(0, math.pi, 0) or v4)
+    Synth.DSlot1:PivotTo(v2 and CFrame.new(156.935, 5.25, 11426.898) * CFrame.Angles(0, math.pi, 0) or v4)
+    Synth.Slot2:PivotTo(v3 and v42 and CFrame.new(156.935, 5.25, 11386.898) * CFrame.Angles(0, math.pi, 0) or v4)
+    Synth.DSlot2:PivotTo((v2 or not v42) and v1 and CFrame.new(156.935, 5.25, 11386.898) * CFrame.Angles(0, math.pi, 0) or v4)
+    Synth.Slot3:PivotTo(v3 and v5 and CFrame.new(156.935, 5.25, 11346.898) * CFrame.Angles(0, math.pi, 0) or v4)
+    Synth.DSlot3:PivotTo((v2 or not v5) and v1 and CFrame.new(156.935, 5.25, 11346.898) * CFrame.Angles(0, math.pi, 0) or v4)
+    Synth.Slot4:PivotTo(v3 and v6 and CFrame.new(156.935, 5.25, 11306.898) * CFrame.Angles(0, math.pi, 0) or v4)
+    Synth.DSlot4:PivotTo((v2 or not v6) and v1 and CFrame.new(156.935, 5.25, 11306.898) * CFrame.Angles(0, math.pi, 0) or v4)
+    Synth.Slot5:PivotTo(v3 and v7 and CFrame.new(196.935, 5.25, 11426.898) * CFrame.Angles(0, math.pi, 0) or v4)
+    Synth.DSlot5:PivotTo((v2 or not v7) and v1 and CFrame.new(196.935, 5.25, 11426.898) * CFrame.Angles(0, math.pi, 0) or v4)
+    Synth.Slot6:PivotTo(v3 and v8 and CFrame.new(196.935, 5.25, 11386.898) * CFrame.Angles(0, math.pi, 0) or v4)
+    Synth.DSlot6:PivotTo((v2 or not v8) and v1 and CFrame.new(196.935, 5.25, 11386.898) * CFrame.Angles(0, math.pi, 0) or v4)
+    Synth.Slot7:PivotTo(v3 and v9 and CFrame.new(196.935, 5.25, 11346.898) * CFrame.Angles(0, math.pi, 0) or v4)
+    Synth.DSlot7:PivotTo((v2 or not v9) and v1 and CFrame.new(196.935, 5.25, 11346.898) * CFrame.Angles(0, math.pi, 0) or v4)
+    Synth.Slot8:PivotTo(v3 and v10 and CFrame.new(196.935, 5.25, 11306.898) * CFrame.Angles(0, math.pi, 0) or v4)
+    Synth.DSlot8:PivotTo((v2 or not v10) and v1 and CFrame.new(196.935, 5.25, 11306.898) * CFrame.Angles(0, math.pi, 0) or v4)
+end
+function t.UpdatePR() --[[ UpdatePR | Line: 1257 | Upvalues: PlanetRun (copy), v4 (copy) ]]
+    local v1 = workspace.Building.Structures.PR.Normal["0"]
+
+    v1["1-2"]:PivotTo((PlanetRun.Levels.normal.levels["1"].c or 0) > 0 and CFrame.new(1852.621, -24979.844, 19929.896) * CFrame.Angles(0, 1.5707963267948966, -0) or v4)
+    v1["1-3"]:PivotTo((PlanetRun.Levels.normal.levels["2"].c or 0) > 0 and CFrame.new(1852.621, -24979.844, 19907.896) * CFrame.Angles(0, 1.5707963267948966, -0) or v4)
+    v1["2-1"]:PivotTo((PlanetRun.Levels.normal.levels["3"].c or 0) > 0 and CFrame.new(1852.621, -24979.844, 19879.896) * CFrame.Angles(0, 1.5707963267948966, -0) or v4)
+    v1["2-2"]:PivotTo((PlanetRun.Levels.space.levels["1"].c or 0) > 0 and CFrame.new(1852.621, -24979.844, 19857.896) * CFrame.Angles(0, 1.5707963267948966, -0) or v4)
+    v1["2-3"]:PivotTo((PlanetRun.Levels.space.levels["2"].c or 0) > 0 and CFrame.new(1852.621, -24979.844, 19835.896) * CFrame.Angles(0, 1.5707963267948966, -0) or v4)
+    v1["3-1"]:PivotTo((PlanetRun.Levels.space.levels["3"].c or 0) > 0 and CFrame.new(1852.621, -24979.844, 19805.896) * CFrame.Angles(0, 1.5707963267948966, -0) or v4)
+    v1["3-2"]:PivotTo((PlanetRun.Levels.anti.levels["1"].c or 0) > 0 and CFrame.new(1852.621, -24979.844, 19783.896) * CFrame.Angles(0, 1.5707963267948966, -0) or v4)
+    v1["3-3"]:PivotTo((PlanetRun.Levels.anti.levels["2"].c or 0) > 0 and CFrame.new(1852.621, -24979.844, 19761.896) * CFrame.Angles(0, 1.5707963267948966, -0) or v4)
+    v1["4-1"]:PivotTo((PlanetRun.Levels.anti.levels["3"].c or 0) > 0 and CFrame.new(1852.621, -24979.844, 19733.896) * CFrame.Angles(0, 1.5707963267948966, -0) or v4)
+    v1["4-2"]:PivotTo((PlanetRun.Levels.dark.levels["1"].c or 0) > 0 and CFrame.new(1852.621, -24979.844, 19711.896) * CFrame.Angles(0, 1.5707963267948966, -0) or v4)
+    v1["4-3"]:PivotTo(v4)
+    v1["Lol-1"]:PivotTo((PlanetRun.Levels.lol.levels["1"].c or 0) > 0 and CFrame.new(2010.655, -24979.844, 19953.379) * CFrame.Angles(0, math.pi, -0) or v4)
+    v1["Lol-2"]:PivotTo((PlanetRun.Levels.lol.levels["1"].c or 0) > 0 and CFrame.new(2032.655, -24979.844, 19953.379) * CFrame.Angles(0, math.pi, -0) or v4)
+    v1["Lol-3"]:PivotTo((PlanetRun.Levels.lol.levels["2"].c or 0) > 0 and CFrame.new(2054.655, -24979.844, 19953.379) * CFrame.Angles(0, math.pi, -0) or v4)
+    v1["Lol-4"]:PivotTo((PlanetRun.Levels.lol.levels["3"].c or 0) > 0 and CFrame.new(2076.655, -24979.844, 19953.379) * CFrame.Angles(0, math.pi, -0) or v4)
+    v1["Lol-5"]:PivotTo((PlanetRun.Levels.lol.levels["4"].c or 0) > 0 and CFrame.new(2098.655, -24979.844, 19953.379) * CFrame.Angles(0, math.pi, -0) or v4)
+end
+function t.UpdateDE() --[[ UpdateDE | Line: 1283 | Upvalues: Data (copy), t (copy), InfoStore (copy), v4 (copy), LethalNum (copy), CurrencyTypes (copy) ]]
+    local DG = workspace.MetalBits.DG
+    local dungeonStats = Data.ImportantData.UpgradeLevels.dungeonStats
+    local Container = t.menus.mapTele.GL.Container
+    local v1 = if InfoStore.Resets.starTier.a >= 9 then true else InfoStore.Resets.loop1.b > 0
+
+    DG.DarklandPortal:PivotTo(v1 and CFrame.new(26823.197, 9359.302, -31042.342) * CFrame.Angles(0, -3.141592653589793, -0) or v4)
+    DG["D1:GrassValley"]:PivotTo(CFrame.new(26954.898, 9392.002, -31244.916) * CFrame.Angles(0, -1.5707963267948966, -1.5707963267948966) or v4)
+    DG["D1:GrassValley"].DungeonGateway5:PivotTo(dungeonStats.valley.highestCleared >= 1 and CFrame.new(26941.898, 9370.002, -31246.291) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+    DG["D1:GrassValley"].DungeonGateway10:PivotTo(dungeonStats.valley.highestCleared >= 2 and CFrame.new(26965.398, 9370.002, -31242.791) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+    DG["D1:GrassValley"].DungeonGateway15:PivotTo(dungeonStats.valley.highestCleared >= 3 and CFrame.new(26987.398, 9370.002, -31242.791) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+    DG["DD1:InfernoValley"]:PivotTo(v1 and CFrame.new(26954.898, 8374.502, -31244.916) * CFrame.Angles(0, -1.5707963267948966, -1.5707963267948966) or v4)
+    DG["DD1:InfernoValley"].DungeonGatewayB:PivotTo(v1 and dungeonStats.valleyDark.highestCleared >= 1 and CFrame.new(26941.898, 8352.502, -31246.291) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+    DG["DD1:InfernoValley"].DungeonGatewayC:PivotTo(v1 and dungeonStats.valleyDark.highestCleared >= 2 and CFrame.new(26965.398, 8352.502, -31242.791) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+    DG["DD1:InfernoValley"].DungeonGatewayD:PivotTo(v1 and dungeonStats.valleyDark.highestCleared >= 3 and CFrame.new(26987.398, 8352.502, -31242.791) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+
+    local v13 = if dungeonStats.valley.highestCleared >= 4 then true else false
+    local v14 = if dungeonStats.cursed.highestCleared >= 4 then true else false
+
+    Container.Dungeon2.Visible = not v13
+    DG["D2:DarkMine"]:PivotTo(v13 and CFrame.new(26996.398, 9389.502, -31353.414) * CFrame.Angles(0, -1.5707963267948966, -1.5707963267948966) or v4)
+    DG["D2:DarkMine"].DungeonGateway25:PivotTo(v13 and dungeonStats.mine.highestCleared >= 1 and CFrame.new(26988.398, 9370.002, -31352.789) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+    DG["D2:DarkMine"].DungeonGateway30:PivotTo(v13 and dungeonStats.mine.highestCleared >= 2 and CFrame.new(27009.398, 9370.002, -31350.289) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+    DG["D2:DarkMine"].DungeonGateway35:PivotTo(v13 and dungeonStats.mine.highestCleared >= 3 and CFrame.new(27028.398, 9370.002, -31350.289) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+    DG["DD2:SilentCave"]:PivotTo(v14 and CFrame.new(26998.398, 8372.002, -31353.414) * CFrame.Angles(0, -1.5707963267948966, -1.5707963267948966) or v4)
+    DG["DD2:SilentCave"].DungeonGatewayB:PivotTo(v14 and dungeonStats.mineDark.highestCleared >= 1 and CFrame.new(26988.398, 8352.502, -31352.789) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+    DG["DD2:SilentCave"].DungeonGatewayC:PivotTo(v14 and dungeonStats.mineDark.highestCleared >= 2 and CFrame.new(27009.398, 8352.502, -31350.289) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+    DG["DD2:SilentCave"].DungeonGatewayD:PivotTo(v14 and dungeonStats.mineDark.highestCleared >= 3 and CFrame.new(27028.398, 8352.502, -31350.289) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+
+    local v25 = if dungeonStats.mine.highestCleared >= 4 then true else false
+    local v26 = if dungeonStats.crypt.highestCleared >= 4 then true else false
+
+    Container.Dungeon3.Visible = not v25
+    DG["D3:Desert"]:PivotTo(v25 and CFrame.new(27141.773, 9398.002, -31324.537) * CFrame.Angles(0, math.pi, -1.5707963267948966) or v4)
+    DG["D3:Desert"].DungeonGateway45:PivotTo(v25 and dungeonStats.desert.highestCleared >= 1 and CFrame.new(27169.754, 9370.002, -31329.672) * CFrame.Angles(0, -2.0943951023931953, 0) or v4)
+    DG["D3:Desert"].DungeonGateway50:PivotTo(v25 and dungeonStats.desert.highestCleared >= 2 and CFrame.new(27191.643, 9370.002, -31303.744) * CFrame.Angles(0, -2.792526803190927, 0) or v4)
+    DG["D3:Desert"].DungeonGateway55:PivotTo(v25 and dungeonStats.desert.highestCleared >= 3 and CFrame.new(27195.648, 9370.002, -31275.039) * CFrame.Angles(0, math.pi, 0) or v4)
+    DG["DD3:IndustrialWasteland"]:PivotTo(v26 and CFrame.new(27141.773, 8380.502, -31324.537) * CFrame.Angles(0, math.pi, -1.5707963267948966) or v4)
+    DG["DD3:IndustrialWasteland"].DungeonGatewayB:PivotTo(v26 and dungeonStats.desertDark.highestCleared >= 1 and CFrame.new(27169.754, 8352.502, -31329.672) * CFrame.Angles(0, -2.0943951023931953, 0) or v4)
+    DG["DD3:IndustrialWasteland"].DungeonGatewayC:PivotTo(v26 and dungeonStats.desertDark.highestCleared >= 2 and CFrame.new(27191.643, 8352.502, -31303.744) * CFrame.Angles(0, -2.792526803190927, 0) or v4)
+    DG["DD3:IndustrialWasteland"].DungeonGatewayD:PivotTo(v26 and dungeonStats.desertDark.highestCleared >= 3 and CFrame.new(27195.648, 8352.502, -31275.039) * CFrame.Angles(0, math.pi, 0) or v4)
+    DG["D0:TheInfiniteTower"]:PivotTo(v4)
+    DG["D0:TheInfiniteTower"].DungeonGatewayInf2:PivotTo(v4)
+    DG["D0:TheInfiniteTower"].DungeonGatewayInf3:PivotTo(v4)
+    DG["D0:TheInfiniteTower"].DungeonGatewayInf4:PivotTo(v4)
+    DG["D0:TheInfiniteTower"].DungeonGatewayInf5:PivotTo(v4)
+    DG["D0:TheInfiniteTower"].DungeonGatewayInf6:PivotTo(v4)
+    DG["D0:TheInfiniteTower"].DungeonGatewayInf7:PivotTo(v4)
+    DG["D0:TheInfiniteTower"].DungeonGatewayInf8:PivotTo(v4)
+    DG["D0:TheInfiniteTower"].DungeonGatewayInf9:PivotTo(v4)
+    DG.InfTowerDoor:PivotTo(v13 and CFrame.new(26954.023, 9368.752, -31341.539) * CFrame.Angles(0, 0, -1.5707963267948966) or v4)
+
+    local v38 = if dungeonStats.desert.highestCleared >= 4 and Data.ImportantData.Stats.bestStage >= 120 then true elseif InfoStore.Resets.loop1.b > 0 then true else false
+    local v39 = if dungeonStats.chaos.highestCleared >= 4 then true else false
+
+    Container.Dungeon4.Visible = not v38
+    DG["D4:SandRuins"]:PivotTo(v38 and CFrame.new(27146.398, 9392.002, -31189.164) * CFrame.Angles(0, 1.5707963267948966, -1.5707963267948966) or v4)
+    DG["D4:SandRuins"].DungeonGatewayB:PivotTo(v38 and dungeonStats.sandruin.highestCleared >= 1 and CFrame.new(27134.648, 9370.002, -31178.535) * CFrame.Angles(0, math.pi, 0) or v4)
+    DG["D4:SandRuins"].DungeonGatewayC:PivotTo(v38 and dungeonStats.sandruin.highestCleared >= 2 and CFrame.new(27146.395, 9370.002, -31166.291) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+    DG["D4:SandRuins"].DungeonGatewayD:PivotTo(v38 and dungeonStats.sandruin.highestCleared >= 3 and CFrame.new(27158.648, 9370.002, -31178.541) * CFrame.Angles(0, 0, 0) or v4)
+    DG["DD4:FP"]:PivotTo(v39 and CFrame.new(27146.398, 8374.502, -31189.164) * CFrame.Angles(0, 1.5707963267948966, -1.5707963267948966) or v4)
+    DG["DD4:FP"].DungeonGatewayB:PivotTo(v39 and dungeonStats.sandruinDark.highestCleared >= 1 and CFrame.new(27134.648, 8352.502, -31178.535) * CFrame.Angles(0, math.pi, 0) or v4)
+    DG["DD4:FP"].DungeonGatewayC:PivotTo(v39 and dungeonStats.sandruinDark.highestCleared >= 2 and CFrame.new(27146.395, 8352.502, -31166.291) * CFrame.Angles(0, -1.5707963267948966, 0) or v4)
+    DG["DD4:FP"].DungeonGatewayD:PivotTo(v39 and dungeonStats.sandruinDark.highestCleared >= 3 and CFrame.new(27158.648, 8352.502, -31178.541) * CFrame.Angles(0, 0, 0) or v4)
+
+    local v50 = if dungeonStats.sandruin.highestCleared >= 4 and Data.ImportantData.Stats.bestStage >= 140 then true elseif InfoStore.Resets.loop1.b > 0 then true else false
+
+    Container.Dungeon5.Visible = not v50
+    DG["D5:Mountain"]:PivotTo(v50 and CFrame.new(27090.898, 9394.002, -31048.164) * CFrame.Angles(0, 1.5707963267948966, -1.5707963267948966) or v4)
+    DG["D5:Mountain"].DungeonGatewayB:PivotTo(v50 and dungeonStats.mountain.highestCleared >= 1 and CFrame.new(27101.395, 9370.002, -31050.789) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+    DG["D5:Mountain"].DungeonGatewayC:PivotTo(v50 and dungeonStats.mountain.highestCleared >= 2 and CFrame.new(27049.402, 9370.002, -31047.789) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+    DG["D5:Mountain"].DungeonGatewayD:PivotTo(v50 and dungeonStats.mountain.highestCleared >= 3 and CFrame.new(27007.398, 9370.002, -31055.789) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+    DG["D5:Mountain"].DungeonGatewayE:PivotTo(v50 and dungeonStats.mountain.highestCleared >= 4 and CFrame.new(27036.648, 9370.002, -31101.539) * CFrame.Angles(0, math.pi, 0) or v4)
+
+    local v57 = dungeonStats.mountain.highestCleared >= 4 and LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("souls3"), LethalNum.new(1, 0)) or (if InfoStore.Resets.loop1.b > 0 then true else false)
+
+    Container.Dungeon6.Visible = not v57
+    DG["D6:Temple"]:PivotTo(v57 and CFrame.new(26883.021, 9401.502, -31076.039) * CFrame.Angles(0, 0, -1.5707963267948966) or v4)
+    DG["D6:Temple"].DungeonGatewayB:PivotTo(v57 and dungeonStats.temple.highestCleared >= 1 and CFrame.new(26873.646, 9370.002, -31063.539) * CFrame.Angles(0, 0, 0) or v4)
+    DG["D6:Temple"].DungeonGatewayC:PivotTo(v57 and dungeonStats.temple.highestCleared >= 2 and CFrame.new(26873.646, 9370.002, -31088.039) * CFrame.Angles(0, 0, 0) or v4)
+    DG["D6:Temple"].DungeonGatewayD:PivotTo(v57 and dungeonStats.temple.highestCleared >= 3 and CFrame.new(26873.646, 9370.002, -31111.539) * CFrame.Angles(0, 0, 0) or v4)
+
+    local v63 = if dungeonStats.temple.highestCleared >= 4 and Data.ImportantData.Stats.bestStage >= 180 then true elseif InfoStore.Resets.loop1.b > 0 then true else false
+
+    Container.Dungeon7.Visible = not v63
+    DG["D7:CursedLand"]:PivotTo(v63 and CFrame.new(26905.398, 9406.503, -30842.412) * CFrame.Angles(0, 1.5707963267948966, -1.5707963267948966) or v4)
+    DG["D7:CursedLand"].DungeonGatewayB:PivotTo(v63 and dungeonStats.cursed.highestCleared >= 1 and CFrame.new(26933.148, 9370.017, -30933.041) * CFrame.Angles(0, math.pi, 0) or v4)
+    DG["D7:CursedLand"].DungeonGatewayC:PivotTo(v63 and dungeonStats.cursed.highestCleared >= 2 and CFrame.new(26933.15, 9370.018, -30905.539) * CFrame.Angles(0, math.pi, 0) or v4)
+    DG["D7:CursedLand"].DungeonGatewayD:PivotTo(v63 and dungeonStats.cursed.highestCleared >= 3 and CFrame.new(26892.4, 9370.018, -30850.289) * CFrame.Angles(0, 1.5707963267948966, 0) or v4)
+
+    local v69 = if dungeonStats.cursed.highestCleared >= 4 and Data.ImportantData.Stats.bestStage >= 270 then true elseif InfoStore.Resets.loop1.b > 0 then true else false
+
+    Container.Dungeon8.Visible = not v69
+    DG["D8:Crypt"]:PivotTo(v69 and CFrame.new(27056.4, 9402.503, -30898.412) * CFrame.Angles(0, math.pi, -1.5707963267948966) or v4)
+    DG["D8:Crypt"].DungeonGatewayB:PivotTo(v69 and dungeonStats.crypt.highestCleared >= 1 and CFrame.new(27053.15, 9370.018, -30889.539) * CFrame.Angles(0, -3.141592653589793, 0) or v4)
+    DG["D8:Crypt"].DungeonGatewayC:PivotTo(v69 and dungeonStats.crypt.highestCleared >= 2 and CFrame.new(27053.15, 9370.018, -30869.539) * CFrame.Angles(0, -3.141592653589793, 0) or v4)
+    DG["D8:Crypt"].DungeonGatewayD:PivotTo(v69 and dungeonStats.crypt.highestCleared >= 3 and CFrame.new(27053.15, 9370.018, -30849.539) * CFrame.Angles(0, -3.141592653589793, 0) or v4)
+
+    local v75 = if dungeonStats.crypt.highestCleared >= 4 and Data.ImportantData.Stats.bestStage >= 380 then true elseif InfoStore.Resets.loop1.b > 0 then true else false
+
+    Container.Dungeon9.Visible = not v75
+    DG["D9:ChaoticCanyon"]:PivotTo(v75 and CFrame.new(27160.402, 9402.504, -30897.912) * CFrame.Angles(0, math.pi, -1.5707963267948966) or v4)
+    DG["D9:ChaoticCanyon"].DungeonGatewayB:PivotTo(v75 and dungeonStats.chaos.highestCleared >= 1 and CFrame.new(27156.652, 9370.019, -30926.039) * CFrame.Angles(0, -3.141592653589793, 0) or v4)
+    DG["D9:ChaoticCanyon"].DungeonGatewayC:PivotTo(v75 and dungeonStats.chaos.highestCleared >= 2 and CFrame.new(27156.652, 9370.019, -30874.039) * CFrame.Angles(0, -3.141592653589793, 0) or v4)
+    DG["D9:ChaoticCanyon"].DungeonGatewayD:PivotTo(v75 and dungeonStats.chaos.highestCleared >= 3 and CFrame.new(27152.652, 9370.019, -30850.039) * CFrame.Angles(0, -3.141592653589793, 0) or v4)
+
+    local v81 = if InfoStore.Resets.loop2.b > 0 then true else false
+
+    Container.Dungeon11.Visible = not v81 and InfoStore.Resets.loop1.b > 0
+    DG["D11:NeonCity"]:PivotTo(v81 and CFrame.new(27320.898, 9391.002, -31064.914) * CFrame.Angles(0, math.pi, -1.5707963267948966) or v4)
+end
+function t.UpdateSGJ() --[[ UpdateSGJ | Line: 1397 | Upvalues: t (copy) ]]
+    local t2 = {
+        [0] = Color3.new(0.678431, 0.678431, 0.678431),
+        [1] = Color3.new(0.701961, 1, 0),
+        [2] = Color3.new(0, 0.917647, 1),
+        [3] = Color3.new(0.231373, 0.231373, 0.231373)
+    }
+    local v1 = GetFeature("SGJ"):GetChildren()
+
+    for i = 0, 9 do
+        for k, v in pairs(v1) do
+            if v.Name == "Recolor" then
+                v.Color = t2[math.floor((math.random(0, 3.99)))]
+            end
+        end
+
+        task.wait(0.1)
+    end
+
+    local sgjM = t.menus.sgjM
+
+    sgjM.Gradient.ImageColor3 = t2[math.floor((math.random(0, 3.99)))]
+    sgjM.Title.TextColor3 = t2[math.floor((math.random(0, 3.99)))]
+    sgjM.HSJButton.ImageColor3 = t2[math.floor((math.random(0, 3.99)))]
+end
+function test(p1, p2, p3, p4, p5, p6) --[[ test | Line: 1420 | Upvalues: v4 (copy) ]]
+    if not p2 then
+        return
+    end
+
+    if p1 then
+        p2:PivotTo(p3 * p4)
+    else
+        p2:PivotTo(v4)
+    end
+end
+function buildingAppear(p1, p2, p3, p4, p5) --[[ buildingAppear | Line: 1454 ]]
+    task.wait(p5)
+    p1:PivotTo(CFrame.new(p2.X, p2.Y + 300, p2.Z) * p3)
+
+    local v1 = 1
+
+    for i = 0, 100 do
+        local v2 = p2.Y + (1 - v1 / 100) * 300
+
+        if p1.PrimaryPart.Position.Y < v2 then
+            return
+        end
+
+        p1:PivotTo(CFrame.new(p2.X, v2, p2.Z) * p3)
+        task.wait(p4 / 100)
+        v1 = v1 * 1.0471285480508996
+    end
+
+    p1:PivotTo(CFrame.new(p2.X, p2.Y, p2.Z) * p3)
+end
+function t.getUpgradeLevel(p1) --[[ getUpgradeLevel | Line: 1487 | Upvalues: Data (copy) ]]
+    local v1 = Data.ImportantData.UpgradeLevels.upgrades[p1]
+
+    if v1 then
+        return v1.level
+    end
+
+    return 0
+end
+
+return t
