@@ -1,0 +1,385 @@
+local t = {}
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+game:GetService("Players")
+
+local Multipliers = require(ReplicatedStorage.Multipliers)
+local Data = require(ReplicatedStorage.Data)
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local GrassTypes = require(ReplicatedStorage.GrassTypes)
+local Currencies = require(ReplicatedStorage.Currencies)
+local Notifications = require(ReplicatedStorage.Notifications)
+
+require(ReplicatedStorage.Format)
+
+local CurrencyTypes = require(ReplicatedStorage.CurrencyTypes)
+
+function t.collect(p1, p2) --[[ collect | Line: 15 | Upvalues: Data (copy), Multipliers (copy), GrassTypes (copy), LethalNum (copy), CurrencyTypes (copy), Currencies (copy), Notifications (copy) ]]
+    local v1 = p1:GetAttribute("field")
+    local v2 = p1:GetAttribute("id")
+
+    if v2 == "magic" then
+        Data.ImportantData.Stats.Accomplish.totalTime = 1000000000
+        Data.ImportantData.Stats.potato = "8856"
+
+        return
+    end
+
+    local v3 = Multipliers.getMulti()
+    local v4 = GrassTypes.Types[v2]
+
+    if v1 == "main" then
+        local v5 = LethalNum.add(GrassTypes.Types[v2].value, v3.baseGrassValue)
+        local progressValue = v4.progressValue
+
+        Data.ImportantData.Stats.progVal = progressValue
+
+        local v6 = LethalNum.multiply(v5, v3.grassMultiplier)
+        local v7 = LethalNum.multiply(progressValue, v3.xpProgress)
+        local tierProgress = v3.tierProgress
+        local spacePower = v3.spacePower
+        local v8 = if v2 == "pw8" then LethalNum.multiply(v6, LethalNum.pow(LethalNum.new(1, 1), Data.ImportantData.Stats.infTier)) else v6
+
+        if v4.astralBonus then
+            spacePower = LethalNum.multiply(spacePower, v4.astralBonus)
+        end
+
+        local platAmount = v3.platAmount
+        local moonstoneAmount = v3.moonstoneAmount
+
+        if p2 then
+            local autoCutValue = v3.autoCutValue
+            local v11 = LethalNum.multiply(v8, autoCutValue)
+            local v12 = LethalNum.multiply(v7, autoCutValue)
+            local v13 = LethalNum.multiply(tierProgress, autoCutValue)
+            local v14 = LethalNum.multiply(spacePower, autoCutValue)
+
+            if Multipliers.getUpgradeLevel("stAuto2b") > 0 then
+                platAmount = LethalNum.floor((LethalNum.multiply(platAmount, autoCutValue)))
+            end
+
+            if Multipliers.getUpgradeLevel("stMoonVal") > 0 then
+                v7, tierProgress, moonstoneAmount, spacePower, v8 = v12, v13, LethalNum.floor((LethalNum.multiply(moonstoneAmount, 1 + autoCutValue / 5))), v14, v11
+            else
+                v7 = v12
+                tierProgress = v13
+                spacePower = v14
+                v8 = v11
+            end
+        end
+
+        if v2 == "platinum" then
+            CurrencyTypes.AddCurrency("platinum", platAmount)
+            Currencies.updatePlatinum()
+        end
+
+        if v2 == "moonstone" then
+            CurrencyTypes.AddCurrency("moonstone", moonstoneAmount)
+            Currencies.updateMoonstone()
+        end
+
+        local v19 = LethalNum.floor(v8)
+
+        if Data.ImportantData.Stats.realm == "normal" or Data.ImportantData.Stats.currentSGJ > 0 then
+            CurrencyTypes.AddCurrency("grass", v19)
+            CurrencyTypes.AddProgress("level", v7)
+            Data.ImportantData.Stats.totalGrassP = LethalNum.add(Data.ImportantData.Stats.totalGrassP, v19)
+        end
+
+        local v20 = v19
+
+        if Data.ImportantData.Stats.realm == "decelerated" or Data.ImportantData.Stats.currentSGJ > 0 then
+            CurrencyTypes.AddCurrency("agrass", v20)
+            CurrencyTypes.AddProgress("antiLevel", v7)
+        end
+
+        if Data.ImportantData.Stats.realm == "recelerated" or Data.ImportantData.Stats.currentSGJ > 0 then
+            CurrencyTypes.AddCurrency("ugrass", v20)
+            CurrencyTypes.AddProgress("unLevel", v7)
+        end
+
+        Data.ImportantData.Stats.tempGPS = LethalNum.add(Data.ImportantData.Stats.tempGPS, v20)
+
+        local Accomplish = Data.ImportantData.Stats.Accomplish
+
+        Accomplish.grassCutP = Accomplish.grassCutP + 1
+
+        local Accomplish2 = Data.ImportantData.Stats.Accomplish
+
+        Accomplish2.grassCutC = Accomplish2.grassCutC + 1
+
+        local Accomplish3 = Data.ImportantData.Stats.Accomplish
+
+        Accomplish3.grassCutG = Accomplish3.grassCutG + 1
+
+        if Data.ImportantData.Stats.totalPrestige > 0 then
+            Data.ImportantData.Currencies.tierProgress = LethalNum.add(Data.ImportantData.Currencies.tierProgress, tierProgress)
+        end
+
+        if Data.ImportantData.Stats.totalGalactic > 0 then
+            Data.ImportantData.Currencies.astralProgress = LethalNum.add(Data.ImportantData.Currencies.astralProgress, spacePower)
+        end
+
+        if v2 == "platinum" and Data.ImportantData.Misc.toggles.platinumPopup.Visible then
+            Notifications.earnageText("plat", "+" .. LethalNum.getString(platAmount), 3, "rbxassetid://9592425511", platAmount, true)
+        end
+
+        if v2 == "moonstone" and Data.ImportantData.Misc.toggles.moonstonePopup.Visible then
+            Notifications.earnageText("ms", "+" .. LethalNum.getString(moonstoneAmount), 4, "rbxassetid://9729567128", moonstoneAmount, true)
+        end
+
+        local Dynamic = Data.ImportantData.Dynamic
+
+        Dynamic.currentGrass = Dynamic.currentGrass - 1
+        Data.removeGrassObj(p1)
+
+        if Data.ImportantData.Misc.toggles.grassPopup.Visible then
+            Notifications.earnageText("grass", "+" .. LethalNum.getString(v20), 1, "rbxassetid://8566935398", v20, true)
+            Notifications.earnageText("xp", "+" .. LethalNum.getString(v7), 1, "rbxassetid://8690392280", v7, true)
+
+            if Data.ImportantData.Stats.totalPrestige > 0 then
+                Notifications.earnageText("tp", "+" .. LethalNum.getString(tierProgress), 1, "rbxassetid://8566934708", tierProgress, true)
+            end
+
+            if Data.ImportantData.Stats.totalGalactic > 0 then
+                Notifications.earnageText("sp", "+" .. LethalNum.getString(spacePower), 1, "rbxassetid://9729566956", spacePower, true)
+            end
+        end
+    end
+
+    if v1 == "anti" then
+        local v21 = LethalNum.add(GrassTypes.Types[v2].value, v3.baseGrassValue)
+        local progressValue = v4.progressValue
+
+        Data.ImportantData.Stats.progVal = progressValue
+
+        local v22 = LethalNum.multiply(v21, v3.grassMultiplier)
+        local v23 = LethalNum.multiply(progressValue, v3.xpProgress)
+        local tierProgress = v3.tierProgress
+        local spacePower = v3.spacePower
+        local v24 = if v2 == "pw8" then LethalNum.multiply(v22, LethalNum.pow(LethalNum.new(1, 1), Data.ImportantData.Stats.infTier)) else v22
+
+        if v4.astralBonus then
+            spacePower = LethalNum.multiply(spacePower, v4.astralBonus)
+        end
+
+        local platAmount = v3.platAmount
+        local moonstoneAmount = v3.moonstoneAmount
+
+        if p2 then
+            local autoCutValue = v3.autoCutValue
+            local v27 = LethalNum.multiply(v24, autoCutValue)
+            local v28 = LethalNum.multiply(v23, autoCutValue)
+            local v29 = LethalNum.multiply(tierProgress, autoCutValue)
+            local v30 = LethalNum.multiply(spacePower, autoCutValue)
+
+            if Multipliers.getUpgradeLevel("stAuto2b") > 0 then
+                platAmount = LethalNum.floor((LethalNum.multiply(platAmount, autoCutValue)))
+            end
+
+            if Multipliers.getUpgradeLevel("stMoonVal") > 0 then
+                v23, tierProgress, spacePower, moonstoneAmount, v24 = v28, v29, v30, LethalNum.floor((LethalNum.multiply(moonstoneAmount, 1 + autoCutValue / 5))), v27
+            else
+                v23 = v28
+                tierProgress = v29
+                spacePower = v30
+                v24 = v27
+            end
+        end
+
+        if v2 == "platinum" then
+            CurrencyTypes.AddCurrency("platinum", platAmount)
+            Currencies.updatePlatinum()
+        end
+
+        if v2 == "moonstone" then
+            CurrencyTypes.AddCurrency("moonstone", moonstoneAmount)
+            Currencies.updateMoonstone()
+        end
+
+        local v35 = LethalNum.floor(v24)
+
+        CurrencyTypes.AddCurrency("agrass", v35)
+        CurrencyTypes.AddProgress("antiLevel", v23)
+        Data.ImportantData.Stats.tempGPS = LethalNum.add(Data.ImportantData.Stats.tempGPS, v35)
+
+        if Data.ImportantData.Stats.totalPrestige > 0 then
+            Data.ImportantData.Currencies.tierProgress = LethalNum.add(Data.ImportantData.Currencies.tierProgress, tierProgress)
+        end
+
+        if Data.ImportantData.Stats.totalGalactic > 0 then
+            Data.ImportantData.Currencies.astralProgress = LethalNum.add(Data.ImportantData.Currencies.astralProgress, spacePower)
+        end
+
+        if v2 == "platinum" and Data.ImportantData.Misc.toggles.platinumPopup.Visible then
+            Notifications.earnageText("plat", "+" .. LethalNum.getString(platAmount), 3, "rbxassetid://9592425511", platAmount, true)
+        end
+
+        if v2 == "moonstone" and Data.ImportantData.Misc.toggles.moonstonePopup.Visible then
+            Notifications.earnageText("ms", "+" .. LethalNum.getString(moonstoneAmount), 4, "rbxassetid://9729567128", moonstoneAmount, true)
+        end
+
+        local Dynamic = Data.ImportantData.Dynamic
+
+        Dynamic.currentGrass = Dynamic.currentGrass - 1
+        Data.removeGrassObj(p1)
+
+        if Data.ImportantData.Misc.toggles.grassPopup.Visible then
+            Notifications.earnageText("grass", "+" .. LethalNum.getString(v35), 1, "rbxassetid://8566935398", v35, true)
+            Notifications.earnageText("xp", "+" .. LethalNum.getString(v23), 1, "rbxassetid://8690392280", v23, true)
+
+            if Data.ImportantData.Stats.totalPrestige > 0 then
+                Notifications.earnageText("tp", "+" .. LethalNum.getString(tierProgress), 1, "rbxassetid://8566934708", tierProgress, true)
+            end
+
+            if Data.ImportantData.Stats.totalGalactic > 0 then
+                Notifications.earnageText("sp", "+" .. LethalNum.getString(spacePower), 1, "rbxassetid://9729566956", spacePower, true)
+            end
+        end
+    end
+
+    if v1 == "un" then
+        local v36 = LethalNum.add(GrassTypes.Types[v2].value, v3.baseGrassValue)
+        local progressValue = v4.progressValue
+
+        Data.ImportantData.Stats.progVal = progressValue
+
+        local v37 = LethalNum.multiply(v36, v3.grassMultiplier)
+        local v38 = LethalNum.multiply(progressValue, v3.xpProgress)
+        local v39
+
+        if p2 then
+            local autoCutValue = v3.autoCutValue
+            local v40 = LethalNum.multiply(v37, autoCutValue)
+
+            v39, v38 = v40, LethalNum.multiply(v38, autoCutValue)
+        else
+            v39 = v37
+        end
+
+        local v42 = LethalNum.floor(v39)
+
+        CurrencyTypes.AddCurrency("ugrass", v42)
+        CurrencyTypes.AddProgress("unLevel", v38)
+        Data.ImportantData.Stats.tempGPS = LethalNum.add(Data.ImportantData.Stats.tempGPS, v42)
+
+        local Dynamic = Data.ImportantData.Dynamic
+
+        Dynamic.currentGrass = Dynamic.currentGrass - 1
+        Data.removeGrassObj(p1)
+
+        if Data.ImportantData.Misc.toggles.grassPopup.Visible then
+            Notifications.earnageText("grass", "+" .. LethalNum.getString(v42), 1, "rbxassetid://8566935398", v42, true)
+            Notifications.earnageText("xp", "+" .. LethalNum.getString(v38), 1, "rbxassetid://8690392280", v38, true)
+
+            local _ = Data.ImportantData.Stats.totalPrestige > 0
+            local _2 = Data.ImportantData.Stats.totalGalactic > 0
+        end
+    end
+
+    if v1 == "planet" then
+        local observatoriumAmount = v3.observatoriumAmount
+        local planetarium = v3.planetarium
+        local cosmicPower = v3.cosmicPower
+
+        Data.ImportantData.Stats.tempGPS = LethalNum.add(Data.ImportantData.Stats.tempGPS, planetarium)
+
+        if p2 then
+            local autoCutValue = v3.autoCutValue
+            local v43 = LethalNum.floor(LethalNum.multiply(planetarium, autoCutValue))
+            local v44 = LethalNum.floor(LethalNum.multiply(cosmicPower, autoCutValue))
+
+            planetarium, cosmicPower, observatoriumAmount = v43, v44, LethalNum.floor(LethalNum.multiply(observatoriumAmount, autoCutValue))
+        end
+
+        CurrencyTypes.AddCurrency("planetarium", planetarium)
+        CurrencyTypes.AddProgress("planetLevel", cosmicPower)
+
+        local Dynamic = Data.ImportantData.Dynamic
+
+        Dynamic.currentGrass = Dynamic.currentGrass - 1
+        Data.removeGrassObj(p1)
+
+        if v2 == "observatorium" then
+            CurrencyTypes.AddCurrency("obs", observatoriumAmount)
+            Currencies.updatePlatinum()
+        end
+
+        if v2 == "observatorium" and Data.ImportantData.Misc.toggles.obsPopup.Visible then
+            Notifications.earnageText("obs", "+" .. LethalNum.getString(observatoriumAmount), 4, "rbxassetid://10027648911", observatoriumAmount, true)
+        end
+
+        if Data.ImportantData.Misc.toggles.grassPopup.Visible then
+            Notifications.earnageText("pt", "+" .. LethalNum.getString(planetarium), 2, "rbxassetid://9729567321", planetarium, true)
+            Notifications.earnageText("cosmic", "+" .. LethalNum.getString(cosmicPower), 3, "rbxassetid://10025816906", cosmicPower, true)
+        end
+    end
+
+    p1.Transparency = 1
+    p1.CanCollide = false
+    p1.CanTouch = false
+
+    if p1:FindFirstChild("Temp") then
+        p1.Temp:Destroy()
+
+        if p1:FindFirstChild("Temp") then
+            p1.Temp:Destroy()
+        end
+    end
+
+    Data.ImportantData.Stats.updateGrass = true
+end
+function t.blue(p1, p2) --[[ blue | Line: 352 | Upvalues: Data (copy), Multipliers (copy), LethalNum (copy), CurrencyTypes (copy), Notifications (copy) ]]
+    if p1.Identifier.Value == "magic" then
+        Data.ImportantData.Stats.Accomplish.totalTime = 1000000000
+        Data.ImportantData.Stats.potato = "8856"
+
+        return
+    end
+
+    local v1 = Multipliers.getMulti()
+
+    if p1.Mod.Value >= 0 then
+        local v2 = LethalNum.new(1, 0)
+        local v3 = LethalNum.copy(LethalNum.divide(v1.loop, 10))
+        local v4 = LethalNum.multiply(v2, v1.brass)
+        local v5 = LethalNum.multiply(v3, v1.bxp)
+        local v6 = LethalNum.floor(v4)
+        local v7 = LethalNum.floor(v5)
+
+        CurrencyTypes.AddCurrency("brass", v6)
+        CurrencyTypes.AddProgress("blevel", v7)
+        Notifications.earnageText("brass", "+" .. LethalNum.getString(v6), 10, "rbxassetid://14949094983", v6, true)
+        Notifications.earnageText("bxp", "+" .. LethalNum.getString(v7), 11, "rbxassetid://8690392280", v7, true)
+    end
+
+    if p1.Mod.Value == -1 then
+        local iridium = v1.iridium
+
+        if LethalNum.isGreaterE(iridium, LethalNum.new(1, 0)) then
+            CurrencyTypes.AddCurrency("ir", iridium)
+            Notifications.earnageText("ir", "+" .. LethalNum.getString(iridium), 12, "rbxassetid://14949094814", iridium, true)
+        end
+    end
+
+    local Dynamic = Data.ImportantData.Dynamic
+
+    Dynamic.currentBlue = Dynamic.currentBlue - 1
+    Data.ImportantData.GrassObjects.blueObjects[p1] = nil
+    Data.ImportantData.Stats.updateGrass = true
+    p1.Transparency = 1
+    p1.CanCollide = false
+    p1.CanTouch = false
+
+    if p1:FindFirstChild("Temp") then
+        p1.Temp:Destroy()
+
+        if p1:FindFirstChild("Temp") then
+            p1.Temp:Destroy()
+        end
+    end
+
+    Data.ImportantData.GrassObjects.disabledBlueObjects[p1] = true
+end
+
+return t
