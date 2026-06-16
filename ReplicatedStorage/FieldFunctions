@@ -1,0 +1,478 @@
+local Data = require(script.Parent.Data)
+local CurrencyTypes = require(script.Parent.CurrencyTypes)
+local Fields = require(script.Parent.Fields)
+local GrassTypes = require(script.Parent.GrassTypes)
+local InfoStore = require(script.Parent.InfoStore)
+local LethalNum = require(script.Parent.LethalNum)
+local Multipliers = require(script.Parent.Multipliers)
+local t = {
+    hardCap = 5000,
+    rand = Random.new(),
+    GetType = function(p1, p2, p3) --[[ GetType | Line: 14 | Upvalues: Data (copy), InfoStore (copy), CurrencyTypes (copy), GrassTypes (copy), Multipliers (copy), LethalNum (copy) ]]
+        local v1 = "basic"
+        local Multipliers2 = Data.ImportantData.Multipliers
+
+        if p2 == "temp" then
+            p1.Reflectance = 0.5
+
+            return "basic"
+        end
+
+        if p2 == "rift" then
+            p1.Color = Color3.new(0.635294, 0.635294, 0.635294)
+            p1.Material = "Neon"
+
+            return "basic"
+        end
+
+        if p2 == "cactus" then
+            p1.Color = Color3.new(0.32549, 0.694118, 0.317647)
+            p1.Material = "Grass"
+
+            if Random.new():NextNumber(0, 1000) <= 100 then
+                p1.Color = Color3.new(0.32549, 0.694118, 0.317647)
+                p1.Material = "Neon"
+
+                return "platinum"
+            end
+
+            return "basic"
+        end
+
+        if p2 == "temple" then
+            p1.Color = Color3.new(0.513725, 0.513725, 1)
+
+            if InfoStore.Resets.midnight2.a >= 3 then
+                local v2 = 100
+
+                if Data.ImportantData.Stats.event == "ruby" then
+                    v2 = v2 * 3
+                end
+
+                if Random.new():NextNumber(0, 1000) <= v2 then
+                    p1.Color = Color3.new(255/255, 255/255, 255/255)
+
+                    return "moonstone"
+                end
+            end
+
+            if InfoStore.Resets.twilight2.a >= 1 and Random.new():NextNumber(0, 1000) <= 200 then
+                p1.Color = Color3.new(0.929412, 0.529412, 1)
+
+                return "platinum"
+            end
+
+            return "basic"
+        end
+
+        if p2 == "desert" then
+            if Random.new():NextNumber(0, 1000) <= 70 then
+                p1.Color = Color3.new(0.552941, 0, 0)
+                p1.Reflectance = 0
+                p1.Transparency = 0
+                p1.TextureID = ""
+                p1.Material = "Grass"
+
+                local Temp = workspace.Prefabs.DoomParticles:Clone()
+
+                Temp.Name = "Temp"
+                Temp.Parent = p1
+                Temp.Texture = "rbxassetid://18427476590"
+                Temp.Enabled = true
+
+                return "platinum"
+            end
+
+            if InfoStore.Resets.midnight2.a >= 3 and Random.new():NextNumber(0, 1000) <= 200 then
+                p1.Color = Color3.new(0.654902, 0.654902, 1)
+                p1.Reflectance = 0
+                p1.Transparency = 0
+                p1.TextureID = ""
+                p1.Material = "Neon"
+
+                return "moonstone"
+            end
+
+            p1.Color = Color3.new(0.294118, 0.552941, 0)
+            p1.Reflectance = 0
+            p1.Transparency = 0
+            p1.TextureID = ""
+            p1.Material = "Grass"
+
+            return "basic"
+        end
+
+        if p2 == "intersection" then
+            p1.Transparency = 0.999
+
+            return "basic"
+        end
+
+        if p2 == "brick" then
+            return "basic"
+        end
+
+        if Data.ImportantData.Stats.world == 9 then
+            for i = 1, 10 do
+                if p2 == "9_F" .. i then
+                    if InfoStore.Resets["F" .. i .. "L1"].b > 0 and Random.new():NextNumber(0, 1000) <= Multipliers2["9_F" .. i .. "-5Chance"] * 10 then
+                        p1.Color = Color3.new(0.807843, 1, 0.929412)
+                        p1.Reflectance = 0.4
+                        p1.Transparency = 0
+                        p1.TextureID = ""
+
+                        local Temp = workspace.Prefabs.PlatinumParticles:Clone()
+
+                        Temp.Name = "Temp"
+                        Temp.Parent = p1
+
+                        if i == 2 then
+                            p1.Color = Color3.new(0.698039, 0.576471, 1)
+                        end
+
+                        if i == 3 then
+                            p1.Color = Color3.new(0.690196, 0.996078, 1)
+                            Temp.Texture = "rbxassetid://18409976466"
+                        end
+
+                        if i == 4 then
+                            p1.Color = Color3.new(0.807843, 1, 0.929412)
+                            Temp.Texture = "rbxassetid://18409972995"
+                        end
+
+                        if i == 5 then
+                            p1.Color = Color3.new(0/255, 255/255, 0/255)
+                            Temp.Texture = "rbxassetid://18409969271"
+                        end
+
+                        Temp.Enabled = true
+
+                        return "platinum"
+                    end
+
+                    p1.Color = Color3.new(0.14902, 0.47451, 0)
+                    p1.Reflectance = 0
+                    p1.Transparency = 0
+                    p1.TextureID = ""
+
+                    if i == 2 then
+                        p1.Color = Color3.new(0.933333, 0, 1)
+                        p1.Transparency = 0.5
+                    end
+
+                    if i == 3 then
+                        p1.Color = Color3.new(0/255, 255/255, 255/255)
+                        p1.Transparency = 0.5
+                    end
+
+                    if i == 4 then
+                        p1.Color = Color3.new(0.0823529, 1, 0.588235)
+                    end
+
+                    if i ~= 5 then
+                        return "basic"
+                    end
+
+                    p1.Color = Color3.new(0.784314, 0, 0)
+
+                    return "basic"
+                end
+            end
+        end
+
+        if p2 == "main" or p2 == "anti" then
+            if CurrencyTypes.Levels.tier.highestLevel >= 3 and (InfoStore.Resets.prestige.b > 0 and (Multipliers2.platChance * 10 >= Random.new():NextNumber(0, 1000) and CurrencyTypes.GetCentralized("moonstone"))) then
+                if InfoStore.Resets.galactic.b > 0 and (Random.new():NextNumber(0, 1000) <= Multipliers2.moonstoneChance * 10 or CurrencyTypes.GetInfinity("platinum")) then
+                    p1.Color = Color3.new(0.508751, 0.638773, 0.998871)
+                    p1.Reflectance = 0.4
+                    p1.Transparency = 0
+                    p1.TextureID = ""
+
+                    local Temp = workspace.Prefabs.PlatinumParticles:Clone()
+
+                    Temp.Name = "Temp"
+                    Temp.Parent = p1
+                    Temp.Texture = "rbxassetid://9729567128"
+                    Temp.Enabled = true
+
+                    return "moonstone"
+                end
+
+                p1.Color = Color3.new(0.882353, 1, 1)
+                p1.Reflectance = 0.4
+                p1.Transparency = 0
+                p1.TextureID = ""
+
+                local Temp = workspace.Prefabs.PlatinumParticles:Clone()
+
+                Temp.Name = "Temp"
+                Temp.Parent = p1
+                Temp.Enabled = true
+
+                return "platinum"
+            end
+
+            v1 = Data.ImportantData.Stats.currentTier
+        end
+
+        if p2 == "un" then
+            v1 = Data.ImportantData.Stats.currentTier
+        end
+
+        if p2 == "jungle" then
+            local v5 = 0
+
+            if InfoStore.Resets.rune.b > 0 and (v5 == 0 and Random.new():NextNumber(0, 1000) <= Multipliers2.rubyChance * 10) then
+                v5 = 1
+            end
+
+            local jTier = Data.ImportantData.Stats.jTier
+
+            if jTier > 57 then
+                jTier = 57
+            end
+
+            p1.Size = Vector3.new(1, jTier + 1, 1)
+            p1.CFrame = CFrame.new((Vector3.new(p1.Position.X, p1.Position.Y + jTier / 2, p1.Position.Z)))
+
+            if v5 == 0 then
+                v1 = GrassTypes.LevelTiers[jTier] or "basic"
+            end
+
+            if v5 == 1 then
+                p1.Color = Color3.new(255/255, 0/255, 0/255)
+                p1.Reflectance = 0.5
+                p1.Transparency = 0
+                p1.TextureID = ""
+
+                local Temp = workspace.Prefabs.RubyParticles:Clone()
+
+                Temp.Name = "Temp"
+                Temp.Parent = p1
+                Temp.Enabled = true
+
+                return "ruby"
+            end
+        end
+
+        if p2 == "cavern" then
+            local mushMod = Multipliers.getMulti().mushMod
+            local v10 = math.floor((Random.new():NextInteger(0, mushMod)))
+            local v11 = v10 / 2 + 1
+
+            if Random.new():NextNumber(0, 1000) < Multipliers.getMulti().rfChance * 10 then
+                v10 = -1
+            end
+
+            if v10 == -1 then
+                p1.TextureID = "rbxassetid://14504955410"
+                v11 = 0.75
+            end
+
+            if v10 == 0 then
+                p1.TextureID = "rbxassetid://14464993639"
+            end
+
+            if v10 == 1 then
+                p1.TextureID = "rbxassetid://14477535266"
+            end
+
+            if v10 == 2 then
+                p1.TextureID = "rbxassetid://14503426617"
+            end
+
+            if v10 == 3 then
+                p1.TextureID = "rbxassetid://14514346430"
+            end
+
+            if v10 == 4 then
+                p1.TextureID = "rbxassetid://14610888593"
+            end
+
+            local v12 = LethalNum.toNumber(Multipliers.getMulti().mushMin)
+            local v13 = LethalNum.toNumber(Multipliers.getMulti().mushMax) + 100
+
+            if v13 < v12 then
+                v12 = v13
+            end
+
+            local v14 = Random.new():NextNumber(v12, v13)
+
+            if v14 < 0 then
+                v14 = 0
+            end
+
+            local v15 = math.min(30, (1 + v14 / 100) / v11)
+
+            p1.Size = Vector3.new(v15, v15, v15)
+
+            if p1.Size.X < 1 then
+                p1.Size = Vector3.new(1, 1, 1)
+            end
+
+            local count = p1.Position.Y + (p1.Size.X - 1) / 2
+
+            if v15 >= 5 then
+                count = count - 1
+            end
+
+            p1.CFrame = CFrame.new((Vector3.new(p1.Position.X, count, p1.Position.Z)))
+
+            if v10 == -1 then
+                return "rune"
+            end
+
+            return "basic"
+        end
+
+        if p2 == "planet" then
+            if Multipliers2.platChance * 10 >= Random.new():NextNumber(0, 1000) and CurrencyTypes.GetCentralized("obs") then
+                p1.Color = Color3.new(0.309804, 0.321569, 1)
+                p1.Reflectance = 0.4
+                p1.Transparency = 0
+                p1.TextureID = ""
+
+                local Temp = workspace.Prefabs.PlatinumParticles:Clone()
+
+                Temp.Name = "Temp"
+                Temp.Parent = p1
+                Temp.Texture = "rbxassetid://10027648911"
+                Temp.Enabled = true
+
+                return "observatorium"
+            end
+
+            v1 = Data.ImportantData.Stats.currentTier
+        end
+
+        if p2 == "blue" then
+            local v17 = if InfoStore.Resets.bluestige.b > 0 and (not p3 and Random.new():NextNumber(0, 100) <= Multipliers2.iridiumChance) then "iridium" else "basic"
+
+            p1.Color = Color3.new(1, 0.827451, 0.423529)
+
+            if v17 ~= "iridium" then
+                return v17
+            end
+
+            local Temp = workspace.Prefabs.IrParticles:Clone()
+
+            Temp.Name = "Temp"
+            Temp.Parent = p1
+            Temp.Enabled = true
+            p1.TextureID = ""
+            p1.Color = Color3.new(0.45098, 0.45098, 0.45098)
+
+            return v17
+        end
+
+        if p2 == "normS" then
+            if CurrencyTypes.Levels.levelS.level >= 50 and Random.new():NextNumber(0, 100) < 10 then
+                if InfoStore.Resets.grasshopS.a >= 2 and Random.new():NextNumber(0, 100) < 10 then
+                    p1.TextureID = ""
+                    p1.Color = Color3.new(255/255, 0/255, 0/255)
+
+                    return "perk2"
+                end
+
+                p1.TextureID = ""
+                p1.Color = Color3.new(0/255, 153/255, 255/255)
+
+                return "perk"
+            end
+
+            v1 = "basic"
+        end
+
+        local v18 = GrassTypes.Types[v1]
+
+        if Data.ImportantData.Stats.tierDisplayed ~= "auto" then
+            v18 = GrassTypes.Types[Data.ImportantData.Stats.tierDisplayed]
+        end
+
+        if not v18 then
+            return v1
+        end
+
+        p1.Color = v18.color
+        p1.Reflectance = v18.reflectance or 0
+        p1.Transparency = v18.transparency or 0
+        p1.TextureID = v18.texture or ""
+
+        return v1
+    end
+}
+
+function t.GetFieldObject(p1) --[[ GetFieldObject | Line: 371 | Upvalues: Fields (copy), t (copy) ]]
+    local v1 = Fields.Fields[p1]
+
+    if not v1 then
+        return nil
+    end
+
+    local v2 = nil
+
+    for k, v in pairs(v1.disabled) do
+        v1.disabled[k] = nil
+
+        return k
+    end
+
+    if v2 == nil and v1.counter < t.hardCap then
+        local g = v1.baseObject:Clone()
+
+        v1.disabled[g] = true
+        g.Name = "g"
+        g.Transparency = 1
+        g.CanCollide = false
+        g.CanTouch = false
+        g.Parent = workspace.GrassObjects
+        v2 = g
+    end
+
+    return v2
+end
+function t.CreateObject(p1, p2) --[[ CreateObject | Line: 395 | Upvalues: Fields (copy), t (copy) ]]
+    local v1 = Fields.Fields[p1]
+
+    if not v1 then
+        return
+    end
+
+    local v2 = t.GetFieldObject(p1)
+
+    if v2 == nil then
+        return
+    end
+
+    local v3 = t.rand:NextNumber(v1.spawnArea.x.X, v1.spawnArea.x.Y)
+    local v4 = t.rand:NextNumber(v1.spawnArea.z.X, v1.spawnArea.z.Y)
+    local v5 = v1.spawnArea.y - Random.new():NextNumber(1, 2000) / 10000
+
+    v2.Parent = workspace.GrassObjects
+
+    if v1.randomRotation then
+        local v6 = CFrame.new((Vector3.new(v3, v5, v4)))
+        local Angles = CFrame.Angles
+
+        v2.CFrame = v6 * Angles(0, math.rad(({
+            [0] = 90,
+            [1] = 0
+        })[Random.new():NextInteger(0, 1)]), 0)
+    else
+        v2.CFrame = CFrame.new((Vector3.new(v3, v5, v4)))
+    end
+
+    v1.counter = v1.counter + 1
+    v2:SetAttribute("id", t.GetType(v2, p1, p2))
+    v2:SetAttribute("field", p1)
+    v2.Transparency = 0
+    v2.CanTouch = true
+    v2.CanCollide = true
+    v1.objects[v2] = true
+    v1.disabled[v2] = nil
+    task.delay(0.1, function() --[[ Line: 428 | Upvalues: v2 (copy) ]]
+        v2.CFrame = v2.CFrame + Vector3.new(0, 0.01, 0)
+    end)
+end
+
+return t
