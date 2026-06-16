@@ -1,0 +1,385 @@
+local t = {}
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+require(ReplicatedStorage.LethalNum)
+
+local Data = require(ReplicatedStorage.Data)
+local BadgeService = game:GetService("BadgeService")
+local Players = game:GetService("Players")
+
+t.Saves = {
+    prestige = {
+        badgeID = 2125823794,
+        displayName = "First Prestige",
+        icon = "rbxassetid://8566935066",
+        base = "rbxassetid://8624760400",
+        order = 1,
+        obj = nil,
+        color = Color3.new(0, 0.27451, 0.419608)
+    },
+    crystallize = {
+        badgeID = 2125823799,
+        displayName = "First Crystallize",
+        icon = "rbxassetid://9281596403",
+        base = "rbxassetid://9281596277",
+        order = 2,
+        obj = nil,
+        color = Color3.new(0.419608, 0, 0.411765)
+    },
+    grasshop = {
+        badgeID = 2125828657,
+        displayName = "First Grasshop",
+        icon = "rbxassetid://9805259105",
+        base = "rbxassetid://9301071550",
+        order = 3,
+        obj = nil,
+        color = Color3.new(0.419608, 0.419608, 0.419608)
+    },
+    steelie = {
+        badgeID = 2125829512,
+        displayName = "First Steelie",
+        icon = "rbxassetid://9932698337",
+        base = "rbxassetid://9301071550",
+        order = 4,
+        obj = nil,
+        color = Color3.new(0.419608, 0.419608, 0.419608)
+    },
+    generator = {
+        badgeID = 2126311328,
+        displayName = "Unlocked Generator",
+        icon = "rbxassetid://9301948305",
+        base = "rbxassetid://9301071550",
+        order = 5,
+        obj = nil,
+        color = Color3.new(0.419608, 0.419608, 0.419608)
+    },
+    charge = {
+        badgeID = 2125873088,
+        displayName = "Unlocked Charger",
+        icon = "rbxassetid://9301948498",
+        base = "rbxassetid://9301071550",
+        order = 6,
+        obj = nil,
+        color = Color3.new(0.419608, 0.419608, 0.419608)
+    },
+    assembler = {
+        badgeID = 2126311369,
+        displayName = "Unlocked Assembler",
+        icon = "rbxassetid://9301948587",
+        base = "rbxassetid://9301071550",
+        order = 7,
+        obj = nil,
+        color = Color3.new(0.419608, 0.419608, 0.419608)
+    },
+    decelerate = {
+        badgeID = 2125873089,
+        displayName = "Unlocked Decelerator",
+        icon = "rbxassetid://9319385941",
+        base = "rbxassetid://9301071550",
+        order = 8,
+        obj = nil,
+        color = Color3.new(0.419608, 0.419608, 0.419608)
+    },
+    anonymity = {
+        badgeID = 2125863966,
+        displayName = "First Anonymity",
+        icon = "rbxassetid://9318557854",
+        base = "rbxassetid://9318557748",
+        order = 9,
+        obj = nil,
+        color = Color3.new(0.419608, 0, 0)
+    },
+    liquefy = {
+        badgeID = 2125863970,
+        displayName = "First Liquefy",
+        icon = "rbxassetid://9333103268",
+        base = "rbxassetid://9333103593",
+        order = 10,
+        obj = nil,
+        color = Color3.new(0.14902, 0.14902, 0.14902)
+    },
+    refinery = {
+        badgeID = 2126311412,
+        displayName = "Unlocked Refinery",
+        icon = "rbxassetid://9561513686",
+        base = "rbxassetid://9301071550",
+        order = 11,
+        obj = nil,
+        color = Color3.new(0.419608, 0.419608, 0.419608)
+    },
+    launchPad = {
+        badgeID = 2126311463,
+        displayName = "Unlocked Launch Pad",
+        icon = "rbxassetid://9561513019",
+        base = "rbxassetid://9301071550",
+        order = 12,
+        obj = nil,
+        color = Color3.new(0.419608, 0.419608, 0.419608)
+    },
+    oilRig = {
+        badgeID = 2126313535,
+        displayName = "Unlocked Oil Rig",
+        icon = "rbxassetid://9606543979",
+        base = "rbxassetid://9301071550",
+        order = 14,
+        obj = nil,
+        color = Color3.new(0.419608, 0.419608, 0.419608)
+    },
+    galactic = {
+        badgeID = 2126232210,
+        displayName = "First Galactic",
+        icon = "rbxassetid://10104888999",
+        base = "rbxassetid://9737687479",
+        order = 15,
+        obj = nil,
+        color = Color3.new(0.168627, 0, 0.419608)
+    },
+    grassSkip = {
+        badgeID = 2126735882,
+        displayName = "First Grass-Skip",
+        icon = "rbxassetid://9853362154",
+        base = "rbxassetid://9757748504",
+        order = 16,
+        obj = nil,
+        color = Color3.new(0.658824, 0.615686, 0)
+    },
+    funify = {
+        badgeID = 2126735899,
+        displayName = "First Funify",
+        icon = "rbxassetid://9752019198",
+        base = "rbxassetid://9757748504",
+        order = 17,
+        obj = nil,
+        color = Color3.new(0.658824, 0.615686, 0)
+    },
+    sfrgt = {
+        badgeID = 2126735955,
+        displayName = "Unlocked SFRGTG",
+        icon = "rbxassetid://9798823486",
+        base = "rbxassetid://9757748504",
+        order = 18,
+        obj = nil,
+        color = Color3.new(0.505882, 0.658824, 0)
+    },
+    zerogh = {
+        badgeID = 2126735911,
+        displayName = "Reached 0 AGH",
+        icon = "rbxassetid://9818039474",
+        base = "rbxassetid://8624760400",
+        order = 19,
+        obj = nil,
+        color = Color3.new(0.168627, 0, 0.419608)
+    },
+    sacrifice = {
+        badgeID = 2126735923,
+        displayName = "First Sacrifice",
+        icon = "rbxassetid://9821096393",
+        base = "rbxassetid://9821095923",
+        order = 20,
+        obj = nil,
+        color = Color3.new(0, 0.27451, 0.419608)
+    },
+    recelerator = {
+        badgeID = 2127159334,
+        displayName = "Unlocked Recelerator",
+        icon = "rbxassetid://9798870986",
+        base = "rbxassetid://9757748504",
+        order = 22,
+        obj = nil,
+        color = Color3.new(0.658824, 0.615686, 0)
+    },
+    planetoid = {
+        badgeID = 2127159346,
+        displayName = "Unlocked The Planetoid",
+        icon = "rbxassetid://9729567321",
+        base = "rbxassetid://9737687479",
+        order = 25,
+        obj = nil,
+        color = Color3.new(0.329412, 0, 0.419608)
+    },
+    astrolabe = {
+        badgeID = 2127159347,
+        displayName = "First Astrolabe",
+        icon = "rbxassetid://10399803402",
+        base = "rbxassetid://8624760400",
+        order = 26,
+        obj = nil,
+        color = Color3.new(0, 0.419608, 0.403922)
+    },
+    quadrant = {
+        badgeID = 2127159348,
+        displayName = "First Quadrant",
+        icon = "rbxassetid://10090572910",
+        base = "rbxassetid://10090774345",
+        order = 27,
+        obj = nil,
+        color = Color3.new(0.419608, 0.419608, 0.419608)
+    },
+    ringBreak = {
+        badgeID = 2128267041,
+        displayName = "Broke The Ring",
+        icon = "rbxassetid://9874421574",
+        base = "rbxassetid://9874421351",
+        order = 28,
+        obj = nil,
+        color = Color3.new(0.419608, 0.133333, 0.329412)
+    },
+    planetary = {
+        badgeID = 2128267085,
+        displayName = "First Planetary",
+        icon = "rbxassetid://10511408576",
+        base = "rbxassetid://8624760400",
+        order = 29,
+        obj = nil,
+        color = Color3.new(0, 0.305882, 0.419608)
+    },
+    grassJump = {
+        badgeID = 2128267092,
+        displayName = "First Grass Jump",
+        icon = "rbxassetid://10695121279",
+        base = "rbxassetid://11315218948",
+        order = 30,
+        obj = nil,
+        color = Color3.new(0.121569, 0.121569, 0.121569)
+    },
+    lunarOb = {
+        badgeID = 2128267101,
+        displayName = "Unlocked Lunar Obelisk",
+        icon = "rbxassetid://10650666901",
+        base = "rbxassetid://9757748291",
+        order = 31,
+        obj = nil,
+        color = Color3.new(0.172549, 0.239216, 0.419608)
+    },
+    constellation = {
+        badgeID = 2128267105,
+        displayName = "First Constellation",
+        icon = "rbxassetid://10427780685",
+        base = "rbxassetid://10427781114",
+        order = 32,
+        obj = nil,
+        color = Color3.new(0, 0.0196078, 0.419608)
+    },
+    darkCharger = {
+        badgeID = 2128267153,
+        displayName = "Unlocked Dark Charger",
+        icon = "rbxassetid://10675022080",
+        base = "rbxassetid://11315218948",
+        order = 33,
+        obj = nil,
+        color = Color3.new(0.121569, 0.121569, 0.121569)
+    },
+    theStar = {
+        badgeID = 2129893474,
+        displayName = "Unlocked The Star",
+        icon = "rbxassetid://10427779406",
+        base = "rbxassetid://10427780381",
+        order = 34,
+        obj = nil,
+        color = Color3.new(0.266667, 0, 0.419608)
+    },
+    supernova = {
+        badgeID = 2129893476,
+        displayName = "First Supernova",
+        icon = "rbxassetid://10985298823",
+        base = "rbxassetid://10985314749",
+        order = 35,
+        obj = nil,
+        color = Color3.new(0.815686, 0.639216, 0)
+    },
+    eclipse = {
+        badgeID = 2129893480,
+        displayName = "Unlocked Eclipse (SN T2)",
+        icon = "rbxassetid://11315125269",
+        base = "rbxassetid://11317049299",
+        order = 36,
+        obj = nil,
+        color = Color3.new(0.776471, 0.388235, 0)
+    },
+    hsj = {
+        badgeID = 2129893483,
+        displayName = "Supernova Tier 3",
+        icon = "rbxassetid://11307779670",
+        base = "rbxassetid://11315218948",
+        order = 37,
+        obj = nil,
+        color = Color3.new(0.121569, 0.121569, 0.121569)
+    },
+    centralize = {
+        badgeID = 2129893485,
+        displayName = "First Centralize",
+        icon = "rbxassetid://11387956718",
+        base = "rbxassetid://11388482646",
+        order = 39,
+        obj = nil,
+        color = Color3.new(0.227451, 0, 0.392157)
+    }
+}
+function t.UpdateInfo() --[[ UpdateInfo | Line: 362 | Upvalues: Data (copy), t (copy) ]]
+    local recoverSelected = Data.ImportantData.Stats.recoverSelected
+
+    if t.Saves[recoverSelected] then
+        recoverSelected = t.Saves[recoverSelected].displayName
+    else
+        for i = 1, 9 do
+            if string.find(recoverSelected, "_" .. i) then
+                recoverSelected = "Slot " .. i
+            end
+        end
+
+        if recoverSelected == "delete" then
+            recoverSelected = "Erase Data"
+        end
+
+        if recoverSelected == "previous" then
+            recoverSelected = "Backup"
+        end
+
+        if recoverSelected == "old" then
+            recoverSelected = "Old Save"
+        end
+
+        if recoverSelected == "best" then
+            recoverSelected = "Best Save"
+        end
+    end
+
+    Data.ImportantData.Misc.player.PlayerGui.MobileUI.RecoverySystem.Result.Text = "Copying <font color=\"#00ff00\">" .. recoverSelected .. "</font> to <font color=\"#00ff00\">Slot " .. Data.ImportantData.Stats.recoverSlot .. "</font>"
+    Data.ImportantData.Misc.player.PlayerGui.MobileUI.Confirmation.Text.Text = "Are you sure you want to copy\n<font color=\"#00ff00\">" .. recoverSelected .. "</font>\nto\n<font color=\"#00ff00\">Slot " .. Data.ImportantData.Stats.recoverSlot .. "</font>"
+end
+function t.Processing() --[[ Processing | Line: 390 | Upvalues: Data (copy) ]]
+    Data.ImportantData.Misc.player.PlayerGui.MobileUI.Confirmation.Text.Text = "\n\nCopying data...\n\n"
+    task.delay(30, function() --[[ Line: 392 | Upvalues: Data (ref) ]]
+        Data.ImportantData.Misc.player.PlayerGui.MobileUI.Confirmation.Text.Text = "\n\nTimed Out\n\n"
+        Data.ImportantData.Misc.player.PlayerGui.MobileUI.Confirmation.ConfirmNo.Visible = true
+    end)
+end
+function t.FailCopy() --[[ FailCopy | Line: 398 | Upvalues: Data (copy) ]]
+    Data.ImportantData.Misc.player.PlayerGui.MobileUI.Confirmation.Text.Text = "\n\nFailed to copy save data\n\n"
+end
+
+local v1 = false
+
+function t.LoadList() --[[ LoadList | Line: 403 | Upvalues: v1 (ref), Players (copy), t (copy), BadgeService (copy) ]]
+    if v1 then
+        return
+    end
+
+    local LocalPlayer = Players.LocalPlayer
+
+    v1 = true
+
+    for k, v in pairs(t.Saves) do
+        if not v.obj.Visible then
+            if BadgeService:UserHasBadgeAsync(LocalPlayer.UserId, v.badgeID) then
+                v.obj.Visible = true
+            else
+                v.obj.Visible = false
+            end
+
+            task.wait(0.5)
+        end
+    end
+end
+
+return t
