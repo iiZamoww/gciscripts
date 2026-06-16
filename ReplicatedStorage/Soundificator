@@ -1,0 +1,90 @@
+local SoundService = game:GetService("SoundService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Data = require(ReplicatedStorage.Data)
+local t = {}
+local t2 = {
+    nr = "rbxassetid://17377286892",
+    ar = "rbxassetid://17377288097",
+    rr = "rbxassetid://17377288689",
+    spc = "rbxassetid://17377287495",
+    dForest = "rbxassetid://17682590000",
+    lForest = "rbxassetid://17682588593",
+    rr2 = "rbxassetid://10558579641",
+    pt = "rbxassetid://17682813036",
+    ptr = "rbxassetid://10563793557",
+    star = "rbxassetid://17682816357",
+    void = "rbxassetid://11992924039",
+    nrc = "rbxassetid://17682819564",
+    gl = "rbxassetid://17682808687",
+    loop = "rbxassetid://18767801413",
+    blue = "rbxassetid://18767799066",
+    challenge = "rbxassetid://12772935717",
+    d1 = "rbxassetid://17682817539",
+    dd1 = "rbxassetid://17682814292",
+    d2 = "rbxassetid://17682820848",
+    dd2 = "rbxassetid://14828235590",
+    d3 = "rbxassetid://17682806920",
+    dd3 = "rbxassetid://17682805980",
+    d4 = "rbxassetid://18767807356",
+    dd4 = "rbxassetid://18767808688",
+    d5 = "rbxassetid://18767806008",
+    d6 = "rbxassetid://18767804837",
+    d7 = "rbxassetid://18767802382",
+    d8 = "rbxassetid://18767795578",
+    d9 = "rbxassetid://18767803594",
+    d10 = "rbxassetid://18767797911",
+    d11 = "rbxassetid://18767800128",
+    jungle = "rbxassetid://17682811549",
+    cavern = "rbxassetid://17682810584",
+    intersection = "rbxassetid://17682809576",
+    understand = "rbxassetid://18767796646",
+    temple1 = "rbxassetid://18867141622",
+    temple2 = "rbxassetid://19000640124",
+    cool = "rbxassetid://80803845952368"
+}
+
+function t.SwitchMusic(p1, p2) --[[ SwitchMusic | Line: 51 | Upvalues: Data (copy), SoundService (copy), t2 (copy) ]]
+    local v1 = if Data.ImportantData.Misc.toggles.music == nil or Data.ImportantData.Misc.toggles.music.state then p2 or 0.5 else 0
+
+    if p1 == nil then
+        SoundService.Music:Stop()
+
+        return
+    end
+
+    if SoundService.Music.SoundId ~= t2[p1] then
+        SoundService.Music:Stop()
+        SoundService.Music.SoundId = t2[p1]
+        SoundService.Music:Play()
+        SoundService.Music.Volume = v1
+
+        return
+    end
+
+    if v1 ~= SoundService.Music.Volume then
+        SoundService.Music.Volume = v1
+    end
+
+    if SoundService.Music.IsPlaying then
+        return
+    end
+
+    SoundService.Music:Play()
+end
+function t.UpdateVolume() --[[ UpdateVolume | Line: 77 | Upvalues: Data (copy), SoundService (copy) ]]
+    SoundService.Music.Volume = if Data.ImportantData.Misc.toggles.music.state then 0.5 else 0
+end
+function t.PlayAll() --[[ PlayAll | Line: 82 | Upvalues: t2 (copy), SoundService (copy) ]]
+    for v1, v2 in t2 do
+        SoundService.Music:Stop()
+        SoundService.Music.SoundId = t2[v1]
+        SoundService.Music:Play()
+        task.wait(0.5)
+    end
+end
+
+if not SoundService.Music.IsPlaying then
+    t.SwitchMusic("nr")
+end
+
+return t
