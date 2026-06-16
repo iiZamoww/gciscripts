@@ -1,0 +1,43 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Data = require(ReplicatedStorage.Data)
+
+game:GetService("UserInputService")
+
+local RunService = game:GetService("RunService")
+local PlanetRun = require(ReplicatedStorage.PlanetRun)
+local v1 = script.Parent
+local Humanoid = v1:WaitForChild("Humanoid")
+local HumanoidRootPart = v1:WaitForChild("HumanoidRootPart")
+local v2 = RaycastParams.new()
+
+v2.CollisionGroup = "Character"
+RunService.Heartbeat:Connect(function() --[[ Line: 13 | Upvalues: Data (copy), PlanetRun (copy), Humanoid (copy), HumanoidRootPart (copy), v2 (copy) ]]
+    if not Data.ImportantData.Stats.prTimerActive then
+        return
+    end
+
+    local v1 = if Data.ImportantData.Stats.speedRun4 then "sr4" else "default"
+    local v22 = PlanetRun.Levels[Data.ImportantData.Stats.planetRun]
+
+    if v22 then
+        local v3 = v22.levels["" .. Data.ImportantData.Stats.planetRunLevel]
+
+        if v3 and v3.physics then
+            v1 = v3.physics
+        end
+    end
+
+    if Data.ImportantData.Stats.location ~= "pr" or v1 ~= "sr4" then
+        return
+    end
+
+    if Humanoid.MoveDirection == Vector3.new(0, 0, 0) then
+        HumanoidRootPart.Velocity = Vector3.new(0, HumanoidRootPart.Velocity.Y, 0)
+
+        return
+    end
+
+    local MoveDirection = Humanoid.MoveDirection
+
+    HumanoidRootPart.Velocity = if workspace:Raycast(HumanoidRootPart.Position, HumanoidRootPart.CFrame.LookVector * 2, v2) and not workspace:Raycast(HumanoidRootPart.Position, Vector3.new(0, -3, 0), v2) then Vector3.new(0, HumanoidRootPart.Velocity.Y, 0) else Vector3.new(MoveDirection.X * Humanoid.WalkSpeed, HumanoidRootPart.Velocity.Y, MoveDirection.Z * Humanoid.WalkSpeed)
+end)
