@@ -1,0 +1,593 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Data = require(ReplicatedStorage.Data)
+local LethalNum = require(ReplicatedStorage.LethalNum)
+
+require(ReplicatedStorage.Format)
+
+local CurrencyTypes = require(ReplicatedStorage.CurrencyTypes)
+
+require(ReplicatedStorage.CommonFunctions)
+
+local t = {}
+
+t.Challenges = {
+    basic = {
+        displayName = "Basic",
+        resetMulti = true,
+        resetSouls = false,
+        disablesSouls = false,
+        completions = 0,
+        maxCompletions = 4,
+        tier = 1,
+        order = 0,
+        object = nil,
+        desc = function() --[[ desc | Line: 13 ]]
+            return "Now do it all again!\n<font color=\"#ff0000\">- Forces a sunrise and sets your fighting multiplier back down to 1</font>"
+        end,
+        unlockReq = function() --[[ unlockReq | Line: 28 ]]
+            return "Stage 14"
+        end,
+        unlockCondition = function() --[[ unlockCondition | Line: 31 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 14
+        end,
+        calculateCondition = function(p1) --[[ calculateCondition | Line: 35 | Upvalues: t (copy) ]]
+            return 14 + (p1 and p1.UpgradeLevels.challenges.basic.c or t.Challenges.basic.completions) * 2
+        end,
+        clearReq = function() --[[ clearReq | Line: 39 | Upvalues: t (copy) ]]
+            return "Reach Stage " .. t.Challenges.basic.calculateCondition()
+        end,
+        clearCondition = function(p1) --[[ clearCondition | Line: 42 | Upvalues: Data (copy), t (copy) ]]
+            return t.Challenges.basic.calculateCondition(p1) <= (p1 and p1.Stats.stage or Data.ImportantData.Stats.currStage)
+        end,
+        score = LethalNum.new(2, 1),
+        calculateReward = function(p1) --[[ calculateReward | Line: 48 | Upvalues: t (copy), LethalNum (copy) ]]
+            return LethalNum.add(LethalNum.new(1, 3), LethalNum.new(1000 * (p1 and p1.UpgradeLevels.challenges.basic.c or t.Challenges.basic.completions), 0))
+        end,
+        reward = function() --[[ reward | Line: 54 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "" .. LethalNum.getString(t.Challenges.basic.calculateReward()) .. " Souls"
+        end,
+        grantReward = function(p1) --[[ grantReward | Line: 57 | Upvalues: LethalNum (copy), t (copy) ]]
+            p1.Currency.curr.souls.amount = LethalNum.add(p1.Currency.curr.souls.amount, t.Challenges.basic.calculateReward(p1))
+            p1.Currency.curr.souls.totalAmount = LethalNum.add(p1.Currency.curr.souls.totalAmount, t.Challenges.basic.calculateReward(p1))
+        end
+    },
+    cycle = {
+        displayName = "Cycle",
+        resetMulti = true,
+        resetSouls = false,
+        disablesSouls = true,
+        disablesCS = true,
+        autoSunrise = true,
+        autoSunriseT = 600,
+        completions = 0,
+        maxCompletions = 5,
+        tier = 1,
+        order = 1,
+        object = nil,
+        desc = function() --[[ desc | Line: 69 ]]
+            return "Things are really starting to heat up. First completion unlocks golden stars shop in solar upgrades\n<font color=\"#ff0000\">- Forces a sunrise and sets your fighting multiplier back down to 1</font>\n<font color=\"#ff0000\">- You can\'t earn souls</font>\n<font color=\"#ff0000\">- Challenge score bonus is disabled</font>\n<font color=\"#ff0000\">- You automatically sunrise every 10 minutes</font>"
+        end,
+        unlockReq = function() --[[ unlockReq | Line: 88 ]]
+            return "Stage 15"
+        end,
+        unlockCondition = function() --[[ unlockCondition | Line: 91 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 15
+        end,
+        calculateCondition = function(p1) --[[ calculateCondition | Line: 95 | Upvalues: t (copy) ]]
+            return 10 + (p1 and p1.UpgradeLevels.challenges.cycle.c or t.Challenges.cycle.completions) * 4
+        end,
+        clearReq = function() --[[ clearReq | Line: 99 | Upvalues: t (copy) ]]
+            return "Reach Stage " .. t.Challenges.cycle.calculateCondition()
+        end,
+        clearCondition = function(p1) --[[ clearCondition | Line: 102 | Upvalues: Data (copy), t (copy) ]]
+            return t.Challenges.cycle.calculateCondition(p1) <= (p1 and p1.Stats.stage or Data.ImportantData.Stats.currStage)
+        end,
+        score = LethalNum.new(4, 1),
+        calculateReward = function() --[[ calculateReward | Line: 108 | Upvalues: LethalNum (copy) ]]
+            return LethalNum.new(2, 0)
+        end,
+        reward = function() --[[ reward | Line: 112 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "" .. LethalNum.getString(t.Challenges.cycle.calculateReward()) .. " Golden Stars"
+        end,
+        grantReward = function(p1) --[[ grantReward | Line: 115 | Upvalues: LethalNum (copy), t (copy) ]]
+            p1.Currency.curr.goldenStars.amount = LethalNum.add(p1.Currency.curr.goldenStars.amount, t.Challenges.cycle.calculateReward(p1))
+            p1.Currency.curr.goldenStars.totalAmount = LethalNum.add(p1.Currency.curr.goldenStars.totalAmount, t.Challenges.cycle.calculateReward(p1))
+        end
+    },
+    soul = {
+        displayName = "Soul",
+        resetMulti = true,
+        resetSouls = true,
+        startSouls = true,
+        disablesSouls = false,
+        autoSunrise = false,
+        completions = 0,
+        maxCompletions = 5,
+        tier = 1,
+        order = 2,
+        object = nil,
+        desc = function() --[[ desc | Line: 126 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "I hope you have some soul upgrades" .. "\n<font color=\"#ff0000\">- Forces a sunrise and sets your fighting multiplier back down to 1</font>" .. "\n<font color=\"#ff0000\">- Your souls bonuses will be taken away temporarily</font>" .. "\n<font color=\"#ff0000\">- Earned souls are not kept on giving up or completing the challenge</font>" .. "\n<font color=\"#00ff00\">- You start with " .. LethalNum.getString(t.Challenges.soul.startSoulsAmnt) .. " souls</font>"
+        end,
+        startSoulsAmnt = LethalNum.new(1, 3),
+        soulsPenalty = LethalNum.new(1, 0),
+        unlockReq = function() --[[ unlockReq | Line: 146 ]]
+            return "Stage 18"
+        end,
+        unlockCondition = function() --[[ unlockCondition | Line: 149 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 18
+        end,
+        calculateCondition = function(p1) --[[ calculateCondition | Line: 153 | Upvalues: t (copy) ]]
+            return 14 + (p1 and p1.UpgradeLevels.challenges.soul.c or t.Challenges.soul.completions) * 2
+        end,
+        clearReq = function() --[[ clearReq | Line: 157 | Upvalues: t (copy) ]]
+            return "Reach Stage " .. t.Challenges.soul.calculateCondition()
+        end,
+        clearCondition = function(p1) --[[ clearCondition | Line: 160 | Upvalues: Data (copy), t (copy) ]]
+            return t.Challenges.soul.calculateCondition(p1) <= (p1 and p1.Stats.stage or Data.ImportantData.Stats.currStage)
+        end,
+        score = LethalNum.new(1, 2),
+        calculateReward = function() --[[ calculateReward | Line: 166 | Upvalues: LethalNum (copy) ]]
+            return LethalNum.new(2, 0)
+        end,
+        reward = function() --[[ reward | Line: 170 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "" .. LethalNum.getString(t.Challenges.soul.calculateReward()) .. " Golden Stars"
+        end,
+        grantReward = function(p1) --[[ grantReward | Line: 173 | Upvalues: LethalNum (copy), t (copy) ]]
+            p1.Currency.curr.goldenStars.amount = LethalNum.add(p1.Currency.curr.goldenStars.amount, t.Challenges.soul.calculateReward(p1))
+            p1.Currency.curr.goldenStars.totalAmount = LethalNum.add(p1.Currency.curr.goldenStars.totalAmount, t.Challenges.soul.calculateReward(p1))
+        end
+    },
+    wall = {
+        displayName = "Wall",
+        resetMulti = true,
+        resetSouls = false,
+        disablesSouls = false,
+        autoSunrise = false,
+        fasterScaling = true,
+        completions = 0,
+        maxCompletions = 5,
+        tier = 1,
+        order = 3,
+        object = nil,
+        desc = function() --[[ desc | Line: 184 ]]
+            return "Now you can\'t rely entirely on your fighting multiplier!\n<font color=\"#ff0000\">- Forces a sunrise and sets your fighting multiplier back down to 1</font>\n<font color=\"#ff0000\">- Enemy stats scale 5x faster</font>"
+        end,
+        scaling = LethalNum.new(5, 1),
+        scalingHP = LethalNum.new(5.015, 1),
+        unlockReq = function() --[[ unlockReq | Line: 202 ]]
+            return "Stage 22"
+        end,
+        unlockCondition = function() --[[ unlockCondition | Line: 205 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 22
+        end,
+        calculateCondition = function(p1) --[[ calculateCondition | Line: 209 | Upvalues: t (copy) ]]
+            return 10 + (p1 and p1.UpgradeLevels.challenges.wall.c or t.Challenges.wall.completions) * 2
+        end,
+        clearReq = function() --[[ clearReq | Line: 213 | Upvalues: t (copy) ]]
+            return "Reach Stage " .. t.Challenges.wall.calculateCondition()
+        end,
+        clearCondition = function(p1) --[[ clearCondition | Line: 216 | Upvalues: Data (copy), t (copy) ]]
+            return t.Challenges.wall.calculateCondition(p1) <= (p1 and p1.Stats.stage or Data.ImportantData.Stats.currStage)
+        end,
+        score = LethalNum.new(2, 2),
+        calculateReward = function() --[[ calculateReward | Line: 222 | Upvalues: LethalNum (copy) ]]
+            return LethalNum.new(2, 0)
+        end,
+        reward = function() --[[ reward | Line: 226 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "" .. LethalNum.getString(t.Challenges.wall.calculateReward()) .. " Golden Stars"
+        end,
+        grantReward = function(p1) --[[ grantReward | Line: 229 | Upvalues: LethalNum (copy), t (copy) ]]
+            p1.Currency.curr.goldenStars.amount = LethalNum.add(p1.Currency.curr.goldenStars.amount, t.Challenges.wall.calculateReward(p1))
+            p1.Currency.curr.goldenStars.totalAmount = LethalNum.add(p1.Currency.curr.goldenStars.totalAmount, t.Challenges.wall.calculateReward(p1))
+        end
+    },
+    soulless = {
+        displayName = "Soulless",
+        resetMulti = true,
+        resetSouls = true,
+        disablesSouls = true,
+        completions = 0,
+        maxCompletions = 3,
+        tier = 1,
+        order = 4,
+        object = nil,
+        desc = function() --[[ desc | Line: 240 ]]
+            return "Suffering\n<font color=\"#ff0000\">- Forces a sunrise and sets your fighting multiplier back down to 1</font>\n<font color=\"#ff0000\">- Your souls bonuses will be taken away temporarily</font>\n<font color=\"#ff0000\">- You can\'t earn souls</font>"
+        end,
+        soulsPenalty = LethalNum.new(1, 0),
+        unlockReq = function() --[[ unlockReq | Line: 256 ]]
+            return "Stage 26"
+        end,
+        unlockCondition = function() --[[ unlockCondition | Line: 259 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 26
+        end,
+        calculateCondition = function(p1) --[[ calculateCondition | Line: 263 | Upvalues: t (copy) ]]
+            return 10 + (p1 and p1.UpgradeLevels.challenges.soulless.c or t.Challenges.soulless.completions) * 4
+        end,
+        clearReq = function() --[[ clearReq | Line: 267 | Upvalues: t (copy) ]]
+            return "Reach Stage " .. t.Challenges.soulless.calculateCondition()
+        end,
+        clearCondition = function(p1) --[[ clearCondition | Line: 270 | Upvalues: Data (copy), t (copy) ]]
+            return t.Challenges.soulless.calculateCondition(p1) <= (p1 and p1.Stats.stage or Data.ImportantData.Stats.currStage)
+        end,
+        score = LethalNum.new(2, 2),
+        calculateReward = function() --[[ calculateReward | Line: 276 | Upvalues: LethalNum (copy) ]]
+            return LethalNum.new(2, 0)
+        end,
+        reward = function() --[[ reward | Line: 280 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "" .. LethalNum.getString(t.Challenges.soulless.calculateReward()) .. " Golden Stars"
+        end,
+        grantReward = function(p1) --[[ grantReward | Line: 283 | Upvalues: LethalNum (copy), t (copy) ]]
+            p1.Currency.curr.goldenStars.amount = LethalNum.add(p1.Currency.curr.goldenStars.amount, t.Challenges.soulless.calculateReward(p1))
+            p1.Currency.curr.goldenStars.totalAmount = LethalNum.add(p1.Currency.curr.goldenStars.totalAmount, t.Challenges.soulless.calculateReward(p1))
+        end
+    },
+    advanced = {
+        displayName = "Limited",
+        resetMulti = true,
+        resetSouls = false,
+        disablesSouls = false,
+        hardcapSol = true,
+        completions = 0,
+        maxCompletions = 5,
+        tier = 1,
+        order = 5,
+        object = nil,
+        desc = function() --[[ desc | Line: 294 ]]
+            return "How will you do with only 1,000 solarian power?\n<font color=\"#ff0000\">- Forces a sunrise and sets your fighting multiplier back down to 1</font>\n<font color=\"#ff0000\">- Solarian power is set to 1,000</font>"
+        end,
+        hardcap = LethalNum.new(1, 3),
+        unlockReq = function() --[[ unlockReq | Line: 311 ]]
+            return "Stage 30\n& Max Basic"
+        end,
+        unlockCondition = function() --[[ unlockCondition | Line: 314 | Upvalues: Data (copy), t (copy) ]]
+            return if Data.ImportantData.Stats.bestStage >= 30 then t.Challenges.basic.completions >= 4 else false
+        end,
+        calculateCondition = function(p1) --[[ calculateCondition | Line: 318 | Upvalues: t (copy) ]]
+            return 20 + (p1 and p1.UpgradeLevels.challenges.advanced.c or t.Challenges.advanced.completions) * 2
+        end,
+        clearReq = function() --[[ clearReq | Line: 322 | Upvalues: t (copy) ]]
+            return "Reach Stage " .. t.Challenges.advanced.calculateCondition()
+        end,
+        clearCondition = function(p1) --[[ clearCondition | Line: 325 | Upvalues: Data (copy), t (copy) ]]
+            return t.Challenges.advanced.calculateCondition(p1) <= (p1 and p1.Stats.stage or Data.ImportantData.Stats.currStage)
+        end,
+        score = LethalNum.new(1, 2),
+        calculateReward = function() --[[ calculateReward | Line: 331 | Upvalues: LethalNum (copy), t (copy) ]]
+            return LethalNum.add(LethalNum.new(1, 4), LethalNum.new(5000 * t.Challenges.advanced.completions, 0))
+        end,
+        reward = function() --[[ reward | Line: 336 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "" .. LethalNum.getString(t.Challenges.advanced.calculateReward()) .. " Souls"
+        end,
+        grantReward = function(p1) --[[ grantReward | Line: 339 | Upvalues: LethalNum (copy), t (copy) ]]
+            p1.Currency.curr.souls.amount = LethalNum.add(p1.Currency.curr.souls.amount, t.Challenges.advanced.calculateReward(p1))
+            p1.Currency.curr.souls.totalAmount = LethalNum.add(p1.Currency.curr.souls.totalAmount, t.Challenges.advanced.calculateReward(p1))
+        end
+    },
+    strong = {
+        displayName = "Strong",
+        resetMulti = true,
+        resetSouls = false,
+        disablesSouls = false,
+        statNerf = true,
+        statNerfN = 0.6,
+        completions = 0,
+        maxCompletions = 3,
+        tier = 1,
+        order = 6,
+        object = nil,
+        desc = function() --[[ desc | Line: 350 ]]
+            return "Get nerfed\n<font color=\"#ff0000\">- Forces a sunrise and sets your fighting multiplier back down to 1</font>\n<font color=\"#ff0000\">- Your solarian power, collecting speed, and forming speed is ^0.6</font>"
+        end,
+        unlockReq = function() --[[ unlockReq | Line: 367 ]]
+            return "Stage 35"
+        end,
+        unlockCondition = function() --[[ unlockCondition | Line: 370 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 35
+        end,
+        calculateCondition = function(p1) --[[ calculateCondition | Line: 374 | Upvalues: t (copy) ]]
+            return 20 + (p1 and p1.UpgradeLevels.challenges.strong.c or t.Challenges.strong.completions) * 6
+        end,
+        clearReq = function() --[[ clearReq | Line: 378 | Upvalues: t (copy) ]]
+            return "Reach Stage " .. t.Challenges.strong.calculateCondition()
+        end,
+        clearCondition = function(p1) --[[ clearCondition | Line: 381 | Upvalues: Data (copy), t (copy) ]]
+            return t.Challenges.strong.calculateCondition(p1) <= (p1 and p1.Stats.stage or Data.ImportantData.Stats.currStage)
+        end,
+        score = LethalNum.new(2.5, 2),
+        calculateReward = function() --[[ calculateReward | Line: 387 | Upvalues: LethalNum (copy) ]]
+            return LethalNum.new(2, 0)
+        end,
+        reward = function() --[[ reward | Line: 391 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "" .. LethalNum.getString(t.Challenges.strong.calculateReward()) .. " Golden Stars"
+        end,
+        grantReward = function(p1) --[[ grantReward | Line: 394 | Upvalues: LethalNum (copy), t (copy) ]]
+            p1.Currency.curr.goldenStars.amount = LethalNum.add(p1.Currency.curr.goldenStars.amount, t.Challenges.strong.calculateReward(p1))
+            p1.Currency.curr.goldenStars.totalAmount = LethalNum.add(p1.Currency.curr.goldenStars.totalAmount, t.Challenges.strong.calculateReward(p1))
+        end
+    },
+    evil = {
+        displayName = "Evil",
+        resetMulti = true,
+        resetSouls = false,
+        disablesSouls = false,
+        autoSunrise = false,
+        fasterScaling = true,
+        completions = 0,
+        maxCompletions = 3,
+        tier = 1,
+        order = 8,
+        object = nil,
+        desc = function() --[[ desc | Line: 405 ]]
+            return "Infinite walls of doom\n<font color=\"#ff0000\">- Forces a sunrise and sets your fighting multiplier back down to 1</font>\n<font color=\"#ff0000\">- Enemy stats scale 1e10x faster</font>"
+        end,
+        scaling = LethalNum.new(1, 10),
+        scalingHP = LethalNum.new(1.03, 10),
+        unlockReq = function() --[[ unlockReq | Line: 423 ]]
+            return "Stage 40"
+        end,
+        unlockCondition = function() --[[ unlockCondition | Line: 426 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 40
+        end,
+        calculateCondition = function(p1) --[[ calculateCondition | Line: 430 | Upvalues: t (copy) ]]
+            return 3 + (p1 and p1.UpgradeLevels.challenges.evil.c or t.Challenges.evil.completions) * 2
+        end,
+        clearReq = function() --[[ clearReq | Line: 434 | Upvalues: t (copy) ]]
+            return "Reach Stage " .. t.Challenges.evil.calculateCondition()
+        end,
+        clearCondition = function(p1) --[[ clearCondition | Line: 437 | Upvalues: Data (copy), t (copy) ]]
+            return t.Challenges.evil.calculateCondition(p1) <= (p1 and p1.Stats.stage or Data.ImportantData.Stats.currStage)
+        end,
+        score = LethalNum.new(1, 3),
+        calculateReward = function() --[[ calculateReward | Line: 443 | Upvalues: LethalNum (copy) ]]
+            return LethalNum.new(4, 0)
+        end,
+        reward = function() --[[ reward | Line: 447 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "" .. LethalNum.getString(t.Challenges.evil.calculateReward()) .. " Golden Stars"
+        end,
+        grantReward = function(p1) --[[ grantReward | Line: 450 | Upvalues: LethalNum (copy), t (copy) ]]
+            p1.Currency.curr.goldenStars.amount = LethalNum.add(p1.Currency.curr.goldenStars.amount, t.Challenges.evil.calculateReward(p1))
+            p1.Currency.curr.goldenStars.totalAmount = LethalNum.add(p1.Currency.curr.goldenStars.totalAmount, t.Challenges.evil.calculateReward(p1))
+        end
+    },
+    adv = {
+        displayName = "Advanced",
+        completions = 0,
+        maxCompletions = 3,
+        tier = 2,
+        order = 11,
+        object = nil,
+        desc = function() --[[ desc | Line: 461 ]]
+            return "Your first tier 2 challenge! Note that you can\'t start any other challenges while inside of a challenge. You need to be at least stage 40 to get divine souls from the forced sunset\n<font color=\"#ff0000\">- Forces a sunset</font>"
+        end,
+        unlockReq = function() --[[ unlockReq | Line: 471 ]]
+            return "Sunset Once"
+        end,
+        unlockCondition = function() --[[ unlockCondition | Line: 474 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+            return LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("souls2"), LethalNum.new(1, 0))
+        end,
+        calculateCondition = function(p1) --[[ calculateCondition | Line: 478 | Upvalues: t (copy) ]]
+            return 40 + (p1 and p1.UpgradeLevels.challenges.adv.c or t.Challenges.adv.completions) * 4
+        end,
+        clearReq = function() --[[ clearReq | Line: 482 | Upvalues: t (copy) ]]
+            return "Reach Stage " .. t.Challenges.adv.calculateCondition()
+        end,
+        clearCondition = function(p1) --[[ clearCondition | Line: 485 | Upvalues: Data (copy), t (copy) ]]
+            return t.Challenges.adv.calculateCondition(p1) <= (p1 and p1.Stats.stage or Data.ImportantData.Stats.currStage)
+        end,
+        score = LethalNum.new(5, 3),
+        calculateReward = function() --[[ calculateReward | Line: 491 | Upvalues: LethalNum (copy) ]]
+            return LethalNum.new(2, 0)
+        end,
+        reward = function() --[[ reward | Line: 495 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "" .. LethalNum.getString(t.Challenges.adv.calculateReward()) .. " Platinum Stars"
+        end,
+        grantReward = function(p1) --[[ grantReward | Line: 498 | Upvalues: LethalNum (copy), t (copy) ]]
+            p1.Currency.curr.platStars.amount = LethalNum.add(p1.Currency.curr.platStars.amount, t.Challenges.adv.calculateReward(p1))
+            p1.Currency.curr.platStars.totalAmount = LethalNum.add(p1.Currency.curr.platStars.totalAmount, t.Challenges.adv.calculateReward(p1))
+        end
+    },
+    comp = {
+        displayName = "Decompressed",
+        compNerf = true,
+        compNerfN = 0.5,
+        completions = 0,
+        maxCompletions = 3,
+        tier = 2,
+        order = 12,
+        object = nil,
+        desc = function() --[[ desc | Line: 509 ]]
+            return "Compression is too good, so let\'s nerf it!\n<font color=\"#ff0000\">- Forces a sunset</font>\n<font color=\"#ff0000\">- Your compression speed is ^0.5</font>"
+        end,
+        unlockReq = function() --[[ unlockReq | Line: 522 ]]
+            return "Sunset Once"
+        end,
+        unlockCondition = function() --[[ unlockCondition | Line: 525 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+            return LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("souls2"), LethalNum.new(1, 0))
+        end,
+        calculateCondition = function(p1) --[[ calculateCondition | Line: 529 | Upvalues: t (copy) ]]
+            return 40 + (p1 and p1.UpgradeLevels.challenges.comp.c or t.Challenges.comp.completions) * 4
+        end,
+        clearReq = function() --[[ clearReq | Line: 533 | Upvalues: t (copy) ]]
+            return "Reach Stage " .. t.Challenges.comp.calculateCondition()
+        end,
+        clearCondition = function(p1) --[[ clearCondition | Line: 536 | Upvalues: Data (copy), t (copy) ]]
+            return t.Challenges.comp.calculateCondition(p1) <= (p1 and p1.Stats.stage or Data.ImportantData.Stats.currStage)
+        end,
+        score = LethalNum.new(5, 3),
+        calculateReward = function() --[[ calculateReward | Line: 542 | Upvalues: LethalNum (copy) ]]
+            return LethalNum.new(2, 0)
+        end,
+        reward = function() --[[ reward | Line: 546 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "" .. LethalNum.getString(t.Challenges.comp.calculateReward()) .. " Platinum Stars"
+        end,
+        grantReward = function(p1) --[[ grantReward | Line: 549 | Upvalues: LethalNum (copy), t (copy) ]]
+            p1.Currency.curr.platStars.amount = LethalNum.add(p1.Currency.curr.platStars.amount, t.Challenges.comp.calculateReward(p1))
+            p1.Currency.curr.platStars.totalAmount = LethalNum.add(p1.Currency.curr.platStars.totalAmount, t.Challenges.comp.calculateReward(p1))
+        end
+    },
+    cs = {
+        displayName = "Challenging",
+        statNerf = true,
+        statNerfN = 0.7,
+        disablesCS = true,
+        completions = 0,
+        maxCompletions = 5,
+        tier = 2,
+        order = 13,
+        object = nil,
+        desc = function() --[[ desc | Line: 560 ]]
+            return "This challenge rewards a skilled player\n<font color=\"#ff0000\">- Forces a sunset</font>\n<font color=\"#ff0000\">- Challenge score bonus is disabled</font>\n<font color=\"#ff0000\">- Your solarian power, collecting speed, and forming speed is ^0.7</font>"
+        end,
+        unlockReq = function() --[[ unlockReq | Line: 574 ]]
+            return "Sunset Once"
+        end,
+        unlockCondition = function() --[[ unlockCondition | Line: 577 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+            return LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("souls2"), LethalNum.new(1, 0))
+        end,
+        calculateCondition = function(p1) --[[ calculateCondition | Line: 581 | Upvalues: t (copy) ]]
+            return 40 + (p1 and p1.UpgradeLevels.challenges.cs.c or t.Challenges.cs.completions) * 5
+        end,
+        clearReq = function() --[[ clearReq | Line: 585 | Upvalues: t (copy) ]]
+            return "Reach Stage " .. t.Challenges.cs.calculateCondition()
+        end,
+        clearCondition = function(p1) --[[ clearCondition | Line: 588 | Upvalues: Data (copy), t (copy) ]]
+            return t.Challenges.cs.calculateCondition(p1) <= (p1 and p1.Stats.stage or Data.ImportantData.Stats.currStage)
+        end,
+        score = LethalNum.new(8, 3),
+        calculateReward = function() --[[ calculateReward | Line: 594 | Upvalues: t (copy) ]]
+            return 1 + t.Challenges.cs.completions * 1
+        end,
+        reward = function() --[[ reward | Line: 597 ]]
+            return "Nothing"
+        end,
+        grantReward = function() --[[ grantReward | Line: 600 ]] end
+    },
+    t = {
+        displayName = "Speed",
+        disablesCS = true,
+        autoSunrise = true,
+        autoSunriseT = 60,
+        completions = 0,
+        maxCompletions = 3,
+        tier = 2,
+        order = 14,
+        object = nil,
+        desc = function() --[[ desc | Line: 610 ]]
+            return "Got to go fast\n<font color=\"#ff0000\">- Forces a sunset</font>\n<font color=\"#ff0000\">- Challenge score bonus is disabled</font>\n<font color=\"#ff0000\">- You automatically sunrise every minute</font>"
+        end,
+        unlockReq = function() --[[ unlockReq | Line: 624 ]]
+            return "Stage 60"
+        end,
+        unlockCondition = function() --[[ unlockCondition | Line: 627 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 60
+        end,
+        calculateCondition = function(p1) --[[ calculateCondition | Line: 630 | Upvalues: t (copy) ]]
+            return 24 + (p1 and p1.UpgradeLevels.challenges.t.c or t.Challenges.t.completions) * 4
+        end,
+        clearReq = function() --[[ clearReq | Line: 634 | Upvalues: t (copy) ]]
+            return "Reach Stage " .. t.Challenges.t.calculateCondition()
+        end,
+        clearCondition = function(p1) --[[ clearCondition | Line: 637 | Upvalues: Data (copy), t (copy) ]]
+            return t.Challenges.t.calculateCondition(p1) <= (p1 and p1.Stats.stage or Data.ImportantData.Stats.currStage)
+        end,
+        score = LethalNum.new(1, 4),
+        calculateReward = function() --[[ calculateReward | Line: 643 | Upvalues: LethalNum (copy) ]]
+            return LethalNum.new(2, 0)
+        end,
+        reward = function() --[[ reward | Line: 647 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "" .. LethalNum.getString(t.Challenges.t.calculateReward()) .. " Platinum Stars"
+        end,
+        grantReward = function(p1) --[[ grantReward | Line: 650 | Upvalues: LethalNum (copy), t (copy) ]]
+            p1.Currency.curr.platStars.amount = LethalNum.add(p1.Currency.curr.platStars.amount, t.Challenges.t.calculateReward(p1))
+            p1.Currency.curr.platStars.totalAmount = LethalNum.add(p1.Currency.curr.platStars.totalAmount, t.Challenges.t.calculateReward(p1))
+        end
+    },
+    o = {
+        displayName = "One",
+        resetMulti = true,
+        resetSouls = false,
+        disablesSouls = false,
+        hardcapSol = true,
+        completions = 0,
+        maxCompletions = 3,
+        tier = 2,
+        order = 15,
+        object = nil,
+        desc = function() --[[ desc | Line: 661 ]]
+            return "Powerless\n<font color=\"#ff0000\">- Forces a sunset</font>\n<font color=\"#ff0000\">- Solarian power is set to 1</font>"
+        end,
+        hardcap = LethalNum.new(1, 0),
+        unlockReq = function() --[[ unlockReq | Line: 678 ]]
+            return "Stage 70"
+        end,
+        unlockCondition = function() --[[ unlockCondition | Line: 681 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 70
+        end,
+        calculateCondition = function(p1) --[[ calculateCondition | Line: 684 | Upvalues: t (copy) ]]
+            return 20 + (p1 and p1.UpgradeLevels.challenges.o.c or t.Challenges.o.completions) * 10
+        end,
+        clearReq = function() --[[ clearReq | Line: 688 | Upvalues: t (copy) ]]
+            return "Reach Stage " .. t.Challenges.o.calculateCondition()
+        end,
+        clearCondition = function(p1) --[[ clearCondition | Line: 691 | Upvalues: Data (copy), t (copy) ]]
+            return t.Challenges.o.calculateCondition(p1) <= (p1 and p1.Stats.stage or Data.ImportantData.Stats.currStage)
+        end,
+        score = LethalNum.new(2, 4),
+        calculateReward = function() --[[ calculateReward | Line: 697 | Upvalues: LethalNum (copy) ]]
+            return LethalNum.new(2, 0)
+        end,
+        reward = function() --[[ reward | Line: 701 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "" .. LethalNum.getString(t.Challenges.o.calculateReward()) .. " Platinum Stars"
+        end,
+        grantReward = function(p1) --[[ grantReward | Line: 704 | Upvalues: LethalNum (copy), t (copy) ]]
+            p1.Currency.curr.platStars.amount = LethalNum.add(p1.Currency.curr.platStars.amount, t.Challenges.o.calculateReward(p1))
+            p1.Currency.curr.platStars.totalAmount = LethalNum.add(p1.Currency.curr.platStars.totalAmount, t.Challenges.o.calculateReward(p1))
+        end
+    },
+    sc = {
+        displayName = "Sole Hero",
+        resetMulti = true,
+        resetSouls = false,
+        disablesSouls = false,
+        hardcapSol = true,
+        completions = 0,
+        maxCompletions = 5,
+        tier = 2,
+        order = 16,
+        object = nil,
+        desc = function() --[[ desc | Line: 764 ]]
+            return "Nobody else but you\n<font color=\"#ff0000\">- Forces a sunset</font>\n<font color=\"#ff0000\">- You can\'t have any solarians</font>"
+        end,
+        hardcap = LethalNum.new(0, 0),
+        unlockReq = function() --[[ unlockReq | Line: 781 ]]
+            return "Stage 80"
+        end,
+        unlockCondition = function() --[[ unlockCondition | Line: 784 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 80
+        end,
+        calculateCondition = function(p1) --[[ calculateCondition | Line: 787 | Upvalues: t (copy) ]]
+            return 40 + (p1 and p1.UpgradeLevels.challenges.sc.c or t.Challenges.sc.completions) * 10
+        end,
+        clearReq = function() --[[ clearReq | Line: 791 | Upvalues: t (copy) ]]
+            return "Reach Stage " .. t.Challenges.sc.calculateCondition()
+        end,
+        clearCondition = function(p1) --[[ clearCondition | Line: 794 | Upvalues: Data (copy), t (copy) ]]
+            return t.Challenges.sc.calculateCondition(p1) <= (p1 and p1.Stats.stage or Data.ImportantData.Stats.currStage)
+        end,
+        score = LethalNum.new(2, 5),
+        calculateReward = function() --[[ calculateReward | Line: 800 | Upvalues: LethalNum (copy) ]]
+            return LethalNum.new(2, 0)
+        end,
+        reward = function() --[[ reward | Line: 804 | Upvalues: LethalNum (copy), t (copy) ]]
+            return "" .. LethalNum.getString(t.Challenges.sc.calculateReward()) .. " Platinum Stars"
+        end,
+        grantReward = function(p1) --[[ grantReward | Line: 807 | Upvalues: LethalNum (copy), t (copy) ]]
+            p1.Currency.curr.platStars.amount = LethalNum.add(p1.Currency.curr.platStars.amount, t.Challenges.sc.calculateReward(p1))
+            p1.Currency.curr.platStars.totalAmount = LethalNum.add(p1.Currency.curr.platStars.totalAmount, t.Challenges.sc.calculateReward(p1))
+        end
+    }
+}
+
+return t
