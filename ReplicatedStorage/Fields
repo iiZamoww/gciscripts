@@ -1,0 +1,465 @@
+local t = {}
+local FieldObjects = script.Parent.Templates.FieldObjects
+
+t.Fields = {
+    main = {
+        display = "Grass Field",
+        counter = 0,
+        max = 0,
+        timer = 0,
+        growSpeed = 0,
+        growAmount = 1,
+        acTimer = 0,
+        acSpeed = 0,
+        acAmount = 0,
+        world = 1,
+        defaultId = "tier",
+        objects = {},
+        disabled = {},
+        spawnArea = {
+            y = -27,
+            x = Vector2.new(-63.5, 35.5),
+            z = Vector2.new(-19.5, 79.5)
+        },
+        baseObject = FieldObjects.Grass
+    },
+    anti = {
+        display = "Anti Grass Field",
+        counter = 0,
+        max = 0,
+        timer = 0,
+        growSpeed = 0,
+        growAmount = 1,
+        acTimer = 0,
+        acSpeed = 0,
+        acAmount = 0,
+        world = 1,
+        defaultId = "tier",
+        objects = {},
+        disabled = {},
+        spawnArea = {
+            y = -27,
+            x = Vector2.new(-17039.5, -16940.5),
+            z = Vector2.new(-19.5, 79.5)
+        },
+        baseObject = FieldObjects.Grass
+    },
+    un = {
+        display = "Unnatural Grass Field",
+        counter = 0,
+        max = 0,
+        timer = 0,
+        growSpeed = 0,
+        growAmount = 1,
+        acTimer = 0,
+        acSpeed = 0,
+        acAmount = 0,
+        world = 1,
+        defaultId = "basic",
+        objects = {},
+        disabled = {},
+        spawnArea = {
+            y = 369.613,
+            x = Vector2.new(-27489.891, -27390.891),
+            z = Vector2.new(-19.5, 79.5)
+        },
+        baseObject = FieldObjects.Grass
+    },
+    planet = {
+        display = "Planetoid Field",
+        counter = 0,
+        max = 0,
+        timer = 0,
+        growSpeed = 0,
+        growAmount = 1,
+        acTimer = 0,
+        acSpeed = 0,
+        acAmount = 0,
+        world = 1,
+        defaultId = "basic",
+        objects = {},
+        disabled = {},
+        spawnArea = {
+            y = 5053.5,
+            x = Vector2.new(-667, -568),
+            z = Vector2.new(3184, 3283)
+        },
+        baseObject = FieldObjects.Grass
+    },
+    blue = {
+        display = "Brass Field",
+        counter = 0,
+        max = 0,
+        timer = 0,
+        growSpeed = 0,
+        growAmount = 1,
+        acTimer = 0,
+        acSpeed = 0,
+        acAmount = 0,
+        world = 1,
+        defaultId = "basic",
+        objects = {},
+        disabled = {},
+        spawnArea = {
+            y = 9463.6,
+            x = Vector2.new(-3704, -3605),
+            z = Vector2.new(-119897.5, -119798.5)
+        },
+        baseObject = FieldObjects.Brass
+    },
+    temp = {
+        display = "Temporal Field",
+        counter = 0,
+        max = 0,
+        timer = 0,
+        growSpeed = 0,
+        growAmount = 1,
+        acTimer = 0,
+        acSpeed = 0,
+        acAmount = 0,
+        world = 0,
+        defaultId = "basic",
+        objects = {},
+        disabled = {},
+        spawnArea = {
+            y = -28,
+            x = Vector2.new(19367.5, 19466.5),
+            z = Vector2.new(-34.501, 64.499)
+        },
+        baseObject = FieldObjects.Tempo
+    },
+    jungle = {
+        display = "Jungle Field",
+        counter = 0,
+        max = 0,
+        timer = 0,
+        growSpeed = 0,
+        growAmount = 1,
+        acTimer = 0,
+        acSpeed = 0,
+        acAmount = 0,
+        world = 2,
+        defaultId = "tier2",
+        objects = {},
+        disabled = {},
+        spawnArea = {
+            y = -29,
+            x = Vector2.new(32885.934, 32984.934),
+            z = Vector2.new(-25.25, 73.75)
+        },
+        baseObject = FieldObjects.Grass
+    },
+    cavern = {
+        display = "Cavern Field",
+        counter = 0,
+        max = 0,
+        timer = 0,
+        growSpeed = 0,
+        growAmount = 1,
+        acTimer = 0,
+        acSpeed = 0,
+        acAmount = 0,
+        world = 2,
+        defaultId = "basic",
+        ignoreGrows = true,
+        objects = {},
+        disabled = {},
+        spawnArea = {
+            y = -6,
+            x = Vector2.new(33618.434, 33717.434),
+            z = Vector2.new(697.75, 796.75)
+        },
+        baseObject = FieldObjects.Mushroom
+    },
+    intersection = {
+        display = "Intersection Field",
+        counter = 0,
+        max = 0,
+        timer = 0,
+        growSpeed = 0,
+        growAmount = 1,
+        acTimer = 0,
+        acSpeed = 0,
+        acAmount = 0,
+        world = 2,
+        defaultId = "basic",
+        objects = {},
+        disabled = {},
+        spawnArea = {
+            y = -348.5,
+            x = Vector2.new(34404.184, 34503.184),
+            z = Vector2.new(26456.5, 26554.5)
+        },
+        baseObject = FieldObjects.GG
+    },
+    understand = {
+        display = "Understanding Field",
+        counter = 0,
+        max = 0,
+        timer = 0,
+        growSpeed = 0,
+        growAmount = 1,
+        acTimer = 0,
+        acSpeed = 0,
+        acAmount = 0,
+        world = 2,
+        defaultId = "basic",
+        objects = {},
+        disabled = {},
+        spawnArea = {
+            y = -114,
+            x = Vector2.new(38274.57, 38175.57),
+            z = Vector2.new(15926.199, 15827.199)
+        },
+        baseObject = FieldObjects.QMark
+    },
+    desert = {
+        display = "Desert Field",
+        counter = 0,
+        max = 0,
+        timer = 0,
+        growSpeed = 0,
+        growAmount = 1,
+        acTimer = 0,
+        acSpeed = 0,
+        acAmount = 0,
+        world = 2,
+        defaultId = "basic",
+        warpDiv = 5,
+        ignoreGrows = true,
+        randomRotation = true,
+        objects = {},
+        disabled = {},
+        spawnArea = {
+            y = -24,
+            x = Vector2.new(34377.934, 34876.934),
+            z = Vector2.new(-1263.25, -764.25)
+        },
+        baseObject = FieldObjects.Cactus
+    },
+    temple = {
+        display = "Temple Field",
+        counter = 0,
+        max = 0,
+        timer = 0,
+        growSpeed = 0,
+        growAmount = 1,
+        acTimer = 0,
+        acSpeed = 0,
+        acAmount = 0,
+        world = 2,
+        ignoreGrows = true,
+        defaultId = "basic",
+        warpDiv = 5,
+        objects = {},
+        disabled = {},
+        spawnArea = {
+            y = 3573.3,
+            x = Vector2.new(33418.125, 33517.125),
+            z = Vector2.new(6696.895, 6795.895)
+        },
+        baseObject = FieldObjects.Star
+    },
+    cactus = {
+        display = "Cactus Field",
+        counter = 0,
+        max = 0,
+        timer = 0,
+        growSpeed = 0,
+        growAmount = 1,
+        acTimer = 0,
+        acSpeed = 0,
+        acAmount = 0,
+        world = 2,
+        defaultId = "basic",
+        warpDiv = 100,
+        ignoreGrows = true,
+        randomRotation = true,
+        objects = {},
+        disabled = {},
+        spawnArea = {
+            y = -549.8,
+            x = Vector2.new(35007.184, 35106.184),
+            z = Vector2.new(-1333, -1234)
+        },
+        baseObject = FieldObjects.Cactus2
+    },
+    rift = {
+        display = "Rift Field",
+        counter = 0,
+        max = 0,
+        timer = 0,
+        growSpeed = 0,
+        growAmount = 1,
+        acTimer = 0,
+        acSpeed = 0,
+        acAmount = 0,
+        world = 2,
+        defaultId = "basic",
+        warpDiv = 5,
+        ignoreGrows = true,
+        randomRotation = true,
+        objects = {},
+        disabled = {},
+        spawnArea = {
+            y = 1028.7,
+            x = Vector2.new(34393.684, 34492.684),
+            z = Vector2.new(26092.25, 26191.25)
+        },
+        baseObject = FieldObjects.Grass
+    },
+    normS = {
+        display = "grass field",
+        counter = 0,
+        max = 0,
+        timer = 0,
+        growSpeed = 0,
+        growAmount = 1,
+        acTimer = 0,
+        acSpeed = 0,
+        acAmount = 0,
+        world = 8,
+        defaultId = "basic",
+        objects = {},
+        disabled = {},
+        spawnArea = {
+            y = 28291.9,
+            x = Vector2.new(-15350.7, -15251.7),
+            z = Vector2.new(-15383.802, -15284.802)
+        },
+        baseObject = FieldObjects.Grass
+    },
+    brick = {
+        display = "brick house",
+        counter = 0,
+        max = 0,
+        timer = 0,
+        growSpeed = 0,
+        growAmount = 1,
+        acTimer = 0,
+        acSpeed = 0,
+        acAmount = 0,
+        world = 8,
+        defaultId = "basic",
+        objects = {},
+        disabled = {},
+        spawnArea = {
+            y = 27705.65,
+            x = Vector2.new(-15808.7, -14817.7),
+            z = Vector2.new(-16003.803, -15012.803)
+        },
+        baseObject = FieldObjects.Brick
+    },
+    ["9_F1"] = {
+        display = "Grass Field",
+        counter = 0,
+        max = 0,
+        timer = 0,
+        growSpeed = 0,
+        growAmount = 1,
+        acTimer = 0,
+        acSpeed = 0,
+        acAmount = 0,
+        world = 9,
+        defaultId = "basic",
+        ignoreGrows = true,
+        objects = {},
+        disabled = {},
+        spawnArea = {
+            y = 28291.9,
+            x = Vector2.new(-15350.7, -15251.7),
+            z = Vector2.new(-30878.801, -30779.801)
+        },
+        baseObject = FieldObjects.Grass
+    },
+    ["9_F2"] = {
+        display = "Crystal Field",
+        counter = 0,
+        max = 0,
+        timer = 0,
+        growSpeed = 0,
+        growAmount = 1,
+        acTimer = 0,
+        acSpeed = 0,
+        acAmount = 0,
+        world = 9,
+        defaultId = "basic",
+        ignoreGrows = true,
+        objects = {},
+        disabled = {},
+        spawnArea = {
+            y = 28791.9,
+            x = Vector2.new(-15350.7, -15251.7),
+            z = Vector2.new(-30878.801, -30779.801)
+        },
+        baseObject = FieldObjects.Grass
+    },
+    ["9_F3"] = {
+        display = "Diamond Field",
+        counter = 0,
+        max = 0,
+        timer = 0,
+        growSpeed = 0,
+        growAmount = 1,
+        acTimer = 0,
+        acSpeed = 0,
+        acAmount = 0,
+        world = 9,
+        defaultId = "basic",
+        ignoreGrows = true,
+        objects = {},
+        disabled = {},
+        spawnArea = {
+            y = 29291.9,
+            x = Vector2.new(-15350.7, -15251.7),
+            z = Vector2.new(-30878.801, -30779.801)
+        },
+        baseObject = FieldObjects.Grass
+    },
+    ["9_F4"] = {
+        display = "Mystical Field",
+        counter = 0,
+        max = 0,
+        timer = 0,
+        growSpeed = 0,
+        growAmount = 1,
+        acTimer = 0,
+        acSpeed = 0,
+        acAmount = 0,
+        world = 9,
+        defaultId = "basic",
+        ignoreGrows = true,
+        objects = {},
+        disabled = {},
+        spawnArea = {
+            y = 29791.9,
+            x = Vector2.new(-15350.7, -15251.7),
+            z = Vector2.new(-30878.801, -30779.801)
+        },
+        baseObject = FieldObjects.Grass
+    },
+    ["9_F5"] = {
+        display = "Demonic Field",
+        counter = 0,
+        max = 0,
+        timer = 0,
+        growSpeed = 0,
+        growAmount = 1,
+        acTimer = 0,
+        acSpeed = 0,
+        acAmount = 0,
+        world = 9,
+        defaultId = "basic",
+        ignoreGrows = true,
+        objects = {},
+        disabled = {},
+        spawnArea = {
+            y = 30291.9,
+            x = Vector2.new(-15350.7, -15251.7),
+            z = Vector2.new(-30878.801, -30779.801)
+        },
+        baseObject = FieldObjects.Grass
+    }
+}
+
+return t
