@@ -1,0 +1,21 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Data = require(ReplicatedStorage.Data)
+local ConstellationGrid = require(ReplicatedStorage.ConstellationGrid)
+local Currencies = require(ReplicatedStorage.Currencies)
+local BuyUpgrade = require(ReplicatedStorage.BuyUpgrade)
+
+return {
+    Picker = function() --[[ Picker | Line: 9 | Upvalues: ConstellationGrid (copy), BuyUpgrade (copy), Data (copy), Currencies (copy) ]]
+        local v1 = ConstellationGrid.GetSlot(ConstellationGrid.hoveredRow, ConstellationGrid.hoveredCol)
+
+        BuyUpgrade.SelectConstellation(v1.c, v1.t)
+
+        local v2 = table.clone(ConstellationGrid.GetConstellation(v1.c, v1.t))
+
+        if Data.ImportantData.Stats.cSelected ~= v2 then
+            Data.ImportantData.Stats.cSelected = v2
+        end
+
+        Currencies.UpdateGInfo()
+    end
+}
