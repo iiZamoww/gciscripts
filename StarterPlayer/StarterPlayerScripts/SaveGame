@@ -1,0 +1,49 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Data = require(ReplicatedStorage.Data)
+local UserId = Data.ImportantData.Misc.player.UserId
+local Currencies = require(ReplicatedStorage.Currencies)
+local SaveObject = require(ReplicatedStorage.SaveObject)
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local CurrencyTypes = require(ReplicatedStorage.CurrencyTypes)
+local Players = game:GetService("Players")
+local LoadGameEvent = ReplicatedStorage:WaitForChild("LoadGameEvent")
+
+ReplicatedStorage:WaitForChild("SaveGameEvent")
+
+local ServerClientEvent = ReplicatedStorage:WaitForChild("ServerClientEvent")
+
+local function doLoad(p1, p2, p3) --[[ doLoad | Line: 16 | Upvalues: SaveObject (copy), Currencies (copy) ]]
+    SaveObject.loadSaveString(p1, p2, p3)
+    Currencies.updateGrass()
+end
+
+local OldSave = ReplicatedStorage:WaitForChild("OldSave")
+
+local function showOld() --[[ showOld | Line: 23 | Upvalues: Currencies (copy) ]]
+    Currencies.ShowOldSave()
+end
+
+LoadGameEvent.OnClientEvent:Connect(doLoad)
+OldSave.OnClientEvent:Connect(showOld)
+
+local function handleEvent(p1) --[[ handleEvent | Line: 36 | Upvalues: Players (copy), LethalNum (copy), Data (copy), CurrencyTypes (copy), Currencies (copy) ]]
+    if p1.item ~= "flowers" then
+        return
+    end
+
+    local amount = p1.amount
+
+    if Players.LocalPlayer.MembershipType == Enum.MembershipType.Premium then
+        amount = LethalNum.multiply(amount, 1.1)
+    end
+
+    local fs = Data.ImportantData.Stats.fs
+    local s = p1.s
+
+    fs[s] = fs[s] + 1
+    CurrencyTypes.AddCurrency("flowers", amount)
+    Data.ImportantData.Stats.flowersBought = LethalNum.add(Data.ImportantData.Stats.flowersBought, amount)
+    Currencies.updateFlowers()
+end
+
+ServerClientEvent.OnClientEvent:Connect(handleEvent)
