@@ -1,0 +1,333 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local Data = require(ReplicatedStorage.Data)
+local t = {
+    Levels = {
+        normal = {
+            display = "Normal Realm",
+            folder = "Normal",
+            visual = "normal",
+            defaultPos = Vector3.new(-57.5, -24983.5, 19989.5),
+            levels = {
+                ["0"] = {
+                    startPos = Vector3.new(1881.5, -24983.5, 19983.5),
+                    reward = LethalNum.new(0, 0),
+                    firstClearReward = LethalNum.new(0, 0),
+                    clearReward = LethalNum.new(0, 0)
+                },
+                ["1"] = {
+                    startPos = Vector3.new(-57.5, -24983.5, 19989.5),
+                    minTime = 20000,
+                    reward = LethalNum.new(1, 0),
+                    firstClearReward = LethalNum.new(2, 2),
+                    dailyClearReward = LethalNum.new(5, 1),
+                    clearReward = LethalNum.new(5, 0)
+                },
+                ["2"] = {
+                    startPos = Vector3.new(-1667.5, -24983.5, 19989.5),
+                    prereq = "normal",
+                    prereqLevel = 1,
+                    prereqDataInfo = "No Req",
+                    minTime = 20000,
+                    reward = LethalNum.new(1, 0),
+                    firstClearReward = LethalNum.new(2, 2),
+                    dailyClearReward = LethalNum.new(5, 1),
+                    clearReward = LethalNum.new(5, 0),
+                    prereqData = function(p1) --[[ prereqData | Line: 37 ]]
+                        return true
+                    end
+                },
+                ["3"] = {
+                    startPos = Vector3.new(-3277.5, -24983.5, 19989.5),
+                    prereq = "normal",
+                    prereqLevel = 2,
+                    prereqDataInfo = "No Req",
+                    minTime = 20000,
+                    reward = LethalNum.new(1, 0),
+                    firstClearReward = LethalNum.new(2, 2),
+                    dailyClearReward = LethalNum.new(5, 1),
+                    clearReward = LethalNum.new(5, 0),
+                    prereqData = function(p1) --[[ prereqData | Line: 51 ]]
+                        return true
+                    end
+                }
+            }
+        },
+        space = {
+            display = "Space",
+            folder = "Space",
+            visual = "space2",
+            defaultPos = Vector3.new(3162.5, -24983.5, 16473.5),
+            levels = {
+                ["1"] = {
+                    startPos = Vector3.new(3162.5, -24983.5, 16473.5),
+                    prereq = "normal",
+                    prereqLevel = 3,
+                    prereqDataInfo = "No Req",
+                    minTime = 20000,
+                    reward = LethalNum.new(1, 0),
+                    firstClearReward = LethalNum.new(2, 2),
+                    dailyClearReward = LethalNum.new(5, 1),
+                    clearReward = LethalNum.new(5, 0),
+                    prereqData = function(p1) --[[ prereqData | Line: 73 ]]
+                        return true
+                    end
+                },
+                ["2"] = {
+                    startPos = Vector3.new(1552.5, -24983.5, 16473.5),
+                    prereq = "space",
+                    prereqLevel = 1,
+                    prereqDataInfo = "No Req",
+                    minTime = 20000,
+                    reward = LethalNum.new(1, 0),
+                    firstClearReward = LethalNum.new(2, 2),
+                    dailyClearReward = LethalNum.new(5, 1),
+                    clearReward = LethalNum.new(5, 0),
+                    prereqData = function(p1) --[[ prereqData | Line: 87 ]]
+                        return true
+                    end
+                },
+                ["3"] = {
+                    startPos = Vector3.new(-40.5, -24983.5, 16473.5),
+                    prereq = "space",
+                    prereqLevel = 2,
+                    prereqDataInfo = "No Req",
+                    minTime = 20000,
+                    reward = LethalNum.new(1, 0),
+                    firstClearReward = LethalNum.new(2, 2),
+                    dailyClearReward = LethalNum.new(5, 1),
+                    clearReward = LethalNum.new(5, 0),
+                    prereqData = function(p1) --[[ prereqData | Line: 101 ]]
+                        return true
+                    end
+                },
+                ["11"] = {
+                    startPos = Vector3.new(7081.5, -24983.5, 16473.5),
+                    prereq = "normal",
+                    prereqLevel = 3,
+                    prereqDataInfo = "No Req",
+                    minTime = 30000,
+                    noAutoRestart = true,
+                    reward = LethalNum.new(2, 0),
+                    firstClearReward = LethalNum.new(1, 3),
+                    dailyClearReward = LethalNum.new(1, 2),
+                    clearReward = LethalNum.new(1, 1),
+                    prereqData = function(p1) --[[ prereqData | Line: 115 ]]
+                        return true
+                    end
+                },
+                ["12"] = {
+                    startPos = Vector3.new(8985.5, -24983.5, 16515.5),
+                    prereq = "normal",
+                    prereqLevel = 3,
+                    visual = "spaceR",
+                    prereqDataInfo = "No Req",
+                    minTime = 30000,
+                    noAutoRestart = true,
+                    reward = LethalNum.new(2, 0),
+                    firstClearReward = LethalNum.new(1, 3),
+                    dailyClearReward = LethalNum.new(1, 2),
+                    clearReward = LethalNum.new(1, 1),
+                    prereqData = function(p1) --[[ prereqData | Line: 130 ]]
+                        return true
+                    end
+                }
+            }
+        },
+        anti = {
+            display = "Anti Realm",
+            folder = "Anti",
+            visual = "anti2",
+            defaultPos = Vector3.new(-6497.5, -24983.5, 19989.5),
+            levels = {
+                ["1"] = {
+                    startPos = Vector3.new(-6497.5, -24983.5, 19989.5),
+                    minTime = 20000,
+                    reward = LethalNum.new(1, 0),
+                    firstClearReward = LethalNum.new(2, 2),
+                    dailyClearReward = LethalNum.new(5, 1),
+                    clearReward = LethalNum.new(5, 0)
+                },
+                ["2"] = {
+                    startPos = Vector3.new(-7804.5, -24983.5, 19989.5),
+                    prereq = "anti",
+                    prereqLevel = 1,
+                    prereqDataInfo = "No Req",
+                    minTime = 20000,
+                    reward = LethalNum.new(1, 0),
+                    firstClearReward = LethalNum.new(2, 2),
+                    dailyClearReward = LethalNum.new(5, 1),
+                    clearReward = LethalNum.new(5, 0),
+                    prereqData = function(p1) --[[ prereqData | Line: 162 ]]
+                        return true
+                    end
+                },
+                ["3"] = {
+                    visual = "anti3",
+                    startPos = Vector3.new(-10140.5, -24718.502, 20181.5),
+                    prereq = "anti",
+                    prereqLevel = 2,
+                    prereqDataInfo = "No Req",
+                    minTime = 20000,
+                    reward = LethalNum.new(1, 0),
+                    firstClearReward = LethalNum.new(2, 2),
+                    dailyClearReward = LethalNum.new(5, 1),
+                    clearReward = LethalNum.new(5, 0),
+                    prereqData = function(p1) --[[ prereqData | Line: 177 ]]
+                        return true
+                    end
+                }
+            }
+        },
+        dark = {
+            display = "Dark Forest",
+            folder = "Dark",
+            visual = "darkForest2",
+            defaultPos = Vector3.new(-6763.5, -24881.5, 16597.5),
+            levels = {
+                ["1"] = {
+                    startPos = Vector3.new(-6763.5, -24881.5, 16597.5),
+                    minTime = 20000,
+                    reward = LethalNum.new(1, 0),
+                    firstClearReward = LethalNum.new(2, 2),
+                    dailyClearReward = LethalNum.new(5, 1),
+                    clearReward = LethalNum.new(5, 0)
+                },
+                ["2"] = {
+                    startPos = Vector3.new(-8347.5, -24892, 16534),
+                    prereq = "dark",
+                    prereqLevel = 1,
+                    prereqDataInfo = "No Req",
+                    minTime = 20000,
+                    reward = LethalNum.new(1, 0),
+                    firstClearReward = LethalNum.new(2, 2),
+                    dailyClearReward = LethalNum.new(5, 1),
+                    clearReward = LethalNum.new(5, 0),
+                    prereqData = function(p1) --[[ prereqData | Line: 207 ]]
+                        return true
+                    end
+                },
+                ["3"] = {
+                    startPos = Vector3.new(-10140.5, -24718.502, 20181.5),
+                    prereq = "dark",
+                    prereqLevel = 2,
+                    prereqDataInfo = "No Req",
+                    minTime = 20000,
+                    reward = LethalNum.new(1, 0),
+                    firstClearReward = LethalNum.new(2, 2),
+                    dailyClearReward = LethalNum.new(5, 1),
+                    clearReward = LethalNum.new(5, 0),
+                    prereqData = function(p1) --[[ prereqData | Line: 221 ]]
+                        return true
+                    end
+                }
+            }
+        },
+        lol = {
+            display = "Lol",
+            folder = "Lol",
+            visual = "lol",
+            defaultPos = Vector3.new(9890.5, -24983.5, 19972.5),
+            levels = {
+                ["1"] = {
+                    startPos = Vector3.new(9890.5, -24983.5, 19972.5),
+                    minTime = 20000,
+                    prereq = "anti",
+                    prereqLevel = 2,
+                    physics = "default",
+                    speed = 16,
+                    jump = 50,
+                    reward = LethalNum.new(1, 0),
+                    firstClearReward = LethalNum.new(2, 2),
+                    dailyClearReward = LethalNum.new(5, 1),
+                    clearReward = LethalNum.new(5, 0)
+                },
+                ["2"] = {
+                    startPos = Vector3.new(11500.5, -24983.5, 19972.5),
+                    minTime = 20000,
+                    visual = "lol2",
+                    prereq = "lol",
+                    prereqLevel = 1,
+                    physics = "default",
+                    speed = 16,
+                    jump = 50,
+                    reward = LethalNum.new(1, 0),
+                    firstClearReward = LethalNum.new(2, 2),
+                    dailyClearReward = LethalNum.new(5, 1),
+                    clearReward = LethalNum.new(5, 0)
+                },
+                ["3"] = {
+                    startPos = Vector3.new(13110.5, -24983.5, 19972.5),
+                    minTime = 20000,
+                    visual = "lol3",
+                    prereq = "lol",
+                    prereqLevel = 2,
+                    physics = "default",
+                    speed = 16,
+                    jump = 50,
+                    reward = LethalNum.new(1, 0),
+                    firstClearReward = LethalNum.new(2, 2),
+                    dailyClearReward = LethalNum.new(5, 1),
+                    clearReward = LethalNum.new(5, 0)
+                },
+                ["4"] = {
+                    startPos = Vector3.new(14720.5, -24983.5, 19972.5),
+                    minTime = 20000,
+                    visual = "lol4",
+                    prereq = "lol",
+                    prereqLevel = 3,
+                    physics = "default",
+                    speed = 16,
+                    jump = 50,
+                    reward = LethalNum.new(1, 0),
+                    firstClearReward = LethalNum.new(2, 2),
+                    dailyClearReward = LethalNum.new(5, 1),
+                    clearReward = LethalNum.new(5, 0)
+                },
+                ["5"] = {
+                    startPos = Vector3.new(16330.5, -24983.5, 19972.5),
+                    minTime = 20000,
+                    visual = "lol5",
+                    prereq = "lol",
+                    prereqLevel = 3,
+                    physics = "default",
+                    speed = 16,
+                    jump = 50,
+                    reward = LethalNum.new(1, 0),
+                    firstClearReward = LethalNum.new(2, 2),
+                    dailyClearReward = LethalNum.new(5, 1),
+                    clearReward = LethalNum.new(5, 0)
+                }
+            }
+        }
+    },
+    BitsCreated = {}
+}
+
+function t.CreateBits() --[[ CreateBits | Line: 309 | Upvalues: ReplicatedStorage (copy), t (copy), Data (copy) ]]
+    local Bit = ReplicatedStorage.Templates.Misc.Bit
+    local Bits = workspace.Building.Structures.PR[t.Levels[Data.ImportantData.Stats.planetRun].folder]["" .. Data.ImportantData.Stats.planetRunLevel].Bits
+
+    for v1, v2 in t.BitsCreated do
+        if v2 then
+            v1:Destroy()
+        end
+    end
+
+    t.BitsCreated = {}
+
+    if not Bits then
+        return
+    end
+
+    for k, v in pairs(Bits:GetChildren()) do
+        local v3 = Bit:Clone()
+
+        v3:PivotTo(CFrame.new((Vector3.new(v.Position.X, v.Position.Y + 5, v.Position.Z))))
+        v3.Hurtbox:SetAttribute("SpawnPos", v.Position)
+        v3.Parent = workspace.GrassObjects
+        t.BitsCreated[v3] = true
+    end
+end
+
+return t
