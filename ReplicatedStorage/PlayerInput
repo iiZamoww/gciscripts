@@ -1,0 +1,37 @@
+local UserInputService = game:GetService("UserInputService")
+local t = {}
+local v1 = nil
+
+if UserInputService.KeyboardEnabled and UserInputService.MouseEnabled then
+    v1 = "Keyboard/Mouse"
+elseif UserInputService.TouchEnabled then
+    v1 = "Touch"
+elseif UserInputService.GamepadEnabled then
+    v1 = "Gamepad"
+end
+
+function t.getInputType() --[[ getInputType | Line: 17 | Upvalues: UserInputService (copy), v1 (ref) ]]
+    local v12 = UserInputService:GetLastInputType()
+
+    if v12 == Enum.UserInputType.Keyboard then
+        v1 = "Keyboard/Mouse"
+    else
+        local find = string.find
+
+        if find(tostring(v12.Name), "MouseButton") or v12 == Enum.UserInputType.MouseWheel then
+            v1 = "Keyboard/Mouse"
+        elseif v12 == Enum.UserInputType.Touch then
+            v1 = "Touch"
+        else
+            local find2 = string.find
+
+            if find2(tostring(v12.Name), "Gamepad") then
+                v1 = "Gamepad"
+            end
+        end
+    end
+
+    return v1, v12
+end
+
+return t
