@@ -1,0 +1,34 @@
+local t = {
+    Templates = {
+        PC = {},
+        Mobile = {}
+    },
+    UIElements = {}
+}
+
+function t.UpdateUI(p1) --[[ UpdateUI | Line: 10 | Upvalues: t (copy) ]]
+    for k, v in pairs(t.UIElements) do
+        local v1 = t.Templates[p1][k]
+
+        if v1 == nil then
+            v.Visible = false
+
+            continue
+        end
+
+        v.Position = v1.pos
+        v.Size = v1.size
+        v.AnchorPoint = v1.anchor
+        v.ZIndex = v1.zindex
+        v.BackgroundTransparency = v1.backgroundTransparency
+        v.Visible = v1.visible
+        v:IsA("ImageButton")
+
+        if v:IsA("TextLabel") then
+            v.TextSize = v.textSize
+            v.Text = v.text
+        end
+    end
+end
+
+return t
