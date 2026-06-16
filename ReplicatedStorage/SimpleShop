@@ -1,0 +1,218 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local Data = require(ReplicatedStorage.Data)
+local InfoStore = require(ReplicatedStorage.InfoStore)
+
+return {
+    Items = {
+        prConv = {
+            display = "+50 Rare Flowers",
+            icon = "rbxassetid://17653966802",
+            currency = "prCurr",
+            refreshGroup = "daily",
+            maxBuy = 50,
+            itemType = "currency",
+            itemId = "flowers2",
+            itemAmount = 50,
+            location = "pr",
+            order = 0,
+            cost = LethalNum.new(1, 2)
+        },
+        prTW1 = {
+            display = "1hr Time Warp",
+            icon = "rbxassetid://17665851413",
+            currency = "prCurr",
+            refreshGroup = "daily",
+            maxBuy = 1,
+            itemType = "boost",
+            itemId = "tw1",
+            itemAmount = 1,
+            location = "pr",
+            order = 1,
+            cost = LethalNum.new(5, 2)
+        },
+        prTW2 = {
+            display = "4hr Time Warp",
+            icon = "rbxassetid://17665851552",
+            currency = "prCurr",
+            refreshGroup = "daily",
+            maxBuy = 1,
+            itemType = "boost",
+            itemId = "tw4",
+            itemAmount = 1,
+            location = "pr",
+            order = 2,
+            cost = LethalNum.new(1.5, 3)
+        },
+        prTW3 = {
+            display = "12hr Time Warp",
+            icon = "rbxassetid://17665851658",
+            currency = "prCurr",
+            refreshGroup = "daily",
+            maxBuy = 1,
+            itemType = "boost",
+            itemId = "tw12",
+            itemAmount = 1,
+            location = "pr",
+            order = 3,
+            cost = LethalNum.new(4, 3)
+        },
+        fConv = {
+            display = "+50 Rare Flowers",
+            icon = "rbxassetid://17653966802",
+            currency = "flowers",
+            refreshGroup = "daily",
+            maxBuy = 20,
+            itemType = "currency",
+            itemId = "flowers2",
+            itemAmount = 50,
+            location = "any",
+            order = 0,
+            cost = LethalNum.new(5, 1)
+        },
+        rfTW1 = {
+            display = "1hr Time Warp",
+            icon = "rbxassetid://17665851413",
+            currency = "flowers2",
+            refreshGroup = "daily",
+            maxBuy = 3,
+            itemType = "boost",
+            itemId = "tw1",
+            itemAmount = 1,
+            location = "any",
+            order = 1,
+            cost = LethalNum.new(2.5, 2)
+        },
+        rfTW2 = {
+            display = "4hr Time Warp",
+            icon = "rbxassetid://17665851552",
+            currency = "flowers2",
+            refreshGroup = "daily",
+            maxBuy = 2,
+            itemType = "boost",
+            itemId = "tw4",
+            itemAmount = 1,
+            location = "any",
+            order = 2,
+            cost = LethalNum.new(7.5, 2)
+        },
+        rfTW3 = {
+            display = "12hr Time Warp",
+            icon = "rbxassetid://17665851658",
+            currency = "flowers2",
+            refreshGroup = "daily",
+            maxBuy = 1,
+            itemType = "boost",
+            itemId = "tw12",
+            itemAmount = 1,
+            location = "any",
+            order = 3,
+            cost = LethalNum.new(2, 3)
+        },
+        rfSL = {
+            display = "Super Luck",
+            icon = "rbxassetid://12922665870",
+            currency = "flowers2",
+            refreshGroup = "daily",
+            maxBuy = 2,
+            itemType = "boost",
+            itemId = "luck",
+            itemAmount = 1,
+            location = "any",
+            order = 4,
+            cost = LethalNum.new(1.5, 2),
+            showReq = function() --[[ showReq | Line: 126 | Upvalues: Data (copy), InfoStore (copy) ]]
+                return if Data.ImportantData.Stats.prog > 0 then true else InfoStore.Resets.loop1.b > 0
+            end
+        },
+        rfL = {
+            display = "Loop Per Loop",
+            icon = "rbxassetid://14971474716",
+            currency = "flowers2",
+            refreshGroup = "daily",
+            maxBuy = 2,
+            itemType = "boost",
+            itemId = "loop",
+            itemAmount = 1,
+            location = "any",
+            order = 5,
+            cost = LethalNum.new(3, 2),
+            showReq = function() --[[ showReq | Line: 142 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.loop1.b > 0
+            end
+        }
+    },
+    Boosts = {
+        tw0 = {
+            display = "Mini Time Warp",
+            desc = "Earn 30 minutes of offline progress",
+            updatingDesc = true,
+            icon = "rbxassetid://17708062585",
+            base = "rbxassetid://17665851764",
+            use = "instant",
+            effect = "tw",
+            magnitude = 1800,
+            order = 10,
+            alwaysShow = true,
+            color = Color3.new(0.611765, 0.337255, 0)
+        },
+        tw1 = {
+            display = "1hr Time Warp",
+            desc = "Earn 1 hour of offline progress",
+            icon = "rbxassetid://17665851413",
+            base = "rbxassetid://17665851764",
+            use = "instant",
+            effect = "tw",
+            magnitude = 3600,
+            cap = 50,
+            order = 11,
+            color = Color3.new(0.611765, 0.337255, 0)
+        },
+        tw4 = {
+            display = "4hr Time Warp",
+            desc = "Earn 4 hours of offline progress",
+            icon = "rbxassetid://17665851552",
+            base = "rbxassetid://17665851764",
+            use = "instant",
+            effect = "tw",
+            magnitude = 14400,
+            cap = 25,
+            order = 12,
+            color = Color3.new(0.611765, 0.337255, 0)
+        },
+        tw12 = {
+            display = "12hr Time Warp",
+            desc = "Earn 12 hours of offline progress",
+            icon = "rbxassetid://17665851658",
+            base = "rbxassetid://17665851764",
+            use = "instant",
+            effect = "tw",
+            magnitude = 43200,
+            cap = 10,
+            order = 13,
+            color = Color3.new(0.611765, 0.337255, 0)
+        },
+        loop = {
+            display = "Loop Per Loop",
+            desc = "Earn +1 loop on your next loop (stacks)",
+            icon = "rbxassetid://14971474716",
+            base = "rbxassetid://14971561399",
+            use = "stack",
+            effect = "none",
+            magnitude = 1,
+            order = 30,
+            color = Color3.new(0/255, 0/255, 0/255)
+        },
+        luck = {
+            display = "Super Luck",
+            desc = "Makes your next drop super lucky (stacks) | Only works if there are at least 3 different rarities (i.e. common/uncommon/rare)",
+            icon = "rbxassetid://12922665870",
+            base = "rbxassetid://12427738151",
+            use = "stack",
+            effect = "none",
+            magnitude = 1,
+            order = 8,
+            color = Color3.new(0.12549, 1, 0.752941)
+        }
+    }
+}
