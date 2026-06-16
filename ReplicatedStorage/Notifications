@@ -1,0 +1,277 @@
+local t = {}
+local Data = require(script.Parent.Data)
+local LethalNum = require(script.Parent.LethalNum)
+local CurrencyTypes = require(script.Parent.CurrencyTypes)
+local t2 = {}
+local t3 = {}
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+game:GetService("Players")
+require(ReplicatedStorage.PlayerInput)
+
+local SendNotification = ReplicatedStorage.Remotes:WaitForChild("SendNotification")
+local v1 = false
+
+function t.grassEarnage(p1, p2) --[[ grassEarnage | Line: 20 | Upvalues: t (copy), LethalNum (copy) ]]
+    t.earnageText("<b>+" .. LethalNum.getString(p1) .. " <font color=\"#ffff00\">(+" .. LethalNum.getString(p2) .. " TP)</font></b>")
+end
+function t.platEarnage(p1) --[[ platEarnage | Line: 24 | Upvalues: t (copy), LethalNum (copy) ]]
+    t.earnageText("<b><font color=\"#ffffff\">+" .. LethalNum.getString(p1) .. " Platinum</font></b>")
+end
+function t.flowerEarnage(p1) --[[ flowerEarnage | Line: 28 | Upvalues: t (copy), LethalNum (copy) ]]
+    t.earnageText("<b><font color=\"#ab81ff\">+" .. LethalNum.getString(p1) .. " Flowers</font></b>")
+end
+
+if game:GetService("RunService"):IsClient() then
+    SendNotification.OnClientEvent:Connect(function(p1, p2, p3, p4, p5, p6) --[[ Line: 33 | Upvalues: t (copy) ]]
+        t.earnageText(p1, p2, p3, p4, p5, p6)
+    end)
+end
+
+function t.ClearNotifs() --[[ ClearNotifs | Line: 38 | Upvalues: t3 (copy) ]]
+    for k, v in pairs(t3) do
+        if v.obj.Visible then
+            v.iterations = 0
+            v.visdelay = 0
+        end
+    end
+end
+function t.addCurrPopup(p1, p2) --[[ addCurrPopup | Line: 47 | Upvalues: Data (copy), LethalNum (copy), t (copy), CurrencyTypes (copy) ]]
+    if not Data.ImportantData.Misc.toggles.resetCurrPopup.Visible then
+        return
+    end
+
+    if not LethalNum.isGreater(LethalNum.new(1, 0), p2) then
+        t.earnageText(p1 .. "C", "+" .. LethalNum.getString(p2), 100 + CurrencyTypes.Currencies[p1].order, CurrencyTypes.Currencies[p1].icon, p2, true)
+    end
+end
+function t.earnageText(p1, p2, p3, p4, p5, p6) --[[ earnageText | Line: 59 | Upvalues: t3 (copy), LethalNum (copy) ]]
+    if p6 and (t3[p1] and t3[p1].obj.Visible) then
+        local v1 = t3[p1]
+
+        v1.iterations = v1.iterations + 1
+
+        if LethalNum.isGreater(LethalNum.new(1, 0), p5) then
+            updateText(p1, p2)
+
+            if p1 ~= "drop" and (p1 ~= "buy" and p1 ~= "master") then
+                return
+            end
+
+            local v2 = t3[p1]
+
+            v2.iterations = v2.iterations + 10
+            t3[p1].obj.Icon.Image = p4
+            t3[p1].vis = 0
+            t3[p1].visdelay = 40
+
+            return
+        end
+
+        updateEarnText(p1, p5)
+    else
+        coroutine.resume(coroutine.create(textPop), p1, p2, p3, p4, p5, p6)
+    end
+end
+function t.earnageTextNew(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10) --[[ earnageTextNew | Line: 91 ]]
+    coroutine.resume(coroutine.create(textPopNew), p1, p2, p3, p4, p5, p6, p7, p8, p9, p10)
+end
+function updateText(p1, p2) --[[ updateText | Line: 97 | Upvalues: t3 (copy) ]]
+    t3[p1].obj.Text = "<stroke color=\"#000000\" joins=\"miter\" thickness=\"2\">" .. p2 .. "</stroke>"
+end
+function updateEarnText(p1, p2) --[[ updateEarnText | Line: 101 | Upvalues: t3 (copy), LethalNum (copy) ]]
+    t3[p1].magnitude = LethalNum.add(t3[p1].magnitude, p2)
+    t3[p1].obj.Text = "<stroke color=\"#000000\" joins=\"miter\" thickness=\"2\">+" .. LethalNum.getString(t3[p1].magnitude) .. "</stroke>"
+end
+function textPopNew(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11) --[[ textPopNew | Line: 106 ]]
+    local v1 = getGrassEarnage(p10)
+
+    if v1 == nil then
+        return
+    end
+
+    v1.Icon.Image = if p11 == nil or not p11 then "rbxassetid://8566935398" else p11
+    v1.Icon.ImageTransparency = if p11 == nil then 1 else 0
+    v1.Position = p3
+    UDim.new(p3.Y.Scale - p5, p3.Y.Offset)
+    v1.TextSize = p8
+    v1.Visible = true
+    v1.Text = "<stroke color=\"#000000\" joins=\"miter\" thickness=\"2\">" .. p2 .. "</stroke>"
+    v1.ZIndex = p9 + p10
+    v1.LayoutOrder = p9 + p10
+    v1.Size = UDim2.new(UDim.new(0.6, 0), UDim.new(0.45 + p8 / 100, 0))
+    UDim2.new(UDim.new(0.6, 0), UDim.new(0, 0))
+    task.wait(p6)
+    task.wait(p7)
+    task.wait(p4 - p7)
+    v1.Visible = false
+end
+function textPop(p1, p2, p3, p4, p5, p6) --[[ textPop | Line: 136 | Upvalues: v1 (ref), t3 (copy), t2 (copy), LethalNum (copy) ]]
+    if not v1 then
+        createText()
+    end
+
+    local v12 = nil
+
+    if t3[p1] then
+        t3[p1].magnitude = LethalNum.copy(p5)
+        v12 = t3[p1].obj
+    else
+        for k, v in pairs(t2) do
+            if v.key == "none" then
+                v.key = p1
+                v12 = v.obj
+                t3[p1] = {
+                    iterations = 0,
+                    vis = 1,
+                    visdelay = 0,
+                    obj = v.obj,
+                    magnitude = LethalNum.copy(p5)
+                }
+
+                if p1 == "drop" or (p1 == "buy" or p1 == "master") then
+                    v12.Icon.ResampleMode = "Pixelated"
+                    v12.Icon.Size = UDim2.new(UDim.new(0.24, 0), UDim.new(1.2, 0))
+                    v12.Icon.Position = UDim2.new(UDim.new(0.975, 0), UDim.new(0.5, 0))
+                end
+
+                break
+            end
+        end
+    end
+
+    if v12 == nil then
+        return
+    end
+
+    v12.Icon.Image = if p4 == nil or not p4 then "rbxassetid://8566935398" else p4
+    v12.Icon.ImageTransparency = if p4 == nil then 1 else 0
+    v12.Position = UDim2.new(UDim.new(0.5 + Random.new():NextNumber(-20, 20) / 100, 0), UDim.new(8.5, 0))
+    UDim.new(v12.Position.Y.Scale - 1.5, v12.Position.Y.Offset)
+    v12.TextSize = 20
+    v12.Visible = true
+    v12.Text = "<stroke color=\"#000000\" joins=\"miter\" thickness=\"2\">" .. p2 .. "</stroke>"
+    v12.ZIndex = p3
+    v12.LayoutOrder = p3
+
+    while t3[p1].vis > 0 do
+        local v4 = t3[p1]
+
+        v4.vis = v4.vis - 0.2
+        v12.TextTransparency = math.min(1, t3[p1].vis)
+        v12.TextStrokeTransparency = math.min(1, t3[p1].vis)
+        v12.Icon.ImageTransparency = math.min(1, t3[p1].vis)
+        task.wait()
+    end
+
+    task.wait(3)
+
+    local count = 0
+
+    while count < t3[p1].iterations + 3 do
+        count = count + 1
+
+        if count >= 40 then
+            break
+        end
+
+        task.wait(0.5)
+    end
+
+    while t3[p1].vis < 1 do
+        if t3[p1].visdelay > 0 then
+            local v5 = t3[p1]
+
+            v5.visdelay = v5.visdelay - 0.2
+        else
+            local v6 = t3[p1]
+
+            v6.vis = v6.vis + 0.2
+        end
+
+        v12.TextTransparency = math.max(0, t3[p1].vis)
+        v12.TextStrokeTransparency = math.max(0, t3[p1].vis)
+        v12.Icon.ImageTransparency = math.max(0, t3[p1].vis)
+        task.wait()
+    end
+
+    if p6 then
+        t3[p1].magnitude = LethalNum.new(0, 0)
+    end
+
+    t3[p1].iterations = 0
+    v12.Visible = false
+end
+function t.minigameText(p1, p2, p3, p4, p5, p6, p7, p8) --[[ minigameText | Line: 246 ]]
+    coroutine.resume(coroutine.create(textPopM), p1, p2, p3, p4, p5, p6, p7, p8)
+end
+function textPopM(p1, p2, p3, p4, p5, p6, p7, p8) --[[ textPopM | Line: 252 ]]
+    local v1 = getGrassEarnage(p7)
+
+    if v1 ~= nil then
+        v1.Position = UDim2.new(UDim.new(0.75 + Random.new():NextNumber(-10, 10) / 100, 0), UDim.new(8.5, 0))
+
+        local v2 = UDim.new(p2.Y.Scale - p8, p2.Y.Offset)
+
+        v1.TextSize = p5
+        v1.Visible = true
+        v1.Text = "<stroke color=\"#000000\" joins=\"miter\" thickness=\"2\">" .. p1 .. "</stroke>"
+        v1.ZIndex = p6 + p7
+        UDim2.new(UDim.new(0.6, 0), UDim.new(0.45 + p5 / 100, 0))
+
+        local v3 = UDim2.new(UDim.new(0.6, 0), UDim.new(0, 0))
+        local v4 = true
+
+        v1:TweenPosition(UDim2.new(UDim.new(v1.Position.X.Scale, v1.Position.X.Offset), v2), Enum.EasingDirection.Out, Enum.EasingStyle.Sine, p3, true, function() --[[ Line: 270 | Upvalues: v4 (ref) ]]
+            v4 = false
+        end)
+        task.wait(p4)
+        v1:TweenSize(v3, Enum.EasingDirection.Out, Enum.EasingStyle.Sine, p3 - p4, true, function() --[[ Line: 272 | Upvalues: v4 (ref) ]]
+            v4 = false
+        end)
+        task.wait(p3 - p4)
+        v1.Visible = false
+    end
+end
+function createText() --[[ createText | Line: 279 | Upvalues: t2 (copy), Data (copy), v1 (ref) ]]
+    for i = 0, 100 do
+        local v12 = workspace.Prefabs.GrassEarnage:Clone()
+
+        t2[v12] = {
+            key = "none",
+            obj = v12
+        }
+        v12.Visible = false
+        v12.Priority.Value = if i > 7 then 1 else 0
+        v12.Parent = Data.ImportantData.Misc.player.PlayerGui.MobileUI.Popups.Holder
+    end
+
+    v1 = true
+end
+function getGrassEarnage(p1) --[[ getGrassEarnage | Line: 299 | Upvalues: v1 (ref), t2 (copy) ]]
+    if not v1 then
+        createText()
+    end
+
+    for k, v in pairs(t2) do
+        if v.key == "none" and (k.Visible == false and k.Priority.Value < p1) then
+            return k
+        end
+    end
+
+    for k, v in pairs(t2) do
+        if v.key == "none" and k.Priority.Value < p1 then
+            return k
+        end
+    end
+
+    for k, v in pairs(t2) do
+        if v.key == "none" and p1 >= 100 then
+            return k
+        end
+    end
+
+    return nil
+end
+
+return t
