@@ -1,0 +1,161 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local Data = require(ReplicatedStorage.Data)
+local t = {
+    conditionText = function(p1) --[[ conditionText | Line: 7 ]]
+        if p1 then
+            return "<font color=\"#00ff00\">"
+        end
+
+        return "<font color=\"#ff0000\">"
+    end,
+    canAffordText = function(p1, p2) --[[ canAffordText | Line: 18 | Upvalues: LethalNum (copy) ]]
+        if LethalNum.isGreaterE(p1, p2) then
+            return "<font color=\"#00ff00\">"
+        end
+
+        return "<font color=\"#ff0000\">"
+    end,
+    canAffordTextN = function(p1, p2) --[[ canAffordTextN | Line: 29 ]]
+        if p2 <= p1 then
+            return "<font color=\"#00ff00\">"
+        end
+
+        return "<font color=\"#ff0000\">"
+    end,
+    accConditionText = function(p1, p2) --[[ accConditionText | Line: 40 ]]
+        if not p1 then
+            return "<font color=\"#ff0000\">"
+        end
+
+        if p2 then
+            return "<font color=\"#00ff00\">"
+        end
+
+        return "<font color=\"#ffb700\">"
+    end,
+    spairs = function(p1, p2) --[[ spairs | Line: 55 ]]
+        local t = {}
+
+        for k in pairs(p1) do
+            t[#t + 1] = k
+        end
+
+        if p2 then
+            table.sort(t, function(p12, p22) --[[ Line: 63 | Upvalues: p2 (copy), p1 (copy) ]]
+                return p2(p1, p12, p22)
+            end)
+        else
+            table.sort(t)
+        end
+
+        local v1 = 0
+
+        return function() --[[ Line: 70 | Upvalues: v1 (ref), t (copy), p1 (copy) ]]
+            v1 = v1 + 1
+
+            if t[v1] then
+                return t[v1], p1[t[v1]]
+            end
+        end
+    end
+}
+local t2 = {}
+
+function t.fade(p1, p2, p3, p4) --[[ fade | Line: 79 | Upvalues: t2 (copy) ]]
+    if t2[p1] then
+        coroutine.close(t2[p1])
+    end
+
+    t2[p1] = coroutine.create(fadeCR)
+    coroutine.resume(t2[p1], p1, p2, p3, p4)
+end
+function fadeCR(p1, p2, p3, p4) --[[ fadeCR | Line: 88 | Upvalues: Data (copy), t2 (copy) ]]
+    local frameRate = Data.ImportantData.Misc.frameRate
+    local t = {
+        image = function(p12) --[[ Line: 93 | Upvalues: p1 (copy) ]]
+            p1.ImageTransparency = p12
+        end,
+        frame = function(p12) --[[ Line: 96 | Upvalues: p1 (copy) ]]
+            p1.BackgroundTransparency = p12
+        end,
+        text = function(p12) --[[ Line: 99 | Upvalues: p1 (copy) ]]
+            p1.TextTransparency = p12
+            p1.TextStrokeTransparency = p12
+        end
+    }
+
+    for i = 1, frameRate do
+        if p3 then
+            t[p4](1 - i / frameRate)
+        else
+            t[p4](i / frameRate)
+        end
+
+        task.wait(p2 / frameRate)
+    end
+
+    t[p4](if p3 then 0 else 1)
+    t2[p1] = nil
+end
+function t.getFadeObj() --[[ getFadeObj | Line: 119 | Upvalues: Data (copy) ]]
+    local v1 = workspace.Prefabs.Blackness:Clone()
+
+    v1.Parent = Data.ImportantData.Misc.player.PlayerGui.MobileUI
+
+    return v1
+end
+function t.getFadeImg() --[[ getFadeImg | Line: 125 | Upvalues: Data (copy) ]]
+    local v1 = workspace.Prefabs.FadeImg:Clone()
+
+    v1.Parent = Data.ImportantData.Misc.player.PlayerGui.MobileUI
+
+    return v1
+end
+function t.clearFadeObj(p1) --[[ clearFadeObj | Line: 131 ]]
+    if not p1 then
+        return
+    end
+
+    p1:Destroy()
+end
+function t.additiveBuyMax(p1, p2, p3, p4) --[[ additiveBuyMax | Line: 137 | Upvalues: LethalNum (copy) ]]
+    local v1 = LethalNum.toNumber(p4)
+    local v2 = LethalNum.toNumber(p3)
+    local v3 = v2 / 2
+    local v4 = LethalNum.toNumber(p2) + v1 * v2 - v3
+
+    return LethalNum.new(math.floor((v4 * -1 + math.sqrt(v4 ^ 2 - 4 * v3 * (LethalNum.toNumber(p1) * -1))) / (2 * v3)), 0)
+end
+function t.additiveScaling(p1, p2, p3) --[[ additiveScaling | Line: 152 | Upvalues: LethalNum (copy) ]]
+    local v1 = LethalNum.toNumber(p1)
+    local v2 = LethalNum.toNumber(p3)
+
+    return LethalNum.new((v2 - 1) * v2 / 2 * LethalNum.toNumber(p2) + v1 * v2, 0)
+end
+function t.multiBuyMax(p1, p2, p3, p4) --[[ multiBuyMax | Line: 159 | Upvalues: LethalNum (copy) ]]
+    local v1 = LethalNum.toNumber(p3)
+
+    return LethalNum.floor(LethalNum.log(LethalNum.addDecimal(LethalNum.divide(LethalNum.multiply(p1, v1 - 1), (LethalNum.multiply(p2, LethalNum.pow(p3, p4)))), LethalNum.new(1, 0)), v1))
+end
+function t.GetFinalCost(p1, p2, p3, p4, p5) --[[ GetFinalCost | Line: 168 | Upvalues: LethalNum (copy) ]]
+    return LethalNum.multiply(p2, (LethalNum.divide(LethalNum.multiply(p3 ^ p4, p3 ^ p1 - 1), p3 - 1)))
+end
+function t.GetMaxBuy(p1, p2, p3, p4) --[[ GetMaxBuy | Line: 175 | Upvalues: LethalNum (copy) ]]
+    return LethalNum.toNumber(LethalNum.floor(LethalNum.log(LethalNum.addDecimal(LethalNum.divide(LethalNum.multiply(p4, p2 - 1), (LethalNum.multiply(p1, LethalNum.pow(p2, p3)))), LethalNum.new(1, 0)), p2)))
+end
+function t.CopyTable(p1) --[[ CopyTable | Line: 183 | Upvalues: t (copy) ]]
+    if typeof(p1) ~= "table" then
+        return p1
+    end
+
+    local t2 = {}
+
+    for k, v in pairs(p1) do
+        t2[t.CopyTable(k)] = t.CopyTable(v)
+    end
+
+    return t2
+end
+
+return t
