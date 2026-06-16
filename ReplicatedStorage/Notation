@@ -1,0 +1,5 @@
+return {
+    Info = {
+        notation = "standard"
+    }
+}
