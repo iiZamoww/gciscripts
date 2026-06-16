@@ -1,0 +1,92 @@
+local v1 = script.Parent
+local CurrencyTypes = require(v1.CurrencyTypes)
+local Data = require(v1.Data)
+local t = {
+    Loaded = {}
+}
+
+function t.UnloadWorld() --[[ UnloadWorld | Line: 9 | Upvalues: t (copy) ]]
+    for v1, v2 in t.Loaded do
+        if v1 then
+            v1:Destroy()
+        end
+    end
+
+    t.Loaded = {}
+end
+function t.ShouldLoad(p1) --[[ ShouldLoad | Line: 18 | Upvalues: Data (copy) ]]
+    if p1 == -1 then
+        return true
+    end
+
+    return Data.ImportantData.Stats.world == p1
+end
+function t.LoadBars() --[[ LoadBars | Line: 26 | Upvalues: Data (copy), CurrencyTypes (copy), t (copy) ]]
+    local world = Data.ImportantData.Stats.world
+
+    for v1, v2 in CurrencyTypes.Levels do
+        if v2.template then
+            local v3 = v2.template:Clone()
+
+            v3.Parent = workspace.Bars
+
+            local v4 = v2.template:GetAttribute("barType")
+            local t2 = {}
+
+            v3:PivotTo(v2.cframe)
+            t2.barWhole = v3
+            t2.bar = v3:FindFirstChild("ProgressBar")
+            t2.barHalfSize = t2.bar.Size.X / 2
+            t2.barWidth = t2.bar.Size.X
+            t2.barHeight = t2.bar.Size.Y
+            t2.progressText = v3:FindFirstChild("ProgressBarHolder").SurfaceGui.ProgressDisplay
+            t2.origin = t2.bar.Position
+
+            if v4 == "basic" then
+                t2.nameDisplay = v3:FindFirstChild("Holder").SurfaceGui.Text
+                t2.levelText = v3:FindFirstChild("LevelDisplay").SurfaceGui.Text
+                t2.extraText = v3:FindFirstChild("ExtraDisplay").SurfaceGui.Text
+                t2.back = v3:FindFirstChild("Back")
+                t2.nameDisplay.Text = v2.display
+                t2.back.Color = v2.color
+                t2.bar.Color = v2.barColor
+
+                if t2.bar:FindFirstChild("SurfaceGui") then
+                    t2.bar.SurfaceGui.Gradient.ImageColor3 = v2.barColor
+                end
+
+                if v2.extraColor then
+                    t2.extraText.TextColor3 = v2.extraColor
+                end
+
+                if v2.partColor then
+                    for v5, v6 in v3:GetChildren() do
+                        if v6.Name == "Part" then
+                            v6.Color = v2.partColor
+                        end
+                    end
+                end
+            end
+
+            if v4 == "tier" then
+                t2.nextTierText = v3:FindFirstChild("NextTierText").SurfaceGui.Text
+                t2.nextTierDisplay = v3:FindFirstChild("NextTierDisplay")
+            end
+
+            if v4 == "astral" or v4 == "eclipse" then
+                t2.nameDisplay = v3:FindFirstChild("Holder").SurfaceGui.Text
+                t2.levelText = v3:FindFirstChild("LevelDisplay").SurfaceGui.Text
+            end
+
+            if v4 == "rift" then
+                t2.nameDisplay = v3:FindFirstChild("Holder").SurfaceGui.Text
+                t2.levelText = v3:FindFirstChild("LevelDisplay").SurfaceGui.Text
+            end
+
+            v2.barObject = t2
+            t.Loaded[v3] = true
+        end
+    end
+end
+
+return t
