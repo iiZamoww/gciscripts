@@ -1,0 +1,93 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local LethalNum = require(ReplicatedStorage.LethalNum)
+
+require(ReplicatedStorage.Format)
+
+local v1 = false
+local UpdateLeaderboard2 = ReplicatedStorage.Remotes:WaitForChild("UpdateLeaderboard")
+
+function GetValueString(p1, p2) --[[ GetValueString | Line: 10 | Upvalues: LethalNum (copy) ]]
+    if p1 == "tower" then
+        return LethalNum.getString(LethalNum.new(p2, 0))
+    end
+
+    if p1 == "general" then
+        return LethalNum.getString(LethalNum.new(p2 % 10000 / 1000, (math.floor(p2 / 10000))))
+    end
+
+    return "0"
+end
+function UpdateYourPlace(p1) --[[ UpdateYourPlace | Line: 22 | Upvalues: v1 (ref), Players (copy) ]]
+    if not v1 then
+        if not Players.LocalPlayer.PlayerGui:FindFirstChild("Quality") then
+            return
+        end
+
+        v1 = true
+    end
+
+    local v12 = if p1.id == "tower" then Players.LocalPlayer.PlayerGui.Quality.AdjacentLeaderboard.Holder else nil
+
+    v12.You.Visible = true
+
+    local v2 = game.Players:GetUserThumbnailAsync(Players.LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size150x150)
+    local v3 = game.Players:GetNameFromUserIdAsync(Players.LocalPlayer.UserId)
+
+    v12.You.Icon.Image = v2
+    v12.You.Place.Text = ""
+    v12.You.Username.Text = v3
+    v12.You.LeaderboardValue.Text = GetValueString(p1.id, p1.value)
+end
+function UpdateLeaderboard(p1) --[[ UpdateLeaderboard | Line: 46 | Upvalues: v1 (ref), Players (copy) ]]
+    if not v1 then
+        if not Players.LocalPlayer.PlayerGui:FindFirstChild("Quality") then
+            return
+        end
+
+        v1 = true
+    end
+
+    local v12 = if p1.id == "tower" then Players.LocalPlayer.PlayerGui.Quality.AdjacentLeaderboard.Holder else nil
+
+    if p1.prev.place > 0 then
+        v12.Behind.Visible = true
+
+        local v2 = game.Players:GetUserThumbnailAsync(p1.prev.id, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size150x150)
+        local v3 = game.Players:GetNameFromUserIdAsync(p1.prev.id)
+
+        v12.Behind.Icon.Image = v2
+        v12.Behind.Place.Text = "Below"
+        v12.Behind.Username.Text = v3
+        v12.Behind.LeaderboardValue.Text = GetValueString(p1.id, p1.prev.val)
+    else
+        v12.Behind.Visible = false
+    end
+
+    if p1.current.place > 0 then
+        v12.You.Visible = true
+
+        local v4 = game.Players:GetUserThumbnailAsync(p1.current.id, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size150x150)
+        local v5 = game.Players:GetNameFromUserIdAsync(p1.current.id)
+
+        v12.You.Icon.Image = v4
+        v12.You.Place.Text = ""
+        v12.You.Username.Text = v5
+        v12.You.LeaderboardValue.Text = GetValueString(p1.id, p1.current.val)
+    end
+
+    if p1.ahead.place > 0 then
+        v12.Ahead.Visible = true
+
+        local v6 = game.Players:GetUserThumbnailAsync(p1.ahead.id, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size150x150)
+        local v7 = game.Players:GetNameFromUserIdAsync(p1.ahead.id)
+
+        v12.Ahead.Icon.Image = v6
+        v12.Ahead.Place.Text = "Above"
+        v12.Ahead.Username.Text = v7
+        v12.Ahead.LeaderboardValue.Text = GetValueString(p1.id, p1.ahead.val)
+    else
+        v12.Ahead.Visible = false
+    end
+end
+UpdateLeaderboard2.OnClientEvent:Connect(UpdateYourPlace)
