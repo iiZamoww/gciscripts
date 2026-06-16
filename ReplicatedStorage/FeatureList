@@ -1,0 +1,92 @@
+return {
+    Features = {
+        grassfield = {
+            title = "Grass Field",
+            desc = "A field where you cut grass to earn grass",
+            req = "Play the game",
+            base = "rbxassetid://8566935278",
+            icon = "rbxassetid://8566935398",
+            object = nil,
+            hidden = false,
+            color = Color3.new(0.105882, 0.419608, 0.00392157),
+            iconColor = Color3.new(255/255, 255/255, 255/255)
+        },
+        grassupgrades = {
+            title = "Grass Upgrades",
+            desc = "Where you spend grass on upgrades which allows you to earn even more grass",
+            req = "Play the game",
+            base = "rbxassetid://8566935278",
+            icon = "rbxassetid://8567180935",
+            object = nil,
+            hidden = false,
+            color = Color3.new(0.105882, 0.419608, 0.00392157),
+            iconColor = Color3.new(255/255, 255/255, 255/255)
+        },
+        levelperks = {
+            title = "Level Perks",
+            desc = "Spend perks earned when leveling up on perk upgrades",
+            req = "Level up once",
+            base = "rbxassetid://8624760717",
+            icon = "rbxassetid://9685943580",
+            object = nil,
+            hidden = false,
+            color = Color3.new(0, 0.305882, 0.419608),
+            iconColor = Color3.new(255/255, 255/255, 255/255)
+        },
+        prestige = {
+            title = "Prestige",
+            desc = "Resets your grass, grass upgrades, level, and perk upgrades for prestige points which are spent on prestige upgrades",
+            req = "Reach level 31",
+            base = "rbxassetid://8624760400",
+            icon = "rbxassetid://8566935066",
+            object = nil,
+            hidden = false,
+            color = Color3.new(0, 0.419608, 0.384314),
+            iconColor = Color3.new(255/255, 255/255, 255/255)
+        },
+        tiers = {
+            title = "Tiers",
+            desc = "Earn tier progress when cutting grass to work towards the next tier. Each tier significantly increases grass value and XP earned slightly",
+            req = "Prestige once",
+            base = "rbxassetid://8566935278",
+            icon = "rbxassetid://8566934708",
+            object = nil,
+            hidden = false,
+            color = Color3.new(0.419608, 0.392157, 0),
+            iconColor = Color3.new(255/255, 255/255, 255/255)
+        },
+        platinum = {
+            title = "Platinum",
+            desc = "Platinum has a small chance to grow in place of regular grass. Cutting down this grass will give platinum which can be spent on platinum upgrades",
+            req = "Reach tier 3",
+            base = "rbxassetid://8739526187",
+            icon = "rbxassetid://9592425511",
+            object = nil,
+            hidden = false,
+            color = Color3.new(0.67451, 0.733333, 0.737255),
+            iconColor = Color3.new(255/255, 255/255, 255/255)
+        },
+        crystallize = {
+            title = "Crystallize",
+            desc = "Resets your prestige points and upgrades, tier, and everything prestige resets for crystals which are spent on crystal upgrades",
+            req = "Reach level 101",
+            base = "rbxassetid://9281596277",
+            icon = "rbxassetid://9281596403",
+            object = nil,
+            hidden = false,
+            color = Color3.new(1, 0.627451, 0.984314),
+            iconColor = Color3.new(255/255, 255/255, 255/255)
+        },
+        accomplishments = {
+            title = "Accomplishments",
+            desc = "A set of self imposed restrictions with rewards if you manage to meet the accomplishment goal",
+            req = "Crystallize 3 times",
+            base = "rbxassetid://9281596277",
+            icon = "rbxassetid://8566934708",
+            object = nil,
+            hidden = false,
+            color = Color3.new(0.458824, 0.00392157, 0.313725),
+            iconColor = Color3.new(0.54902, 0, 1)
+        }
+    }
+}
