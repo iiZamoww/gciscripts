@@ -1,0 +1,171 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Data = require(ReplicatedStorage.Data)
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local InfoStore = require(ReplicatedStorage.InfoStore)
+local t = {}
+local v1 = ReplicatedStorage.Templates.Misc.InnerStar:Clone()
+
+t.Tiers = {
+    [0] = {
+        size = 5,
+        color = Color3.new(255/255, 0/255, 0/255),
+        dia = Color3.new(0/255, 0/255, 0/255),
+        plat = Color3.new(255/255, 255/255, 255/255),
+        plat2 = Color3.new(255/255, 255/255, 255/255)
+    },
+    [1] = {
+        size = 15,
+        color = Color3.new(0.666667, 0, 0),
+        dia = Color3.new(0.345098, 0, 0),
+        plat = Color3.new(255/255, 0/255, 0/255),
+        plat2 = Color3.new(0.654902, 0, 0)
+    },
+    [2] = {
+        size = 20,
+        color = Color3.new(0.666667, 0.298039, 0),
+        dia = Color3.new(0.317647, 0.12549, 0),
+        plat = Color3.new(1, 0.54902, 0),
+        plat2 = Color3.new(1, 0.415686, 0)
+    },
+    [3] = {
+        size = 25,
+        color = Color3.new(1, 0.431373, 0),
+        dia = Color3.new(0.337255, 0.243137, 0),
+        plat = Color3.new(1, 0.666667, 0),
+        plat2 = Color3.new(1, 0.635294, 0)
+    },
+    [4] = {
+        size = 30,
+        color = Color3.new(1, 0.635294, 0),
+        dia = Color3.new(0.333333, 0.321569, 0),
+        plat = Color3.new(1, 0.886275, 0),
+        plat2 = Color3.new(1, 0.701961, 0)
+    },
+    [5] = {
+        size = 35,
+        color = Color3.new(0.533333, 1, 0),
+        dia = Color3.new(0.286275, 0.329412, 0),
+        plat = Color3.new(0.901961, 1, 0),
+        plat2 = Color3.new(0.984314, 1, 0)
+    },
+    [6] = {
+        size = 40,
+        color = Color3.new(0.0980392, 1, 0),
+        dia = Color3.new(0.0431373, 0.309804, 0),
+        plat = Color3.new(0.482353, 1, 0),
+        plat2 = Color3.new(0.835294, 1, 0)
+    },
+    [7] = {
+        size = 45,
+        color = Color3.new(0.627451, 1, 0.52549),
+        dia = Color3.new(0.227451, 0.329412, 0.235294),
+        plat = Color3.new(0.462745, 1, 0.454902),
+        plat2 = Color3.new(0.14902, 1, 0)
+    },
+    [8] = {
+        size = 50,
+        color = Color3.new(255/255, 255/255, 255/255),
+        dia = Color3.new(0.301961, 0.301961, 0.301961),
+        plat = Color3.new(255/255, 255/255, 255/255),
+        plat2 = Color3.new(0.737255, 0.737255, 0.737255)
+    },
+    [9] = {
+        size = 55,
+        color = Color3.new(0.447059, 1, 0.890196),
+        dia = Color3.new(0.145098, 0.309804, 0.309804),
+        plat = Color3.new(0.0431373, 1, 0.937255),
+        plat2 = Color3.new(0.705882, 1, 0.937255)
+    },
+    [10] = {
+        size = 60,
+        color = Color3.new(0.168627, 0.709804, 1),
+        dia = Color3.new(0, 0.2, 0.301961),
+        plat = Color3.new(0, 0.533333, 1),
+        plat2 = Color3.new(0.298039, 0.992157, 1)
+    },
+    [11] = {
+        size = 65,
+        color = Color3.new(0.164706, 0.290196, 1),
+        dia = Color3.new(0, 0, 0.278431),
+        plat = Color3.new(0, 0.0156863, 1),
+        plat2 = Color3.new(0.286275, 0.596078, 1)
+    },
+    [12] = {
+        size = 70,
+        color = Color3.new(0.317647, 0.180392, 1),
+        dia = Color3.new(0.184314, 0, 0.301961),
+        plat = Color3.new(0.533333, 0, 1),
+        plat2 = Color3.new(0.403922, 0.12549, 1)
+    },
+    [13] = {
+        size = 75,
+        color = Color3.new(0.498039, 0.160784, 1),
+        dia = Color3.new(0.270588, 0.00392157, 0.317647),
+        plat = Color3.new(0.74902, 0, 1),
+        plat2 = Color3.new(0.333333, 0, 1)
+    },
+    [14] = {
+        size = 80,
+        color = Color3.new(1, 0, 0.45098),
+        dia = Color3.new(0.298039, 0, 0.223529),
+        plat = Color3.new(1, 0, 0.733333),
+        plat2 = Color3.new(0.933333, 0, 1)
+    }
+}
+function t.UpdateStar() --[[ UpdateStar | Line: 120 | Upvalues: LethalNum (copy), Data (copy), v1 (copy), t (copy) ]]
+    local v12 = math.min(1, LethalNum.toNumber(LethalNum.divide(Data.ImportantData.Stats.starProgress, Data.ImportantData.Stats.starGoal)))
+    local v2 = Data.ImportantData.Stats.starTier % 15
+
+    if v1.Parent and v1.Parent.Name ~= "TheStar" then
+        v1.Parent = workspace.Features.TheStar
+    end
+
+    local v3 = t.Tiers[v2]
+    local v5 = t.Tiers[v2 + 1 > 14 and v2 + 1 or v2 + 1]
+    local size = v3.size
+    local size2 = v5.size
+
+    if Data.ImportantData.Stats.starTier > 14 then
+        size = 80 + (Data.ImportantData.Stats.starTier - 14)
+        size2 = 80 + (Data.ImportantData.Stats.starTier - 13)
+    end
+
+    local v6 = size + (size2 - size) * v12
+    local v7 = math.max(v3.color.R, v5.color.R)
+    local v8 = v7 - math.min(v3.color.R, v5.color.R)
+    local v9 = if v3.color.R > v5.color.R then v3.color.R - v8 * v12 else v3.color.R + v8 * v12
+    local v10 = math.max(v3.color.G, v5.color.G)
+    local v11 = v10 - math.min(v3.color.G, v5.color.G)
+    local v122 = if v3.color.G > v5.color.G then v3.color.G - v11 * v12 else v3.color.G + v11 * v12
+    local v13 = math.max(v3.color.B, v5.color.B)
+    local v14 = v13 - math.min(v3.color.B, v5.color.B)
+
+    v1.Color = Color3.new(v9, v122, if v3.color.B > v5.color.B then v3.color.B - v14 * v12 else v3.color.B + v14 * v12)
+    v1.Size = Vector3.new(v6, v6, v6)
+end
+function t.UpdateStarColors() --[[ UpdateStarColors | Line: 173 | Upvalues: Data (copy), InfoStore (copy), t (copy) ]]
+    local v1 = Data.ImportantData.Stats.visualST < 0 and InfoStore.Resets.starTier.a % 15 or Data.ImportantData.Stats.visualST
+    local v2 = t.Tiers[v1]
+    local StarZone = workspace.MetalBits.SP.Modify:FindFirstChild("StarZone")
+
+    if not StarZone then
+        return
+    end
+
+    StarZone.Diamond.Color = v2.dia
+    StarZone.InnerStar.Color = v2.color
+
+    for k, v in pairs((StarZone:GetChildren())) do
+        if v.Name == "Plat" then
+            v.Color = v2.plat
+        end
+
+        if v.Name == "Plat2" then
+            v.Color = v2.plat2
+        end
+    end
+
+    Data.ImportantData.Stats.currentVisualST = v1
+end
+
+return t
