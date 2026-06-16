@@ -1,0 +1,70 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Upgrades = require(ReplicatedStorage.Upgrades)
+local CurrencyTypes = require(ReplicatedStorage.CurrencyTypes)
+local Currencies = require(ReplicatedStorage.Currencies)
+local LethalNum = require(ReplicatedStorage.LethalNum)
+
+game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.EmotesMenu, false)
+
+for v1, v2 in ReplicatedStorage.Upgrades:GetChildren() do
+    if v2:IsA("Folder") then
+        for v3, v4 in v2:GetChildren() do
+            for v5, v6 in require(v4).Upgrades do
+                Upgrades.Basic[v5] = v6
+            end
+
+            v4.Name = "Loaded"
+            task.wait()
+        end
+    end
+end
+
+task.wait(0.1)
+
+for v7, v8 in CurrencyTypes.Currencies do
+    if not v8.noMulti then
+        local t = {
+            obj = nil,
+            isCurr = true,
+            multi = LethalNum.new(0, 0),
+            icon = v8.icon,
+            base = v8.base,
+            color = v8.color
+        }
+
+        t.textColor = v8.multiColor or Color3.new(255/255, 255/255, 255/255)
+        t.display = v8.displayP
+        t.typ = v8.multiType or "multi"
+        t.order = v8.order * 10
+        t.world = v8.world or 1
+        CurrencyTypes.Multis[v7] = t
+    end
+end
+
+for v10, v11 in CurrencyTypes.Levels do
+    if not v11.noMulti then
+        local t = {
+            typ = "multi",
+            obj = nil,
+            multi = LethalNum.new(0, 0),
+            icon = v11.icon,
+            base = v11.base,
+            color = v11.color
+        }
+
+        t.textColor = v11.barColor or Color3.new(255/255, 255/255, 255/255)
+        t.display = v11.displayM
+        t.order = v11.order - 1000
+        t.world = v11.world or 1
+        CurrencyTypes.Multis[v10] = t
+    end
+end
+
+task.wait(0.1)
+
+while not Currencies.getDisplay().multisMenu do
+    task.wait(0.1)
+end
+
+Currencies.getDisplay().multisMenu.Distribute.Enabled = true
+script.Parent.Update.Enabled = true
