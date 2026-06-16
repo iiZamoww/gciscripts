@@ -1,0 +1,320 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Remotes = ReplicatedStorage.Remotes
+local GenericEvent = Remotes:WaitForChild("GenericEvent")
+local GenericFunction = Remotes:WaitForChild("GenericFunction")
+local Data = require(ReplicatedStorage.Data)
+
+return {
+    Buy = function(p1, p2) --[[ Buy | Line: 9 | Upvalues: Data (copy), GenericEvent (copy) ]]
+        if Data.ImportantData.Stats.upgradeSelected then
+            GenericEvent:FireServer({
+                id = "buyUpgrade",
+                upgradeId = Data.ImportantData.Stats.upgradeSelected,
+                mode = p1,
+                x = p2
+            })
+        end
+    end,
+    QuickBuyMax = function(p1) --[[ QuickBuyMax | Line: 16 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "buyUpgrade",
+            mode = "max",
+            upgradeId = p1
+        })
+    end,
+    SetMaxSpend = function(p1) --[[ SetMaxSpend | Line: 20 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "maxSpend",
+            upgradeId = p1
+        })
+    end,
+    CloseUpgrade = function() --[[ CloseUpgrade | Line: 24 | Upvalues: Data (copy) ]]
+        Data.ImportantData.Stats.upgradeSelected = nil
+        Data.ImportantData.Events.updateOpenInfo = nil
+
+        if not Data.ImportantData.GrassObjects.InfoOpen then
+            return
+        end
+
+        Data.ImportantData.GrassObjects.InfoOpen.Visible = false
+    end,
+    InvestDF = function(p1) --[[ InvestDF | Line: 32 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "investDF",
+            treeId = p1
+        })
+    end,
+    SetDF = function(p1) --[[ SetDF | Line: 36 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "setDF",
+            set = p1
+        })
+    end,
+    SetSol = function(p1) --[[ SetSol | Line: 40 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "setSol",
+            set = p1
+        })
+    end,
+    AddSolarians = function(p1) --[[ AddSolarians | Line: 44 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "addSol",
+            barId = p1
+        })
+    end,
+    RemoveSolarians = function(p1) --[[ RemoveSolarians | Line: 47 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "removeSol",
+            barId = p1
+        })
+    end,
+    CapSolarians = function(p1) --[[ CapSolarians | Line: 50 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "capSol",
+            barId = p1
+        })
+    end,
+    AllocateOne = function() --[[ AllocateOne | Line: 53 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "allocateOne"
+        })
+    end,
+    RecallSolarians = function() --[[ RecallSolarians | Line: 57 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "recallSol"
+        })
+    end,
+    ToggleLunar = function(p1) --[[ ToggleLunar | Line: 61 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "toggleLunar",
+            lunarId = p1
+        })
+    end,
+    BuySC = function(p1) --[[ BuySC | Line: 65 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "buySC",
+            scId = p1
+        })
+    end,
+    StartFighting = function() --[[ StartFighting | Line: 69 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "startFight"
+        })
+    end,
+    StopFighting = function() --[[ StopFighting | Line: 72 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "stopFight"
+        })
+    end,
+    BuySoul = function(p1) --[[ BuySoul | Line: 75 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "buySoul",
+            soulId = p1
+        })
+    end,
+    ChangeSoul = function(p1) --[[ ChangeSoul | Line: 78 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "changeSoul",
+            x = p1
+        })
+    end,
+    SetSoul = function(p1) --[[ SetSoul | Line: 81 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "setSoul",
+            x = p1
+        })
+    end,
+    SellConstellation = function(p1, p2) --[[ SellConstellation | Line: 85 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "sellConst",
+            row = p1,
+            col = p2
+        })
+    end,
+    PlaceConstellation = function(p1, p2) --[[ PlaceConstellation | Line: 88 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "placeConst",
+            row = p1,
+            col = p2
+        })
+    end,
+    SelectConstellation = function(p1, p2) --[[ SelectConstellation | Line: 91 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "selectConst",
+            csType = p1,
+            csTier = p2
+        })
+    end,
+    Centralize = function(p1) --[[ Centralize | Line: 94 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "centralize",
+            cent = p1
+        })
+    end,
+    Synthesis = function(p1, p2) --[[ Synthesis | Line: 98 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "synthesis",
+            syn = p1,
+            selected = p2
+        })
+    end,
+    ItemInteract = function(p1, p2) --[[ ItemInteract | Line: 102 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "itemInteract",
+            int = p1,
+            uuid = p2
+        })
+    end,
+    SellAllItems = function(p1, p2) --[[ SellAllItems | Line: 105 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "sellAllItems",
+            items = p1,
+            scrap = p2
+        })
+    end,
+    FilterItem = function(p1) --[[ FilterItem | Line: 109 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "filterItem",
+            int = p1
+        })
+    end,
+    ReplicateItem = function(p1) --[[ ReplicateItem | Line: 112 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "replicateItem",
+            int = p1
+        })
+    end,
+    MasterDungeon = function(p1) --[[ MasterDungeon | Line: 115 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "masterDungeon",
+            dungeon = p1
+        })
+    end,
+    CompleteDungeon = function(p1, p2) --[[ CompleteDungeon | Line: 118 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "completeDungeon",
+            dungeon = p1,
+            difficulty = p2
+        })
+    end,
+    AddItem = function(p1, p2, p3) --[[ AddItem | Line: 121 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "addItem",
+            int = p1,
+            level = p2,
+            quantity = p3
+        })
+    end,
+    StartDungeon = function(p1) --[[ StartDungeon | Line: 124 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "startDungeon",
+            dungeon = p1
+        })
+    end,
+    EndDungeon = function() --[[ EndDungeon | Line: 127 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "endDungeon"
+        })
+    end,
+    LoadConstLayout = function(p1) --[[ LoadConstLayout | Line: 130 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "loadConstLayout",
+            num = p1
+        })
+    end,
+    SaveConstLayout = function(p1) --[[ SaveConstLayout | Line: 133 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "saveConstLayout",
+            num = p1
+        })
+    end,
+    FlowerRespec = function() --[[ FlowerRespec | Line: 136 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "flowerRespec"
+        })
+    end,
+    GridLock = function() --[[ GridLock | Line: 139 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "gridLock"
+        })
+    end,
+    SolarChallenge = function(p1) --[[ SolarChallenge | Line: 142 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "solChallenge",
+            challenge = p1
+        })
+    end,
+    SellGrid = function() --[[ SellGrid | Line: 145 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "sellGrid"
+        })
+    end,
+    DiaOpen = function() --[[ DiaOpen | Line: 148 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "diaOpen"
+        })
+    end,
+    DiaClose = function() --[[ DiaClose | Line: 151 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "diaClose"
+        })
+    end,
+    World1End = function() --[[ World1End | Line: 154 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "w1End"
+        })
+    end,
+    Charge_8 = function() --[[ Charge_8 | Line: 157 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "charge_8"
+        })
+    end,
+    StartPR = function(p1, p2) --[[ StartPR | Line: 160 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "startPR",
+            area = p1,
+            level = p2
+        })
+    end,
+    QuitPR = function() --[[ QuitPR | Line: 163 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "quitPR"
+        })
+    end,
+    CollectBit = function(p1) --[[ CollectBit | Line: 166 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "collectBit",
+            pos = p1
+        })
+    end,
+    BuySimpleShopItem = function(p1) --[[ BuySimpleShopItem | Line: 169 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "buySimpleShopItem",
+            itemId = p1
+        })
+    end,
+    UseBoost = function(p1) --[[ UseBoost | Line: 172 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer({
+            id = "useBoost",
+            boostId = p1
+        })
+    end,
+    ClientEvent = function(p1) --[[ ClientEvent | Line: 176 | Upvalues: GenericEvent (copy) ]]
+        GenericEvent:FireServer(p1)
+    end,
+    BuyShopItem = function(p1) --[[ BuyShopItem | Line: 182 | Upvalues: GenericFunction (copy) ]]
+        return GenericFunction:InvokeServer({
+            id = "buyShopItem",
+            item = p1
+        })
+    end,
+    DefeatGLEnemy = function(p1, p2, p3, p4) --[[ DefeatGLEnemy | Line: 185 | Upvalues: GenericFunction (copy) ]]
+        return GenericFunction:InvokeServer({
+            id = "defeatGLEnemy",
+            enemyId = p1,
+            enemyLevel = p2,
+            difficulty = p3,
+            tempLuck = p4
+        })
+    end
+}
