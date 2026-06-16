@@ -1,0 +1,2650 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local Data = require(ReplicatedStorage.Data)
+local v1 = nil
+
+while not v1 do
+    v1 = Players.LocalPlayer.PlayerGui
+    print("Loading0")
+    task.wait(0.1)
+end
+
+local Stats = Data.ImportantData.Stats
+
+Stats.loadStage = Stats.loadStage + 1
+
+local v2 = false
+
+while not v2 do
+    local W1 = v1:WaitForChild("W1", 1)
+
+    print("Loading1")
+    task.wait(0.1)
+    v2 = W1
+end
+
+local Stats2 = Data.ImportantData.Stats
+
+Stats2.loadStage = Stats2.loadStage + 1
+
+local v3 = false
+
+while not v3 do
+    local W2 = v1:WaitForChild("W2", 1)
+
+    print("Loading2")
+    task.wait(0.1)
+    v3 = W2
+end
+
+local Stats3 = Data.ImportantData.Stats
+
+Stats3.loadStage = Stats3.loadStage + 1
+
+local v4 = false
+
+while not v4 do
+    local COOL = v1:WaitForChild("COOL", 1)
+
+    print("Loading3")
+    task.wait(0.1)
+    v4 = COOL
+end
+
+local Stats4 = Data.ImportantData.Stats
+
+Stats4.loadStage = Stats4.loadStage + 1
+
+local v5 = false
+
+while not v5 do
+    local Quality = v1:WaitForChild("Quality", 1)
+
+    print("Loading4")
+    task.wait(0.1)
+    v5 = Quality
+end
+
+local Stats5 = Data.ImportantData.Stats
+
+Stats5.loadStage = Stats5.loadStage + 1
+
+local ContextActionService = game:GetService("ContextActionService")
+local CommonFunctions = require(ReplicatedStorage.CommonFunctions)
+local Multipliers = require(ReplicatedStorage.Multipliers)
+local Currencies = require(ReplicatedStorage.Currencies)
+
+require(ReplicatedStorage.Format)
+
+local Upgrades = require(ReplicatedStorage.Upgrades)
+local TreeItems = require(ReplicatedStorage.TreeItems)
+
+require(ReplicatedStorage.EarnGrass)
+
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local Accomplishments = require(ReplicatedStorage.Accomplishments)
+
+require(ReplicatedStorage.Notifications)
+
+local GrassTypes = require(ReplicatedStorage.GrassTypes)
+local Resets = require(ReplicatedStorage.Resets)
+
+require(ReplicatedStorage.Goals)
+
+local Notation = require(ReplicatedStorage.Notation)
+local Decelerate = require(ReplicatedStorage.Decelerate)
+local ConstellationGrid = require(ReplicatedStorage.ConstellationGrid)
+local TabManager = require(ReplicatedStorage.TabManager)
+local LunarItems = require(ReplicatedStorage.LunarItems)
+local Star = require(ReplicatedStorage.Star)
+local CurrencyTypes = require(ReplicatedStorage.CurrencyTypes)
+local GalaxyGen = require(ReplicatedStorage.GalaxyGen)
+
+require(ReplicatedStorage.CalculateTime)
+
+local SingularityChart = require(ReplicatedStorage.SingularityChart)
+local Solarians = require(ReplicatedStorage.Solarians)
+local Portaling = require(ReplicatedStorage.Portaling)
+local SolarChallenges = require(ReplicatedStorage.SolarChallenges)
+local MapTeles = require(ReplicatedStorage.MapTeles)
+local Picker = require(ReplicatedStorage.Picker)
+local Fields = require(ReplicatedStorage.Fields)
+local ChangeVisual = require(ReplicatedStorage.ChangeVisual)
+local InfoStore = require(ReplicatedStorage.InfoStore)
+local Achievements = require(ReplicatedStorage.Achievements)
+local Titles = require(ReplicatedStorage.Titles)
+local DailyReward = require(ReplicatedStorage.DailyReward)
+local Synthesis = require(ReplicatedStorage.Synthesis)
+local SimpleShop = require(ReplicatedStorage.SimpleShop)
+local PlanetRun = require(ReplicatedStorage.PlanetRun)
+local Gauntlet = require(ReplicatedStorage.Gauntlet)
+local CC = require(ReplicatedStorage.CC)
+local Loader = require(ReplicatedStorage.Loader)
+local BasicUpgrade = workspace.Prefabs.BasicUpgrade
+local Accomplishment = workspace.Prefabs.Accomplishment
+local TreeItem = workspace.Prefabs.TreeItem
+local TierItem = workspace.Prefabs.TierItem
+local Goal = workspace.Prefabs.Goal
+
+function sortUpgrades(p1, p2) --[[ sortUpgrades | Line: 90 ]]
+    if p1.baseCostExponent > p2.baseCostExponent then
+        return true
+    end
+
+    if p1.baseCostExponent < p2.baseCostExponent then
+        return false
+    end
+
+    if p1.baseCostExponent ~= p2.baseCostExponent then
+        return
+    end
+
+    if p1.baseCost > p2.baseCost then
+        return true
+    end
+
+    if p1.baseCost < p2.baseCost then
+        return false
+    end
+end
+
+local t = {
+    prestige = 0,
+    crystal = 1,
+    steelie = 2,
+    anonymity = 3,
+    liquefy = 4,
+    bluestige = 5,
+    plasma = 6
+}
+
+function sortAcc(p1, p2) --[[ sortAcc | Line: 109 | Upvalues: t (copy) ]]
+    if t[p1.tier] > t[p2.tier] then
+        return true
+    end
+
+    if t[p1.tier] < t[p2.tier] then
+        return false
+    end
+
+    if t[p1.tier] ~= t[p2.tier] then
+        return
+    end
+
+    if p1.difficulty > p2.difficulty then
+        return true
+    end
+
+    if p1.difficulty < p2.difficulty then
+        return false
+    end
+end
+function sortTiers(p1, p2) --[[ sortTiers | Line: 118 | Upvalues: LethalNum (copy) ]]
+    if not p1.progressValue then
+        return false
+    end
+
+    if not p2.progressValue then
+        return true
+    end
+
+    if LethalNum.isGreater(p1.progressValue, p2.progressValue) then
+        return true
+    end
+
+    if LethalNum.isGreater(p2.progressValue, p1.progressValue) then
+        return false
+    end
+end
+function sortGoals(p1, p2) --[[ sortGoals | Line: 125 ]]
+    if not p1.order then
+        return false
+    end
+
+    if not p2.order then
+        return true
+    end
+
+    if p1.order > p2.order then
+        return true
+    end
+
+    if p2.order < p1.order then
+        return false
+    end
+end
+function spairs(p1, p2) --[[ spairs | Line: 132 ]]
+    local t = {}
+
+    for k in pairs(p1) do
+        t[#t + 1] = k
+    end
+
+    if p2 then
+        table.sort(t, function(p12, p22) --[[ Line: 140 | Upvalues: p2 (copy), p1 (copy) ]]
+            return p2(p1, p12, p22)
+        end)
+    else
+        table.sort(t)
+    end
+
+    local v1 = 0
+
+    return function() --[[ Line: 148 | Upvalues: v1 (ref), t (copy), p1 (copy) ]]
+        v1 = v1 + 1
+
+        if t[v1] then
+            return t[v1], p1[t[v1]]
+        end
+    end
+end
+Data.ImportantData.Dynamic.changeDifficulty = Resets.ChangeDifficulty
+Data.ImportantData.Dynamic.decelerateWrapper = Decelerate.decelerateWrapper
+Data.ImportantData.Dynamic.recelerateWrapper = Decelerate.recelerateWrapper
+
+for v6, v7 in CurrencyTypes.Currencies do
+    v7.gen = LethalNum.new(0, 0)
+    v7.autobuy = false
+    v7.popup = false
+
+    local Stats6 = Data.ImportantData.Stats
+
+    Stats6.loadStage = Stats6.loadStage + 1
+    task.wait()
+end
+
+local v8 = nil
+local t2 = {}
+
+local function GetUpgradeParent(p1) --[[ GetUpgradeParent | Line: 171 | Upvalues: v1 (ref), v8 (ref), t2 (copy) ]]
+    local W1 = v1:FindFirstChild("W1")
+    local W2 = v1:FindFirstChild("W2")
+    local COOL = v1:FindFirstChild("COOL")
+    local Quality = v1:FindFirstChild("Quality")
+
+    if not v8 then
+        v8 = {
+            basic = function() --[[ Line: 179 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("Upgrades").ShopContainer.ScrollingFrame
+            end,
+            perk = function() --[[ Line: 180 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("LevelPerks").Perks.ScrollingFrame
+            end,
+            prestige = function() --[[ Line: 181 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("PrestigeUpgrades").ShopContainer.ScrollingFrame
+            end,
+            platinum = function() --[[ Line: 182 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("PlatinumUpgrades").Platinum.ScrollingFrame
+            end,
+            crystal = function() --[[ Line: 183 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("CrystalUpgrades").ShopContainer.ScrollingFrame
+            end,
+            factory = function() --[[ Line: 184 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("FactoryUpgrades").ShopContainer.ScrollingFrame
+            end,
+            foundry = function() --[[ Line: 185 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("Foundry").Upgrades.ScrollingFrame
+            end,
+            generator = function() --[[ Line: 186 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("Generator").Upgrades.ScrollingFrame
+            end,
+            assembler = function() --[[ Line: 187 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("Assembler").ShopContainer.ScrollingFrame
+            end,
+            flower = function() --[[ Line: 188 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("FlowerUpgrades").ShopContainer.ScrollingFrame
+            end,
+            flower2 = function() --[[ Line: 189 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("SolarUpgrades").ShopContainer.Shops.Flowers
+            end,
+            automation = function() --[[ Line: 190 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("AutomationUpgrades").ShopContainer.ScrollingFrame
+            end,
+            antiantiautomation = function() --[[ Line: 191 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("AntiAntiAutomationUpgrades").ShopContainer.ScrollingFrame
+            end,
+            antigrass = function() --[[ Line: 192 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("AntiUpgrades").ShopContainer.ScrollingFrame
+            end,
+            anonymity = function() --[[ Line: 193 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("AnonymityUpgrades").ShopContainer.ScrollingFrame
+            end,
+            liquefy = function() --[[ Line: 194 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("OilUpgrades").ShopContainer.ScrollingFrame
+            end,
+            rocketFuel = function() --[[ Line: 195 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("Refinery").ShopContainer.ScrollingFrame
+            end,
+            momentum = function() --[[ Line: 196 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("Momentum").Momentums.ScrollingFrame
+            end,
+            oilRig = function() --[[ Line: 197 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("OilRig").Upgrades.ScrollingFrame
+            end,
+            starAccumulator = function() --[[ Line: 198 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("StarAccumulator").Upgrades.ScrollingFrame
+            end,
+            stars = function() --[[ Line: 199 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("StarChart").ShopContainer.Shops
+            end,
+            moonstone = function() --[[ Line: 200 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("MoonstoneUpgrades").ShopContainer.ScrollingFrame
+            end,
+            darkMatter = function() --[[ Line: 201 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("DarkMatterUpgrades").ShopContainer.ScrollingFrame
+            end,
+            darkFruit = function() --[[ Line: 202 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("DarkTreeUpgrades").ShopContainer.ScrollingFrame
+            end,
+            funnyMachine = function() --[[ Line: 203 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("FunnyUpgrades").ShopContainer.ScrollingFrame
+            end,
+            fundry = function() --[[ Line: 204 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("Fundry").Upgrades.ScrollingFrame
+            end,
+            sfrgtgenerator = function() --[[ Line: 205 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("SFRGTGenerator").Upgrades.ScrollingFrame
+            end,
+            rings = function() --[[ Line: 206 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("RingUpgrades").ShopContainer.ScrollingFrame
+            end,
+            ugrass = function() --[[ Line: 207 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("UnnaturalUpgrades").ShopContainer.ScrollingFrame
+            end,
+            normality = function() --[[ Line: 208 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("NormalityUpgrades").ShopContainer.ScrollingFrame
+            end,
+            vaporize = function() --[[ Line: 209 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("CloudUpgrades").ShopContainer.ScrollingFrame
+            end,
+            planetarium = function() --[[ Line: 210 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("PlanetariumUpgrades").ShopContainer.ScrollingFrame
+            end,
+            perk2 = function() --[[ Line: 211 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("LevelPerks2").Perks.ScrollingFrame
+            end,
+            observatorium = function() --[[ Line: 212 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("ObservatoryUpgrades").Observatorium.ScrollingFrame
+            end,
+            astro = function() --[[ Line: 213 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("AstroUpgrades").ShopContainer.ScrollingFrame
+            end,
+            reservatorium = function() --[[ Line: 214 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("Reservatory").ShopContainer.ScrollingFrame
+            end,
+            measure = function() --[[ Line: 215 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("MeasureUpgrades").ShopContainer.ScrollingFrame
+            end,
+            planetary = function() --[[ Line: 216 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("PlanetUpgrades").ShopContainer.ScrollingFrame
+            end,
+            constellation = function() --[[ Line: 217 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("LineUpgrades").ShopContainer.ScrollingFrame
+            end,
+            arc = function() --[[ Line: 218 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("ArcUpgrades").ShopContainer.ScrollingFrame
+            end,
+            nebula = function() --[[ Line: 219 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("TheStar").ShopContainer.ScrollingFrame
+            end,
+            solar = function() --[[ Line: 220 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("SolarUpgrades").ShopContainer.Shops
+            end,
+            remnant = function() --[[ Line: 221 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("EclipseUpgrades").ShopContainer.ScrollingFrame
+            end,
+            gold = function() --[[ Line: 222 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("GoldUpgrades").ShopContainer.ScrollingFrame
+            end,
+            mastery = function() --[[ Line: 223 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("MasteryUpgrades").ShopContainer.ScrollingFrame
+            end,
+            cs = function() --[[ Line: 224 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("CSUpgrades").ShopContainer.ScrollingFrame
+            end,
+            loop = function() --[[ Line: 225 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("LoopUpgrades").ShopContainer.Shops.Loop.Loop
+            end,
+            lime = function() --[[ Line: 226 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("LoopUpgrades").ShopContainer.Shops.LimeCharge.Shop
+            end,
+            arrow = function() --[[ Line: 227 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("LoopUpgrades").ShopContainer.Shops.Filler.Shop
+            end,
+            brass = function() --[[ Line: 228 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("Brass").ShopContainer.ScrollingFrame
+            end,
+            blue = function() --[[ Line: 229 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("BlueUpgrades").ShopContainer.ScrollingFrame
+            end,
+            ir = function() --[[ Line: 230 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("Iridium").ShopContainer.ScrollingFrame
+            end,
+            plasma = function() --[[ Line: 231 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("PlasmaUpgrades").ShopContainer.ScrollingFrame
+            end,
+            blautomation = function() --[[ Line: 232 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("BlautomationUpgrades").ShopContainer.ScrollingFrame
+            end,
+            pr = function() --[[ Line: 233 | Upvalues: W1 (copy) ]]
+                return W1:FindFirstChild("PRUpgrades").ShopContainer.ScrollingFrame
+            end,
+            jungle = function() --[[ Line: 236 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("Upgrades").ShopContainer.ScrollingFrame
+            end,
+            regrowth = function() --[[ Line: 237 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("Regrowth").ShopContainer.ScrollingFrame
+            end,
+            runes = function() --[[ Line: 238 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("RuneUpgrades").ShopContainer.ScrollingFrame
+            end,
+            ruby = function() --[[ Line: 239 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("RubyRunes").ShopContainer.ScrollingFrame
+            end,
+            sapphire = function() --[[ Line: 240 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("Sapphire").ShopContainer.ScrollingFrame
+            end,
+            sapphireP = function() --[[ Line: 241 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("Sapphire").ShopContainer.ScrollingFrame
+            end,
+            sRune = function() --[[ Line: 242 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("Sapphire").ShopContainer.ScrollingFrame
+            end,
+            construct = function() --[[ Line: 243 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("ConstructUpgrades").ShopContainer.ScrollingFrame
+            end,
+            inst = function() --[[ Line: 244 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("Unstable").ShopContainer.ScrollingFrame
+            end,
+            mush = function() --[[ Line: 245 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("Mushroom").ShopContainer.ScrollingFrame
+            end,
+            spore = function() --[[ Line: 246 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("Spores").ShopContainer.ScrollingFrame
+            end,
+            opal = function() --[[ Line: 247 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("OpalUpgrades").ShopContainer.ScrollingFrame
+            end,
+            bulb = function() --[[ Line: 248 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("BulbUpgrades").ShopContainer.ScrollingFrame
+            end,
+            gg = function() --[[ Line: 249 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("GG").ShopContainer.ScrollingFrame
+            end,
+            linker = function() --[[ Line: 250 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("Linker").ShopContainer.ScrollingFrame
+            end,
+            l4 = function() --[[ Line: 251 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("TrueAwaken").ShopContainer.ScrollingFrame
+            end,
+            relic = function() --[[ Line: 252 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("GauntletShop").ShopContainer.ScrollingFrame
+            end,
+            creation = function() --[[ Line: 253 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("Creation").ShopContainer.ScrollingFrame
+            end,
+            remnant2 = function() --[[ Line: 254 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("RemnantUpgrades").ShopContainer.ScrollingFrame
+            end,
+            destabilize = function() --[[ Line: 255 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("DestabilizeUpgrades").ShopContainer.ScrollingFrame
+            end,
+            un = function() --[[ Line: 256 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("UnUpgrades").ShopContainer.ScrollingFrame
+            end,
+            ["break"] = function() --[[ Line: 257 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("BreakthroughUpgrades").ShopContainer.ScrollingFrame
+            end,
+            discovery = function() --[[ Line: 258 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("DiscoveryUpgrades").ShopContainer.ScrollingFrame
+            end,
+            regen = function() --[[ Line: 259 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("Regeneration").ShopContainer.ScrollingFrame
+            end,
+            regenP = function() --[[ Line: 260 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("Regeneration").ShopContainer.ScrollingFrame
+            end,
+            regenP2 = function() --[[ Line: 261 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("Regeneration").ShopContainer.ScrollingFrame
+            end,
+            core = function() --[[ Line: 262 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("RemnantStackUpgrades").ShopContainer.ScrollingFrame
+            end,
+            cactus = function() --[[ Line: 263 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("CactusUpgrades").ShopContainer.ScrollingFrame
+            end,
+            water = function() --[[ Line: 264 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("Water").ShopContainer.ScrollingFrame
+            end,
+            vase = function() --[[ Line: 265 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("VaseUpgrades").ShopContainer.ScrollingFrame
+            end,
+            bone = function() --[[ Line: 266 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("BoneUpgrades").ShopContainer.ScrollingFrame
+            end,
+            doom = function() --[[ Line: 267 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("DoomSigils").ShopContainer.ScrollingFrame
+            end,
+            sand = function() --[[ Line: 268 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("SandUpgrades").ShopContainer.ScrollingFrame
+            end,
+            relic2 = function() --[[ Line: 269 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("GauntletShopD").ShopContainer.ScrollingFrame
+            end,
+            degen = function() --[[ Line: 270 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("Degeneration").ShopContainer.ScrollingFrame
+            end,
+            starFragment = function() --[[ Line: 271 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("SFUpgrades").ShopContainer.ScrollingFrame
+            end,
+            twilight = function() --[[ Line: 272 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("TwilightUpgrades").ShopContainer.ScrollingFrame
+            end,
+            midnight = function() --[[ Line: 273 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("MidnightUpgrades").ShopContainer.ScrollingFrame
+            end,
+            starFragmentS = function() --[[ Line: 274 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("SSFUpgrades").ShopContainer.ScrollingFrame
+            end,
+            cactusS = function() --[[ Line: 275 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("SSCUpgrades").ShopContainer.ScrollingFrame
+            end,
+            cactusToken = function() --[[ Line: 276 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("CactusTokenUpgrades").ShopContainer.ScrollingFrame
+            end,
+            trialCactus = function() --[[ Line: 277 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("CTUpgrades").ShopContainer.ScrollingFrame
+            end,
+            trialCharge = function() --[[ Line: 278 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("TrialCharge").ShopContainer.ScrollingFrame
+            end,
+            rareCactus = function() --[[ Line: 279 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("RareCactusUpgrades").ShopContainer.ScrollingFrame
+            end,
+            cactus1 = function() --[[ Line: 280 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("Cactus1Upgrades").ShopContainer.ScrollingFrame
+            end,
+            cactus2 = function() --[[ Line: 281 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("Cactus2Upgrades").ShopContainer.ScrollingFrame
+            end,
+            cactus3 = function() --[[ Line: 282 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("Cactus3Upgrades").ShopContainer.ScrollingFrame
+            end,
+            riftEnergy = function() --[[ Line: 283 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("RiftEnergy").ShopContainer.ScrollingFrame
+            end,
+            riftEssence = function() --[[ Line: 284 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("RiftEssence").ShopContainer.ScrollingFrame
+            end,
+            riftRune = function() --[[ Line: 285 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("RiftRuneUpgrades").ShopContainer.ScrollingFrame
+            end,
+            relic0 = function() --[[ Line: 286 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("GauntletShopR").ShopContainer.ScrollingFrame
+            end,
+            scam2 = function() --[[ Line: 287 | Upvalues: W2 (copy) ]]
+                return W2:FindFirstChild("ScamUpgrades").ShopContainer.ScrollingFrame
+            end,
+            basicS = function() --[[ Line: 290 | Upvalues: COOL (copy) ]]
+                return COOL:FindFirstChild("Upgrades").ShopContainer.ScrollingFrame
+            end,
+            perksS = function() --[[ Line: 291 | Upvalues: COOL (copy) ]]
+                return COOL:FindFirstChild("LevelPerks").ShopContainer.ScrollingFrame
+            end,
+            perks2S = function() --[[ Line: 292 | Upvalues: COOL (copy) ]]
+                return COOL:FindFirstChild("LevelPerks2").ShopContainer.ScrollingFrame
+            end,
+            automationS = function() --[[ Line: 293 | Upvalues: COOL (copy) ]]
+                return COOL:FindFirstChild("AutomationUpgrades").ShopContainer.ScrollingFrame
+            end,
+            prestigeS = function() --[[ Line: 294 | Upvalues: COOL (copy) ]]
+                return COOL:FindFirstChild("PrestigeUpgrades").ShopContainer.ScrollingFrame
+            end,
+            crystalS = function() --[[ Line: 295 | Upvalues: COOL (copy) ]]
+                return COOL:FindFirstChild("CrystalUpgrades").ShopContainer.ScrollingFrame
+            end,
+            factoryS = function() --[[ Line: 296 | Upvalues: COOL (copy) ]]
+                return COOL:FindFirstChild("Factory").ShopContainer.ScrollingFrame
+            end,
+            chargeS = function() --[[ Line: 297 | Upvalues: COOL (copy) ]]
+                return COOL:FindFirstChild("ChargeBonus").ShopContainer.ScrollingFrame
+            end,
+            assemblerS = function() --[[ Line: 298 | Upvalues: COOL (copy) ]]
+                return COOL:FindFirstChild("Assembler").ShopContainer.ScrollingFrame
+            end,
+            brick = function() --[[ Line: 299 | Upvalues: COOL (copy) ]]
+                return COOL:FindFirstChild("BrickUpgrades").ShopContainer.ScrollingFrame
+            end
+        }
+
+        for i = 1, 10 do
+            if not Quality:FindFirstChild("F" .. i .. "_Upgrades", 5) then
+                break
+            end
+
+            v8["9_F" .. i .. "C1"] = function() --[[ Line: 310 | Upvalues: Quality (copy), i (copy) ]]
+                return Quality:FindFirstChild("F" .. i .. "_Upgrades").ShopContainer.ScrollingFrame
+            end
+            v8["9_F" .. i .. "C2"] = function() --[[ Line: 311 | Upvalues: Quality (copy), i (copy) ]]
+                return Quality:FindFirstChild("F" .. i .. "_Perks").ShopContainer.ScrollingFrame
+            end
+            v8["9_F" .. i .. "C3"] = function() --[[ Line: 312 | Upvalues: Quality (copy), i (copy) ]]
+                return Quality:FindFirstChild("F" .. i .. "_Layer1Shop").ShopContainer.ScrollingFrame
+            end
+            v8["9_F" .. i .. "C4"] = function() --[[ Line: 313 | Upvalues: Quality (copy), i (copy) ]]
+                return Quality:FindFirstChild("F" .. i .. "_Layer2Shop").ShopContainer.ScrollingFrame
+            end
+            v8["9_F" .. i .. "C5"] = function() --[[ Line: 314 | Upvalues: Quality (copy), i (copy) ]]
+                return Quality:FindFirstChild("F" .. i .. "_Platinum").ShopContainer.ScrollingFrame
+            end
+            v8["9_F" .. i .. "C6"] = function() --[[ Line: 315 | Upvalues: Quality (copy), i (copy) ]]
+                return Quality:FindFirstChild("F" .. i .. "_Layer3Shop").ShopContainer.ScrollingFrame
+            end
+            v8["9_F" .. i .. "Auto"] = function() --[[ Line: 316 | Upvalues: Quality (copy), i (copy) ]]
+                return Quality:FindFirstChild("F" .. i .. "_Auto").ShopContainer.ScrollingFrame
+            end
+        end
+    end
+
+    if t2[p1] then
+        return t2[p1]
+    end
+
+    local v12 = nil
+
+    pcall(function() --[[ Line: 323 | Upvalues: v12 (ref), v8 (ref), p1 (copy) ]]
+        v12 = v8[p1]()
+    end)
+
+    if v12 then
+        t2[p1] = v12
+
+        return v12
+    end
+
+    local count = 0
+
+    while not v12 and count < 10 do
+        print(p1)
+        pcall(function() --[[ Line: 333 | Upvalues: v12 (ref), v8 (ref), p1 (copy) ]]
+            v12 = v8[p1]()
+        end)
+        task.wait(1)
+        count = count + 1
+    end
+end
+
+colors = {
+    basic = Color3.new(0, 0.564706, 0),
+    perk = Color3.new(0, 0.396078, 0.564706),
+    prestige = Color3.new(0, 0.619608, 0.568627),
+    platinum = Color3.new(0.662745, 0.772549, 0.768627),
+    crystal = Color3.new(0.439216, 0.25098, 0.423529),
+    grasshop = Color3.new(0.32549, 0.345098, 0.356863),
+    steelie = Color3.new(0.533333, 0.564706, 0.584314),
+    flower = Color3.new(0.4, 0.286275, 0.513725),
+    antigrass = Color3.new(0.0431373, 0.211765, 0.462745),
+    anonymity = Color3.new(0.462745, 0, 0),
+    liquefy = Color3.new(0.356863, 0.356863, 0.356863),
+    rocketFuel = Color3.new(0.649073, 1, 0.979919),
+    momentum = Color3.new(0.594949, 0.33463, 0.0142214),
+    stars = Color3.new(255/255, 255/255, 255/255),
+    moonstone = Color3.new(0.638514, 0.702525, 0.999084),
+    fun = Color3.new(0.956558, 1, 0.0404211),
+    sfrgt = Color3.new(0.670039, 1, 0.0346227),
+    bluestige = Color3.new(0, 0.266667, 1),
+    plasma = Color3.new(0.584314, 0, 1)
+}
+currOrder = {
+    grass = 1,
+    pp = 2,
+    crystals = 3,
+    steel = 4,
+    antigrass = 5,
+    anonymityPoints = 6,
+    oil = 7,
+    rocketFuel = 8,
+    momentum = 9,
+    stars = 10,
+    moonstone = 11,
+    fun = 12,
+    sfrgt = 13,
+    flowers = 1,
+    flowers2 = 2,
+    grass2 = 21,
+    ruby = 22,
+    rRune = 23,
+    sapphire = 21,
+    sRune = 22,
+    grassS = 1,
+    ppS = 2,
+    crystalsS = 3,
+    perksS = 4,
+    perks2S = 5,
+    steelS = 6,
+    brick = 7
+}
+ContextActionService:BindAction("ConstPicker", Picker.Picker, false, Enum.KeyCode.F)
+
+local W1 = v1:WaitForChild("W1")
+local t3 = {}
+
+for k, v in pairs(TreeItems.Items) do
+    local v9 = TreeItem:Clone()
+
+    v9.Identifier.Value = k
+    v9.Icon.Image = v.img
+    v9.Parent = W1:WaitForChild("DarkTree").ShopContainer.ScrollingFrame
+    v.obj = v9
+    t3[k] = v9
+
+    local Stats6 = Data.ImportantData.Stats
+
+    Stats6.loadStage = Stats6.loadStage + 1
+    task.wait()
+end
+
+local LunarItem = workspace.Prefabs.LunarItem
+
+for k, v in pairs(LunarItems.Items) do
+    local v10 = LunarItem:Clone()
+
+    v10.Identifier.Value = k
+    v10.Activate.Icon.Image = v.img
+    v10.Parent = W1:WaitForChild("LunarObelisk").ShopContainer.ScrollingFrame
+    v10.LayoutOrder = v.order
+
+    local Stats6 = Data.ImportantData.Stats
+
+    Stats6.loadStage = Stats6.loadStage + 1
+    task.wait()
+end
+
+local CentralizeItem = workspace.Prefabs.CentralizeItem
+
+for k, v in pairs(CurrencyTypes.Currencies) do
+    if v.centralize then
+        local v11 = CentralizeItem:Clone()
+
+        v11.Identifier.Value = k
+        v11.CentralizeButton.Icon.Image = v.icon
+        v11.Parent = W1:WaitForChild("VoidObelisk").ShopContainer.ScrollingFrame
+        v11.LayoutOrder = v.centOrder or 0
+
+        local Stats6 = Data.ImportantData.Stats
+
+        Stats6.loadStage = Stats6.loadStage + 1
+        task.wait()
+    end
+end
+
+local ScrollingFrame = v1.MobileUI.UI.Settings.Menus.Tier.ScrollingFrame
+
+for v12, v13 in spairs(GrassTypes.Types, function(p1, p2, p3) --[[ Line: 465 ]]
+    return sortTiers(p1[p3], p1[p2])
+end) do
+    if v13.displayName then
+        local v14 = TierItem:Clone()
+
+        if v13.icon then
+            v14.Icon.Image = v13.icon
+        elseif v13.texture then
+            v14.Icon.Image = v13.texture
+        else
+            v14.Icon.Image = "rbxassetid://8215940165"
+            v14.Icon.ImageColor3 = v13.color
+        end
+
+        v14.Toggle.Toggle.DisplayId.Value = v12
+        v14.Tier.Text = v13.displayName
+        v14.Parent = ScrollingFrame
+
+        local Stats6 = Data.ImportantData.Stats
+
+        Stats6.loadStage = Stats6.loadStage + 1
+        task.wait()
+    end
+end
+
+local count = 0
+local count2 = 0
+
+for v15, v16 in spairs(Upgrades.Basic, function(p1, p2, p3) --[[ Line: 491 ]]
+    return sortUpgrades(p1[p3], p1[p2])
+end) do
+    local v17 = BasicUpgrade:Clone()
+    local Variables = v17.Variables
+
+    Variables.Identifier.Value = v15
+    v17.LayoutOrder = count
+    v16.level = 0
+    v16.highestLevel = 0
+    v16.testOrder = count
+    v16.maxSpend = 1
+    count = count + 1
+
+    if v16.autoBuyReq and (v16.autoBuyReq == "l1" or (v16.autoBuyReq == "l2" or (v16.autoBuyReq == "l3" or (v16.autoBuyReq == "l4" or (v16.autoBuyReq == "l5" or (v16.autoBuyReq == "l6" or v16.autoBuyReq == "l7")))))) then
+        if v16.currency == "solarFlares" then
+            Variables.Autobuy.Value = true
+        else
+            Variables.Autobuy.Value = false
+        end
+    end
+
+    if v16.unlockCondition then
+        v17.Display.Unlock.Text = "<b><stroke color=\"#000000\" joins=\"miter\" thickness=\"5\">" .. v16.unlockText .. "</stroke></b>"
+    else
+        v17.Display.Unlock.Visible = false
+        v17.Display.Lock.Visible = false
+    end
+
+    v17.Display.CostDisplay.Base.Icon.Image = CurrencyTypes.Currencies[v16.currency].icon
+    v17.Display.CostDisplay.Base.Image = CurrencyTypes.Currencies[v16.currency].base
+    v17.Display.Gradient.ImageColor3 = Color3.new(0.219608, 0.219608, 0.219608)
+    v17.Display.TierDisplay.Text = v16.ti ~= nil and "<b><stroke color=\"#000000\" joins=\"miter\" thickness=\"7\">" .. v16.ti .. "</stroke></b>" or ""
+
+    if v16.currency == "antigrass" or (v16.currency == "anonymityPoints" or (v16.currency == "oil" or v16.currency == "fun")) then
+        v17.Display.CostDisplay.Font = "DenkOne"
+        v17.Display.LevelDisplay.Font = "DenkOne"
+    end
+
+    if v16.currency == "unnaturalgrass" or (v16.currency == "normalityPoints" or v16.currency == "clouds") then
+        v17.Display.CostDisplay.Font = "FredokaOne"
+        v17.Display.LevelDisplay.Font = "FredokaOne"
+    end
+
+    v17.Base.Image = v16.baseImg or "rbxassetid://8566935278"
+    v17.Base.Icon.Image = v16.iconImg or "rbxassetid://8566934968"
+
+    if v16.extraImg then
+        v17.Base.Extra.Image = v16.extraImg
+        v17.Base.Extra.Visible = true
+    end
+
+    v17.ImageColor3 = colors[v16.tier] or Color3.new(255/255, 255/255, 255/255)
+    v16.object = v17
+
+    if currOrder[v16.currency] then
+        v17.LayoutOrder = v17.LayoutOrder + 1000 * currOrder[v16.currency]
+    end
+
+    if (v16.world or 1) == 9 then
+        v17.LayoutOrder = v17.LayoutOrder + 1000 * CurrencyTypes.Currencies[v16.currency].order
+    end
+
+    if v16.tier == "stars" then
+        if v16.shopType == "autoBranch" then
+            v17.Parent = GetUpgradeParent(v16.tier).Automation
+        end
+
+        if v16.shopType == "speedBranch" then
+            v17.Parent = GetUpgradeParent(v16.tier).Speed
+        end
+
+        if v16.shopType == "progBranch" then
+            v17.Parent = GetUpgradeParent(v16.tier).Progression
+        end
+
+        if v16.shopType == "ultBranch" then
+            v17.Parent = GetUpgradeParent(v16.tier).Ultimate
+        end
+
+        v16.location = "space"
+
+        local v22 = v16.positionX * 200
+        local v23 = 250 + v16.positionY * 200
+
+        v17.Size = UDim2.new(0, 225, 0, 225)
+        v17.Position = UDim2.new(0.5, v22, 0, v23)
+        v17.ZIndex = 5
+
+        if v16.prereq ~= nil then
+            local v24 = workspace.Prefabs.Pivot:Clone()
+
+            Variables.ChartLine.Value = v24
+            Variables.Prereq.Value = v16.prereq
+
+            local v25 = Upgrades.Basic[v16.prereq]
+            local v26 = math.abs(v16.positionX - v25.positionX)
+            local v27 = math.abs(v16.positionY - v25.positionY)
+            local v28 = math.sqrt(v26 ^ 2 + v27 ^ 2)
+
+            v24.Parent = v17.Parent.Mask
+            v24.Position = UDim2.new(0.5, v22, 0.5, v23 - 700 - (if v26 == 0 then 200 else 0))
+            v24.Line.Size = UDim2.new(0, v28 * 200, 0, 25)
+
+            if v26 == 0 then
+                v24.Rotation = 90
+            else
+                local v32 = math.deg((math.acos((v26 ^ 2 + v28 ^ 2 - v27 ^ 2) / (2 * v26 * v28))))
+
+                if v16.positionX >= 0 then
+                    v24.Rotation = -180 + v32
+                else
+                    v24.Rotation = v32 * -1
+                end
+            end
+        end
+    elseif v16.tier == "solar" or (v16.tier == "loop" or (v16.tier == "lime" or v16.tier == "arrow")) then
+        if v16.shopType == "basic" then
+            v17.Parent = GetUpgradeParent(v16.tier).Basic
+        end
+
+        if v16.shopType == "advanced" then
+            v17.Parent = GetUpgradeParent(v16.tier).Advanced
+        end
+
+        if v16.shopType == "auto" then
+            v17.Parent = GetUpgradeParent(v16.tier).Auto
+        end
+
+        if v16.shopType == "filler" then
+            v17.Parent = GetUpgradeParent(v16.tier).Filler
+        end
+
+        if v16.shopType == "flare" then
+            v17.Parent = GetUpgradeParent(v16.tier).Flare
+        end
+
+        if v16.shopType == "sunstone" then
+            v17.Parent = GetUpgradeParent(v16.tier).Sun
+        end
+
+        if v16.shopType == "gs" then
+            v17.Parent = GetUpgradeParent(v16.tier).GoldenStars
+        end
+
+        v17.Size = UDim2.new(0, 280, 0, 280)
+        v17.Position = UDim2.new(0, 220 + v16.positionX * 280, 0.5, v16.positionY * 280)
+        v17.ZIndex = 5
+
+        if v16.shopType == "loopBranch" then
+            v17.Size = UDim2.new(0, 225, 0, 225)
+            v17.Position = UDim2.new(0.5, v16.positionX * 200, 0, 250 + v16.positionY * 200)
+            v17.ZIndex = 5
+
+            if v16.tier == "loop" then
+                v17.Parent = GetUpgradeParent("loop")
+            end
+
+            if v16.tier == "lime" then
+                v17.Parent = GetUpgradeParent("lime")
+            end
+
+            if v16.tier == "arrow" then
+                v17.Parent = GetUpgradeParent("arrow")
+            end
+        end
+    elseif v16.shopType == "basic" then
+        v17.Parent = GetUpgradeParent(v16.tier)
+    else
+        v17.Parent = GetUpgradeParent(v16.shopType)
+    end
+
+    v17.ShopUpgrade.Enabled = true
+    v17.Visible = false
+
+    local Stats6 = Data.ImportantData.Stats
+
+    Stats6.loadStage = Stats6.loadStage + 1
+    count2 = count2 + 1
+
+    if count2 >= 10 then
+        task.wait()
+        count2 = 0
+    end
+end
+
+Loader.LoadBars()
+GetUpgradeParent("automation").UIGridLayout:ApplyLayout()
+
+local ScrollingFrame2 = W1:WaitForChild("Accomplishments").Acc.ShopContainer.ScrollingFrame
+
+for v37, v38 in spairs(Accomplishments.Basic, function(p1, p2, p3) --[[ Line: 700 ]]
+    return sortAcc(p1[p3], p1[p2])
+end) do
+    local v39 = Accomplishment:Clone()
+    local Variables = v39.Variables
+
+    Variables.BonusPerLevel.Value = v38.bonusPerLevel
+    Variables.Description.Value = v38.desc
+    Variables.DisplayName.Value = v38.displayName
+    Variables.RewardType.Value = v38.rewardType or "grass"
+    Variables.BonusPerLevel.Value = v38.bonusPerLevel or 0
+    Variables.LevelCap.Value = v38.maxLevel or 0
+    Variables.Identifier.Value = v37
+    Variables.Tier.Value = v38.tier
+    v39.ImageColor3 = colors[v38.tier] or Color3.new(255/255, 255/255, 255/255)
+    v38.object = v39
+    v39.Accomplishment.Disabled = false
+    v39.Parent = ScrollingFrame2
+
+    local Stats6 = Data.ImportantData.Stats
+
+    Stats6.loadStage = Stats6.loadStage + 1
+    task.wait()
+end
+
+local Grid = W1:WaitForChild("ConstellationBoard").Board.Grid
+local ConstellationSlot = workspace.Prefabs.ConstellationSlot
+
+for i = -2, 8 do
+    for j = -2, 8 do
+        local v41 = ConstellationSlot:Clone()
+
+        ConstellationGrid.Slots["" .. i .. "/" .. j] = {
+            c = 0,
+            t = 0,
+            s = nil,
+            o = v41,
+            info = {
+                icon = v41.Icon,
+                info = v41.Info
+            },
+            row = i,
+            col = j
+        }
+        v41.Row.Value = i
+        v41.Col.Value = j
+        v41.Parent = Grid
+
+        local Stats6 = Data.ImportantData.Stats
+
+        Stats6.loadStage = Stats6.loadStage + 1
+    end
+
+    task.wait()
+end
+
+ConstellationGrid.ResizeGrid("7")
+ConstellationGrid.UpdateGrid()
+
+local Board = W1:WaitForChild("ConstellationBoard").Board
+local Constellation = workspace.Prefabs.Constellation
+local t4 = {
+    Board.LineShop.Generators,
+    Board.LineShop.Stabilizers,
+    Board.LineShop.Reinforcement,
+    Board.LineShop.Moon,
+    Board.LineShop.Rings,
+    Board.LineShop.Amplifier,
+    Board.LineShop.Arcs,
+    Board.ArcShop.Capacitors,
+    Board.ArcShop.Reducers,
+    Board.ArcShop.Bulwark,
+    Board.ArcShop.Magnifier,
+    Board.ArcShop.Echo,
+    Board.LineShop.Bolt,
+    Board.AdvShop.Prism,
+    Board.AdvShop.Ray,
+    Board.AdvShop.Grid,
+    Board.AdvShop.Galaxy,
+    Board.AdvShop.Star,
+    Board.AdvShop.Improver,
+    Board.AdvShop.Sword,
+    Board.AdvShop.Soul
+}
+
+for k, v in pairs(ConstellationGrid.Constellations) do
+    for k2, v6 in pairs(v) do
+        local v42 = Constellation:Clone()
+
+        v42.Type.Value = v6.cstype
+        v42.Tier.Value = v6.tier
+        v42.Base.Icon.Image = v6.icon
+        v42.Base.Icon.ImageColor3 = v6.color
+        v42.CostDisplay.Text = "<b>" .. LethalNum.getString(v6.cost) .. "</b>"
+
+        if v6.resource == "dark" then
+            v42.CostDisplay.TextColor3 = Color3.new(0.427451, 0.509804, 0.776471)
+        end
+
+        v42.Parent = t4[v6.cstype]
+        v42.LayoutOrder = v6.tier
+
+        local Stats6 = Data.ImportantData.Stats
+
+        Stats6.loadStage = Stats6.loadStage + 1
+    end
+
+    task.wait()
+end
+
+for k, v in pairs(GalaxyGen.Galaxies) do
+    Data.ImportantData.UpgradeLevels.dungeonStats[k] = {
+        highestCleared = 0,
+        timesCleared = 0,
+        timesClearedD = 0,
+        pity = 0
+    }
+
+    local Stats6 = Data.ImportantData.Stats
+
+    Stats6.loadStage = Stats6.loadStage + 1
+    task.wait()
+end
+
+script.Parent.ColliderFollowPlayer.Enabled = true
+
+local v43 = 0
+local v44 = 0
+local v45 = 0
+local v46 = 0
+local v47 = 0
+local RunService = game:GetService("RunService")
+local Remotes = ReplicatedStorage.Remotes
+local v48 = 0
+local v49 = false
+local SendStats = Remotes:WaitForChild("SendStats")
+
+local function UpdateStats(p1) --[[ UpdateStats | Line: 828 | Upvalues: Data (copy), Portaling (copy), Solarians (copy), Multipliers (copy), v49 (ref), v48 (ref), ChangeVisual (copy), Currencies (copy), MapTeles (copy), TabManager (copy) ]]
+    for v1, v2 in p1.statistics do
+        if Data.ImportantData.Stats[v1] ~= nil and v1 ~= "equipped" then
+            if typeof(v2) == "table" then
+                for v3, v4 in v2 do
+                    if Data.ImportantData.Stats[v1][v3] ~= nil then
+                        Data.ImportantData.Stats[v1][v3] = v4
+                    end
+                end
+
+                continue
+            end
+
+            Data.ImportantData.Stats[v1] = v2
+        end
+    end
+
+    local v5 = "" .. Data.ImportantData.Stats.world
+
+    for v6, v7 in p1.statistics.pins[v5] do
+        Data.ImportantData.Stats.currPins[v6].curr = v7
+    end
+
+    for v8, v9 in p1.statistics.mpins[v5] do
+        Data.ImportantData.Stats.multiPins[v8].multi = v9
+    end
+
+    for v10, v11 in p1.statistics.tpins[v5] do
+        Data.ImportantData.Stats.telePins[v10].tele = v11
+    end
+
+    for v12, v13 in p1.statistics.lpins[v5] do
+        Data.ImportantData.Stats.levelPins[v12].level = v13
+    end
+
+    if p1.statistics.fightingStats then
+        local fightingStats = p1.statistics.fightingStats
+        local PortalingState = Portaling.PortalingState
+
+        PortalingState.fighting = p1.statistics.fighting
+        PortalingState.updateSC = true
+        PortalingState.stage = p1.statistics.stage
+        PortalingState.soulsPenalty = fightingStats.soulsPenality
+        PortalingState.soulsAdd = fightingStats.soulsAdd
+        PortalingState.soulsMulti = fightingStats.soulsMulti
+        PortalingState.soulsDisabled = fightingStats.soulsDisabled
+        PortalingState.soulsReset = fightingStats.soulsReset
+        PortalingState.enemyScaling = fightingStats.enemyScaling
+        PortalingState.enemyHPScaling = fightingStats.enemyHPScaling
+        PortalingState.fightingSpeed = fightingStats.fightingSpeed
+        PortalingState.combatTime = fightingStats.combatTime
+        PortalingState.enemyTime = fightingStats.enemyTime
+        PortalingState.playerStats = {
+            health = fightingStats.playerStats.health,
+            maxHealth = fightingStats.playerStats.maxHealth,
+            offense = fightingStats.playerStats.offense,
+            defense = fightingStats.playerStats.defense
+        }
+        PortalingState.enemyStats = {
+            health = fightingStats.enemyStats.health,
+            maxHealth = fightingStats.enemyStats.maxHealth,
+            offense = fightingStats.enemyStats.offense,
+            defense = fightingStats.enemyStats.defense,
+            souls = fightingStats.enemyStats.souls
+        }
+    end
+
+    if p1.statistics.solarianMultis then
+        local solarianMultis = p1.statistics.solarianMultis
+        local SolarianMultis = Solarians.SolarianMultis
+
+        SolarianMultis.fill = solarianMultis.fill
+        SolarianMultis.genSpd = solarianMultis.genSpd
+        SolarianMultis.maxForm = solarianMultis.maxForm
+        SolarianMultis.collecting = solarianMultis.collecting
+        SolarianMultis.forming = solarianMultis.forming
+        SolarianMultis.restoring = solarianMultis.restoring
+    end
+
+    if p1.statistics.constCaps then
+        for v14, v15 in p1.statistics.constCaps do
+            Multipliers.ConstCaps[v14].curr = v15.curr
+            Multipliers.ConstCaps[v14].cap = v15.cap
+        end
+    end
+
+    if p1.statistics.equipped then
+        for v16, v17 in Data.ImportantData.Stats.equipped do
+            Data.ImportantData.Stats.equipped[v16] = p1.statistics.equipped[v16]
+        end
+    end
+
+    Data.ImportantData.Stats.starTier = p1.statistics.stTier
+    v49 = true
+    v48 = 1
+    Data.ImportantData.Stats.updateGrass = true
+    Data.ImportantData.Stats.tslsu = 0
+    ChangeVisual.Change(Data.ImportantData.Stats.location)
+    Currencies.UpdatePins()
+    Currencies.UpdateMultiPin()
+    Currencies.updateHelpSections()
+    MapTeles.UpdateTeles()
+
+    local world = Data.ImportantData.Stats.world
+
+    if world == 1 then
+        Currencies.updateGHMilestones()
+        Currencies.updateAGHMilestones()
+        Currencies.updateGSMilestones()
+        Currencies.updateGJMilestones()
+        Currencies.updatePLMilestones()
+        Currencies.updatePTGMilestones()
+        Currencies.updateSNMilestones()
+        Currencies.GTMilestones()
+
+        if Data.ImportantData.Stats.location == "darkForest" then
+            Data.ImportantData.Events.updateTree:Fire()
+        end
+    end
+
+    if world == 2 then
+        Currencies.TempleMilestones()
+        Currencies.TreeMilestones()
+        Currencies.TrueAwakenMilestones()
+        Currencies.SandstormMilestones()
+        Currencies.EpiphanyMilestones()
+        Currencies.MidMilestones()
+        Currencies.RiftMilestones()
+        Currencies.Cactus3Milestones()
+    end
+
+    if world == 8 then
+        Currencies.updateGH_8Milestones()
+    end
+
+    if world ~= 9 then
+        Data.updateColliderSize()
+        TabManager.ShowHideTabs()
+
+        return
+    end
+
+    for i = 1, 10 do
+        Currencies.QualityMilestones(i)
+    end
+
+    Data.updateColliderSize()
+    TabManager.ShowHideTabs()
+end
+
+SendStats.OnClientEvent:Connect(UpdateStats)
+
+local UpdateSettings = Remotes:WaitForChild("UpdateSettings")
+
+local function UpdateSettings2(p1) --[[ UpdateSettings | Line: 974 | Upvalues: Data (copy), Currencies (copy) ]]
+    for v1, v2 in p1.basic do
+        if Data.ImportantData.Misc.toggles[v1] then
+            Data.ImportantData.Misc.toggles[v1].state = v2
+        end
+    end
+
+    for v3, v4 in Data.ImportantData.Misc.tierSettings do
+        v4.state = v3 == p1.tierDisplayed
+    end
+
+    for v5, v6 in Data.ImportantData.Misc.displaySettings do
+        v6.state = v5 == p1.displayDisplayed
+    end
+
+    Currencies.UpdateToggles()
+    Currencies.UpdateTierSetting()
+    Currencies.UpdateDisplaySetting()
+    Currencies.UpdateTitleSetting()
+    Currencies.updateTierSettings()
+    Currencies.updateSettings()
+end
+
+UpdateSettings.OnClientEvent:Connect(UpdateSettings2)
+
+local UpdateMultipliers = Remotes:WaitForChild("UpdateMultipliers")
+
+local function UpdateMultipliers2(p1) --[[ UpdateMultipliers | Line: 997 | Upvalues: Data (copy) ]]
+    for v1, v2 in p1 do
+        Data.ImportantData.Multipliers[v1] = v2
+    end
+end
+
+UpdateMultipliers.OnClientEvent:Connect(UpdateMultipliers2)
+
+local UpdateSingleCurrency = Remotes:WaitForChild("UpdateSingleCurrency")
+
+local function IndivCurrency(p1) --[[ IndivCurrency | Line: 1005 | Upvalues: CurrencyTypes (copy) ]]
+    for v1, v2 in p1 do
+        local v3 = CurrencyTypes.Currencies[v1]
+
+        if v3 then
+            v3.amount = v2.a
+            v3.totalAmount = v2.t
+            v3.infinity = v2.i
+        end
+    end
+end
+
+UpdateSingleCurrency.OnClientEvent:Connect(IndivCurrency)
+
+local UpdateSingleUpgrade = Remotes:WaitForChild("UpdateSingleUpgrade")
+
+local function IndivUpgrades(p1) --[[ IndivUpgrades | Line: 1018 | Upvalues: Upgrades (copy) ]]
+    for v1, v2 in p1 do
+        local v3 = Upgrades.Basic[v1]
+
+        if v3 then
+            v3.level = v2.l
+            v3.highestLevel = v2.h
+        end
+    end
+end
+
+UpdateSingleUpgrade.OnClientEvent:Connect(IndivUpgrades)
+
+local UpdateUpgrades = Remotes:WaitForChild("UpdateUpgrades")
+local t5 = {}
+
+local function UpdateUpgrades2(p1) --[[ UpdateUpgrades | Line: 1031 | Upvalues: Upgrades (copy), Fields (copy), Accomplishments (copy), TreeItems (copy), LunarItems (copy), SingularityChart (copy), Solarians (copy), Synthesis (copy), GalaxyGen (copy), Data (copy), SolarChallenges (copy), ConstellationGrid (copy), SimpleShop (copy), PlanetRun (copy), Gauntlet (copy), CC (copy), InfoStore (copy), TabManager (copy), Currencies (copy), t5 (ref), v43 (ref) ]]
+    for v1, v2 in p1.upgrades do
+        if Upgrades.Basic[v1] then
+            for v3, v4 in v2 do
+                if v3 == "autoToggle" then
+                    Upgrades.Basic[v1].auto = v4
+
+                    continue
+                end
+
+                if Upgrades.Basic[v1][v3] then
+                    Upgrades.Basic[v1][v3] = v4
+                end
+
+                if v3 == "infinited" then
+                    Upgrades.Basic[v1].infinited = v4
+                end
+
+                if v3 == "infinitedC" then
+                    Upgrades.Basic[v1].infinitedC = v4
+                end
+
+                if v3 == "isVisible" then
+                    Upgrades.Basic[v1].isVisible = v4
+                end
+
+                if v3 == "unlocked" then
+                    Upgrades.Basic[v1].unlocked = v4
+                end
+
+                if v3 == "autobuyUnlocked" then
+                    Upgrades.Basic[v1].autobuyUnlocked = v4
+                end
+
+                if v3 == "disabled" then
+                    Upgrades.Basic[v1].disabled = v4
+                end
+            end
+        end
+    end
+
+    for v5, v6 in p1.fields do
+        if Fields.Fields[v5] then
+            for v7, v8 in v6 do
+                if Fields.Fields[v5][v7] then
+                    Fields.Fields[v5][v7] = v8
+                end
+            end
+        end
+    end
+
+    for v9, v10 in p1.accomplishments do
+        local v11 = Accomplishments.Basic[v9]
+
+        if v11 then
+            v11.metGoal = v10.metGoal
+            v11.level = v10.level
+        end
+    end
+
+    for v12, v13 in p1.trials do
+        local v14 = Accomplishments.Trial[v12]
+
+        if v14 then
+            v14.metGoal = v13.metGoal
+            v14.level = v13.level
+        end
+    end
+
+    for v15, v16 in p1.tree do
+        local v17 = TreeItems.Items[v15]
+
+        if v17 then
+            v17.level = v16.a
+        end
+    end
+
+    for v18, v19 in p1.lunar do
+        local v20 = LunarItems.Items[v18]
+
+        if v20 then
+            v20.level = v19.level
+            v20.activated = v19.activated
+            v20.progress = v19.progress
+            v20.prev = v19.prev
+        end
+    end
+
+    for v21, v22 in p1.schart do
+        local v23 = SingularityChart.Upgrades[v21]
+
+        if v23 then
+            v23.level = v22.level
+            v23.unlocked = v22.unlocked
+        end
+    end
+
+    for v24, v25 in p1.solBars do
+        local v26 = Solarians.Bars[v24]
+
+        if v26 then
+            v26.level = v25.l
+            v26.totalLevel = v25.t
+            v26.progress = v25.p
+            v26.rankProgress = v25.s
+            v26.allocated = v25.a
+            v26.rank = v25.r
+            v26.o = v25.o or 0
+
+            if v25.bp then
+                v26.baseProgress = v25.bp
+                v26.resourceMulti = v25.rm
+                v26.displayName = v25.dn
+            end
+        end
+    end
+
+    for v27, v28 in p1.soul do
+        local v29 = Solarians.SoulItems[v27]
+
+        if v29 then
+            v29.level = v28.l
+
+            if v28.d then
+                v29.displayBonus = v28.d
+            end
+        end
+    end
+
+    for v30, v31 in p1.compression do
+        local v32 = Solarians.CompressionItems[v30]
+
+        if v32 then
+            v32.level = v31.l
+        end
+    end
+
+    for v33, v34 in p1.compBars do
+        local v35 = Solarians.CompressionBars[v33]
+
+        if v35 then
+            v35.progress = v34.p
+            v35.totalProgress = v34.tp
+            v35.completions = v34.c
+            v35.owned = v34.o
+            v35.totalOwned = v34.t
+        end
+    end
+
+    for v36, v37 in p1.synthesis do
+        local v39 = Synthesis.SynthesisSlots[tonumber(v36)]
+
+        if v39 then
+            v39.progress = v37.t
+            v39.tier = v37.t
+            v39.current = v37.c
+            v39.level = v37.l
+            v39.levelProgress = v37.x
+        end
+    end
+
+    for v40, v41 in p1.discovered do
+        local v42 = GalaxyGen.Items[v40]
+
+        if v42 then
+            v42.discovered = v41.d
+            v42.filter = v41.f
+            v42.ml = v41.m
+            v42.mp = v41.p
+        end
+    end
+
+    for v432, v44 in p1.dungeonStats do
+        local v45 = Data.ImportantData.UpgradeLevels.dungeonStats[v432]
+
+        if v45 then
+            v45.highestCleared = v44.h
+            v45.timesCleared = v44.c
+            v45.timesClearedD = v44.d
+        end
+    end
+
+    for v46, v47 in p1.challenges do
+        local v48 = SolarChallenges.Challenges[v46]
+
+        if v48 then
+            v48.completions = v47.c
+        end
+    end
+
+    for v49, v50 in p1.clayouts do
+        local v52 = ConstellationGrid.Layouts[tonumber(v49)]
+
+        if v52 then
+            v52.r = v50.r
+            v52.w = v50.w
+        end
+    end
+
+    for v53, v54 in p1.simpleShop do
+        local v55 = SimpleShop.Items[v53]
+
+        if v55 then
+            v55.left = v54.r
+        end
+    end
+
+    for v56, v57 in p1.boosts do
+        local v58 = SimpleShop.Boosts[v56]
+
+        if v58 then
+            v58.owned = v57.o
+            v58.timeRemaining = v57.t
+            v58.stacks = v57.s or 0
+        end
+    end
+
+    local v59 = false
+
+    for v60, v61 in p1.pr do
+        local v62 = PlanetRun.Levels[v60]
+
+        if v62 then
+            for v63, v64 in v61 do
+                local v65 = v62.levels[v63]
+
+                if v65 then
+                    v65.c = v64.c
+                    v65.dc = v64.dc
+                    v65.b = v64.b
+                end
+            end
+
+            v59 = true
+        end
+    end
+
+    for v66, v67 in p1.gauntlet do
+        local v68 = Gauntlet.Areas[v66]
+
+        if v68 then
+            v68.currentLevel = v67.cl
+            v68.highestLevel = v67.hl
+            v68.enemiesDefeated = v67.d
+        end
+    end
+
+    for v69, v70 in p1.artifacts do
+        local v71 = Gauntlet.Artifacts[v69]
+
+        if v71 then
+            v71.level = v70.l
+            v71.extra = v70.e
+            v71.asc = v70.a
+        end
+    end
+
+    for v72, v73 in p1.cc do
+        local v74 = CC.Creations[v72]
+
+        if v74 then
+            v74.completed = v73.c
+
+            if v72 == "p" then
+                InfoStore.Store.purity = v73.c
+            end
+
+            if v72 == "r" then
+                InfoStore.Store.regen = v73.c
+            end
+
+            if v72 == "g" then
+                InfoStore.Store.great = v73.c
+            end
+
+            if v72 == "d" then
+                InfoStore.Store.degen = v73.c
+            end
+
+            if v72 == "f" then
+                InfoStore.Store.found = v73.c
+            end
+        end
+    end
+
+    if Data.ImportantData.Stats.location == "pr" then
+        v59 = true
+    end
+
+    if v59 then
+        TabManager.UpdatePR()
+        Currencies.UpdatePRDisplays()
+    end
+
+    Data.updateColliderSize()
+    t5 = {}
+
+    for v75, v76 in Solarians.Bars do
+        table.insert(t5, v76)
+    end
+
+    table.sort(t5, function(p1, p2) --[[ Line: 1277 ]]
+        return (p1.o or 0) < (p2.o or 0)
+    end)
+    v43 = 1
+    Data.ImportantData.Events.updateUpgrades:Fire()
+    Data.ImportantData.Events.updateLunar:Fire()
+    Data.ImportantData.Events.updateCentralize:Fire()
+end
+
+UpdateUpgrades.OnClientEvent:Connect(UpdateUpgrades2)
+
+local UpdateDynamic = Remotes:WaitForChild("UpdateDynamic")
+
+local function UpdateDynamic2(p1) --[[ UpdateDynamic | Line: 1287 | Upvalues: Data (copy) ]]
+    for v1, v2 in p1 do
+        if Data.ImportantData.Dynamic[v1] then
+            Data.ImportantData.Dynamic[v1] = v2
+        end
+    end
+end
+
+UpdateDynamic.OnClientEvent:Connect(UpdateDynamic2)
+
+local UpdateCurrency = Remotes:WaitForChild("UpdateCurrency")
+
+local function UpdateCurrency2(p1) --[[ UpdateCurrency | Line: 1297 | Upvalues: CurrencyTypes (copy), Currencies (copy), Data (copy) ]]
+    for v1, v2 in p1 do
+        if CurrencyTypes.Currencies[v1] then
+            CurrencyTypes.Currencies[v1].amount = v2.amount
+            CurrencyTypes.Currencies[v1].totalAmount = v2.totalAmount
+            CurrencyTypes.Currencies[v1].gen = v2.gen or nil
+            CurrencyTypes.Currencies[v1].cap = v2.cap or nil
+            CurrencyTypes.Currencies[v1].infinity = v2.infinity
+            CurrencyTypes.Currencies[v1].autobuy = v2.autobuy
+            CurrencyTypes.Currencies[v1].popup = v2.popup
+        end
+    end
+
+    Currencies.UpdateCurrencyAmounts()
+    Data.ImportantData.Stats.updateGrass = true
+end
+
+UpdateCurrency.OnClientEvent:Connect(UpdateCurrency2)
+
+local UpdateCurrMisc = Remotes:WaitForChild("UpdateCurrMisc")
+
+local function UpdateCurrMisc2(p1) --[[ UpdateCurrMisc | Line: 1317 | Upvalues: Data (copy) ]]
+    for v1, v2 in p1 do
+        if Data.ImportantData.Currencies[v1] and typeof(Data.ImportantData.Currencies[v1]) ~= "table" then
+            Data.ImportantData.Currencies[v1] = v2
+        end
+    end
+
+    Data.ImportantData.Stats.updateGrass = true
+end
+
+UpdateCurrMisc.OnClientEvent:Connect(UpdateCurrMisc2)
+
+local UpdateMultis = Remotes:WaitForChild("UpdateMultis")
+
+local function UpdateMultis2(p1) --[[ UpdateMultis | Line: 1331 | Upvalues: CurrencyTypes (copy) ]]
+    for v1, v2 in p1 do
+        if CurrencyTypes.Multis[v1] then
+            CurrencyTypes.Multis[v1].multi = v2.multi
+        end
+    end
+end
+
+UpdateMultis.OnClientEvent:Connect(UpdateMultis2)
+
+local UpdateTeles = Remotes:WaitForChild("UpdateTeles")
+
+local function UpdateTeles2(p1) --[[ UpdateTeles | Line: 1341 | Upvalues: MapTeles (copy) ]]
+    for v1, v2 in p1 do
+        if MapTeles.Teles[v1] then
+            MapTeles.Teles[v1].v = v2.v
+        end
+    end
+
+    MapTeles.HideShowTeles()
+end
+
+UpdateTeles.OnClientEvent:Connect(UpdateTeles2)
+
+local UpdateAchievements = Remotes:WaitForChild("UpdateAchievements")
+
+local function UpdateAchievements2(p1) --[[ UpdateAchievements | Line: 1352 | Upvalues: Achievements (copy), Currencies (copy) ]]
+    for v1, v2 in p1 do
+        if Achievements.Items[v1] then
+            Achievements.Items[v1].earned = v2.e
+            Achievements.Items[v1].claimed = v2.c
+        end
+    end
+
+    Currencies.UpdateAchievements()
+end
+
+UpdateAchievements.OnClientEvent:Connect(UpdateAchievements2)
+
+local UpdateTitles = Remotes:WaitForChild("UpdateTitles")
+
+local function UpdateTitles2(p1) --[[ UpdateTitles | Line: 1364 | Upvalues: Titles (copy), Currencies (copy) ]]
+    for v1, v2 in p1 do
+        if Titles.Items[v1] then
+            Titles.Items[v1].u = v2.u
+        end
+    end
+
+    Currencies.UpdateTitleSetting()
+end
+
+UpdateTitles.OnClientEvent:Connect(UpdateTitles2)
+
+local UpdateInventory = Remotes:WaitForChild("UpdateInventory")
+
+local function UpdateInventory2(p1) --[[ UpdateInventory | Line: 1375 | Upvalues: Data (copy), GalaxyGen (copy) ]]
+    local t = {}
+
+    for v1, v2 in p1 do
+        t["" .. v1] = v2
+    end
+
+    for v3, v4 in p1 do
+        local v5 = Data.ImportantData.Dynamic.inventoryItems[v3]
+
+        if not v5 then
+            Data.ImportantData.Dynamic.inventoryItems[v3] = v4
+        end
+
+        if v5 then
+            v5.lvl = v4.lvl
+            v5.asc = v4.asc
+            v5.equippedSlot = v4.equippedSlot
+            v5.locked = v4.locked
+            v5.favorite = v4.favorite
+            v5.replica = v4.replica
+            v5.quantity = v4.quantity
+            v5.itemType = v4.itemType
+        end
+    end
+
+    for v6, v7 in Data.ImportantData.Dynamic.inventoryItems do
+        if not t["" .. v6] then
+            local v8 = Data.ImportantData.Dynamic.inventoryItems[v6]
+
+            if v8 and v8.obj then
+                v8.obj:Destroy()
+                v8.destroyed = true
+                Data.ImportantData.Dynamic.inventoryItems[v6] = nil
+            end
+        end
+    end
+
+    GalaxyGen.UpdateInventory()
+    GalaxyGen.UpdateSelected()
+    GalaxyGen.UpdatePlayerStats()
+    GalaxyGen.UpdateMasterySelected()
+    Data.ImportantData.Events.mastery:Fire()
+end
+
+UpdateInventory.OnClientEvent:Connect(UpdateInventory2)
+
+local UpdateConstellation = Remotes:WaitForChild("UpdateConstellation")
+
+local function UpdateConstellation2(p1) --[[ UpdateConstellation | Line: 1441 | Upvalues: ConstellationGrid (copy), Currencies (copy) ]]
+    for v1, v2 in p1.slots do
+        local v3 = ConstellationGrid.GetSlot(v2.r, v2.l)
+
+        if v3 then
+            v3.c = v2.c
+            v3.t = v2.t
+            v3.s = v2.s
+        end
+    end
+
+    if not p1.st then
+        ConstellationGrid.UpdateGrid()
+        Currencies.UpdateCG()
+        Currencies.UpdateConstellationStats()
+
+        return
+    end
+
+    local st = p1.st
+    local Effects = ConstellationGrid.Effects
+
+    Effects.totalGeneration = st.totalGeneration
+    Effects.arcs = st.arcs
+    Effects.arcsCap = st.arcsCap
+    Effects.arcsTaken = st.arcsTaken
+    Effects.totalInstability = st.totalInstability
+    Effects.totalICap = st.totalICap
+    Effects.bulwark = st.bulwark
+    Effects.magnify = st.magnify
+    Effects.darkmoon = st.darkmoon
+    Effects.totalLP = st.totalLP
+    Effects.totalR = st.totalR
+    Effects.totalDC = st.totalDC
+    Effects.stab = st.stab
+    Effects.rays = st.rays
+    Effects.star = st.star
+    Effects.sword = st.sword
+    Effects.soul = st.soul
+    Effects.instCap = st.instCap
+    ConstellationGrid.UpdateGrid()
+    Currencies.UpdateCG()
+    Currencies.UpdateConstellationStats()
+end
+
+UpdateConstellation.OnClientEvent:Connect(UpdateConstellation2)
+
+local UpdateLevels = Remotes:WaitForChild("UpdateLevels")
+
+local function UpdateLevels2(p1) --[[ UpdateLevels | Line: 1480 | Upvalues: CurrencyTypes (copy), InfoStore (copy), Currencies (copy) ]]
+    for v1, v2 in p1.l do
+        if CurrencyTypes.Levels[v1] and not CurrencyTypes.Levels[v1].inherit then
+            CurrencyTypes.Levels[v1].level = v2.level
+            CurrencyTypes.Levels[v1].progress = v2.progress
+            CurrencyTypes.Levels[v1].highestLevel = v2.highestLevel
+            CurrencyTypes.Levels[v1].goal = v2.goal
+            CurrencyTypes.Levels[v1].popup = v2.popup
+            CurrencyTypes.Levels[v1].popup2 = v2.popup2
+        end
+    end
+
+    for v3, v4 in p1.r do
+        if InfoStore.Resets[v3] and not InfoStore.Resets[v3].ignore then
+            InfoStore.Resets[v3].a = v4.a
+            InfoStore.Resets[v3].b = v4.b
+            InfoStore.Resets[v3].h = v4.h
+            InfoStore.Resets[v3].t = v4.t
+        end
+    end
+
+    Currencies.UpdateLevelBars()
+end
+
+UpdateLevels.OnClientEvent:Connect(UpdateLevels2)
+ReplicatedStorage.Remotes:WaitForChild("Amogus"):FireServer()
+
+local v50 = 0
+local v51 = 0
+
+local function onStepped(p1, p2) --[[ onStepped | Line: 1509 | Upvalues: v43 (ref), v50 (ref), v44 (ref), v45 (ref), v46 (ref), v47 (ref), Data (copy), Currencies (copy), GalaxyGen (copy), v51 (ref), SingularityChart (copy), InfoStore (copy), Multipliers (copy), TabManager (copy), Star (copy), TreeItems (copy), CurrencyTypes (copy), t3 (copy), LethalNum (copy), Portaling (copy), LunarItems (copy), CommonFunctions (copy), DailyReward (copy), Gauntlet (copy), MapTeles (copy), Notation (copy), Synthesis (copy), t5 (ref), Solarians (copy) ]]
+    v43 = v43 + p2
+    v50 = v50 + p2
+    v44 = v44 + p2
+    v45 = v45 + p2
+    v46 = v46 + p2
+    v47 = v47 + p2
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.tslsu = Stats.tslsu + p2
+    Currencies.UnstableConnection()
+
+    local init = Data.ImportantData.Stats.init
+    local location = Data.ImportantData.Stats.location
+
+    if v47 >= 3 then
+        v47 = 0
+        Currencies.UpdateGameProgress()
+    end
+
+    if Data.ImportantData.Stats.mastered == "none" then
+        Data.ImportantData.Stats.masteryTime = 0
+    else
+        local Stats2 = Data.ImportantData.Stats
+
+        Stats2.masteryTime = Stats2.masteryTime + p2
+
+        if Data.ImportantData.Stats.masteryTime >= 2 then
+            Data.ImportantData.Stats.masteryTime = 0
+            Data.ImportantData.Stats.mastered = "none"
+        end
+    end
+
+    GalaxyGen.UpdateMasteryVisual()
+
+    if Currencies.getDisplay().matLL.Parent == nil then
+        return
+    end
+
+    if Data.ImportantData.Stats.updateGrass then
+        Data.ImportantData.Stats.updateGrass = false
+        Currencies.updateGrass()
+        Currencies.updateGrassCap()
+        Currencies.UpdateLevelBars()
+
+        if Data.ImportantData.Events.updateOpenInfo then
+            Data.ImportantData.Events.updateOpenInfo()
+        end
+    end
+
+    if v51 > 0 then
+        v51 = v51 - p2
+    end
+
+    if v51 <= 0 and (v44 >= 1 or Data.ImportantData.Stats.calcMulti) then
+        v44 = 0
+        Data.ImportantData.Stats.calcMulti = false
+        v51 = 0.1
+    end
+
+    if v50 >= 1 then
+        v50 = 0
+        Data.ImportantData.Events.autobuy:Fire()
+    end
+
+    if SingularityChart.GetUnlocked("sol") or InfoStore.Resets.loop2.b > 0 then
+        GalaxyGen.EnemyCombat()
+    end
+
+    if Data.ImportantData.Stats.planetRun ~= "none" then
+        if Data.ImportantData.Stats.prTimerActive then
+            local Stats2 = Data.ImportantData.Stats
+
+            Stats2.prTimer = Stats2.prTimer + p2 * 1000
+        end
+
+        Currencies.UpdatePRStopwatch()
+    end
+
+    if v43 >= 1 and Data.ImportantData.Stats.tslsu < 30 then
+        v43 = 0
+
+        if Data.ImportantData.Stats.saveCooldown > 0 then
+            local Stats2 = Data.ImportantData.Stats
+
+            Stats2.saveCooldown = Stats2.saveCooldown - 1
+        end
+
+        for v1, v2 in InfoStore.Resets do
+            if v2.world == Data.ImportantData.Stats.world or v2.world == -1 then
+                v2.t = v2.t + 1
+            end
+        end
+
+        Data.ImportantData.Misc.frameRate = 1 / p2
+
+        local v3 = Multipliers.getMulti()
+
+        if Data.ImportantData.Stats.minigameTime > 0 then
+            local Stats2 = Data.ImportantData.Stats
+
+            Stats2.minigameTime = Stats2.minigameTime - 1
+            Currencies.UpdateMinigameTimer()
+
+            if Data.ImportantData.Stats.minigameTime == 0 and TabManager.menus.bits.Visible then
+                GalaxyGen.DeleteDungeon()
+            end
+        end
+
+        if location == "pr" then
+            Currencies.PRPhysics()
+            Data.ImportantData.Stats.speedRun4 = Data.ImportantData.Stats.prPhysics == "sr4"
+        end
+
+        Currencies.updateDailyTimer()
+        Currencies.HourlyTimer()
+
+        if Data.ImportantData.Stats.world ~= 1 and Currencies.Displays.trialTimer.Visible then
+            Currencies.Displays.trialTimer.Visible = false
+        end
+
+        if Data.ImportantData.Stats.world ~= 2 and Currencies.Displays.ctrialTimer.Visible then
+            Currencies.Displays.ctrialTimer.Visible = false
+        end
+
+        Currencies.updateSettings()
+
+        if Data.ImportantData.Stats.world == 1 then
+            Currencies.updateAccDislay()
+
+            if InfoStore.Resets.galactic.b > 0 or InfoStore.Resets.loop1.b > 0 then
+                Star.UpdateStar()
+
+                if Data.ImportantData.Stats.pDif <= 0 and InfoStore.Resets.galactic.b > 0 then
+                    local Stats2 = Data.ImportantData.Stats
+
+                    Stats2.autoAccTime = Stats2.autoAccTime + v3.autoAccRate
+                end
+
+                local count = 0
+
+                while Data.ImportantData.Stats.autoAccTime >= 14400 and count < 15 do
+                    local Stats2 = Data.ImportantData.Stats
+
+                    Stats2.autoAccTime = Stats2.autoAccTime - 14400
+                    Data.ImportantData.Stats.autoAccTime = math.min(Data.ImportantData.Stats.autoAccTime, 216000)
+                    count = count + 1
+                end
+
+                if InfoStore.Resets.zeroghgs.a >= Data.ImportantData.Reqs.dt then
+                    if typeof(Data.ImportantData.Stats.dfProgress) == "table" then
+                        Data.ImportantData.Stats.dfProgress = 0
+                    end
+
+                    local Stats2 = Data.ImportantData.Stats
+
+                    Stats2.dfProgress = Stats2.dfProgress + 1
+
+                    if Multipliers.getUpgradeLevel("Sdf") > 0 then
+                        for k, v in pairs(TreeItems.Items) do
+                            v.level = CurrencyTypes.GetCurrencyAmt("darkFruits")
+                            t3[k].InvestButton.Visible = false
+                        end
+                    else
+                        for k, v in pairs(TreeItems.Items) do
+                            t3[k].InvestButton.Visible = true
+                        end
+                    end
+
+                    Currencies.updateDF()
+                    Currencies.updateDarkFruits()
+                end
+            end
+
+            Data.ImportantData.Events.updateUpgrades:Fire()
+
+            if InfoStore.Resets.constellation.b > 0 then
+                if LethalNum.isGreater(v3.instGen, LethalNum.new(0, 0)) then
+                    Data.ImportantData.Stats.inst = LethalNum.add(Data.ImportantData.Stats.inst, v3.instGen)
+                elseif LethalNum.isGreater(v3.cooling, LethalNum.new(0, 0)) then
+                    if LethalNum.isGreaterE(v3.cooling, Data.ImportantData.Stats.inst) then
+                        Data.ImportantData.Stats.inst = LethalNum.new(0, 0)
+                    else
+                        Data.ImportantData.Stats.inst = LethalNum.subtract(Data.ImportantData.Stats.inst, v3.cooling)
+                    end
+                end
+
+                Data.ImportantData.Stats.inst = Currencies.Normalize(Data.ImportantData.Stats.inst)
+
+                if LethalNum.isGreater(v3.instCap, Data.ImportantData.Stats.inst) and Data.ImportantData.Stats.constChanged then
+                    Data.ImportantData.Stats.constChanged = false
+                end
+
+                if Data.ImportantData.Stats.constChanged then
+                    Data.ImportantData.Stats.constChanged = false
+                end
+
+                if LethalNum.isGreaterE(Data.ImportantData.Stats.inst, v3.instCap) then
+                    Data.ImportantData.Stats.inst = v3.instCap
+                end
+
+                if location == "planet" or location == "star" then
+                    Currencies.UpdateCG()
+                end
+            end
+
+            if location == "normal" or (location == "anti" or (location == "un" or (location == "blue" or init))) then
+                Data.ImportantData.Events.updateAccs:Fire()
+                Data.ImportantData.Events.updateStats()
+            end
+
+            if location == "planet" or (location == "star" or init) then
+                Data.ImportantData.Events.updateConst:Fire()
+            end
+
+            if InfoStore.Resets.supernova.b > 0 and location == "star" then
+                Currencies.UpdateSol()
+            end
+
+            if InfoStore.Resets.grasshop.b > 7 and location == "normal" then
+                Currencies.updateChargerDisplay()
+            end
+
+            if InfoStore.Resets.grassJump.a >= Data.ImportantData.Reqs.gj.dc and location == "planet" then
+                Currencies.UpdateDarkChargerDisplay()
+            end
+
+            if InfoStore.Resets.loop2.b > 0 and location == "loop" then
+                Currencies.UpdateLimeChargerDisplay()
+            end
+
+            if Multipliers.getUpgradeLevel("refinery") > 0 and Data.ImportantData.Stats.pDif <= 0 then
+                Currencies.updateRocketFuelProd()
+            end
+
+            local perkEarn = Multipliers.getMulti().perkEarn
+
+            if LethalNum.isGreaterE(LethalNum.add(Data.ImportantData.Stats.perksSpent, CurrencyTypes.GetCurrencyAmt("perks")), (LethalNum.multiply(perkEarn, CurrencyTypes.Levels.level.level))) then
+                LethalNum.new(0, 0)
+            end
+
+            if Data.ImportantData.Stats.pTrial > 0 then
+                Currencies.Displays.trialTimer.Visible = true
+
+                local Stats2 = Data.ImportantData.Stats
+
+                Stats2.pTime = Stats2.pTime - 1
+                Currencies.UpdatePlanetTimer()
+            elseif Currencies.Displays.trialTimer.Visible then
+                Currencies.Displays.trialTimer.Visible = false
+            end
+
+            if location == "normal" then
+                Currencies.updateFoundryDisplay()
+            end
+
+            if location == "normal" or init then
+                Currencies.updateGrasshopDisplay()
+                Currencies.updatePlatinum()
+            end
+
+            if location == "anti" or init then
+                Currencies.updateGrassskipDisplay()
+            end
+
+            if location == "un" or init then
+                Currencies.updateGrassJumpDisplay()
+                Currencies.updateSGJDisplay()
+            end
+
+            if location == "planet" or init then
+                Currencies.updatePlatinum()
+            end
+
+            if location == "star" or init then
+                Currencies.UpdateMagic()
+                Currencies.updateFlowers()
+            end
+
+            if location == "blue" or init then
+                Currencies.GrassTouch()
+            end
+
+            if Data.ImportantData.Stats.currentVisualST ~= Data.ImportantData.Stats.visualST then
+                Star.UpdateStarColors()
+            end
+
+            local _ = Data.ImportantData.Stats.currentSGJ > 0
+
+            if SingularityChart.GetUnlocked("s16") or Multipliers.getUpgradeLevel("l3d") > 0 then
+                Data.ImportantData.Events.soul1:Fire(true)
+            end
+
+            if SingularityChart.GetUnlocked("s31") then
+                Data.ImportantData.Events.soul2:Fire(true)
+            end
+
+            if Data.ImportantData.Stats.prog >= 1 or InfoStore.Resets.loop2.b > 0 then
+                LethalNum.isGreaterE(GalaxyGen.CombatState.gold, LethalNum.new(1, 0))
+                LethalNum.isGreaterE(GalaxyGen.CombatState.shard, LethalNum.new(1, 0))
+                GalaxyGen.UpdateCR()
+                GalaxyGen.UpdateC()
+            end
+
+            if Multipliers.getUpgradeLevel("Sssg") > 0 then
+                local Accomplish = Data.ImportantData.Stats.Accomplish
+
+                Accomplish.timeSSG = Accomplish.timeSSG + 1
+
+                if Data.ImportantData.Stats.Accomplish.timeSSG < 0 then
+                    Data.ImportantData.Stats.Accomplish.timeSSG = 0
+                end
+            end
+
+            if Portaling.PortalingState.updateSC then
+                Portaling.PortalingState.updateSC = false
+                Currencies.UpdateSolarChallenges()
+            end
+
+            local lunarRate = v3.lunarRate
+
+            if lunarRate and LethalNum.isGreater(lunarRate, LethalNum.new(0, 0)) then
+                for k, v in pairs(LunarItems.Items) do
+                    if v.activated or Multipliers.getUpgradeLevel("Slac") > 0 then
+                        v.progress = Currencies.Normalize(v.progress)
+                        v.progress = LethalNum.add(v.progress, lunarRate)
+
+                        if LethalNum.isGreaterE(v.progress, LunarItems.GetCost(v)) then
+                            local v6 = CommonFunctions.additiveBuyMax(v.progress, v.baseReq, v.inc, v.level)
+                            local v7 = LethalNum.subtract(CommonFunctions.additiveScaling(v.baseReq, v.inc, LethalNum.add(v.level, v6)), CommonFunctions.additiveScaling(v.baseReq, v.inc, v.level))
+
+                            v.level = LethalNum.add(v.level, v6)
+                            v.prev = v6
+                            v.progress = LethalNum.new(0, 0)
+                            v.progress = LethalNum.subtract(v.progress, v7)
+                        end
+
+                        continue
+                    end
+
+                    v.prev = LethalNum.new(0, 0)
+                end
+            end
+
+            if InfoStore.Resets.grassJump.a >= Data.ImportantData.Reqs.gj.ts then
+                Data.ImportantData.Stats.starProgress = LethalNum.add(Data.ImportantData.Stats.starProgress, v3.starGS)
+
+                if location == "planet" then
+                    Star.UpdateStar()
+                    Currencies.updateStardust()
+                end
+            end
+
+            if location == "planet" or (location == "star" or init) then
+                Currencies.UpdateConstellationStats()
+            end
+
+            if location == "grassland" or location == "darkland" then
+                TabManager.UpdateDE()
+            end
+
+            if location == "normal" or init then
+                Currencies.updatePrestigeDisplay()
+                Currencies.updateCrystallizeDisplay()
+                Currencies.updateSteelieDisplay()
+                Currencies.updateRocketPartDisplay()
+                Currencies.updateGalacticDisplay()
+                Currencies.updateMiscFactoryDisplay()
+                DailyReward.updateDailyReward()
+            end
+
+            if location == "anti" or init then
+                Currencies.updateAnonymityDisplay()
+                Currencies.updateLiquefyDisplay()
+                Currencies.updateFunifyDisplay()
+            end
+
+            if location == "un" or init then
+                Currencies.updateNormalityDisplay()
+                Currencies.updateVaporizeDisplay()
+            end
+
+            if location == "space" or (location == "darkForest" or (location == "lightForest" or init)) then
+                Currencies.updateAGrasshopDisplay()
+                Currencies.updateAstralBonuses()
+                Currencies.updateMoonstone()
+                Currencies.updateSacrificeDisplay()
+                Currencies.updateIRDisplay()
+
+                if CurrencyTypes.GetCentralized("darkFruits") or init then
+                    Data.ImportantData.Events.updateTree:Fire()
+                end
+
+                Currencies.UpdateAPDesc()
+                Currencies.UpdateLO()
+                Data.ImportantData.Events.updateLunar:Fire()
+                Data.ImportantData.Events.updateCentralize:Fire()
+            end
+
+            if location == "planet" or init then
+                Currencies.updatePlanetoids()
+                Currencies.updateAstrolabeDisplay()
+                Currencies.updateQuadrantDisplay()
+                Currencies.updatePlanetaryDisplay()
+                Currencies.updateConstellationDisplay()
+            end
+
+            if location == "planet" or (location == "star" or init) then
+                Currencies.updateSupernovaDisplay()
+                Currencies.UpdateTrialTotals()
+            end
+
+            Currencies.updateBestSupernova()
+
+            if location == "star" or init then
+                Currencies.updateSolarObelisk()
+                Currencies.updateBlackholes()
+                Currencies.updateSNDisplay()
+            end
+
+            if location == "blue" or init then
+                Currencies.Bluestige()
+                Currencies.Plasma()
+            end
+
+            if location == "grassland" or (location == "loop" or init) then
+                Currencies.EndGameDesc()
+            end
+        end
+
+        if Data.ImportantData.Stats.world == 2 then
+            Currencies.Linker()
+
+            if location == "jungle" or init then
+                Currencies.Rune()
+                Currencies.Ruby()
+                Currencies.Sapphire()
+                Currencies.Awaken()
+            end
+
+            if location == "cavern" or init then
+                Currencies.Opal()
+                Currencies.Bulb()
+                Currencies.Absorb()
+            end
+
+            if location == "chamber" or init then
+                Currencies.Collapse()
+                Currencies.RemStack()
+                Currencies.Destabilize()
+            end
+
+            if location == "upperTemple" or init then
+                Currencies.Twilight2()
+                Currencies.Midnight2()
+            end
+
+            local v8
+
+            if location == "temple" or init then
+                Currencies.TrueAwaken()
+                Data.ImportantData.Events.cc:Fire()
+                Currencies.UpdateCC()
+                v8 = true
+            else
+                v8 = false
+            end
+
+            if location == "understand" or init then
+                Currencies.Breakthrough()
+                Currencies.Discovery()
+                Currencies.Epiphany()
+            end
+
+            if location == "desert" or init then
+                Currencies.Vase()
+                Currencies.Sandstorm()
+                Currencies.Fossilize()
+                v8 = true
+            end
+
+            if location == "beach" or init then
+                v8 = true
+            end
+
+            if location == "chamber2" or init then
+                Currencies.GreatRift()
+                v8 = true
+            end
+
+            if location == "cactus" or init then
+                Currencies.CactusTrialEnd()
+                Currencies.Cactus1()
+                Currencies.Cactus2()
+                Currencies.Cactus3()
+                Currencies.TrialBonuses()
+            end
+
+            if location == "doom" or init then
+                Currencies.Scam2()
+            end
+
+            if v8 then
+                Currencies.UpdateGauntlet()
+
+                for v9, v10 in Gauntlet.Artifacts do
+                    v10.infoUpdate()
+                end
+
+                for v11, v12 in Gauntlet.Areas do
+                    v12.infoUpdate()
+                end
+            end
+
+            if Data.ImportantData.Stats.cTrial > 0 then
+                Currencies.Displays.ctrialTimer.Visible = true
+                Currencies.UpdateCTTimer()
+            elseif Currencies.Displays.ctrialTimer.Visible then
+                Currencies.Displays.ctrialTimer.Visible = false
+            end
+
+            if LethalNum.isGreaterE(v3.convRate, LethalNum.new(1, 0)) then
+                Currencies.StabilityDevice()
+            end
+        end
+
+        if Data.ImportantData.Stats.world == 8 then
+            if location == "normalS" or init then
+                Currencies.Prestige_8()
+            end
+
+            if Random.new():NextNumber(0, 300) <= 1 then
+                TabManager.menus.radical.Visible = true
+            end
+        end
+
+        if Data.ImportantData.Stats.world == 9 then
+            for i = 1, 10 do
+                if location == "9_F" .. i then
+                    Currencies.QualityUpdate(i)
+                end
+            end
+        end
+
+        Data.ImportantData.Stats.init = false
+        Currencies.UpdateUIOverlay()
+        Data.ImportantData.Events.updateUpgrades:Fire()
+
+        local Accomplish = Data.ImportantData.Stats.Accomplish
+
+        Accomplish.clockTime = Accomplish.clockTime + 1
+
+        local Accomplish2 = Data.ImportantData.Stats.Accomplish
+
+        Accomplish2.totalTime = Accomplish2.totalTime + 1
+
+        local Accomplish3 = Data.ImportantData.Stats.Accomplish
+
+        Accomplish3.fsTime = Accomplish3.fsTime + 1
+
+        if Data.ImportantData.Stats.Accomplish.fsTime >= 1209600 then
+            Data.ImportantData.Stats.Accomplish.fsTime = 1209600
+        end
+
+        if Data.ImportantData.Stats.upgradecd > 0 then
+            local Stats2 = Data.ImportantData.Stats
+
+            Stats2.upgradecd = Stats2.upgradecd - 1
+        end
+
+        if Data.ImportantData.Stats.serverSetTimer >= 0 then
+            local Stats2 = Data.ImportantData.Stats
+
+            Stats2.serverSetTimer = Stats2.serverSetTimer - 1
+            Currencies.updateServerCountdown()
+
+            if Data.ImportantData.Stats.serverSetTimer == 0 then
+                Data.ImportantData.Stats.serverSetTimer = -1
+            end
+        end
+
+        if location == "normal" then
+            Currencies.UpdateFlowerRespec()
+        end
+
+        Currencies.UpdateTimeWarp()
+
+        local Stats2 = Data.ImportantData.Stats
+
+        Stats2.gpsTime = Stats2.gpsTime + 1
+
+        if Data.ImportantData.Stats.gpsTime >= 10 then
+            Data.ImportantData.Stats.gpsTime = 0
+            Data.ImportantData.Stats.gps = LethalNum.divide(Data.ImportantData.Stats.tempGPS, LethalNum.new(10, 0))
+            Data.ImportantData.Stats.tempGPS = LethalNum.new(0, 0)
+        end
+
+        local Stats3 = Data.ImportantData.Stats
+
+        Stats3.dailyTimeRemaining = Stats3.dailyTimeRemaining - 1
+        Data.ImportantData.Stats.hourlyTimeRemaining = math.max(0, Data.ImportantData.Stats.hourlyTimeRemaining - 1)
+
+        if Data.ImportantData.Stats.dailyTimeRemaining < 0 then
+            Data.ImportantData.Stats.dailyTimeRemaining = 0
+        end
+
+        Currencies.UpdateScreenStats()
+        Currencies.UpdatePins()
+        MapTeles.UpdateTeles()
+        Notation.Info.notation = if Data.ImportantData.Misc.toggles.sci.state then "sci" else "standard"
+
+        if Data.ImportantData.Stats.slotLoaded then
+            TabManager.ShowHideTabs()
+
+            if location == "snow" then
+                TabManager.UpdateSynth()
+                Synthesis.UpdateSyn()
+            end
+        end
+
+        if Currencies.getDisplay().allCurrencies.Visible then
+            Currencies.allCurrencies()
+        end
+    end
+
+    if v46 >= 0.05 then
+        v46 = 0
+        Portaling.Portaling()
+    end
+
+    if v45 >= 0.1 then
+        v45 = 0
+
+        local v15 = Multipliers.getMulti()
+
+        if SingularityChart.GetUnlocked("sol") then
+            for k, v in pairs(t5) do
+                local v16
+
+                if LethalNum.isGreaterE(v.allocated, LethalNum.new(1, 0)) then
+                    local v18 = LethalNum.multiply(LethalNum.new(1, 0), Data.ImportantData.Stats.solarianPower)
+
+                    v16 = if v.powerType == 0 then LethalNum.multiply(v18, Solarians.SolarianMultis.collecting) else v18
+
+                    if v.powerType == 1 then
+                        v16 = LethalNum.multiply(v16, Solarians.SolarianMultis.forming)
+                    end
+
+                    if v.powerType == 2 then
+                        v16 = LethalNum.multiply(v16, Solarians.SolarianMultis.restoring)
+                    end
+
+                    local v22 = LethalNum.multiply(v.allocated, v16)
+
+                    if Data.ImportantData.Stats.Accomplish.solTicks > 0 then
+                        v22 = LethalNum.multiply(v22, Data.ImportantData.Stats.Accomplish.solTickSpeed)
+                    end
+
+                    v.progRate = LethalNum.copy(v22)
+                    v.progress = LethalNum.add(v.progress, v22)
+                end
+
+                if v.updateLoop then
+                    v.updateLoop()
+                end
+            end
+
+            if LethalNum.isGreater(Data.ImportantData.Stats.solarianCap, LethalNum.multiply(Data.ImportantData.Stats.solarianMax, 10)) or LethalNum.isGreater(Data.ImportantData.Stats.solarians, LethalNum.multiply(Data.ImportantData.Stats.solarianMax, 10)) then
+                for k, v in pairs(Solarians.Bars) do
+                    v.allocated = LethalNum.new(0, 0)
+                end
+
+                Data.ImportantData.Stats.solarians = LethalNum.copy(Data.ImportantData.Stats.solarianMax)
+                Data.ImportantData.Stats.solarianCap = LethalNum.copy(Data.ImportantData.Stats.solarianMax)
+            end
+
+            if Data.ImportantData.Stats.Accomplish.solTicks > 0 and LethalNum.isGreater(Data.ImportantData.Stats.Accomplish.solTickSpeed, LethalNum.new(1, 0)) then
+                local Accomplish = Data.ImportantData.Stats.Accomplish
+
+                Accomplish.solTicks = Accomplish.solTicks - LethalNum.toNumber(Data.ImportantData.Stats.Accomplish.solTickSpeed) / 10
+
+                if Data.ImportantData.Stats.Accomplish.solTicks < 0 then
+                    Data.ImportantData.Stats.Accomplish.solTicks = 0
+                end
+            end
+
+            Currencies.UpdateSCButton()
+
+            if Data.ImportantData.Stats.bestStage >= 10 then
+                local compRate = v15.compRate
+
+                if Data.ImportantData.Stats.Accomplish.solTicks > 0 then
+                    compRate = LethalNum.multiply(compRate, Data.ImportantData.Stats.Accomplish.solTickSpeed)
+                end
+
+                Solarians.CompressionBars["1"].progress = LethalNum.add(Solarians.CompressionBars["1"].progress, compRate)
+                Solarians.CompressionBars["1"].lastProg = compRate
+
+                for k, v in pairs(Solarians.CompressionBars) do
+                    if LethalNum.isGreaterE(v.progress, v.goal) then
+                        local v25 = LethalNum.floor(LethalNum.divide(v.progress, v.goal))
+
+                        v.completions = LethalNum.add(v.completions, v25)
+
+                        if k == "1" then
+                            CurrencyTypes.AddCurrency("compSol", v25)
+                        else
+                            v.owned = LethalNum.add(v.owned, v25)
+                        end
+
+                        v.totalOwned = LethalNum.add(v.totalOwned, v25)
+                        v.progress = LethalNum.new(0, 0)
+
+                        if v.into ~= nil then
+                            local v26 = Solarians.CompressionBars[v.into]
+
+                            v26.progress = LethalNum.add(v26.progress, v25)
+                            v26.totalProgress = LethalNum.add(v26.totalProgress, v25)
+                            v26.lastProg = v25
+                        end
+                    end
+                end
+            end
+
+            if Data.ImportantData.Stats.bestStage >= 140 then
+                Data.ImportantData.Events.synth:Fire()
+            end
+
+            Data.ImportantData.Events.updateSolarians:Fire()
+        end
+
+        Currencies.UpdateSol()
+    end
+
+    local _ = Multipliers.getMulti().maxWarps
+end
+
+RunService.Stepped:Connect(onStepped)
+Currencies.UpdateVersion()
+print(Data.ImportantData.Stats.loadStage)
+Data.ImportantData.Stats.upgradesLoaded = true
+Data.ImportantData.Stats.playerId = game.Players.LocalPlayer.UserId
+script.Parent.ColliderFollowPlayer.Enabled = true
