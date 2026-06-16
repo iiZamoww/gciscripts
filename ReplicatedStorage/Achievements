@@ -1,0 +1,1515 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LethalNum = require(ReplicatedStorage.LethalNum)
+
+return {
+    Items = {
+        ["-1"] = {
+            display = "Early Gamer",
+            icon = "rbxassetid://17209751572",
+            badgeId = 2125824869,
+            world = 1,
+            secret = true,
+            order = -10,
+            desc = "Played during the game\'s early days",
+            curr = "flowers",
+            reward = LethalNum.new(1, 4),
+            condition = function(p1) --[[ condition | Line: 17 ]]
+                return false
+            end
+        },
+        ["0"] = {
+            display = "Welcome",
+            icon = "rbxassetid://17209753484",
+            badgeId = 2125905724,
+            world = 1,
+            order = 0,
+            desc = "Join the game",
+            curr = "flowers",
+            reward = LethalNum.new(1, 2),
+            condition = function(p1) --[[ condition | Line: 30 ]]
+                return true
+            end
+        },
+        ["1"] = {
+            display = "Prestige",
+            icon = "rbxassetid://17209750943",
+            badgeId = 2125823794,
+            world = 1,
+            order = 1,
+            desc = "Do your first prestige at level 31",
+            curr = "flowers",
+            reward = LethalNum.new(2, 2),
+            condition = function(p1) --[[ condition | Line: 43 ]]
+                return p1.Currency.resets.prestige.b > 0
+            end
+        },
+        ["2"] = {
+            display = "Crystallize",
+            icon = "rbxassetid://17209750477",
+            badgeId = 2125823799,
+            world = 1,
+            order = 2,
+            desc = "Do your first crystallize at level 101",
+            curr = "flowers",
+            reward = LethalNum.new(3, 2),
+            condition = function(p1) --[[ condition | Line: 56 ]]
+                return p1.Currency.resets.crystallize.b > 0
+            end
+        },
+        ["3"] = {
+            display = "Grasshop",
+            icon = "rbxassetid://17209752117",
+            badgeId = 2125828657,
+            world = 1,
+            order = 3,
+            desc = "Do your first grasshop at level 201",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 69 ]]
+                return p1.Currency.resets.grasshop.b > 0
+            end
+        },
+        ["4"] = {
+            display = "Steelie",
+            icon = "rbxassetid://17210287604",
+            badgeId = 2125829512,
+            world = 1,
+            order = 4,
+            desc = "Do your first steelie at 8 grasshops",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 82 ]]
+                return if p1.Currency.resets.steelie.b > 0 or p1.Currency.resets.starTier.a > 0 then true else p1.Stats.gameWon
+            end
+        },
+        ["5"] = {
+            display = "Charge",
+            icon = "rbxassetid://17209753171",
+            badgeId = 2125873088,
+            world = 1,
+            order = 5,
+            desc = "Unlock the charger in the factory",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 95 | Upvalues: LethalNum (copy) ]]
+                return LethalNum.isGreaterE(p1.Currency.curr.charge.totalAmount, LethalNum.new(1, 0))
+            end
+        },
+        ["6"] = {
+            display = "Generator",
+            icon = "rbxassetid://17209754565",
+            badgeId = 2126311328,
+            world = 1,
+            order = 6,
+            desc = "Unlock the generator in the factory",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 108 ]]
+                return p1.UpgradeLevels.generic.generator.level > 0
+            end
+        },
+        ["7"] = {
+            display = "Assembler",
+            icon = "rbxassetid://17209754814",
+            badgeId = 2126311369,
+            world = 1,
+            order = 7,
+            desc = "Unlock the assembler in the factory",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 121 ]]
+                return p1.UpgradeLevels.generic.assembler.level > 0
+            end
+        },
+        ["8"] = {
+            display = "Decelerator",
+            icon = "rbxassetid://17209752941",
+            badgeId = 2125873089,
+            world = 1,
+            order = 8,
+            desc = "Unlock the decelerator in the factory",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 134 ]]
+                return p1.UpgradeLevels.generic.decelerator.level > 0
+            end
+        },
+        ["9"] = {
+            display = "Refinery",
+            icon = "rbxassetid://17209755033",
+            badgeId = 2126311412,
+            world = 1,
+            order = 9,
+            desc = "Unlock the refinery in the factory",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 147 ]]
+                return p1.UpgradeLevels.generic.refinery.level > 0
+            end
+        },
+        ["10"] = {
+            display = "Launch Pad",
+            icon = "rbxassetid://17209755282",
+            badgeId = 2126311463,
+            world = 1,
+            order = 10,
+            desc = "Unlock the launch pad in the factory",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 160 ]]
+                return p1.UpgradeLevels.generic.launchPad.level > 0
+            end
+        },
+        ["11"] = {
+            display = "Oil Rig",
+            icon = "rbxassetid://17209755768",
+            badgeId = 2126313535,
+            world = 1,
+            order = 11,
+            desc = "Unlock the oil rig in the factory",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 173 ]]
+                return p1.UpgradeLevels.generic.oilRig.level > 0
+            end
+        },
+        ["28"] = {
+            display = "Star Accumulator",
+            icon = "rbxassetid://117738150503068",
+            badgeId = 2127159362,
+            world = 1,
+            order = 11.1,
+            desc = "Unlock the star accumulator in the factory",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 186 ]]
+                return p1.UpgradeLevels.generic.starAccumulator.level > 0
+            end
+        },
+        ["12"] = {
+            display = "Anonymity",
+            icon = "rbxassetid://17209752345",
+            badgeId = 2125863966,
+            world = 1,
+            order = 12,
+            desc = "Do your first anonymity within the anti realm at anti level 31",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 199 ]]
+                return p1.Currency.resets.anonymity.b > 0
+            end
+        },
+        ["13"] = {
+            display = "Liquefy",
+            icon = "rbxassetid://17209752558",
+            badgeId = 2125863970,
+            world = 1,
+            order = 13,
+            desc = "Do your first liquefy within the anti realm at anti level 101",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 212 ]]
+                return p1.Currency.resets.liquefy.b > 0
+            end
+        },
+        ["14"] = {
+            display = "Rocket Part",
+            icon = "rbxassetid://17209753962",
+            badgeId = 2126232202,
+            world = 1,
+            order = 14,
+            desc = "Create your first rocket part",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 225 ]]
+                return p1.Currency.resets.rocketPart.b > 0
+            end
+        },
+        ["15"] = {
+            display = "Galactic",
+            icon = "rbxassetid://17209754254",
+            badgeId = 2126232210,
+            world = 1,
+            order = 15,
+            desc = "Do your first galactic after reaching 10 rocket parts",
+            curr = "flowers",
+            reward = LethalNum.new(2.5, 3),
+            condition = function(p1) --[[ condition | Line: 238 ]]
+                return p1.Currency.resets.galactic.b > 0
+            end
+        },
+        ["16"] = {
+            display = "Grass-Skip",
+            icon = "rbxassetid://17209756068",
+            badgeId = 2126735882,
+            world = 1,
+            order = 16,
+            desc = "Do your first grass-skip at anti level 201 after doing a galactic",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 251 ]]
+                return p1.Currency.resets.grassskip.b > 0
+            end
+        },
+        ["17"] = {
+            display = "Funify",
+            icon = "rbxassetid://17209757452",
+            badgeId = 2126735899,
+            world = 1,
+            order = 17,
+            desc = "Do your first funify at grass-skip 8",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 264 ]]
+                return p1.Currency.resets.funify.b > 0
+            end
+        },
+        ["18"] = {
+            display = "Fundry",
+            icon = "rbxassetid://17209757822",
+            badgeId = 2126735948,
+            world = 1,
+            order = 18,
+            desc = "Unlock the fundry in the funny machine",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 277 ]]
+                return if p1.UpgradeLevels.generic.fundry.level > 0 or p1.Currency.resets.starTier.a > 0 then true else p1.Stats.gameWon
+            end
+        },
+        ["19"] = {
+            display = "SFRGT Generator",
+            icon = "rbxassetid://17209773543",
+            badgeId = 2126735955,
+            world = 1,
+            order = 19,
+            desc = "Unlock the SFRGT generator in the funny machine",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 290 ]]
+                return if p1.UpgradeLevels.generic.sfrgtGenerator.level > 0 or p1.Currency.resets.starTier.a > 0 then true else p1.Stats.gameWon
+            end
+        },
+        ["20"] = {
+            display = "Zero Grasshop Galactic",
+            icon = "rbxassetid://17209773192",
+            badgeId = 2126735911,
+            world = 1,
+            order = 20,
+            desc = "Reach galactic with zero grasshops",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 303 ]]
+                return if p1.Currency.resets.lowestgh.a <= 0 then p1.Currency.resets.galactic.b > 0 else false
+            end
+        },
+        ["21"] = {
+            display = "Recelerator",
+            icon = "rbxassetid://17209757099",
+            badgeId = 2127159334,
+            world = 1,
+            order = 21,
+            desc = "Unlock the recelerator in the funny machine",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 316 ]]
+                return if p1.UpgradeLevels.generic.recelerator.level > 0 or p1.Currency.resets.starTier.a > 0 then true else p1.Stats.gameWon
+            end
+        },
+        ["22"] = {
+            display = "Normality",
+            icon = "rbxassetid://17209756445",
+            badgeId = 2127159339,
+            world = 1,
+            order = 22,
+            desc = "Do your first normality within the unnatral realm at unnatural level 31",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 329 ]]
+                return p1.Currency.resets.normality.b > 0
+            end
+        },
+        ["23"] = {
+            display = "Vaporizer",
+            icon = "rbxassetid://17209756838",
+            badgeId = 2127159343,
+            world = 1,
+            order = 23,
+            desc = "Unlock the vaporizer within the unnatral realm at unnatural level 101",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 342 | Upvalues: LethalNum (copy) ]]
+                return LethalNum.isGreaterE(p1.Currency.curr.clouds.totalAmount, LethalNum.new(1, 0))
+            end
+        },
+        ["24"] = {
+            display = "Planetoid",
+            icon = "rbxassetid://17209758331",
+            badgeId = 2127159346,
+            world = 1,
+            order = 24,
+            desc = "Unlock planetoid at 30 grass-skips with 0 grasshops",
+            curr = "flowers",
+            reward = LethalNum.new(1, 3),
+            condition = function(p1) --[[ condition | Line: 355 ]]
+                return if p1.Currency.resets.zeroghgs.a >= 30 or p1.Currency.resets.starTier.a > 0 then true else p1.Stats.gameWon
+            end
+        },
+        ["25"] = {
+            display = "Astrolabe",
+            icon = "rbxassetid://17209759736",
+            badgeId = 2127159347,
+            world = 1,
+            order = 25,
+            desc = "Do your first astrolabe within the planetoid at planetoid level 31",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 368 ]]
+                return p1.Currency.resets.astrolabe.b > 0
+            end
+        },
+        ["26"] = {
+            display = "Quadrant",
+            icon = "rbxassetid://17210287836",
+            badgeId = 2127159348,
+            world = 1,
+            order = 26,
+            desc = "Do your first quadrant within the planetoid at planetoid level 101",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 381 ]]
+                return p1.Currency.resets.quadrant.b > 0
+            end
+        },
+        ["27"] = {
+            display = "Dark Tree",
+            icon = "rbxassetid://17209758682",
+            badgeId = 2127159356,
+            world = 1,
+            order = 27,
+            desc = "Unlock the dark tree at 36 grass-skips with 0 grasshops",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 394 ]]
+                return if p1.Currency.resets.zeroghgs.a >= 36 or p1.Currency.resets.starTier.a > 0 then true else p1.Stats.gameWon
+            end
+        },
+        ["29"] = {
+            display = "Sacrifice",
+            icon = "rbxassetid://17209757664",
+            badgeId = 2126735923,
+            world = 1,
+            order = 29,
+            desc = "Do your first sacrifice unlocked at 18 grass-skips with 0 grasshops",
+            curr = "flowers",
+            reward = LethalNum.new(1, 3),
+            condition = function(p1) --[[ condition | Line: 407 ]]
+                return p1.Currency.resets.sacrifice.b > 0
+            end
+        },
+        ["30"] = {
+            display = "Ring Break",
+            icon = "rbxassetid://17210287329",
+            badgeId = 2128267041,
+            world = 1,
+            order = 30,
+            desc = "Break the ring",
+            curr = "flowers",
+            reward = LethalNum.new(1, 3),
+            condition = function(p1) --[[ condition | Line: 420 ]]
+                return if p1.Stats.innerRingsBroken > 0 or p1.Currency.resets.starTier.a > 0 then true else p1.Stats.gameWon
+            end
+        },
+        ["31"] = {
+            display = "Planetary",
+            icon = "rbxassetid://17209760037",
+            badgeId = 2128267085,
+            world = 1,
+            order = 31,
+            desc = "Do your first planetary within the planetoid at planetoid level 201",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 433 ]]
+                return p1.Currency.resets.planetary.b > 0
+            end
+        },
+        ["32"] = {
+            display = "Grass Jump",
+            icon = "rbxassetid://17209761001",
+            badgeId = 2128267092,
+            world = 1,
+            order = 32,
+            desc = "Do your first grass jump within the unnatural realm at unnatural level 201",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 446 ]]
+                return p1.Currency.resets.grassJump.b > 0
+            end
+        },
+        ["33"] = {
+            display = "Lunar Obelisk",
+            icon = "rbxassetid://17210288420",
+            badgeId = 2128267101,
+            world = 1,
+            order = 33,
+            desc = "Unlock the lunar obelisk at 8 grass jumps",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 459 ]]
+                return p1.Currency.resets.grassJump.b >= 8
+            end
+        },
+        ["34"] = {
+            display = "Constellation",
+            icon = "rbxassetid://17210288111",
+            badgeId = 2128267105,
+            world = 1,
+            order = 34,
+            desc = "Do your first constellation within the planetoid at planetoid level 301",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 472 ]]
+                return p1.Currency.resets.constellation.b > 0
+            end
+        },
+        ["35"] = {
+            display = "Dark Charger",
+            icon = "rbxassetid://17209761594",
+            badgeId = 2128267153,
+            world = 1,
+            order = 35,
+            desc = "Unlock the dark charger at 18 grass jumps",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 485 ]]
+                return p1.Currency.resets.grassJump.b >= 18
+            end
+        },
+        ["36"] = {
+            display = "The Star",
+            icon = "rbxassetid://17209762633",
+            badgeId = 2129893474,
+            world = 1,
+            order = 36,
+            desc = "Unlock the star at 35 grass jumps",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 498 ]]
+                return p1.Currency.resets.grassJump.b >= 35
+            end
+        },
+        ["37"] = {
+            display = "Supernova",
+            icon = "rbxassetid://17209760354",
+            badgeId = 2129893476,
+            world = 1,
+            order = 37,
+            desc = "Do your first supernova",
+            curr = "flowers",
+            reward = LethalNum.new(2.5, 3),
+            condition = function(p1) --[[ condition | Line: 511 ]]
+                return p1.Currency.resets.supernova.b > 0
+            end
+        },
+        ["38"] = {
+            display = "Eclipse",
+            icon = "rbxassetid://17209761868",
+            badgeId = 2129893480,
+            world = 1,
+            order = 38,
+            desc = "Unlock eclipse at supernova tier 2",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 524 ]]
+                return p1.Currency.resets.starTier.a >= 2
+            end
+        },
+        ["39"] = {
+            display = "HSJ",
+            icon = "rbxassetid://17209762172",
+            badgeId = 2129893483,
+            world = 1,
+            order = 39,
+            secret = true,
+            desc = "You did your first HSJ before it was removed",
+            curr = "flowers",
+            reward = LethalNum.new(2.5, 3),
+            condition = function(p1) --[[ condition | Line: 538 ]]
+                return false
+            end
+        },
+        ["40"] = {
+            display = "Centralize",
+            icon = "rbxassetid://17209759408",
+            badgeId = 2129893485,
+            world = 1,
+            order = 40,
+            desc = "Centralize prestige points",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 551 ]]
+                return p1.Currency.curr.pp.infinity
+            end
+        },
+        ["41"] = {
+            display = "Sunrise",
+            icon = "rbxassetid://17209762909",
+            badgeId = 2129893491,
+            world = 1,
+            order = 41,
+            desc = "Unlock the sunrise reset at eclipse 100",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 564 ]]
+                return p1.Stats.bestEclipse >= 100
+            end
+        },
+        ["42"] = {
+            display = "Solarian Challenges",
+            icon = "rbxassetid://17209763215",
+            badgeId = 2129893494,
+            world = 1,
+            order = 42,
+            desc = "Unlock solarian challenges at stage 14 in solarians",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 577 ]]
+                return p1.Stats.bestStage >= 14
+            end
+        },
+        ["43"] = {
+            display = "Sunset",
+            icon = "rbxassetid://17209764641",
+            badgeId = 2145243064,
+            world = 1,
+            order = 43,
+            desc = "Unlock the sunset reset at supernova tier 6",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 590 ]]
+                return p1.Currency.resets.starTier.a >= 6
+            end
+        },
+        ["44"] = {
+            display = "Grassland",
+            icon = "rbxassetid://17209764153",
+            badgeId = 2145243100,
+            world = 1,
+            order = 44,
+            desc = "Reach grassland",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 603 ]]
+                return p1.Stats.prog >= 1
+            end
+        },
+        ["45"] = {
+            display = "Stage 100",
+            icon = "rbxassetid://17209766468",
+            badgeId = 2145243124,
+            world = 1,
+            order = 45,
+            desc = "Reach stage 100 in solarians",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 616 ]]
+                return p1.Stats.bestStage >= 100
+            end
+        },
+        ["46"] = {
+            display = "Stage 200",
+            icon = "rbxassetid://17209766684",
+            badgeId = 2145243152,
+            world = 1,
+            order = 46,
+            desc = "Reach stage 200 in solarians",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 629 ]]
+                return p1.Stats.bestStage >= 200
+            end
+        },
+        ["47"] = {
+            display = "Stage 300",
+            icon = "rbxassetid://17209766931",
+            badgeId = 2145243171,
+            world = 1,
+            order = 47,
+            desc = "Reach stage 300 in solarians",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 642 ]]
+                return p1.Stats.bestStage >= 300
+            end
+        },
+        ["48"] = {
+            display = "Stage 400",
+            icon = "rbxassetid://17209767327",
+            badgeId = 2145243187,
+            world = 1,
+            order = 48,
+            desc = "Reach stage 400 in solarians",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 655 ]]
+                return p1.Stats.bestStage >= 400
+            end
+        },
+        ["49"] = {
+            display = "Stage 1000",
+            icon = "rbxassetid://17209768392",
+            badgeId = 2145243216,
+            world = 1,
+            order = 49,
+            desc = "Reach stage 1000 in solarians",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 668 ]]
+                return p1.Stats.bestStage >= 1000
+            end
+        },
+        ["50"] = {
+            display = "Synthesis",
+            icon = "rbxassetid://17209761319",
+            badgeId = 2145243229,
+            world = 1,
+            order = 50,
+            desc = "Unlock synthesis after finding the corrupted shard in D5",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 681 ]]
+                return p1.Stats.prog >= 2
+            end
+        },
+        ["51"] = {
+            display = "Twilight",
+            icon = "rbxassetid://17209764936",
+            badgeId = 2145243285,
+            world = 1,
+            order = 51,
+            desc = "Unlock the twilight reset at supernova tier 8",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 694 ]]
+                return p1.Currency.resets.starTier.a >= 8
+            end
+        },
+        ["52"] = {
+            display = "Infinity Loops",
+            icon = "rbxassetid://17209765333",
+            badgeId = 2145654076,
+            world = 1,
+            order = 52,
+            desc = "Unlock the ability to collect infinity loops at supernova tier 11",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 707 ]]
+                return p1.Currency.resets.starTier.a >= 11
+            end
+        },
+        ["53"] = {
+            display = "Ascension",
+            icon = "rbxassetid://17531607286",
+            badgeId = 2145243315,
+            world = 1,
+            order = 53,
+            desc = "Unlock the ability to ascend grassland equipment",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 720 ]]
+                return p1.Currency.curr.planets.infinity
+            end
+        },
+        ["54"] = {
+            display = "Final Centralize",
+            icon = "rbxassetid://17209766079",
+            badgeId = 2145243330,
+            world = 1,
+            order = 54,
+            desc = "Centralize perks",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 733 ]]
+                return p1.Currency.curr.perks.infinity
+            end
+        },
+        ["62"] = {
+            display = "The End",
+            icon = "rbxassetid://17209760678",
+            badgeId = 2151863013,
+            world = 1,
+            order = 54.1,
+            desc = "Beat world 1",
+            curr = "flowers",
+            reward = LethalNum.new(1, 3),
+            condition = function(p1) --[[ condition | Line: 746 ]]
+                return p1.Stats.gameWon
+            end
+        },
+        ["55"] = {
+            display = "Loop",
+            icon = "rbxassetid://17209769981",
+            badgeId = 2151863023,
+            world = 1,
+            order = 55,
+            desc = "Do your first loop after beating D10",
+            curr = "flowers",
+            reward = LethalNum.new(2, 3),
+            condition = function(p1) --[[ condition | Line: 759 ]]
+                return if p1.Currency.resets.loop1.a > 0 then true else p1.Currency.resets.trueEnd.a > 0
+            end
+        },
+        ["56"] = {
+            display = "Mega Loop",
+            icon = "rbxassetid://17209770348",
+            badgeId = 2152554104,
+            world = 1,
+            order = 56,
+            desc = "Do your first mega loop after doing 10 loops",
+            curr = "flowers",
+            reward = LethalNum.new(2, 3),
+            condition = function(p1) --[[ condition | Line: 772 ]]
+                return if p1.Currency.resets.loop2.a > 0 then true else p1.Currency.resets.trueEnd.a > 0
+            end
+        },
+        ["57"] = {
+            display = "Super Mega Loop",
+            icon = "rbxassetid://17209770627",
+            badgeId = 2152554119,
+            world = 1,
+            order = 57,
+            desc = "Do your first super mega loop after doing 10 mega loops",
+            curr = "flowers",
+            reward = LethalNum.new(2, 3),
+            condition = function(p1) --[[ condition | Line: 785 ]]
+                return if p1.Currency.resets.loop3.a > 0 then true else p1.Currency.resets.trueEnd.a > 0
+            end
+        },
+        ["58"] = {
+            display = "Super Ultra Mega Loop",
+            icon = "rbxassetid://17209770900",
+            badgeId = 2152554127,
+            world = 1,
+            order = 58,
+            desc = "Do your first super ultra mega loop after doing 10 super mega loops",
+            curr = "flowers",
+            reward = LethalNum.new(2, 3),
+            condition = function(p1) --[[ condition | Line: 798 ]]
+                return if p1.Currency.resets.loop4.a > 0 then true else p1.Currency.resets.trueEnd.a > 0
+            end
+        },
+        ["59"] = {
+            display = "Omega Loop",
+            icon = "rbxassetid://17209771250",
+            badgeId = 2152554133,
+            world = 1,
+            order = 59,
+            desc = "Do your first omega loop after doing 10 super ultra mega loops",
+            curr = "flowers",
+            reward = LethalNum.new(2, 3),
+            condition = function(p1) --[[ condition | Line: 811 ]]
+                return if p1.Currency.resets.loop5.a > 0 then true else p1.Currency.resets.trueEnd.a > 0
+            end
+        },
+        ["60"] = {
+            display = "Bluestige",
+            icon = "rbxassetid://17209769210",
+            badgeId = 2152753916,
+            world = 1,
+            order = 60,
+            desc = "Do your first bluestige within the blue realm",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 824 ]]
+                return if p1.Currency.resets.bluestige.a > 0 then true else p1.Currency.resets.trueEnd.a > 0
+            end
+        },
+        ["61"] = {
+            display = "Plasmaficate",
+            icon = "rbxassetid://17209769591",
+            badgeId = 2152779997,
+            world = 1,
+            order = 61,
+            desc = "Do your first plasmaficate within the blue realm",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 837 ]]
+                return if p1.Currency.resets.plasma.a > 0 then true else p1.Currency.resets.trueEnd.a > 0
+            end
+        },
+        ["63"] = {
+            display = "True End",
+            icon = "rbxassetid://17531607035",
+            badgeId = -1,
+            world = 1,
+            order = 62,
+            desc = "Reach True End",
+            curr = "flowers",
+            reward = LethalNum.new(5, 3),
+            condition = function(p1) --[[ condition | Line: 850 ]]
+                return p1.Currency.resets.trueEnd.a > 0
+            end
+        },
+        ["1a"] = {
+            display = "World 2",
+            icon = "rbxassetid://17283913827",
+            badgeId = 2151863026,
+            world = 2,
+            order = 200,
+            desc = "Enter world 2",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 863 ]]
+                return p1.Stats.world == 2
+            end
+        },
+        ["2a"] = {
+            display = "Rune",
+            icon = "rbxassetid://17283915212",
+            badgeId = 2151863053,
+            world = 2,
+            order = 201,
+            desc = "Do your first rune convert at jungle level 30",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 876 ]]
+                return p1.Currency.resets.rune.b > 0
+            end
+        },
+        ["3a"] = {
+            display = "Sapphire",
+            icon = "rbxassetid://17283914999",
+            badgeId = 2151863057,
+            world = 2,
+            order = 202,
+            desc = "Do your first form sapphire at jungle level 120",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 889 ]]
+                return p1.Currency.resets.sapphire.b > 0
+            end
+        },
+        ["4a"] = {
+            display = "Awaken",
+            icon = "rbxassetid://17283916331",
+            badgeId = 2151863060,
+            world = 2,
+            order = 203,
+            desc = "Do your first awakening at jungle level 200",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 902 ]]
+                return p1.Currency.resets.awaken.b > 0
+            end
+        },
+        ["5a"] = {
+            display = "Stability",
+            icon = "rbxassetid://17283915887",
+            badgeId = 2151863065,
+            world = 2,
+            order = 204,
+            desc = "Unlock the stability device in the construct",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 915 ]]
+                return if p1.UpgradeLevels.generic.bridge.level > 0 then true else p1.Currency.resets.l4.b > 0
+            end
+        },
+        ["6a"] = {
+            display = "Cavern",
+            icon = "rbxassetid://17283915759",
+            badgeId = 2151863069,
+            world = 2,
+            order = 205,
+            desc = "Unlock the cavern in the construct at awakening level 17",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 928 ]]
+                return if p1.UpgradeLevels.generic.bridge2.level > 0 then true else p1.Currency.resets.l4.b > 0
+            end
+        },
+        ["7a"] = {
+            display = "Opal",
+            icon = "rbxassetid://17283915375",
+            badgeId = 2151863071,
+            world = 2,
+            order = 206,
+            desc = "Do your first opal convert at cavern level 30",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 941 ]]
+                return p1.Currency.resets.opal.b > 0
+            end
+        },
+        ["8a"] = {
+            display = "Bulb",
+            icon = "rbxassetid://17283916136",
+            badgeId = 2151863075,
+            world = 2,
+            order = 207,
+            desc = "Do your first bulb convert at cavern level 100",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 954 ]]
+                return p1.Currency.resets.bulb.b > 0
+            end
+        },
+        ["9a"] = {
+            display = "Intersection",
+            icon = "rbxassetid://17283915615",
+            badgeId = 2151863081,
+            world = 2,
+            order = 208,
+            desc = "Unlock the intersection in the unstable modules at awakening level 31",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 967 ]]
+                return if p1.UpgradeLevels.generic.bridge3.level > 0 then true else p1.Currency.resets.l4.b > 0
+            end
+        },
+        ["10a"] = {
+            display = "Absorb",
+            icon = "rbxassetid://17283914796",
+            badgeId = 2151863086,
+            world = 2,
+            order = 209,
+            desc = "Do your first absorb at cavern level 200 after unlocking it in intersection",
+            curr = "flowers",
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 980 ]]
+                return p1.Currency.resets.tree.b > 0
+            end
+        },
+        ["11a"] = {
+            display = "Scammed",
+            icon = "rbxassetid://17284002675",
+            badgeId = 2151863286,
+            world = 2,
+            order = 210,
+            secret = true,
+            desc = "You got scammed before it was removed",
+            curr = "flowers",
+            reward = LethalNum.new(2.5, 3),
+            condition = function(p1) --[[ condition | Line: 994 ]]
+                return false
+            end
+        },
+        ["12a"] = {
+            display = "True Awaken",
+            icon = "rbxassetid://17787507876",
+            badgeId = 2199260626583493,
+            world = 2,
+            order = 211,
+            desc = "Do your first true awaken at intersection level 10",
+            curr = "flowers",
+            reward = LethalNum.new(1, 3),
+            condition = function(p1) --[[ condition | Line: 1007 ]]
+                return p1.Currency.resets.trueAwaken.a > 0
+            end
+        },
+        aC1 = {
+            display = "Pure",
+            icon = "rbxassetid://111490838481794",
+            badgeId = 2756373357901303,
+            world = 2,
+            order = 221,
+            desc = "Understand Pure",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 1020 ]]
+                return p1.UpgradeLevels.cc.p.c
+            end
+        },
+        aC2 = {
+            display = "Heart",
+            icon = "rbxassetid://104901676839422",
+            badgeId = 892956653714268,
+            world = 2,
+            order = 222,
+            desc = "Understand Heart",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 1034 ]]
+                return p1.UpgradeLevels.cc.r.c
+            end
+        },
+        aC3 = {
+            display = "Triangle",
+            icon = "rbxassetid://71844872630249",
+            badgeId = 242002847284382,
+            world = 2,
+            order = 223,
+            desc = "Understand Triangle",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 1048 ]]
+                return p1.UpgradeLevels.cc.t.c
+            end
+        },
+        aC4 = {
+            display = "Great",
+            icon = "rbxassetid://137838764062635",
+            badgeId = 1011920860584975,
+            world = 2,
+            order = 224,
+            desc = "Understand Great",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 1062 ]]
+                return p1.UpgradeLevels.cc.g.c
+            end
+        },
+        aC5 = {
+            display = "Broken",
+            icon = "rbxassetid://89883935291763",
+            badgeId = 725448349906388,
+            world = 2,
+            order = 225,
+            desc = "Understand Broken",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 1076 ]]
+                return p1.UpgradeLevels.cc.d.c
+            end
+        },
+        aC6 = {
+            display = "Found",
+            icon = "rbxassetid://115763538979269",
+            badgeId = 2010093857784142,
+            world = 2,
+            order = 226,
+            desc = "Understand Found",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 1090 ]]
+                return p1.UpgradeLevels.cc.f.c
+            end
+        },
+        ["13a"] = {
+            display = "Collapse",
+            icon = "rbxassetid://18643598580",
+            badgeId = 1157005047162137,
+            world = 2,
+            order = 230,
+            desc = "Do your first collapse",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 1104 ]]
+                return p1.Currency.resets.collapse.b > 0
+            end
+        },
+        ["14a"] = {
+            display = "Desert",
+            icon = "rbxassetid://18764713110",
+            badgeId = 126671877661426,
+            world = 2,
+            order = 231,
+            desc = "Reach the desert",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 1118 | Upvalues: LethalNum (copy) ]]
+                return LethalNum.isGreaterE(p1.Currency.curr.cactus.totalAmount, LethalNum.new(1, 0))
+            end
+        },
+        ["15a"] = {
+            display = "Vase",
+            icon = "rbxassetid://18764713321",
+            badgeId = 3563961872557055,
+            world = 2,
+            order = 232,
+            desc = "Do your first vase reset",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 1132 ]]
+                return p1.Currency.resets.vase.b > 0
+            end
+        },
+        ["16a"] = {
+            display = "Sandstorm",
+            icon = "rbxassetid://18428099824",
+            badgeId = 4309237217895315,
+            world = 2,
+            order = 233,
+            desc = "Do your first sandstorm reset",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 1146 ]]
+                return p1.Currency.resets.sandstorm.b > 0
+            end
+        },
+        ["17a"] = {
+            display = "Destabilize",
+            icon = "rbxassetid://18643598427",
+            badgeId = 128881956290803,
+            world = 2,
+            order = 241,
+            desc = "Do your first destabilize",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 1160 ]]
+                return p1.Currency.resets.destabilize.b > 0
+            end
+        },
+        ["18a"] = {
+            display = "Twilight",
+            icon = "rbxassetid://18643596708",
+            badgeId = 1917454048653590,
+            world = 2,
+            order = 251,
+            desc = "Do your first twilight (World 2)",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 1174 ]]
+                return p1.Currency.resets.twilight2.b > 0
+            end
+        },
+        ["24a"] = {
+            display = "Fossilize",
+            icon = "rbxassetid://138694612010956",
+            badgeId = 2576220393171835,
+            world = 2,
+            order = 252,
+            desc = "Do your first fossilize",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 1188 ]]
+                return p1.Currency.resets.fossilize.b > 0
+            end
+        },
+        ["19a"] = {
+            display = "Midnight",
+            icon = "rbxassetid://18643597756",
+            badgeId = 1922619563805112,
+            world = 2,
+            order = 253,
+            desc = "Do your first midnight (World 2)",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 1202 ]]
+                return p1.Currency.resets.midnight2.b > 0
+            end
+        },
+        ["21a"] = {
+            display = "Trials Begin",
+            icon = "rbxassetid://18885099272",
+            badgeId = 3127291485328077,
+            world = 2,
+            order = 271,
+            desc = "Unlock the cactus trials",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 1216 ]]
+                return p1.Stats.prog2 >= 3
+            end
+        },
+        ["22a"] = {
+            display = "Trials End",
+            icon = "rbxassetid://18885099066",
+            badgeId = 2299341672896371,
+            world = 2,
+            order = 272,
+            desc = "Beat the cactus trials",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 1230 ]]
+                return p1.Stats.prog2 >= 4
+            end
+        },
+        ["20a"] = {
+            display = "Great Rift",
+            icon = "rbxassetid://18955521160",
+            badgeId = 4316856070658899,
+            world = 2,
+            order = 280,
+            desc = "Do your first great rift reset",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(1, 3),
+            condition = function(p1) --[[ condition | Line: 1244 ]]
+                return p1.Currency.resets.rift.b > 0
+            end
+        },
+        ["23a"] = {
+            display = "GRL 5",
+            icon = "rbxassetid://124897536608447",
+            badgeId = 2430840957103014,
+            world = 2,
+            order = 281,
+            desc = "Reach GRL 5, the current endgame",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(5, 2),
+            condition = function(p1) --[[ condition | Line: 1258 ]]
+                return p1.Currency.resets.rift.a >= 5
+            end
+        },
+        ["8_1"] = {
+            display = "really cool",
+            icon = "rbxassetid://17491826145",
+            badgeId = -1,
+            world = 8,
+            order = 801,
+            desc = "real",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(4.1, 1),
+            condition = function(p1) --[[ condition | Line: 1272 ]]
+                return p1.Stats.world == 8
+            end
+        },
+        ["8_2"] = {
+            display = "prestige",
+            icon = "rbxassetid://17508866344",
+            badgeId = -1,
+            world = 8,
+            order = 802,
+            desc = "do prestige",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(4.1, 1),
+            condition = function(p1) --[[ condition | Line: 1287 ]]
+                return p1.Currency.resets.prestigeS.b > 0
+            end
+        },
+        ["8_3"] = {
+            display = "crystallize",
+            icon = "rbxassetid://17508866628",
+            badgeId = -1,
+            world = 8,
+            order = 803,
+            desc = "do crystallize",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(4.1, 1),
+            condition = function(p1) --[[ condition | Line: 1302 ]]
+                return p1.Currency.resets.crystallizeS.b > 0
+            end
+        },
+        ["8_4"] = {
+            display = "grasshop",
+            icon = "rbxassetid://17508866462",
+            badgeId = -1,
+            world = 8,
+            order = 804,
+            desc = "do grasshop",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(4.1, 1),
+            condition = function(p1) --[[ condition | Line: 1317 ]]
+                return p1.Currency.resets.grasshopS.b > 0
+            end
+        },
+        ["8_5"] = {
+            display = "steely",
+            icon = "rbxassetid://17511910891",
+            badgeId = -1,
+            world = 8,
+            order = 805,
+            desc = "do steely",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(4.1, 1),
+            condition = function(p1) --[[ condition | Line: 1332 ]]
+                return p1.Currency.resets.steelieS.b > 0
+            end
+        },
+        ["8_6"] = {
+            display = "charger",
+            icon = "rbxassetid://17511885071",
+            badgeId = -1,
+            world = 8,
+            order = 806,
+            desc = "unlock charger",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(4.1, 1),
+            condition = function(p1) --[[ condition | Line: 1347 ]]
+                return p1.UpgradeLevels.generic["8_charger"].level > 0
+            end
+        },
+        ["8_7"] = {
+            display = "assembler",
+            icon = "rbxassetid://17511885487",
+            badgeId = -1,
+            world = 8,
+            order = 807,
+            desc = "unlock assembler",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(4.1, 1),
+            condition = function(p1) --[[ condition | Line: 1362 ]]
+                return p1.UpgradeLevels.generic["8_assembler"].level > 0
+            end
+        },
+        ["8_8"] = {
+            display = "brick house",
+            icon = "rbxassetid://17511885300",
+            badgeId = -1,
+            world = 8,
+            order = 808,
+            desc = "unlock brick house",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(4.1, 1),
+            condition = function(p1) --[[ condition | Line: 1377 ]]
+                return p1.UpgradeLevels.generic["8_brick"].level > 0
+            end
+        },
+        ["9_F1"] = {
+            display = "Floor 1",
+            icon = "rbxassetid://89411970294311",
+            badgeId = 3581564645433894,
+            world = 9,
+            order = 901,
+            desc = "Enter the tower subworld",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(1, 0),
+            condition = function(p1) --[[ condition | Line: 1392 ]]
+                return if p1.Stats.world == 9 then true else p1.Currency.resets.F1L3.b > 0
+            end
+        },
+        ["9_F1m"] = {
+            display = "Grasshop",
+            icon = "rbxassetid://108110874902769",
+            badgeId = -1,
+            world = 9,
+            order = 902,
+            desc = "Do your first grasshop (tower subworld)",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(1, 0),
+            condition = function(p1) --[[ condition | Line: 1406 ]]
+                return p1.Currency.resets.F1L3.b > 0
+            end
+        },
+        ["9_F2"] = {
+            display = "Floor 2",
+            icon = "rbxassetid://75786014015028",
+            badgeId = 4175107930494874,
+            world = 9,
+            order = 903,
+            desc = "Reach floor 2",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(2, 0),
+            condition = function(p1) --[[ condition | Line: 1420 ]]
+                return p1.Currency.resets.F1L3.b >= 10
+            end
+        },
+        ["9_F2m"] = {
+            display = "Crystal-hop",
+            icon = "rbxassetid://115158095114740",
+            badgeId = -1,
+            world = 9,
+            order = 904,
+            desc = "Do your first crystal-hop",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(2, 0),
+            condition = function(p1) --[[ condition | Line: 1434 ]]
+                return p1.Currency.resets.F2L3.b > 0
+            end
+        },
+        ["9_F3"] = {
+            display = "Floor 3",
+            icon = "rbxassetid://79622846626796",
+            badgeId = 3838290386747545,
+            world = 9,
+            order = 905,
+            desc = "Reach floor 3",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(3, 0),
+            condition = function(p1) --[[ condition | Line: 1448 ]]
+                return p1.Currency.resets.F2L3.b >= 10
+            end
+        },
+        ["9_F3m"] = {
+            display = "Diamond-hop",
+            icon = "rbxassetid://100870988464511",
+            badgeId = -1,
+            world = 9,
+            order = 906,
+            desc = "Do your first diamond-hop",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(3, 0),
+            condition = function(p1) --[[ condition | Line: 1462 ]]
+                return p1.Currency.resets.F3L3.b > 0
+            end
+        },
+        ["9_F4"] = {
+            display = "Floor 4",
+            icon = "rbxassetid://130637409911777",
+            badgeId = 2113258886882793,
+            world = 9,
+            order = 907,
+            desc = "Reach floor 4",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(4, 0),
+            condition = function(p1) --[[ condition | Line: 1476 ]]
+                return p1.Currency.resets.F3L3.b >= 10
+            end
+        },
+        ["9_F4m"] = {
+            display = "Mystic-hop",
+            icon = "rbxassetid://75157915556494",
+            badgeId = -1,
+            world = 9,
+            order = 908,
+            desc = "Do your first mystic-hop",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(4, 0),
+            condition = function(p1) --[[ condition | Line: 1490 ]]
+                return p1.Currency.resets.F4L3.b > 0
+            end
+        },
+        ["9_F5"] = {
+            display = "Floor 5",
+            icon = "rbxassetid://110885337286020",
+            badgeId = 914557156261984,
+            world = 9,
+            order = 909,
+            desc = "Reach floor 5",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(5, 0),
+            condition = function(p1) --[[ condition | Line: 1504 ]]
+                return p1.Currency.resets.F4L3.b >= 10
+            end
+        },
+        ["9_F5m"] = {
+            display = "Ring-hop",
+            icon = "rbxassetid://86551887961341",
+            badgeId = -1,
+            world = 9,
+            order = 910,
+            desc = "Do your first ring-hop",
+            curr = "flowers",
+            secret = true,
+            reward = LethalNum.new(5, 0),
+            condition = function(p1) --[[ condition | Line: 1518 ]]
+                return p1.Currency.resets.F5L3.b > 0
+            end
+        }
+    }
+}
