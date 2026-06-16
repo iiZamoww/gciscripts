@@ -1,0 +1,717 @@
+local t = {}
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+game:GetService("StarterGui")
+
+local Players = game:GetService("Players")
+local Lighting = game:GetService("Lighting")
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local t2 = {}
+
+t2.__index = t2
+function t2.new(p1) --[[ new | Line: 10 | Upvalues: t2 (copy) ]]
+    local t = {}
+
+    for v3, v4 in ipairs(if p1 then p1 else {}) do
+        t[v4] = true
+    end
+
+    return setmetatable(t, t2)
+end
+t.ImportantData = {
+    GrassObjects = {
+        collider = nil,
+        colliderVisual = nil,
+        LevelTimer = nil,
+        InfoOpen = nil,
+        grassObjects = t2.new(),
+        agrassObjects = t2.new(),
+        disabledObjects = t2.new(),
+        blueObjects = {},
+        disabledBlueObjects = {}
+    },
+    Stats = {
+        calcMulti = false,
+        inputType = "Keyboard/Mouse",
+        inField = false,
+        playerId = -1,
+        diaOpen = false,
+        gpsTime = 0,
+        tempGPS = LethalNum.new(0, 0),
+        gps = LethalNum.new(0, 0),
+        gameVersion = "0.9",
+        ver = "",
+        vern = 0,
+        saveCooldown = 0,
+        bing = false,
+        potato = "c",
+        saveLoaded = false,
+        updateGrass = false,
+        deltaTime = 0,
+        tierDisplayed = "auto",
+        titleDisplayed = "0",
+        infTier = 0,
+        resetData = false,
+        levelGoal = LethalNum.new(1, 0),
+        progVal = nil,
+        lastMap = "normal",
+        mapLocation = "normal",
+        help = 0,
+        slotLoaded = false,
+        recoverSlot = 1,
+        testSave = false,
+        recoverSelected = "none",
+        world = 1,
+        saveSlot = 0,
+        saveSlotsObj = { nil, nil, nil },
+        specialEffects = {
+            disco = false
+        },
+        fs = {
+            0,
+            0,
+            0,
+            0
+        },
+        modRoom = false,
+        mods = {
+            noAC = false,
+            noOP = false,
+            noTW = false,
+            GL = false,
+            easy = false,
+            hard = false,
+            boosted = false
+        },
+        maxSpend = false,
+        setMaxSpend = 0.1,
+        mapOpen = false,
+        masteryWorth = LethalNum.new(0, 0),
+        cutscene = false,
+        resetActions = 0,
+        init = false,
+        tslsu = 0,
+        upgradesLoaded = false,
+        loadStage = 0,
+        achSelected = "none",
+        upgradeSelected = nil,
+        cd = "none",
+        ld = "none",
+        currPins = {
+            ["1"] = {
+                curr = "none",
+                obj = nil
+            },
+            ["2"] = {
+                curr = "none",
+                obj = nil
+            },
+            ["3"] = {
+                curr = "none",
+                obj = nil
+            },
+            ["4"] = {
+                curr = "none",
+                obj = nil
+            },
+            ["5"] = {
+                curr = "none",
+                obj = nil
+            },
+            ["6"] = {
+                curr = "none",
+                obj = nil
+            },
+            ["7"] = {
+                curr = "none",
+                obj = nil
+            },
+            ["8"] = {
+                curr = "none",
+                obj = nil
+            },
+            ["9"] = {
+                curr = "none",
+                obj = nil
+            },
+            ["10"] = {
+                curr = "none",
+                obj = nil
+            },
+            ["11"] = {
+                curr = "none",
+                obj = nil
+            },
+            ["12"] = {
+                curr = "none",
+                obj = nil
+            },
+            ["13"] = {
+                curr = "none",
+                obj = nil
+            },
+            ["14"] = {
+                curr = "none",
+                obj = nil
+            },
+            ["15"] = {
+                curr = "none",
+                obj = nil
+            },
+            ["16"] = {
+                curr = "none",
+                obj = nil
+            },
+            ["17"] = {
+                curr = "none",
+                obj = nil
+            },
+            ["18"] = {
+                curr = "none",
+                obj = nil
+            },
+            ["19"] = {
+                curr = "none",
+                obj = nil
+            },
+            ["20"] = {
+                curr = "none",
+                obj = nil
+            }
+        },
+        levelPins = {
+            ["1"] = {
+                level = "none",
+                obj = nil
+            },
+            ["2"] = {
+                level = "none",
+                obj = nil
+            },
+            ["3"] = {
+                level = "none",
+                obj = nil
+            },
+            ["4"] = {
+                level = "none",
+                obj = nil
+            },
+            ["5"] = {
+                level = "none",
+                obj = nil
+            },
+            ["6"] = {
+                level = "none",
+                obj = nil
+            },
+            ["7"] = {
+                level = "none",
+                obj = nil
+            },
+            ["8"] = {
+                level = "none",
+                obj = nil
+            }
+        },
+        telePins = {
+            ["1"] = {
+                tele = "none",
+                obj = nil
+            },
+            ["2"] = {
+                tele = "none",
+                obj = nil
+            },
+            ["3"] = {
+                tele = "none",
+                obj = nil
+            },
+            ["4"] = {
+                tele = "none",
+                obj = nil
+            },
+            ["5"] = {
+                tele = "none",
+                obj = nil
+            },
+            ["6"] = {
+                tele = "none",
+                obj = nil
+            },
+            ["7"] = {
+                tele = "none",
+                obj = nil
+            },
+            ["8"] = {
+                tele = "none",
+                obj = nil
+            },
+            ["9"] = {
+                tele = "none",
+                obj = nil
+            },
+            ["10"] = {
+                tele = "none",
+                obj = nil
+            },
+            ["11"] = {
+                tele = "none",
+                obj = nil
+            },
+            ["12"] = {
+                tele = "none",
+                obj = nil
+            },
+            ["13"] = {
+                tele = "none",
+                obj = nil
+            },
+            ["14"] = {
+                tele = "none",
+                obj = nil
+            },
+            ["15"] = {
+                tele = "none",
+                obj = nil
+            },
+            ["16"] = {
+                tele = "none",
+                obj = nil
+            },
+            ["17"] = {
+                tele = "none",
+                obj = nil
+            },
+            ["18"] = {
+                tele = "none",
+                obj = nil
+            },
+            ["19"] = {
+                tele = "none",
+                obj = nil
+            },
+            ["20"] = {
+                tele = "none",
+                obj = nil
+            }
+        },
+        multiPins = {
+            ["1"] = {
+                multi = "none",
+                obj = nil
+            },
+            ["2"] = {
+                multi = "none",
+                obj = nil
+            }
+        },
+        minigameTime = 0,
+        unlockSelected = "none",
+        bestEclipse = 0,
+        sobSwitch = true,
+        levelTimer = 0,
+        perksSpent = LethalNum.new(0, 0),
+        pDif = 0,
+        pTrial = 0,
+        trialSaves = {
+            rings = LethalNum.new(0, 0),
+            lines = LethalNum.new(0, 0),
+            arcs = LethalNum.new(0, 0),
+            dcharge = LethalNum.new(0, 0)
+        },
+        pHighest = 0,
+        pSet = 0,
+        pMax = 5,
+        pTime = 0,
+        totalTrialLevels = 0,
+        timeWarps = 0,
+        serverSetMessage = "",
+        serverSetTimer = -1,
+        latestVersion = "",
+        serverUpdateRate = 60,
+        highestSpeed = 16,
+        fruitsSet = LethalNum.new(1, 0),
+        currentTier = "basic",
+        antiTier = "basic",
+        unnaturalTier = "basic",
+        currentRank = "alpha",
+        highestTier = 1,
+        highestAntiTier = 1,
+        highestUnnaturalTier = 1,
+        highestRank = 1,
+        totalGrassP = LethalNum.new(0, 0),
+        lastLiquefyOil = LethalNum.new(0, 0),
+        lastNormalityNP = LethalNum.new(0, 0),
+        bestLineGen = LethalNum.new(0, 0),
+        bestArcsGen = LethalNum.new(0, 0),
+        lastAnonymityAP = LethalNum.new(0, 0),
+        lastVaporizeClouds = LethalNum.new(0, 0),
+        totalGRocketFuel = LethalNum.new(0, 0),
+        bestLineGenT = LethalNum.new(0, 0),
+        bestArcsGenT = LethalNum.new(0, 0),
+        obsT = LethalNum.new(0, 0),
+        flowersSpent = LethalNum.new(0, 0),
+        flowersBought = LethalNum.new(0, 0),
+        bestCharge = LethalNum.new(0, 0),
+        bestDarkCharge = LethalNum.new(0, 0),
+        bestLimeCharge = LethalNum.new(0, 0),
+        solarScore = LethalNum.new(0, 0),
+        grassGrowSpeed = 1,
+        grassGrowAmount = 1,
+        playerMoveSpeed = 16,
+        colliderSize = 4,
+        dailyTimer = 0,
+        dailyTimeRemaining = 86400,
+        hourlyTimeRemaining = 0,
+        timeWarpTime = 0,
+        dailiesClaimed = 0,
+        accomplishmentsCleared = 0,
+        autoAccTime = 0,
+        planetScore = LethalNum.new(0, 0),
+        innerRingsBroken = 0,
+        middleRingsBroken = 0,
+        outerRingsBroken = 0,
+        partsRequired = 10,
+        currentSGJ = 0,
+        evil = 0,
+        maxEvil = 0,
+        bone = 0,
+        scoreRingMulti = LethalNum.new(1, 0),
+        slots = 0,
+        cSelected = nil,
+        dragTime = 0,
+        sellMode = false,
+        cLock = false,
+        constChanged = false,
+        constTime = 0,
+        instCapped = false,
+        inst = LethalNum.new(0, 0),
+        ccap = LethalNum.new(0, 0),
+        constTier = 1,
+        location = "normal",
+        starTier = 0,
+        visualST = -1,
+        currentVisualST = -2,
+        starGoal = LethalNum.new(1, 7),
+        starProgress = LethalNum.new(0, 0),
+        bestSupernova = LethalNum.new(0, 0),
+        savedTrialLevels = {},
+        savedTrialGrid = {},
+        isServer = game["Run Service"]:IsServer(),
+        solariansTA = LethalNum.new(1, 0),
+        solariansP = 1,
+        solariansPS = 1,
+        soulsTS = LethalNum.new(1, 0),
+        solariansMode = 0,
+        solariansProg = 0,
+        solarians = LethalNum.new(0, 0),
+        solarianCap = LethalNum.new(1, 3),
+        solarianMax = LethalNum.new(1, 3),
+        solarianPower = LethalNum.new(1, 1),
+        fightMulti = LethalNum.new(1, 0),
+        currStage = 1,
+        bestStage = 1,
+        chalSelected = "none",
+        solChal = "none",
+        soulsStored = LethalNum.new(0, 0),
+        soulsTotal = LethalNum.new(0, 0),
+        chalSouls = LethalNum.new(0, 0),
+        sunrise = 1,
+        souls = 1,
+        manaReq = LethalNum.new(1, 999),
+        eclipseReq = 100000,
+        soulG = LethalNum.new(0, 0),
+        twilightb = 0,
+        prog = 0,
+        prog2 = 0,
+        prog2a = 0,
+        cr = 1,
+        itemSelected = nil,
+        itemDataSelected = nil,
+        itemUUID = nil,
+        masterySelected = nil,
+        masteryTab = 0,
+        currDungeon = "none",
+        equipped = {
+            nil,
+            nil,
+            nil,
+            nil,
+            nil
+        },
+        sell = {},
+        sellificate = false,
+        contextEnemy = nil,
+        contextPortal = nil,
+        contextInteractable = nil,
+        contextDia = nil,
+        cuttingM = LethalNum.new(1, 0),
+        flags = {
+            sp = false,
+            el = false
+        },
+        mastered = "none",
+        masterg = 0,
+        masteryTime = 0,
+        dshopSelected = nil,
+        atkTier = 0,
+        dfProgress = 0,
+        synSpd = LethalNum.new(1, 0),
+        eqLime = LethalNum.new(1, 0),
+        cfDG = LethalNum.new(1, 2),
+        restDG = LethalNum.new(1, 2),
+        synSelected = "none",
+        upgradecd = 0,
+        endSequence = false,
+        gameWon = false,
+        planetRun = "none",
+        planetRunLevel = 1,
+        prTimerActive = false,
+        prTimer = 0,
+        prPhysics = "default",
+        speedRun4 = false,
+        prBestTime = -1,
+        freeRespec = 2,
+        jTier = 1,
+        eventTime = 0,
+        event = "none",
+        tempRF = LethalNum.new(0, 0),
+        instLevel = 0,
+        totalInst = LethalNum.new(0, 0),
+        stability = LethalNum.new(1, 6),
+        gauntletPower = LethalNum.new(1, 0),
+        gauntletPower2 = LethalNum.new(1, 0),
+        gauntletPower3 = LethalNum.new(1, 0),
+        gauntletPower4 = LethalNum.new(1, 0),
+        gauntletArea = "start",
+        gauntletRespawn = 0,
+        gauntletStats = {
+            maxHealth = LethalNum.new(1, 9999999),
+            health = LethalNum.new(1, 9999999),
+            powBlock = LethalNum.new(1, 9999999),
+            reward = LethalNum.new(0, 0)
+        },
+        ccSelected = "none",
+        currentCC = "none",
+        cTrial = -1,
+        highestTAL = 0,
+        talGenTime = 0,
+        strike = 0,
+        boosts = false,
+        Bonus = {},
+        Accomplish = {
+            totalTime = 0,
+            clockTime = 0,
+            autoAccTime = 0,
+            fsTime = 604800,
+            timesRespec = 0,
+            timesWarp = 0,
+            timeSSG = 0,
+            timeSSGReq = 86400,
+            grassCutP = 0,
+            grassCutC = 0,
+            grassCutG = 0,
+            grassBoughtP = 0,
+            grassBoughtC = 0,
+            grassBoughtG = 0,
+            agrassBoughtA = 0,
+            agrassBoughtL = 0,
+            planetariumBought = 0,
+            perks2Bought = 0,
+            ringBought = 0,
+            astroBought = 0,
+            measureBought = 0,
+            planetBought = 0,
+            obsBought = 0,
+            rein = 0,
+            stab = 0,
+            prestigeBoughtC = 0,
+            prestigeBoughtG = 0,
+            anonymityBoughtL = 0,
+            crystalBoughtG = 0,
+            solTicks = 0,
+            solTickSpeed = LethalNum.new(3, 0)
+        },
+        realm = "normal",
+        Backup = {}
+    },
+    Currencies = {
+        pancakes = 0
+    },
+    Reqs = {
+        pt = 30,
+        dt = 36,
+        m = 21,
+        g = 24,
+        tr = 45,
+        gss = 60,
+        autofight = 9,
+        restore = 13,
+        gj = {
+            lo = 8,
+            dc = 18,
+            ru = 30,
+            obu = 40,
+            ts = 35,
+            sr = 55,
+            sgj = 90
+        },
+        Pre = {
+            l2 = 1000000000000,
+            l3 = 1000000000000,
+            l4 = 1000000000000,
+            l5 = 1000000000000,
+            l6 = 1000000000000
+        }
+    },
+    Dynamic = {
+        changeDifficulty = nil,
+        decelerateWrapper = nil,
+        recelerateWrapper = nil,
+        inventory = {},
+        inventoryItems = {}
+    },
+    UpgradeLevels = {
+        upgrades = {},
+        accomplishments = {},
+        gp = {},
+        ghmile = {},
+        aghmile = {},
+        skipmile = {},
+        jumpmile = {},
+        touchmile = {},
+        trialGoal = {},
+        snmile = {},
+        plmile = {},
+        treeItems = {},
+        lunarItems = {},
+        constLayouts = {},
+        schart = {},
+        soulBackup = {},
+        dungeonStats = {},
+        achievements = {},
+        AwakenMile = {},
+        TreeMile = {},
+        OPMile = {},
+        SALMile = {},
+        EMile = {},
+        MidMile = {},
+        RiftMile = {},
+        C3Mile = {},
+        F1Mile = {},
+        F2Mile = {},
+        F3Mile = {},
+        F4Mile = {},
+        F5Mile = {},
+        F6Mile = {},
+        F7Mile = {},
+        F8Mile = {},
+        F9Mile = {},
+        F10Mile = {}
+    },
+    Misc = {
+        frameRate = 60,
+        player = Players.LocalPlayer,
+        lighting = Lighting,
+        toggles = {},
+        displaySettings = {},
+        tierSettings = {}
+    },
+    Multipliers = {},
+    Events = {
+        buyUpgrade = nil,
+        buyMaxUpgrade = nil,
+        buyNextUpgrade = nil,
+        buyXNoScale = nil,
+        updateOpenInfo = nil,
+        updateStats = nil,
+        updateUpgrades = Instance.new("BindableEvent"),
+        updateSolarians = Instance.new("BindableEvent"),
+        capAllSolarians = Instance.new("BindableEvent"),
+        autobuy = Instance.new("BindableEvent"),
+        reconnectAutobuyers = Instance.new("BindableEvent"),
+        progressGP = Instance.new("BindableEvent"),
+        animate = Instance.new("BindableEvent"),
+        mastery = Instance.new("BindableEvent"),
+        synth = Instance.new("BindableEvent"),
+        soul1 = Instance.new("BindableEvent"),
+        soul2 = Instance.new("BindableEvent"),
+        updateAccs = Instance.new("BindableEvent"),
+        updateTree = Instance.new("BindableEvent"),
+        updateLunar = Instance.new("BindableEvent"),
+        updateCentralize = Instance.new("BindableEvent"),
+        updateConst = Instance.new("BindableEvent"),
+        cc = Instance.new("BindableEvent")
+    }
+}
+function t.DataGetter() --[[ DataGetter | Line: 549 ]] end
+function t.DataSetter() --[[ DataSetter | Line: 553 ]] end
+function t.addDisabled(p1) --[[ addDisabled | Line: 557 | Upvalues: t (copy) ]]
+    t.ImportantData.GrassObjects.disabledObjects[p1] = true
+end
+function t.removeDisabled(p1) --[[ removeDisabled | Line: 561 | Upvalues: t (copy) ]]
+    t.ImportantData.GrassObjects.disabledObjects[p1] = nil
+end
+function t.addGrassObj(p1) --[[ addGrassObj | Line: 565 | Upvalues: t (copy) ]]
+    t.ImportantData.GrassObjects.grassObjects[p1] = true
+end
+function t.removeGrassObj(p1) --[[ removeGrassObj | Line: 569 | Upvalues: t (copy) ]]
+    t.ImportantData.GrassObjects.grassObjects[p1] = nil
+end
+function t.addAGrassObj(p1) --[[ addAGrassObj | Line: 573 | Upvalues: t (copy) ]]
+    t.ImportantData.GrassObjects.agrassObjects[p1] = true
+end
+function t.removeAGrassObj(p1) --[[ removeAGrassObj | Line: 577 | Upvalues: t (copy) ]]
+    t.ImportantData.GrassObjects.agrassObjects[p1] = nil
+end
+function t.BuyUpgrade() --[[ BuyUpgrade | Line: 581 | Upvalues: t (copy) ]]
+    t.ImportantData.Events.buyUpgrade()
+end
+function t.BuyMaxUpgrade() --[[ BuyMaxUpgrade | Line: 584 | Upvalues: t (copy) ]]
+    t.ImportantData.Events.buyMaxUpgrade()
+end
+function t.BuyNextUpgrade() --[[ BuyNextUpgrade | Line: 587 | Upvalues: t (copy) ]]
+    t.ImportantData.Events.buyNextUpgrade()
+end
+function t.BuyXNoScale(p1) --[[ BuyXNoScale | Line: 590 | Upvalues: t (copy) ]]
+    t.ImportantData.Events.buyXNoScale(p1)
+end
+function t.updateMoveSpeed() --[[ updateMoveSpeed | Line: 594 ]] end
+function t.updateColliderSize() --[[ updateColliderSize | Line: 637 | Upvalues: t (copy) ]]
+    if not t.ImportantData.GrassObjects.collider then
+        return
+    end
+
+    if t.ImportantData.GrassObjects.colliderVisual.Transparency == 1 then
+        t.ImportantData.GrassObjects.collider.Size = Vector3.new(4, 5, 4)
+
+        return
+    end
+
+    if t.ImportantData.Stats.location == "blue" then
+        t.ImportantData.GrassObjects.collider.Size = Vector3.new(8, 8, 8)
+        t.ImportantData.GrassObjects.colliderVisual.Size = Vector3.new(8, 0.2, 8)
+
+        return
+    end
+
+    t.ImportantData.GrassObjects.collider.Size = Vector3.new(t.ImportantData.Stats.colliderSize, 8, t.ImportantData.Stats.colliderSize)
+    t.ImportantData.GrassObjects.colliderVisual.Size = Vector3.new(t.ImportantData.Stats.colliderSize, 0.2, t.ImportantData.Stats.colliderSize)
+end
+function t.updateDisplaySettings(p1) --[[ updateDisplaySettings | Line: 653 | Upvalues: t (copy) ]]
+    for k, v in pairs(t.ImportantData.Misc.displaySettings) do
+        v.Visible = false
+    end
+
+    t.ImportantData.Misc.displaySettings[p1].Visible = true
+end
+function t.updateTierSettings(p1) --[[ updateTierSettings | Line: 661 | Upvalues: t (copy) ]]
+    for k, v in pairs(t.ImportantData.Misc.tierSettings) do
+        v.Visible = false
+    end
+
+    t.ImportantData.Misc.tierSettings[p1].Visible = true
+    t.ImportantData.Stats.tierDisplay = p1
+end
+
+return t
