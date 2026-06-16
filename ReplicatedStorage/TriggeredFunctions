@@ -1,0 +1,39 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Data = require(ReplicatedStorage.Data)
+
+require(ReplicatedStorage.Multipliers)
+require(ReplicatedStorage.LethalNum)
+game:GetService("HttpService")
+require(ReplicatedStorage.Currencies)
+require(ReplicatedStorage.TabManager)
+require(ReplicatedStorage.CalculateTime)
+require(ReplicatedStorage.GrassTypes)
+require(ReplicatedStorage.Accomplishments)
+require(ReplicatedStorage.Format)
+require(ReplicatedStorage.Decelerate)
+require(ReplicatedStorage.PlayerInput)
+require(ReplicatedStorage.Upgrades)
+
+local ChangeVisual = require(ReplicatedStorage.ChangeVisual)
+
+game:GetService("BadgeService")
+game:GetService("Players")
+require(ReplicatedStorage.Planets)
+
+return {
+    trigger = function(p1, p2, p3) --[[ trigger | Line: 24 | Upvalues: ChangeVisual (copy), Data (copy) ]]
+        print(p2)
+        _ = ({
+            toEarth = function() --[[ Line: 28 | Upvalues: ChangeVisual (ref) ]]
+                ChangeVisual.ToEarth()
+            end,
+            bone = function(p1) --[[ Line: 31 | Upvalues: Data (ref) ]]
+                if Data.ImportantData.Stats.bone < p1 then
+                    Data.ImportantData.Stats.bestCharge = p1
+                end
+
+                print(Data.ImportantData.Stats.bone)
+            end
+        })[p2](p3)
+    end
+}
