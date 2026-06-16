@@ -1,0 +1,512 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+game:GetService("PhysicsService")
+
+local ContextActionService = game:GetService("ContextActionService")
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+
+require(ReplicatedStorage.EarnGrass)
+
+local GrassTypes = require(ReplicatedStorage.GrassTypes)
+local Data = require(ReplicatedStorage.Data)
+local Currencies = require(ReplicatedStorage.Currencies)
+local ChangeVisual = require(ReplicatedStorage.ChangeVisual)
+
+require(ReplicatedStorage.Notifications)
+require(ReplicatedStorage.Soundificator)
+
+local GalaxyGen = require(ReplicatedStorage.GalaxyGen)
+local Dialogue = require(ReplicatedStorage.Dialogue)
+local Boss = require(ReplicatedStorage.Boss)
+local Fields = require(ReplicatedStorage.Fields)
+local BuyUpgrade = require(ReplicatedStorage.BuyUpgrade)
+local RunService = game:GetService("RunService")
+
+game:GetService("GuiService").AutoSelectGuiEnabled = false
+
+local GrassCollider = ReplicatedStorage:WaitForChild("GrassCollider")
+local GrassCollider2 = GrassCollider:WaitForChild("GrassCollider")
+local GrassColliderVisual = ReplicatedStorage:WaitForChild("GrassColliderVisual")
+local Locator = ReplicatedStorage:WaitForChild("Locator")
+local Locator2 = Locator:WaitForChild("Locator")
+local LocatorPerm = Locator:WaitForChild("LocatorPerm")
+local t = {}
+
+for v1, v2 in ReplicatedStorage.Effects:GetChildren() do
+    local v3 = v2:Clone()
+
+    v3.Parent = workspace.Effects
+
+    if not v2:HasTag("ignore") then
+        t[v2.Name] = {
+            state = false,
+            obj = v3
+        }
+    end
+end
+
+GrassColliderVisual.Parent = GrassCollider2
+
+local LocalPlayer = Players.LocalPlayer
+local v4 = nil
+local GenericFunction = ReplicatedStorage.Remotes:WaitForChild("GenericFunction")
+
+Data.ImportantData.GrassObjects.collider = GrassCollider2
+Data.ImportantData.GrassObjects.colliderVisual = GrassColliderVisual
+Locator.Parent = workspace
+
+local function onInputBegan(p1, p2) --[[ onInputBegan | Line: 53 | Upvalues: UserInputService (copy), GalaxyGen (copy) ]]
+    if UserInputService:IsKeyDown(Enum.KeyCode.One) then
+        GalaxyGen.ActivateSkill(1)
+    end
+
+    if UserInputService:IsKeyDown(Enum.KeyCode.Two) then
+        GalaxyGen.ActivateSkill(2)
+    end
+
+    if not UserInputService:IsKeyDown(Enum.KeyCode.Three) then
+        return
+    end
+
+    GalaxyGen.ActivateSkill(3)
+end
+
+UserInputService.InputBegan:Connect(onInputBegan)
+
+local function v5(p1) --[[ onCharacterAdded | Line: 67 | Upvalues: v5 (copy), v4 (ref), Dialogue (copy), Data (copy), Boss (copy), GalaxyGen (copy), ChangeVisual (copy), Currencies (copy) ]]
+    if not p1 then
+        return
+    end
+
+    local HumanoidRootPart = p1:WaitForChild("HumanoidRootPart", 5)
+
+    if not HumanoidRootPart then
+        task.wait(5)
+        v5(p1)
+
+        return
+    end
+
+    v4 = HumanoidRootPart
+    Dialogue.EndDialogue()
+
+    if Data.ImportantData.Stats.endSequence then
+        Data.ImportantData.Stats.endSequence = false
+        Boss.ResetBoss()
+    end
+
+    if not (GalaxyGen.CurrentGalaxy.current > 0) then
+        Currencies.UpdateSolarChallenges()
+        Data.ImportantData.Stats.mapLocation = "none"
+        ChangeVisual.ReturnCamera()
+
+        return
+    end
+
+    GalaxyGen.Respawn()
+    ChangeVisual.ToDungeon()
+    ChangeVisual.UpdateVisual()
+    GalaxyGen.UpdateGalaxy()
+    GalaxyGen.UpdateRoom()
+    Currencies.UpdateSolarChallenges()
+    Data.ImportantData.Stats.mapLocation = "none"
+    ChangeVisual.ReturnCamera()
+end
+
+GrassCollider.Parent = workspace
+LocalPlayer.CharacterAdded:Connect(v5)
+
+local function handleAction(p1, p2, p3) --[[ handleAction | Line: 129 | Upvalues: Data (copy), GalaxyGen (copy), Dialogue (copy) ]]
+    if p1 == "FightEnemy" and (p2 == Enum.UserInputState.Begin and (Data.ImportantData.Stats.contextEnemy ~= nil and Data.ImportantData.Stats.contextEnemy:FindFirstChild("Id"))) then
+        GalaxyGen.EngageEnemy(Data.ImportantData.Stats.contextEnemy.Id.Value, Data.ImportantData.Stats.contextEnemy.Parent.Parent, Data.ImportantData.Stats.contextEnemy.Level.Value)
+    end
+
+    if p1 == "DungeonPortal" and (p2 == Enum.UserInputState.Begin and Data.ImportantData.Stats.contextPortal ~= nil) then
+        GalaxyGen.StartDungeon(Data.ImportantData.Stats.contextPortal.Id.Value, Data.ImportantData.Stats.contextPortal.Level.Value, Data.ImportantData.Stats.contextPortal.Length.Value, if Data.ImportantData.Stats.contextPortal:FindFirstChild("Difficulty") then Data.ImportantData.Stats.contextPortal.Difficulty.Value or nil else nil, Data.ImportantData.Stats.contextPortal:FindFirstChild("NestedDungeon"))
+    end
+
+    if p1 == "Interactable" and p2 == Enum.UserInputState.Begin then
+        if GalaxyGen.CombatState.fighting then
+            return
+        end
+
+        if Data.ImportantData.Stats.contextInteractable ~= nil then
+            local contextInteractable = Data.ImportantData.Stats.contextInteractable
+            local InteractableContext = contextInteractable.InteractableContext
+
+            if InteractableContext.Name ~= "InteractableContext" then
+                return
+            end
+
+            if InteractableContext.InteractType.Value == "master" then
+                GalaxyGen.MasterDungeon(contextInteractable)
+            end
+
+            if InteractableContext.InteractType.Value == "sp" then
+                GalaxyGen.RestoreSP(contextInteractable)
+            end
+
+            if InteractableContext.InteractType.Value == "hp" then
+                GalaxyGen.RestoreHP(contextInteractable)
+            end
+
+            if InteractableContext.InteractType.Value == "shop" then
+                GalaxyGen.OpenShop()
+            end
+        end
+    end
+
+    if p1 ~= "Dialogue" or (p2 ~= Enum.UserInputState.Begin or Data.ImportantData.Stats.contextDia == nil) then
+        return
+    end
+
+    local DialogueContext = Data.ImportantData.Stats.contextDia.DialogueContext
+
+    if DialogueContext.Name ~= "DialogueContext" then
+        return
+    end
+
+    Dialogue.SetDialogue(DialogueContext.Type.Value, 1, false)
+end
+
+local v6 = 0
+local v7 = 0
+local v8 = "main"
+local v9 = false
+local v10 = false
+local v11 = false
+local v12 = false
+
+local function HandleColliderCollisions(p1) --[[ HandleColliderCollisions | Line: 187 | Upvalues: Fields (copy), GrassTypes (copy), GenericFunction (copy), Currencies (copy), v8 (ref), v6 (ref), BuyUpgrade (copy), GalaxyGen (copy), LocalPlayer (copy), Data (copy), ContextActionService (copy), handleAction (copy), v9 (ref), v11 (ref), v10 (ref), v12 (ref) ]]
+    for k, v in pairs(p1) do
+        if v.Name == "g" and v.Transparency < 1 then
+            v.Transparency = 1
+            v.CanCollide = false
+            v.CanTouch = false
+
+            if v:FindFirstChild("Temp") then
+                v.Temp:Destroy()
+
+                if v:FindFirstChild("Temp") then
+                    v.Temp:Destroy()
+                end
+            end
+
+            local v1 = v:GetAttribute("field")
+            local v2 = v:GetAttribute("id")
+            local v3 = Fields.Fields[v1]
+
+            if v3 then
+                v3.objects[v] = nil
+                v3.disabled[v] = true
+                v3.counter = v3.counter - 1
+            end
+
+            if GrassTypes.Types[v2] and GrassTypes.Types[v2].special then
+                if GenericFunction:InvokeServer({
+                    id = "cut",
+                    quantity = 1,
+                    field = v1,
+                    identifier = v2
+                }) then
+                    Currencies.updateGrassCap()
+                end
+            else
+                v6 = if v8 == v1 then v6 + 1 else 1
+                v8 = v1
+            end
+        end
+
+        if v:HasTag("Bit") then
+            local v5 = v:GetAttribute("SpawnPos")
+
+            v.Parent:Destroy()
+            BuyUpgrade.CollectBit(v5)
+        end
+
+        if GalaxyGen.CurrentGalaxy.current > 0 then
+            if v.Name == "Bit" and v.Transparency < 1 then
+                v.Transparency = 1
+                GalaxyGen.CollectBit(v.Value.Value)
+                GalaxyGen.UpdateGalaxy()
+            end
+
+            if v.Name == "Entrance" then
+                if GalaxyGen.CurrentGalaxy.currentPos ~= Vector2.new(v.RoomX.Value, v.RoomY.Value) then
+                    GalaxyGen.QuitCombat()
+                end
+
+                GalaxyGen.CurrentGalaxy.currentPos = Vector2.new(v.RoomX.Value, v.RoomY.Value)
+                GalaxyGen.CurrentGalaxy.currentRoom = GalaxyGen.CurrentGalaxy.rooms[v.RoomX.Value .. "/" .. v.RoomY.Value].ref
+                GalaxyGen.UpdateRoom()
+                GalaxyGen.CurrentGalaxy.current = math.max(GalaxyGen.CurrentGalaxy.current, v.RoomNumber.Value)
+                GalaxyGen.CurrentGalaxy.dungeonLevel = GalaxyGen.CurrentGalaxy.baseLevel + GalaxyGen.CurrentGalaxy.current * GalaxyGen.CurrentGalaxy.levelScaling
+                GalaxyGen.UpdateGalaxy()
+            end
+
+            if v.Name == "End" then
+                GalaxyGen.CompleteDungeon()
+            end
+
+            if v.Name == "DungeonDeath" then
+                LocalPlayer.Character:WaitForChild("Humanoid").Health = 0
+            end
+
+            if v.Name == "EnemyContext" then
+                if Data.ImportantData.Misc.toggles.glauto.state then
+                    Data.ImportantData.Stats.contextEnemy = v.Parent.Parent.StartCombat.Click
+
+                    if Data.ImportantData.Stats.contextEnemy ~= nil and Data.ImportantData.Stats.contextEnemy:FindFirstChild("Id") then
+                        GalaxyGen.EngageEnemy(Data.ImportantData.Stats.contextEnemy.Id.Value, Data.ImportantData.Stats.contextEnemy.Parent.Parent, Data.ImportantData.Stats.contextEnemy.Level.Value)
+                    end
+                else
+                    if Data.ImportantData.Stats.contextEnemy ~= nil and Data.ImportantData.Stats.contextEnemy ~= v.Parent.Parent.StartCombat.Click then
+                        ContextActionService:UnbindAction("FightEnemy")
+                        Data.ImportantData.Stats.contextEnemy = nil
+                    end
+
+                    if Data.ImportantData.Stats.contextEnemy == nil then
+                        ContextActionService:BindAction("FightEnemy", handleAction, true, Enum.KeyCode.E)
+                        ContextActionService:SetPosition("FightEnemy", UDim2.new(0.28, 0, 0.5, 0))
+                        ContextActionService:SetImage("FightEnemy", "rbxassetid://12893403189")
+                        Data.ImportantData.Stats.contextEnemy = v.Parent.Parent.StartCombat.Click
+                    end
+
+                    v9 = true
+                end
+            end
+
+            if v.Name == "InteractableContext" then
+                if Data.ImportantData.Stats.contextInteractable ~= nil and Data.ImportantData.Stats.contextInteractable ~= v.Parent then
+                    ContextActionService:UnbindAction("Interactable")
+                    Data.ImportantData.Stats.contextInteractable = nil
+                end
+
+                if Data.ImportantData.Stats.contextInteractable == nil then
+                    ContextActionService:BindAction("Interactable", handleAction, true, Enum.KeyCode.E)
+                    ContextActionService:SetPosition("Interactable", UDim2.new(0.28, 0, 0.5, 0))
+                    ContextActionService:SetImage("Interactable", "rbxassetid://9592531880")
+                    Data.ImportantData.Stats.contextInteractable = v.Parent
+                end
+
+                v11 = true
+            end
+        end
+
+        if v.Name == "PortalContext" then
+            if Data.ImportantData.Stats.contextPortal ~= nil and Data.ImportantData.Stats.contextPortal ~= v.Parent.StartDungeon.Click then
+                ContextActionService:UnbindAction("DungeonPortal")
+                Data.ImportantData.Stats.contextPortal = nil
+            end
+
+            if Data.ImportantData.Stats.contextPortal == nil then
+                ContextActionService:BindAction("DungeonPortal", handleAction, true, Enum.KeyCode.E)
+                ContextActionService:SetPosition("DungeonPortal", UDim2.new(0.28, 0, 0.5, 0))
+                ContextActionService:SetTitle("DungeonPortal", "Enter")
+                Data.ImportantData.Stats.contextPortal = v.Parent.StartDungeon.Click
+            end
+
+            v10 = true
+        end
+
+        if v.Name == "DialogueContext" then
+            if Data.ImportantData.Stats.contextDia ~= nil and Data.ImportantData.Stats.contextDia ~= v.Parent then
+                ContextActionService:UnbindAction("Dialogue")
+                Data.ImportantData.Stats.contextDia = nil
+            end
+
+            if Data.ImportantData.Stats.contextDia == nil then
+                ContextActionService:BindAction("Dialogue", handleAction, true, Enum.KeyCode.E)
+                ContextActionService:SetPosition("Dialogue", UDim2.new(0.28, 0, 0.5, 0))
+                ContextActionService:SetImage("Dialogue", "rbxassetid://10062393617")
+                Data.ImportantData.Stats.contextDia = v.Parent
+            end
+
+            v12 = true
+        end
+    end
+end
+
+local v13 = 0
+local v14 = 0
+local v15 = 0
+local v16 = 0
+local v17 = true
+local v18 = OverlapParams.new()
+
+v18.CollisionGroup = "Collider"
+v18.RespectCanCollide = false
+RunService.Heartbeat:Connect(function(p1) --[[ Line: 352 | Upvalues: v4 (ref), v16 (ref), HandleColliderCollisions (copy), GrassCollider2 (copy), v18 (copy), t (copy), Data (copy), v14 (ref), GrassColliderVisual (copy), v7 (ref), v6 (ref), GenericFunction (copy), v8 (ref), Currencies (copy), v13 (ref), v17 (ref), Locator2 (copy), LocatorPerm (copy), v15 (ref), v9 (ref), ContextActionService (copy), v10 (ref), v11 (ref), v12 (ref) ]]
+    if not v4 then
+        return
+    end
+
+    local v2 = Vector3.new(v4.Position.X, math.max(-24995, v4.Position.Y), v4.Position.Z)
+    local v3 = CFrame.new(v2)
+    local v42 = CFrame.new(v2)
+
+    v16 = v16 + p1
+
+    if v16 >= 0.033 then
+        v16 = 0
+        HandleColliderCollisions(workspace:GetPartsInPart(GrassCollider2, v18))
+    end
+
+    for v5, v62 in t do
+        v62.state = false
+    end
+
+    if Data.ImportantData.Stats.location == "grassland" or Data.ImportantData.Stats.currDungeon == "temple" then
+        t.Wind.state = true
+    end
+
+    if Data.ImportantData.Stats.location == "snow" then
+        t.Snow.state = true
+    end
+
+    if Data.ImportantData.Stats.location == "jungle" then
+        local _ = CFrame.new(v42.Position) * CFrame.Angles(0, 0, -1.5707963267948966)
+
+        if Data.ImportantData.Stats.event == "ruby" then
+            t.Ruby.state = true
+        else
+            t.SoftRain.state = Data.ImportantData.Stats.event == "none"
+            t.HardRain.state = if Data.ImportantData.Stats.event == "storm" then true else Data.ImportantData.Stats.event == "grow"
+            t.Spore.state = true
+        end
+    end
+
+    if Data.ImportantData.Stats.location == "temple" then
+        t.Spore.state = true
+    end
+
+    if Data.ImportantData.Stats.location == "cavern" then
+        local _ = CFrame.new(v42.Position) * CFrame.Angles(0, 0, -1.5707963267948966)
+
+        t.BlueSpore.state = true
+        t.PinkSpore.state = true
+        t.GreenSpore.state = true
+    end
+
+    if Data.ImportantData.Stats.location == "chamber2" then
+        t.HardRain.state = true
+    end
+
+    if Data.ImportantData.Stats.location == "desert" then
+        if Data.ImportantData.Stats.prog2 < 2 then
+            t.Sandstorm.state = true
+        else
+            t.SandstormCalm.state = true
+        end
+    end
+
+    local v82 = CFrame.new(v42.Position) * CFrame.Angles(0, 0, -1.5707963267948966)
+
+    for v92, v102 in t do
+        v102.obj.ParticleEmitter.Enabled = v102.state
+
+        if v102.state then
+            v102.obj.CFrame = v82
+        end
+    end
+
+    v14 = v14 + p1
+
+    if v14 >= 0.5 then
+        GrassCollider2.CFrame = v3
+        GrassCollider2.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+    end
+
+    GrassColliderVisual.CFrame = CFrame.new(v2 - Vector3.new(0, 3, 0))
+
+    local x = v4.Position.x
+    local z = v4.Position.z
+    local y = v4.Position.y
+
+    if Data.ImportantData.Stats.inField then
+        if GrassColliderVisual.Transparency == 1 then
+            GrassColliderVisual.Transparency = 0.7
+            Data.updateColliderSize()
+        end
+    elseif GrassColliderVisual.Transparency < 1 then
+        GrassColliderVisual.Transparency = 1
+        Data.updateColliderSize()
+    end
+
+    v7 = v7 + Data.ImportantData.Stats.deltaTime
+
+    if v7 >= 0.2 then
+        v7 = 0
+
+        if v6 > 0 then
+            local v112 = v6
+
+            v6 = 0
+
+            if GenericFunction:InvokeServer({
+                id = "cut",
+                field = v8,
+                identifier = Data.ImportantData.Stats.currentTier,
+                quantity = math.min(5000, v112)
+            }) then
+                Currencies.updateGrassCap()
+            end
+        end
+    end
+
+    v13 = v13 + p1
+
+    if v17 then
+        if v13 >= 0.3 then
+            v13 = 0
+            v17 = false
+        end
+    elseif v13 >= 5 then
+        v13 = 0
+        v17 = true
+    end
+
+    if v17 then
+        Locator2.CFrame = CFrame.new(v2)
+    else
+        Locator2.CFrame = CFrame.new(Vector3.new(20000, 20000, 20000))
+    end
+
+    Locator2.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+    LocatorPerm.CFrame = CFrame.new(v2)
+    LocatorPerm.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+    v15 = v15 + p1
+
+    if not (v15 >= 0.5) then
+        return
+    end
+
+    v15 = 0
+
+    if not v9 then
+        ContextActionService:UnbindAction("FightEnemy")
+        Data.ImportantData.Stats.contextEnemy = nil
+    end
+
+    if not v10 then
+        ContextActionService:UnbindAction("DungeonPortal")
+        Data.ImportantData.Stats.contextPortal = nil
+    end
+
+    if not v11 then
+        ContextActionService:UnbindAction("Interactable")
+        Data.ImportantData.Stats.contextInteractable = nil
+    end
+
+    if not v12 then
+        ContextActionService:UnbindAction("Dialogue")
+        Data.ImportantData.Stats.contextDia = nil
+    end
+
+    v9 = false
+    v10 = false
+    v11 = false
+    v12 = false
+end)
+v5(LocalPlayer.Character)
