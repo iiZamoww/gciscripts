@@ -1,0 +1,11 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+require(ReplicatedStorage.Data)
+require(ReplicatedStorage.Currencies)
+require(ReplicatedStorage.LethalNum)
+
+return {
+    Corruptors = {
+        p = {}
+    }
+}
