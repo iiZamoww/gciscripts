@@ -1,0 +1,166 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LethalNum = require(ReplicatedStorage.LethalNum)
+
+require(ReplicatedStorage.Data)
+
+local InfoStore = require(ReplicatedStorage.InfoStore)
+local t = {
+    Items = {
+        grass = {
+            img = "rbxassetid://8566935398",
+            info = "Grass Value",
+            upg = "grass",
+            activated = false,
+            order = 1,
+            level = LethalNum.new(0, 0),
+            prev = LethalNum.new(0, 0),
+            baseReq = LethalNum.new(5, 1),
+            inc = LethalNum.new(5, 0),
+            progress = LethalNum.new(0, 0),
+            bpl = LethalNum.new(5, 0)
+        },
+        xp = {
+            img = "rbxassetid://8690392280",
+            info = "XP",
+            upg = "xp",
+            activated = false,
+            order = 3,
+            level = LethalNum.new(0, 0),
+            prev = LethalNum.new(0, 0),
+            baseReq = LethalNum.new(5, 1),
+            inc = LethalNum.new(5, 0),
+            progress = LethalNum.new(0, 0),
+            bpl = LethalNum.new(3, 0)
+        },
+        cos = {
+            img = "rbxassetid://10025816906",
+            info = "Cosmic",
+            upg = "cos",
+            activated = false,
+            order = 4,
+            level = LethalNum.new(0, 0),
+            prev = LethalNum.new(0, 0),
+            baseReq = LethalNum.new(5, 1),
+            inc = LethalNum.new(5, 0),
+            progress = LethalNum.new(0, 0),
+            bpl = LethalNum.new(3, 0)
+        },
+        df = {
+            img = "rbxassetid://9924947212",
+            info = "Dark Fruits",
+            upg = "df",
+            activated = false,
+            order = 5,
+            level = LethalNum.new(0, 0),
+            prev = LethalNum.new(0, 0),
+            baseReq = LethalNum.new(5, 3),
+            inc = LethalNum.new(5, 2),
+            progress = LethalNum.new(0, 0),
+            bpl = LethalNum.new(5, 0)
+        },
+        cl = {
+            img = "rbxassetid://9769181676",
+            info = "Clouds",
+            upg = "cl",
+            activated = false,
+            order = 6,
+            level = LethalNum.new(0, 0),
+            prev = LethalNum.new(0, 0),
+            baseReq = LethalNum.new(1, 2),
+            inc = LethalNum.new(1, 1),
+            progress = LethalNum.new(0, 0),
+            bpl = LethalNum.new(3, 0)
+        },
+        ob = {
+            img = "rbxassetid://10027648911",
+            info = "Observatorium",
+            upg = "ob",
+            activated = false,
+            order = 7,
+            level = LethalNum.new(0, 0),
+            prev = LethalNum.new(0, 0),
+            baseReq = LethalNum.new(1, 3),
+            inc = LethalNum.new(1, 2),
+            progress = LethalNum.new(0, 0),
+            bpl = LethalNum.new(2, 0)
+        },
+        oil = {
+            img = "rbxassetid://9333103268",
+            info = "Oil",
+            upg = "oil",
+            cent = "oil",
+            activated = false,
+            order = 8,
+            level = LethalNum.new(0, 0),
+            prev = LethalNum.new(0, 0),
+            baseReq = LethalNum.new(1, 2),
+            inc = LethalNum.new(1, 1),
+            progress = LethalNum.new(0, 0),
+            bpl = LethalNum.new(3, 0)
+        },
+        lines = {
+            img = "rbxassetid://10427780685",
+            info = "Lines",
+            upg = "lines",
+            activated = false,
+            order = 9,
+            level = LethalNum.new(0, 0),
+            prev = LethalNum.new(0, 0),
+            baseReq = LethalNum.new(1, 3),
+            inc = LethalNum.new(1, 2),
+            progress = LethalNum.new(0, 0),
+            bpl = LethalNum.new(3, 0),
+            visibleReq = function() --[[ visibleReq | Line: 137 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.constellation.b > 0
+            end
+        }
+    }
+}
+
+function t.GetBonus(p1) --[[ GetBonus | Line: 143 | Upvalues: t (copy), LethalNum (copy) ]]
+    local v1 = t.Items[p1]
+
+    if v1 then
+        return LethalNum.multiply(v1.level, v1.bpl)
+    end
+
+    return LethalNum.new(1, 0)
+end
+function t.GetPreviousBest(p1) --[[ GetPreviousBest | Line: 151 | Upvalues: t (copy), LethalNum (copy) ]]
+    local v1 = t.Items[p1]
+
+    if v1 then
+        return LethalNum.multiply(v1.prev, v1.bpl)
+    end
+
+    return LethalNum.new(1, 0)
+end
+function t.GetBonusM(p1, p2) --[[ GetBonusM | Line: 159 | Upvalues: t (copy), LethalNum (copy) ]]
+    local v1 = t.Items[p2]
+
+    if v1 then
+        return LethalNum.divide(LethalNum.add(LethalNum.new(1, 2), LethalNum.multiply(p1.level, v1.bpl)), LethalNum.new(1, 2))
+    end
+
+    return LethalNum.new(1, 0)
+end
+function t.GetSlots(p1) --[[ GetSlots | Line: 169 | Upvalues: t (copy) ]]
+    local count = 0
+
+    for k, v in pairs(if p1 and p1 then p1 else t.Items) do
+        if v.activated then
+            count = count + 1
+        end
+    end
+
+    return count
+end
+function t.GetCost(p1) --[[ GetCost | Line: 180 | Upvalues: LethalNum (copy) ]]
+    if p1.baseReq then
+        return LethalNum.add(LethalNum.multiply(p1.inc, p1.level), p1.baseReq)
+    end
+
+    return LethalNum.new(1, 0)
+end
+
+return t
