@@ -1,0 +1,3913 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Data = require(ReplicatedStorage.Data)
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local Format = require(ReplicatedStorage.Format)
+local CurrencyTypes = require(ReplicatedStorage.CurrencyTypes)
+local t = {
+    Slots = {},
+    Layouts = {
+        {},
+        {},
+        {},
+        {},
+        {}
+    },
+    Constellations = {
+        {
+            {
+                icon = "rbxassetid://10626018189",
+                displayName = "Basic Generator",
+                cstype = 1,
+                tier = 1,
+                resource = "lines",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 0),
+                power = LethalNum.new(1, 0),
+                instability = LethalNum.new(3, 0)
+            },
+            {
+                icon = "rbxassetid://10626018189",
+                displayName = "Advanced Generator",
+                cstype = 1,
+                tier = 2,
+                resource = "lines",
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(2.5, 2),
+                power = LethalNum.new(1.5, 1),
+                instability = LethalNum.new(1.5, 1)
+            },
+            {
+                icon = "rbxassetid://10626018189",
+                displayName = "Powerful Generator",
+                cstype = 1,
+                tier = 3,
+                resource = "lines",
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(1.5, 3),
+                power = LethalNum.new(1, 2),
+                instability = LethalNum.new(7.5, 1)
+            },
+            {
+                icon = "rbxassetid://10626018189",
+                displayName = "Mega Generator",
+                cstype = 1,
+                tier = 4,
+                resource = "lines",
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(2, 6),
+                power = LethalNum.new(7.5, 2),
+                instability = LethalNum.new(5, 2)
+            },
+            {
+                icon = "rbxassetid://10626018189",
+                displayName = "Giga Generator",
+                cstype = 1,
+                tier = 5,
+                resource = "lines",
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(1, 9),
+                power = LethalNum.new(5, 3),
+                instability = LethalNum.new(2.5, 3)
+            },
+            {
+                icon = "rbxassetid://10626018189",
+                displayName = "Tera Generator",
+                cstype = 1,
+                tier = 6,
+                resource = "lines",
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(1, 12),
+                power = LethalNum.new(2.5, 4),
+                instability = LethalNum.new(2, 4)
+            },
+            {
+                icon = "rbxassetid://10626018189",
+                displayName = "Peta Generator",
+                cstype = 1,
+                tier = 7,
+                resource = "lines",
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(1, 15),
+                power = LethalNum.new(1, 5),
+                instability = LethalNum.new(3, 5)
+            },
+            {
+                icon = "rbxassetid://10626018189",
+                displayName = "Exa Generator",
+                cstype = 1,
+                tier = 8,
+                resource = "lines",
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(1, 19),
+                power = LethalNum.new(4, 5),
+                instability = LethalNum.new(4, 6)
+            },
+            {
+                icon = "rbxassetid://10626018189",
+                displayName = "Zetta Generator",
+                cstype = 1,
+                tier = 9,
+                resource = "lines",
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(1, 23),
+                power = LethalNum.new(2, 6),
+                instability = LethalNum.new(5, 7)
+            },
+            {
+                icon = "rbxassetid://10626018189",
+                displayName = "Yotta Generator",
+                cstype = 1,
+                tier = 10,
+                resource = "lines",
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(1, 27),
+                power = LethalNum.new(1.5, 7),
+                instability = LethalNum.new(6, 8)
+            },
+            {
+                icon = "rbxassetid://11174273614",
+                displayName = "Basic Mega-Generator",
+                cstype = 1,
+                tier = 11,
+                resource = "lines",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 40),
+                power = LethalNum.new(1, 9),
+                instability = LethalNum.new(1, 10)
+            },
+            {
+                icon = "rbxassetid://11174273614",
+                displayName = "Advanced Mega-Generator",
+                cstype = 1,
+                tier = 12,
+                resource = "lines",
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(1, 50),
+                power = LethalNum.new(1, 11),
+                instability = LethalNum.new(1, 11)
+            },
+            {
+                icon = "rbxassetid://11174273614",
+                displayName = "Powerful Mega-Generator",
+                cstype = 1,
+                tier = 13,
+                resource = "lines",
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(1, 60),
+                power = LethalNum.new(1, 13),
+                instability = LethalNum.new(1, 12)
+            },
+            {
+                icon = "rbxassetid://11174273614",
+                displayName = "Mega Mega-Generator",
+                cstype = 1,
+                tier = 14,
+                resource = "lines",
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(1, 70),
+                power = LethalNum.new(1, 15),
+                instability = LethalNum.new(1, 13)
+            },
+            {
+                icon = "rbxassetid://11174273614",
+                displayName = "Giga Mega-Generator",
+                cstype = 1,
+                tier = 15,
+                resource = "lines",
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(1, 80),
+                power = LethalNum.new(1, 17),
+                instability = LethalNum.new(1, 14)
+            },
+            {
+                icon = "rbxassetid://11174273614",
+                displayName = "Tera Mega-Generator",
+                cstype = 1,
+                tier = 16,
+                resource = "lines",
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(1, 90),
+                power = LethalNum.new(1, 19),
+                instability = LethalNum.new(1, 15)
+            },
+            {
+                icon = "rbxassetid://11174273614",
+                displayName = "Peta Mega-Generator",
+                cstype = 1,
+                tier = 17,
+                resource = "lines",
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(1, 100),
+                power = LethalNum.new(1, 21),
+                instability = LethalNum.new(1, 16)
+            },
+            {
+                icon = "rbxassetid://11174273614",
+                displayName = "Exa Mega-Generator",
+                cstype = 1,
+                tier = 18,
+                resource = "lines",
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(1, 110),
+                power = LethalNum.new(1, 23),
+                instability = LethalNum.new(1, 17)
+            },
+            {
+                icon = "rbxassetid://11174273614",
+                displayName = "Zetta Mega-Generator",
+                cstype = 1,
+                tier = 19,
+                resource = "lines",
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(1, 120),
+                power = LethalNum.new(1, 25),
+                instability = LethalNum.new(1, 18)
+            },
+            {
+                icon = "rbxassetid://11174273614",
+                displayName = "Yotta Mega-Generator",
+                cstype = 1,
+                tier = 20,
+                resource = "lines",
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(1, 130),
+                power = LethalNum.new(1, 27),
+                instability = LethalNum.new(1, 19)
+            }
+        },
+        {
+            {
+                icon = "rbxassetid://10626018452",
+                displayName = "Basic Stabilizer",
+                cstype = 2,
+                tier = 1,
+                resource = "lines",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(5, 1),
+                power = LethalNum.new(2, 0),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10626018452",
+                displayName = "Advanced Stabilizer",
+                cstype = 2,
+                tier = 2,
+                resource = "lines",
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(1.5, 3),
+                power = LethalNum.new(8, 0),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10626018452",
+                displayName = "Powerful Stabilizer",
+                cstype = 2,
+                tier = 3,
+                resource = "lines",
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(2.5, 4),
+                power = LethalNum.new(4, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10626018452",
+                displayName = "Mega Stabilizer",
+                cstype = 2,
+                tier = 4,
+                resource = "lines",
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(5, 6),
+                power = LethalNum.new(1.5, 2),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10626018452",
+                displayName = "Giga Stabilizer",
+                cstype = 2,
+                tier = 5,
+                resource = "lines",
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(5, 9),
+                power = LethalNum.new(6, 2),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10626018452",
+                displayName = "Tera Stabilizer",
+                cstype = 2,
+                tier = 6,
+                resource = "lines",
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(3.5, 12),
+                power = LethalNum.new(2.4, 3),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10626018452",
+                displayName = "Peta Stabilizer",
+                cstype = 2,
+                tier = 7,
+                resource = "lines",
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(2.5, 15),
+                power = LethalNum.new(1, 4),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10626018452",
+                displayName = "Exa Stabilizer",
+                cstype = 2,
+                tier = 8,
+                resource = "lines",
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(3, 19),
+                power = LethalNum.new(4, 4),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10626018452",
+                displayName = "Zetta Stabilizer",
+                cstype = 2,
+                tier = 9,
+                resource = "lines",
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(3, 23),
+                power = LethalNum.new(2, 5),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10626018452",
+                displayName = "Yotta Stabilizer",
+                cstype = 2,
+                tier = 10,
+                resource = "lines",
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(3, 27),
+                power = LethalNum.new(9, 5),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11174274057",
+                displayName = "Basic Mega-Stabilizer",
+                cstype = 2,
+                tier = 11,
+                resource = "lines",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(3, 40),
+                power = LethalNum.new(1, 8),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11174274057",
+                displayName = "Advanced Mega-Stabilizer",
+                cstype = 2,
+                tier = 12,
+                resource = "lines",
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(3, 50),
+                power = LethalNum.new(1, 9),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11174274057",
+                displayName = "Powerful Mega-Stabilizer",
+                cstype = 2,
+                tier = 13,
+                resource = "lines",
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(3, 60),
+                power = LethalNum.new(1, 10),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11174274057",
+                displayName = "Mega Mega-Stabilizer",
+                cstype = 2,
+                tier = 14,
+                resource = "lines",
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(3, 70),
+                power = LethalNum.new(1, 11),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11174274057",
+                displayName = "Giga Mega-Stabilizer",
+                cstype = 2,
+                tier = 15,
+                resource = "lines",
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(3, 80),
+                power = LethalNum.new(1, 12),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11174274057",
+                displayName = "Tera Mega-Stabilizer",
+                cstype = 2,
+                tier = 16,
+                resource = "lines",
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(3, 90),
+                power = LethalNum.new(1, 13),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11174274057",
+                displayName = "Peta Mega-Stabilizer",
+                cstype = 2,
+                tier = 17,
+                resource = "lines",
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(3, 100),
+                power = LethalNum.new(1, 14),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11174274057",
+                displayName = "Exa Mega-Stabilizer",
+                cstype = 2,
+                tier = 18,
+                resource = "lines",
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(3, 110),
+                power = LethalNum.new(1, 15),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11174274057",
+                displayName = "Zetta Mega-Stabilizer",
+                cstype = 2,
+                tier = 19,
+                resource = "lines",
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(3, 120),
+                power = LethalNum.new(1, 16),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11174274057",
+                displayName = "Yotta Mega-Stabilizer",
+                cstype = 2,
+                tier = 20,
+                resource = "lines",
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(3, 130),
+                power = LethalNum.new(1, 17),
+                instability = LethalNum.new(0, 0)
+            }
+        },
+        {
+            {
+                icon = "rbxassetid://10626017988",
+                displayName = "Basic Reinforcement",
+                cstype = 3,
+                tier = 1,
+                resource = "lines",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1.5, 2),
+                power = LethalNum.new(1, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10626017988",
+                displayName = "Advanced Reinforcement",
+                cstype = 3,
+                tier = 2,
+                resource = "lines",
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(3.5, 3),
+                power = LethalNum.new(5, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10626017988",
+                displayName = "Powerful Reinforcement",
+                cstype = 3,
+                tier = 3,
+                resource = "lines",
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(7.5, 4),
+                power = LethalNum.new(4, 2),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10626017988",
+                displayName = "Mega Reinforcement",
+                cstype = 3,
+                tier = 4,
+                resource = "lines",
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(1, 7),
+                power = LethalNum.new(1, 3),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10626017988",
+                displayName = "Giga Reinforcement",
+                cstype = 3,
+                tier = 5,
+                resource = "lines",
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(1, 10),
+                power = LethalNum.new(4, 3),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10626017988",
+                displayName = "Tera Reinforcement",
+                cstype = 3,
+                tier = 6,
+                resource = "lines",
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(5.5, 12),
+                power = LethalNum.new(1, 4),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10626017988",
+                displayName = "Peta Reinforcement",
+                cstype = 3,
+                tier = 7,
+                resource = "lines",
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(4.5, 15),
+                power = LethalNum.new(2.5, 4),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10626017988",
+                displayName = "Exa Reinforcement",
+                cstype = 3,
+                tier = 8,
+                resource = "lines",
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(5, 19),
+                power = LethalNum.new(7, 4),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10626017988",
+                displayName = "Zetta Reinforcement",
+                cstype = 3,
+                tier = 9,
+                resource = "lines",
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(5, 23),
+                power = LethalNum.new(2.5, 5),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10626017988",
+                displayName = "Yotta Reinforcement",
+                cstype = 3,
+                tier = 10,
+                resource = "lines",
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(5, 27),
+                power = LethalNum.new(7, 5),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11174274293",
+                displayName = "Basic Mega-Reinforcement",
+                cstype = 3,
+                tier = 11,
+                resource = "lines",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(5, 40),
+                power = LethalNum.new(1, 7),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11174274293",
+                displayName = "Advanced Mega-Reinforcement",
+                cstype = 3,
+                tier = 12,
+                resource = "lines",
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(5, 50),
+                power = LethalNum.new(1, 8),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11174274293",
+                displayName = "Powerful Mega-Reinforcement",
+                cstype = 3,
+                tier = 13,
+                resource = "lines",
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(5, 60),
+                power = LethalNum.new(1, 9),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11174274293",
+                displayName = "Mega Mega-Reinforcement",
+                cstype = 3,
+                tier = 14,
+                resource = "lines",
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(5, 70),
+                power = LethalNum.new(1, 10),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11174274293",
+                displayName = "Giga Mega-Reinforcement",
+                cstype = 3,
+                tier = 15,
+                resource = "lines",
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(5, 80),
+                power = LethalNum.new(1, 11),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11174274293",
+                displayName = "Tera Mega-Reinforcement",
+                cstype = 3,
+                tier = 16,
+                resource = "lines",
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(5, 90),
+                power = LethalNum.new(1, 12),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11174274293",
+                displayName = "Peta Mega-Reinforcement",
+                cstype = 3,
+                tier = 17,
+                resource = "lines",
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(5, 100),
+                power = LethalNum.new(1, 13),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11174274293",
+                displayName = "Exa Mega-Reinforcement",
+                cstype = 3,
+                tier = 18,
+                resource = "lines",
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(5, 110),
+                power = LethalNum.new(1, 14),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11174274293",
+                displayName = "Zetta Mega-Reinforcement",
+                cstype = 3,
+                tier = 19,
+                resource = "lines",
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(5, 120),
+                power = LethalNum.new(1, 15),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11174274293",
+                displayName = "Yotta Mega-Reinforcement",
+                cstype = 3,
+                tier = 20,
+                resource = "lines",
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(5, 130),
+                power = LethalNum.new(1, 16),
+                instability = LethalNum.new(0, 0)
+            }
+        },
+        {
+            {
+                icon = "rbxassetid://10626917946",
+                displayName = "Basic Moon",
+                cstype = 4,
+                tier = 1,
+                resource = "lines",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(3, 5),
+                power = LethalNum.new(1.5, 1),
+                instability = LethalNum.new(3, 1)
+            },
+            {
+                icon = "rbxassetid://10626917946",
+                displayName = "Advanced Moon",
+                cstype = 4,
+                tier = 2,
+                resource = "lines",
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(7.5, 6),
+                power = LethalNum.new(4.5, 1),
+                instability = LethalNum.new(1, 2)
+            },
+            {
+                icon = "rbxassetid://10626917946",
+                displayName = "Powerful Moon",
+                cstype = 4,
+                tier = 3,
+                resource = "lines",
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(5.5, 8),
+                power = LethalNum.new(1.35, 2),
+                instability = LethalNum.new(2, 3)
+            },
+            {
+                icon = "rbxassetid://10626917946",
+                displayName = "Mega Moon",
+                cstype = 4,
+                tier = 4,
+                resource = "lines",
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(8.5, 11),
+                power = LethalNum.new(3, 2),
+                instability = LethalNum.new(7.5, 3)
+            },
+            {
+                icon = "rbxassetid://10626917946",
+                displayName = "Giga Moon",
+                cstype = 4,
+                tier = 5,
+                resource = "lines",
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(2, 14),
+                power = LethalNum.new(7.5, 2),
+                instability = LethalNum.new(4, 4)
+            },
+            {
+                icon = "rbxassetid://10626917946",
+                displayName = "Tera Moon",
+                cstype = 4,
+                tier = 6,
+                resource = "lines",
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(4.5, 17),
+                power = LethalNum.new(2.5, 3),
+                instability = LethalNum.new(2, 5)
+            },
+            {
+                icon = "rbxassetid://10626917946",
+                displayName = "Peta Moon",
+                cstype = 4,
+                tier = 7,
+                resource = "lines",
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(9, 20),
+                power = LethalNum.new(7, 3),
+                instability = LethalNum.new(8, 5)
+            },
+            {
+                icon = "rbxassetid://10626917946",
+                displayName = "Exa Moon",
+                cstype = 4,
+                tier = 8,
+                resource = "lines",
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(2, 24),
+                power = LethalNum.new(2, 4),
+                instability = LethalNum.new(3, 6)
+            },
+            {
+                icon = "rbxassetid://10626917946",
+                displayName = "Zetta Moon",
+                cstype = 4,
+                tier = 9,
+                resource = "lines",
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(7, 27),
+                power = LethalNum.new(6, 4),
+                instability = LethalNum.new(9, 6)
+            },
+            {
+                icon = "rbxassetid://10626917946",
+                displayName = "Yotta Moon",
+                cstype = 4,
+                tier = 10,
+                resource = "lines",
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(5, 31),
+                power = LethalNum.new(4, 5),
+                instability = LethalNum.new(3, 7)
+            },
+            {
+                icon = "rbxassetid://11175218272",
+                displayName = "Basic Dark Moon",
+                cstype = 4,
+                tier = 11,
+                resource = "lines",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(3, 45),
+                power = LethalNum.new(1, 7),
+                instability = LethalNum.new(1, 9)
+            },
+            {
+                icon = "rbxassetid://11175218272",
+                displayName = "Advanced Dark Moon",
+                cstype = 4,
+                tier = 12,
+                resource = "lines",
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(3, 55),
+                power = LethalNum.new(1, 8),
+                instability = LethalNum.new(5, 10)
+            },
+            {
+                icon = "rbxassetid://11175218272",
+                displayName = "Powerful Dark Moon",
+                cstype = 4,
+                tier = 13,
+                resource = "lines",
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(3, 65),
+                power = LethalNum.new(1, 9),
+                instability = LethalNum.new(1, 13)
+            },
+            {
+                icon = "rbxassetid://11175218272",
+                displayName = "Mega Dark Moon",
+                cstype = 4,
+                tier = 14,
+                resource = "lines",
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(3, 75),
+                power = LethalNum.new(1, 10),
+                instability = LethalNum.new(5, 14)
+            },
+            {
+                icon = "rbxassetid://11175218272",
+                displayName = "Giga Dark Moon",
+                cstype = 4,
+                tier = 15,
+                resource = "lines",
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(3, 85),
+                power = LethalNum.new(1, 11),
+                instability = LethalNum.new(1, 16)
+            },
+            {
+                icon = "rbxassetid://11175218272",
+                displayName = "Tera Dark Moon",
+                cstype = 4,
+                tier = 16,
+                resource = "lines",
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(3, 95),
+                power = LethalNum.new(1, 12),
+                instability = LethalNum.new(5, 17)
+            },
+            {
+                icon = "rbxassetid://11175218272",
+                displayName = "Peta Dark Moon",
+                cstype = 4,
+                tier = 17,
+                resource = "lines",
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(3, 105),
+                power = LethalNum.new(1, 13),
+                instability = LethalNum.new(1, 19)
+            },
+            {
+                icon = "rbxassetid://11175218272",
+                displayName = "Exa Dark Moon",
+                cstype = 4,
+                tier = 18,
+                resource = "lines",
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(3, 115),
+                power = LethalNum.new(1, 14),
+                instability = LethalNum.new(5, 20)
+            },
+            {
+                icon = "rbxassetid://11175218272",
+                displayName = "Zetta Dark Moon",
+                cstype = 4,
+                tier = 19,
+                resource = "lines",
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(3, 125),
+                power = LethalNum.new(1, 15),
+                instability = LethalNum.new(1, 22)
+            },
+            {
+                icon = "rbxassetid://11175218272",
+                displayName = "Yotta Dark Moon",
+                cstype = 4,
+                tier = 20,
+                resource = "lines",
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(3, 135),
+                power = LethalNum.new(1, 16),
+                instability = LethalNum.new(5, 23)
+            }
+        },
+        {
+            [1] = {
+                icon = "rbxassetid://10627130276",
+                displayName = "Basic Rings",
+                cstype = 5,
+                tier = 1,
+                resource = "lines",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 4),
+                power = LethalNum.new(2.5, 1),
+                instability = LethalNum.new(1, 1)
+            },
+            [2] = {
+                icon = "rbxassetid://10627130276",
+                displayName = "Advanced Rings",
+                cstype = 5,
+                tier = 2,
+                resource = "lines",
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(3.5, 5),
+                power = LethalNum.new(1, 2),
+                instability = LethalNum.new(5, 1)
+            },
+            [3] = {
+                icon = "rbxassetid://10627130276",
+                displayName = "Powerful Rings",
+                cstype = 5,
+                tier = 3,
+                resource = "lines",
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(4.5, 7),
+                power = LethalNum.new(4, 2),
+                instability = LethalNum.new(5, 2)
+            },
+            [4] = {
+                icon = "rbxassetid://10627130276",
+                displayName = "Mega Rings",
+                cstype = 5,
+                tier = 4,
+                resource = "lines",
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(2.5, 10),
+                power = LethalNum.new(1.6, 3),
+                instability = LethalNum.new(2, 3)
+            },
+            [5] = {
+                icon = "rbxassetid://10627130276",
+                displayName = "Giga Rings",
+                cstype = 5,
+                tier = 5,
+                resource = "lines",
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(6, 12),
+                power = LethalNum.new(7, 3),
+                instability = LethalNum.new(8, 3)
+            },
+            [6] = {
+                icon = "rbxassetid://10627130276",
+                displayName = "Tera Rings",
+                cstype = 5,
+                tier = 6,
+                resource = "lines",
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(3, 15),
+                power = LethalNum.new(2.4, 4),
+                instability = LethalNum.new(2, 4)
+            },
+            [7] = {
+                icon = "rbxassetid://10627130276",
+                displayName = "Peta Rings",
+                cstype = 5,
+                tier = 7,
+                resource = "lines",
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(8.5, 17),
+                power = LethalNum.new(1, 5),
+                instability = LethalNum.new(7, 4)
+            },
+            [8] = {
+                icon = "rbxassetid://10627130276",
+                displayName = "Exa Rings",
+                cstype = 5,
+                tier = 8,
+                resource = "lines",
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(3, 20),
+                power = LethalNum.new(4, 5),
+                instability = LethalNum.new(3, 5)
+            },
+            [9] = {
+                icon = "rbxassetid://10627130276",
+                displayName = "Zetta Rings",
+                cstype = 5,
+                tier = 9,
+                resource = "lines",
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(1, 23),
+                power = LethalNum.new(2, 6),
+                instability = LethalNum.new(1, 6)
+            },
+            [10] = {
+                icon = "rbxassetid://10627130276",
+                displayName = "Yotta Rings",
+                cstype = 5,
+                tier = 10,
+                resource = "lines",
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(2, 26),
+                power = LethalNum.new(1, 7),
+                instability = LethalNum.new(3, 6)
+            },
+            [1000] = {
+                icon = "rbxassetid://11184955119",
+                displayName = "The True Ring",
+                cstype = 5,
+                tier = 1000,
+                resource = "lines",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 45),
+                power = LethalNum.new(1, 10),
+                instability = LethalNum.new(1, 1000)
+            }
+        },
+        {
+            {
+                icon = "rbxassetid://10642921994",
+                displayName = "Basic Amplifier",
+                cstype = 6,
+                tier = 1,
+                resource = "lines",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 6),
+                power = LethalNum.new(1, 0),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10642921994",
+                displayName = "Advanced Amplifier",
+                cstype = 6,
+                tier = 2,
+                resource = "lines",
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(1, 9),
+                power = LethalNum.new(2, 0),
+                instability = LethalNum.new(2.5, 1)
+            },
+            {
+                icon = "rbxassetid://10642921994",
+                displayName = "Powerful Amplifier",
+                cstype = 6,
+                tier = 3,
+                resource = "lines",
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(1, 12),
+                power = LethalNum.new(3, 0),
+                instability = LethalNum.new(1, 2)
+            },
+            {
+                icon = "rbxassetid://10642921994",
+                displayName = "Mega Amplifier",
+                cstype = 6,
+                tier = 4,
+                resource = "lines",
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(1, 15),
+                power = LethalNum.new(4, 0),
+                instability = LethalNum.new(5, 2)
+            },
+            {
+                icon = "rbxassetid://10642921994",
+                displayName = "Giga Amplifier",
+                cstype = 6,
+                tier = 5,
+                resource = "lines",
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(1, 18),
+                power = LethalNum.new(5, 0),
+                instability = LethalNum.new(2, 3)
+            },
+            {
+                icon = "rbxassetid://10642921994",
+                displayName = "Tera Amplifier",
+                cstype = 6,
+                tier = 6,
+                resource = "lines",
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(1, 21),
+                power = LethalNum.new(6, 0),
+                instability = LethalNum.new(1, 4)
+            },
+            {
+                icon = "rbxassetid://10642921994",
+                displayName = "Peta Amplifier",
+                cstype = 6,
+                tier = 7,
+                resource = "lines",
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(1, 24),
+                power = LethalNum.new(7, 0),
+                instability = LethalNum.new(5, 4)
+            },
+            {
+                icon = "rbxassetid://10642921994",
+                displayName = "Exa Amplifier",
+                cstype = 6,
+                tier = 8,
+                resource = "lines",
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(1, 27),
+                power = LethalNum.new(8, 0),
+                instability = LethalNum.new(3, 5)
+            },
+            {
+                icon = "rbxassetid://10642921994",
+                displayName = "Zetta Amplifier",
+                cstype = 6,
+                tier = 9,
+                resource = "lines",
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(1, 30),
+                power = LethalNum.new(9, 0),
+                instability = LethalNum.new(2, 6)
+            },
+            {
+                icon = "rbxassetid://10642921994",
+                displayName = "Yotta Amplifier",
+                cstype = 6,
+                tier = 10,
+                resource = "lines",
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(1, 36),
+                power = LethalNum.new(1, 1),
+                instability = LethalNum.new(1, 7)
+            },
+            {
+                icon = "rbxassetid://11174274538",
+                displayName = "Basic Mega-Amplifier",
+                cstype = 6,
+                tier = 11,
+                resource = "lines",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 48),
+                power = LethalNum.new(2, 1),
+                instability = LethalNum.new(1, 8)
+            },
+            {
+                icon = "rbxassetid://11174274538",
+                displayName = "Advanced Mega-Amplifier",
+                cstype = 6,
+                tier = 12,
+                resource = "lines",
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(1, 58),
+                power = LethalNum.new(3, 1),
+                instability = LethalNum.new(1, 9)
+            },
+            {
+                icon = "rbxassetid://11174274538",
+                displayName = "Powerful Mega-Amplifier",
+                cstype = 6,
+                tier = 13,
+                resource = "lines",
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(1, 68),
+                power = LethalNum.new(4, 1),
+                instability = LethalNum.new(1, 10)
+            },
+            {
+                icon = "rbxassetid://11174274538",
+                displayName = "Mega Mega-Amplifier",
+                cstype = 6,
+                tier = 14,
+                resource = "lines",
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(1, 78),
+                power = LethalNum.new(5, 1),
+                instability = LethalNum.new(1, 11)
+            },
+            {
+                icon = "rbxassetid://11174274538",
+                displayName = "Giga Mega-Amplifier",
+                cstype = 6,
+                tier = 15,
+                resource = "lines",
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(1, 88),
+                power = LethalNum.new(6, 1),
+                instability = LethalNum.new(1, 12)
+            },
+            {
+                icon = "rbxassetid://11174274538",
+                displayName = "Tera Mega-Amplifier",
+                cstype = 6,
+                tier = 16,
+                resource = "lines",
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(1, 98),
+                power = LethalNum.new(7, 1),
+                instability = LethalNum.new(1, 13)
+            },
+            {
+                icon = "rbxassetid://11174274538",
+                displayName = "Peta Mega-Amplifier",
+                cstype = 6,
+                tier = 17,
+                resource = "lines",
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(1, 108),
+                power = LethalNum.new(8, 1),
+                instability = LethalNum.new(1, 14)
+            },
+            {
+                icon = "rbxassetid://11174274538",
+                displayName = "Exa Mega-Amplifier",
+                cstype = 6,
+                tier = 18,
+                resource = "lines",
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(1, 118),
+                power = LethalNum.new(9, 1),
+                instability = LethalNum.new(1, 15)
+            },
+            {
+                icon = "rbxassetid://11174274538",
+                displayName = "Zetta Mega-Amplifier",
+                cstype = 6,
+                tier = 19,
+                resource = "lines",
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(1, 128),
+                power = LethalNum.new(1, 2),
+                instability = LethalNum.new(1, 16)
+            },
+            {
+                icon = "rbxassetid://11174274538",
+                displayName = "Yotta Mega-Amplifier",
+                cstype = 6,
+                tier = 20,
+                resource = "lines",
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(1, 138),
+                power = LethalNum.new(2, 2),
+                instability = LethalNum.new(1, 17)
+            }
+        },
+        {
+            {
+                icon = "rbxassetid://10676726432",
+                displayName = "Basic Arc",
+                cstype = 7,
+                tier = 1,
+                resource = "lines",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 16),
+                power = LethalNum.new(2, 0),
+                instability = LethalNum.new(1, 3)
+            },
+            {
+                icon = "rbxassetid://10676726432",
+                displayName = "Advanced Arc",
+                cstype = 7,
+                tier = 2,
+                resource = "lines",
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(1, 19),
+                power = LethalNum.new(1, 1),
+                instability = LethalNum.new(4, 3)
+            },
+            {
+                icon = "rbxassetid://10676726432",
+                displayName = "Powerful Arc",
+                cstype = 7,
+                tier = 3,
+                resource = "lines",
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(1, 22),
+                power = LethalNum.new(5, 1),
+                instability = LethalNum.new(1.6, 4)
+            },
+            {
+                icon = "rbxassetid://10676726432",
+                displayName = "Mega Arc",
+                cstype = 7,
+                tier = 4,
+                resource = "lines",
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(1, 25),
+                power = LethalNum.new(2.5, 2),
+                instability = LethalNum.new(7, 4)
+            },
+            {
+                icon = "rbxassetid://10676726432",
+                displayName = "Giga Arc",
+                cstype = 7,
+                tier = 5,
+                resource = "lines",
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(1, 28),
+                power = LethalNum.new(1, 4),
+                instability = LethalNum.new(3, 5)
+            },
+            {
+                icon = "rbxassetid://10676726432",
+                displayName = "Tera Arc",
+                cstype = 7,
+                tier = 6,
+                resource = "lines",
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(1, 31),
+                power = LethalNum.new(5, 4),
+                instability = LethalNum.new(1, 6)
+            },
+            {
+                icon = "rbxassetid://10676726432",
+                displayName = "Peta Arc",
+                cstype = 7,
+                tier = 7,
+                resource = "lines",
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(1, 34),
+                power = LethalNum.new(2, 5),
+                instability = LethalNum.new(4, 6)
+            },
+            {
+                icon = "rbxassetid://10676726432",
+                displayName = "Exa Arc",
+                cstype = 7,
+                tier = 8,
+                resource = "lines",
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(1, 37),
+                power = LethalNum.new(3, 6),
+                instability = LethalNum.new(2, 7)
+            },
+            {
+                icon = "rbxassetid://10676726432",
+                displayName = "Zetta Arc",
+                cstype = 7,
+                tier = 9,
+                resource = "lines",
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(1, 40),
+                power = LethalNum.new(1, 7),
+                instability = LethalNum.new(8, 7)
+            },
+            {
+                icon = "rbxassetid://10676726432",
+                displayName = "Yotta Arc",
+                cstype = 7,
+                tier = 10,
+                resource = "lines",
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(1, 48),
+                power = LethalNum.new(1, 8),
+                instability = LethalNum.new(1, 9)
+            }
+        },
+        {
+            {
+                icon = "rbxassetid://10677280502",
+                displayName = "Basic Stellarium",
+                cstype = 8,
+                tier = 1,
+                resource = "arcs",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 2),
+                power = LethalNum.new(3, 0),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10677280502",
+                displayName = "Advanced Stellarium",
+                cstype = 8,
+                tier = 2,
+                resource = "arcs",
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(1, 4),
+                power = LethalNum.new(6, 0),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10677280502",
+                displayName = "Powerful Stellarium",
+                cstype = 8,
+                tier = 3,
+                resource = "arcs",
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(1, 6),
+                power = LethalNum.new(9, 0),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10677280502",
+                displayName = "Mega Stellarium",
+                cstype = 8,
+                tier = 4,
+                resource = "arcs",
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(1, 9),
+                power = LethalNum.new(1.2, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10677280502",
+                displayName = "Giga Stellarium",
+                cstype = 8,
+                tier = 5,
+                resource = "arcs",
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(1, 12),
+                power = LethalNum.new(1.5, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10677280502",
+                displayName = "Tera Stellarium",
+                cstype = 8,
+                tier = 6,
+                resource = "arcs",
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(1, 15),
+                power = LethalNum.new(1.8, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10677280502",
+                displayName = "Peta Stellarium",
+                cstype = 8,
+                tier = 7,
+                resource = "arcs",
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(1, 18),
+                power = LethalNum.new(2.1, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10677280502",
+                displayName = "Exa Stellarium",
+                cstype = 8,
+                tier = 8,
+                resource = "arcs",
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(1, 21),
+                power = LethalNum.new(2.4, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10677280502",
+                displayName = "Zetta Stellarium",
+                cstype = 8,
+                tier = 9,
+                resource = "arcs",
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(1, 24),
+                power = LethalNum.new(2.7, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://10677280502",
+                displayName = "Yotta Stellarium",
+                cstype = 8,
+                tier = 10,
+                resource = "arcs",
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(1, 30),
+                power = LethalNum.new(3, 1),
+                instability = LethalNum.new(0, 0)
+            }
+        },
+        {
+            {
+                icon = "rbxassetid://10678213012",
+                displayName = "Basic Diminisher",
+                cstype = 9,
+                tier = 1,
+                resource = "arcs",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(5, 2),
+                power = LethalNum.new(2, 0),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(2, 0)
+            },
+            {
+                icon = "rbxassetid://10678213012",
+                displayName = "Advanced Diminisher",
+                cstype = 9,
+                tier = 2,
+                resource = "arcs",
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(5, 4),
+                power = LethalNum.new(3, 0),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(4, 0)
+            },
+            {
+                icon = "rbxassetid://10678213012",
+                displayName = "Powerful Diminisher",
+                cstype = 9,
+                tier = 3,
+                resource = "arcs",
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(5, 6),
+                power = LethalNum.new(4, 0),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(6, 0)
+            },
+            {
+                icon = "rbxassetid://10678213012",
+                displayName = "Mega Diminisher",
+                cstype = 9,
+                tier = 4,
+                resource = "arcs",
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(5, 9),
+                power = LethalNum.new(5, 0),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(8, 0)
+            },
+            {
+                icon = "rbxassetid://10678213012",
+                displayName = "Giga Diminisher",
+                cstype = 9,
+                tier = 5,
+                resource = "arcs",
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(5, 12),
+                power = LethalNum.new(6, 0),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(1, 1)
+            },
+            {
+                icon = "rbxassetid://10678213012",
+                displayName = "Tera Diminisher",
+                cstype = 9,
+                tier = 6,
+                resource = "arcs",
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(5, 15),
+                power = LethalNum.new(7, 0),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(1.2, 1)
+            },
+            {
+                icon = "rbxassetid://10678213012",
+                displayName = "Peta Diminisher",
+                cstype = 9,
+                tier = 7,
+                resource = "arcs",
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(5, 18),
+                power = LethalNum.new(8, 0),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(1.4, 1)
+            },
+            {
+                icon = "rbxassetid://10678213012",
+                displayName = "Exa Diminisher",
+                cstype = 9,
+                tier = 8,
+                resource = "arcs",
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(5, 21),
+                power = LethalNum.new(9, 0),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(1.6, 1)
+            },
+            {
+                icon = "rbxassetid://10678213012",
+                displayName = "Zetta Diminisher",
+                cstype = 9,
+                tier = 9,
+                resource = "arcs",
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(5, 24),
+                power = LethalNum.new(1, 1),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(1.8, 1)
+            },
+            {
+                icon = "rbxassetid://10678213012",
+                displayName = "Yotta Diminisher",
+                cstype = 9,
+                tier = 10,
+                resource = "arcs",
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(5, 30),
+                power = LethalNum.new(2, 1),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(2, 1)
+            }
+        },
+        {
+            {
+                icon = "rbxassetid://10678373712",
+                displayName = "Basic Bulwark",
+                cstype = 10,
+                tier = 1,
+                resource = "arcs",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 3),
+                power = LethalNum.new(2, 1),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(1, 0)
+            },
+            {
+                icon = "rbxassetid://10678373712",
+                displayName = "Advanced Bulwark",
+                cstype = 10,
+                tier = 2,
+                resource = "arcs",
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(1, 5),
+                power = LethalNum.new(4, 1),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(2, 0)
+            },
+            {
+                icon = "rbxassetid://10678373712",
+                displayName = "Powerful Bulwark",
+                cstype = 10,
+                tier = 3,
+                resource = "arcs",
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(1, 7),
+                power = LethalNum.new(8, 1),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(3, 0)
+            },
+            {
+                icon = "rbxassetid://10678373712",
+                displayName = "Mega Bulwark",
+                cstype = 10,
+                tier = 4,
+                resource = "arcs",
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(1, 10),
+                power = LethalNum.new(1.6, 2),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(4, 0)
+            },
+            {
+                icon = "rbxassetid://10678373712",
+                displayName = "Giga Bulwark",
+                cstype = 10,
+                tier = 5,
+                resource = "arcs",
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(1, 13),
+                power = LethalNum.new(3.2, 2),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(5, 0)
+            },
+            {
+                icon = "rbxassetid://10678373712",
+                displayName = "Tera Bulwark",
+                cstype = 10,
+                tier = 6,
+                resource = "arcs",
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(1, 16),
+                power = LethalNum.new(6.4, 2),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(6, 0)
+            },
+            {
+                icon = "rbxassetid://10678373712",
+                displayName = "Peta Bulwark",
+                cstype = 10,
+                tier = 7,
+                resource = "arcs",
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(1, 19),
+                power = LethalNum.new(1.3, 3),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(7, 0)
+            },
+            {
+                icon = "rbxassetid://10678373712",
+                displayName = "Exa Bulwark",
+                cstype = 10,
+                tier = 8,
+                resource = "arcs",
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(1, 22),
+                power = LethalNum.new(2.6, 3),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(8, 0)
+            },
+            {
+                icon = "rbxassetid://10678373712",
+                displayName = "Zetta Bulwark",
+                cstype = 10,
+                tier = 9,
+                resource = "arcs",
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(1, 25),
+                power = LethalNum.new(6, 3),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(9, 0)
+            },
+            {
+                icon = "rbxassetid://10678373712",
+                displayName = "Yotta Bulwark",
+                cstype = 10,
+                tier = 10,
+                resource = "arcs",
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(1, 29),
+                power = LethalNum.new(2, 4),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(1, 1)
+            }
+        },
+        {
+            {
+                icon = "rbxassetid://10678373864",
+                displayName = "Basic Magnifier",
+                cstype = 11,
+                tier = 1,
+                resource = "arcs",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 3),
+                power = LethalNum.new(1, 1),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(1, 0)
+            },
+            {
+                icon = "rbxassetid://10678373864",
+                displayName = "Advanced Magnifier",
+                cstype = 11,
+                tier = 2,
+                resource = "arcs",
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(1, 5),
+                power = LethalNum.new(2, 1),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(2, 0)
+            },
+            {
+                icon = "rbxassetid://10678373864",
+                displayName = "Powerful Magnifier",
+                cstype = 11,
+                tier = 3,
+                resource = "arcs",
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(1, 7),
+                power = LethalNum.new(4, 1),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(3, 0)
+            },
+            {
+                icon = "rbxassetid://10678373864",
+                displayName = "Mega Magnifier",
+                cstype = 11,
+                tier = 4,
+                resource = "arcs",
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(1, 10),
+                power = LethalNum.new(8, 1),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(4, 0)
+            },
+            {
+                icon = "rbxassetid://10678373864",
+                displayName = "Giga Magnifier",
+                cstype = 11,
+                tier = 5,
+                resource = "arcs",
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(1, 13),
+                power = LethalNum.new(1.6, 2),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(5, 0)
+            },
+            {
+                icon = "rbxassetid://10678373864",
+                displayName = "Tera Magnifier",
+                cstype = 11,
+                tier = 6,
+                resource = "arcs",
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(1, 16),
+                power = LethalNum.new(3.2, 2),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(6, 0)
+            },
+            {
+                icon = "rbxassetid://10678373864",
+                displayName = "Peta Magnifier",
+                cstype = 11,
+                tier = 7,
+                resource = "arcs",
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(1, 19),
+                power = LethalNum.new(6.4, 2),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(7, 0)
+            },
+            {
+                icon = "rbxassetid://10678373864",
+                displayName = "Exa Magnifier",
+                cstype = 11,
+                tier = 8,
+                resource = "arcs",
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(1, 22),
+                power = LethalNum.new(1.3, 3),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(8, 0)
+            },
+            {
+                icon = "rbxassetid://10678373864",
+                displayName = "Zetta Magnifier",
+                cstype = 11,
+                tier = 9,
+                resource = "arcs",
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(1, 25),
+                power = LethalNum.new(2.6, 3),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(9, 0)
+            },
+            {
+                icon = "rbxassetid://10678373864",
+                displayName = "Yotta Magnifier",
+                cstype = 11,
+                tier = 10,
+                resource = "arcs",
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(1, 29),
+                power = LethalNum.new(7.5, 3),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(1, 1)
+            }
+        },
+        {
+            {
+                icon = "rbxassetid://10678714491",
+                displayName = "Basic Echo",
+                cstype = 12,
+                tier = 1,
+                resource = "arcs",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 5),
+                power = LethalNum.new(2, 0),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(3, 0)
+            },
+            {
+                icon = "rbxassetid://10678714491",
+                displayName = "Advanced Echo",
+                cstype = 12,
+                tier = 2,
+                resource = "arcs",
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(1, 8),
+                power = LethalNum.new(3, 0),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(6, 0)
+            },
+            {
+                icon = "rbxassetid://10678714491",
+                displayName = "Powerful Echo",
+                cstype = 12,
+                tier = 3,
+                resource = "arcs",
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(1, 11),
+                power = LethalNum.new(4, 0),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(9, 0)
+            },
+            {
+                icon = "rbxassetid://10678714491",
+                displayName = "Mega Echo",
+                cstype = 12,
+                tier = 4,
+                resource = "arcs",
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(1, 14),
+                power = LethalNum.new(5, 0),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(1.2, 1)
+            },
+            {
+                icon = "rbxassetid://10678714491",
+                displayName = "Giga Echo",
+                cstype = 12,
+                tier = 5,
+                resource = "arcs",
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(1, 17),
+                power = LethalNum.new(6, 0),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(1.5, 1)
+            },
+            {
+                icon = "rbxassetid://10678714491",
+                displayName = "Tera Echo",
+                cstype = 12,
+                tier = 6,
+                resource = "arcs",
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(1, 20),
+                power = LethalNum.new(7, 0),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(1.8, 1)
+            },
+            {
+                icon = "rbxassetid://10678714491",
+                displayName = "Peta Echo",
+                cstype = 12,
+                tier = 7,
+                resource = "arcs",
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(1, 23),
+                power = LethalNum.new(8, 0),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(2.1, 1)
+            },
+            {
+                icon = "rbxassetid://10678714491",
+                displayName = "Exa Echo",
+                cstype = 12,
+                tier = 8,
+                resource = "arcs",
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(1, 26),
+                power = LethalNum.new(9, 0),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(2.4, 1)
+            },
+            {
+                icon = "rbxassetid://10678714491",
+                displayName = "Zetta Echo",
+                cstype = 12,
+                tier = 9,
+                resource = "arcs",
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(1, 29),
+                power = LethalNum.new(1, 1),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(2.7, 1)
+            },
+            {
+                icon = "rbxassetid://10678714491",
+                displayName = "Yotta Echo",
+                cstype = 12,
+                tier = 10,
+                resource = "arcs",
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(1, 32),
+                power = LethalNum.new(2, 1),
+                instability = LethalNum.new(0, 0),
+                stel = LethalNum.new(3, 1)
+            }
+        },
+        {
+            {
+                icon = "rbxassetid://10679089173",
+                displayName = "Basic Bolt",
+                cstype = 13,
+                tier = 1,
+                resource = "lines",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 13),
+                power = LethalNum.new(3, 1),
+                instability = LethalNum.new(5, 2)
+            },
+            {
+                icon = "rbxassetid://10679089173",
+                displayName = "Advanced Bolt",
+                cstype = 13,
+                tier = 2,
+                resource = "lines",
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(1, 16),
+                power = LethalNum.new(1, 2),
+                instability = LethalNum.new(2, 3)
+            },
+            {
+                icon = "rbxassetid://10679089173",
+                displayName = "Powerful Bolt",
+                cstype = 13,
+                tier = 3,
+                resource = "lines",
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(1, 19),
+                power = LethalNum.new(1, 3),
+                instability = LethalNum.new(8, 3)
+            },
+            {
+                icon = "rbxassetid://10679089173",
+                displayName = "Mega Bolt",
+                cstype = 13,
+                tier = 4,
+                resource = "lines",
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(1, 22),
+                power = LethalNum.new(1, 4),
+                instability = LethalNum.new(3, 4)
+            },
+            {
+                icon = "rbxassetid://10679089173",
+                displayName = "Giga Bolt",
+                cstype = 13,
+                tier = 5,
+                resource = "lines",
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(1, 25),
+                power = LethalNum.new(1, 5),
+                instability = LethalNum.new(1, 5)
+            },
+            {
+                icon = "rbxassetid://10679089173",
+                displayName = "Tera Bolt",
+                cstype = 13,
+                tier = 6,
+                resource = "lines",
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(1, 28),
+                power = LethalNum.new(1, 6),
+                instability = LethalNum.new(4, 5)
+            },
+            {
+                icon = "rbxassetid://10679089173",
+                displayName = "Peta Bolt",
+                cstype = 13,
+                tier = 7,
+                resource = "lines",
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(1, 31),
+                power = LethalNum.new(1, 7),
+                instability = LethalNum.new(2, 6)
+            },
+            {
+                icon = "rbxassetid://10679089173",
+                displayName = "Exa Bolt",
+                cstype = 13,
+                tier = 8,
+                resource = "lines",
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(1, 34),
+                power = LethalNum.new(1, 8),
+                instability = LethalNum.new(8, 6)
+            },
+            {
+                icon = "rbxassetid://10679089173",
+                displayName = "Zetta Bolt",
+                cstype = 13,
+                tier = 9,
+                resource = "lines",
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(1, 37),
+                power = LethalNum.new(1, 9),
+                instability = LethalNum.new(3, 7)
+            },
+            {
+                icon = "rbxassetid://10679089173",
+                displayName = "Yotta Bolt",
+                cstype = 13,
+                tier = 10,
+                resource = "lines",
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(1, 40),
+                power = LethalNum.new(1, 10),
+                instability = LethalNum.new(2, 8)
+            },
+            {
+                icon = "rbxassetid://11184901940",
+                displayName = "Basic Overloaded Bolt",
+                cstype = 13,
+                tier = 11,
+                resource = "lines",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 48),
+                power = LethalNum.new(1, 13),
+                instability = LethalNum.new(1, 10)
+            },
+            {
+                icon = "rbxassetid://11184901940",
+                displayName = "Advanced Overloaded Bolt",
+                cstype = 13,
+                tier = 12,
+                resource = "lines",
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(1, 58),
+                power = LethalNum.new(1, 15),
+                instability = LethalNum.new(1, 11)
+            },
+            {
+                icon = "rbxassetid://11184901940",
+                displayName = "Powerful Overloaded Bolt",
+                cstype = 13,
+                tier = 13,
+                resource = "lines",
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(1, 68),
+                power = LethalNum.new(1, 17),
+                instability = LethalNum.new(1, 12)
+            },
+            {
+                icon = "rbxassetid://11184901940",
+                displayName = "Mega Overloaded Bolt",
+                cstype = 13,
+                tier = 14,
+                resource = "lines",
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(1, 78),
+                power = LethalNum.new(1, 19),
+                instability = LethalNum.new(1, 13)
+            },
+            {
+                icon = "rbxassetid://11184901940",
+                displayName = "Giga Overloaded Bolt",
+                cstype = 13,
+                tier = 15,
+                resource = "lines",
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(1, 88),
+                power = LethalNum.new(1, 21),
+                instability = LethalNum.new(1, 14)
+            },
+            {
+                icon = "rbxassetid://11184901940",
+                displayName = "Tera Overloaded Bolt",
+                cstype = 13,
+                tier = 16,
+                resource = "lines",
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(1, 98),
+                power = LethalNum.new(1, 23),
+                instability = LethalNum.new(1, 15)
+            },
+            {
+                icon = "rbxassetid://11184901940",
+                displayName = "Peta Overloaded Bolt",
+                cstype = 13,
+                tier = 17,
+                resource = "lines",
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(1, 108),
+                power = LethalNum.new(1, 25),
+                instability = LethalNum.new(1, 16)
+            },
+            {
+                icon = "rbxassetid://11184901940",
+                displayName = "Exa Overloaded Bolt",
+                cstype = 13,
+                tier = 18,
+                resource = "lines",
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(1, 128),
+                power = LethalNum.new(1, 27),
+                instability = LethalNum.new(1, 17)
+            },
+            {
+                icon = "rbxassetid://11184901940",
+                displayName = "Zetta Overloaded Bolt",
+                cstype = 13,
+                tier = 19,
+                resource = "lines",
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(1, 138),
+                power = LethalNum.new(1, 29),
+                instability = LethalNum.new(1, 18)
+            },
+            {
+                icon = "rbxassetid://11184901940",
+                displayName = "Yotta Overloaded Bolt",
+                cstype = 13,
+                tier = 20,
+                resource = "lines",
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(1, 148),
+                power = LethalNum.new(1, 31),
+                instability = LethalNum.new(1, 19)
+            }
+        },
+        {
+            {
+                icon = "rbxassetid://11336494956",
+                displayName = "Basic Prism",
+                cstype = 14,
+                tier = 1,
+                resource = "lines",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 3),
+                power = LethalNum.new(1, 0),
+                powerR = LethalNum.new(2.5, 1),
+                powerM = LethalNum.new(1.5, 1),
+                powerA = LethalNum.new(1, 0),
+                powerB = LethalNum.new(3, 1),
+                instability = LethalNum.new(3, 0)
+            },
+            {
+                icon = "rbxassetid://11336494956",
+                displayName = "Advanced Prism",
+                cstype = 14,
+                tier = 2,
+                resource = "lines",
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(1, 5),
+                power = LethalNum.new(1.5, 1),
+                powerR = LethalNum.new(1, 2),
+                powerM = LethalNum.new(4.5, 1),
+                powerA = LethalNum.new(2, 0),
+                powerB = LethalNum.new(1, 2),
+                instability = LethalNum.new(1.5, 1)
+            },
+            {
+                icon = "rbxassetid://11336494956",
+                displayName = "Powerful Prism",
+                cstype = 14,
+                tier = 3,
+                resource = "lines",
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(1, 7),
+                power = LethalNum.new(1, 2),
+                powerR = LethalNum.new(4, 2),
+                powerM = LethalNum.new(1.35, 2),
+                powerA = LethalNum.new(6, 0),
+                powerB = LethalNum.new(1, 3),
+                instability = LethalNum.new(7.5, 1)
+            },
+            {
+                icon = "rbxassetid://11336494956",
+                displayName = "Mega Prism",
+                cstype = 14,
+                tier = 4,
+                resource = "lines",
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(1, 9),
+                power = LethalNum.new(7.5, 2),
+                powerR = LethalNum.new(1.6, 3),
+                powerM = LethalNum.new(3, 2),
+                powerA = LethalNum.new(1, 1),
+                powerB = LethalNum.new(1, 4),
+                instability = LethalNum.new(5, 2)
+            },
+            {
+                icon = "rbxassetid://11336494956",
+                displayName = "Giga Prism",
+                cstype = 14,
+                tier = 5,
+                resource = "lines",
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(1, 11),
+                power = LethalNum.new(5, 3),
+                powerR = LethalNum.new(7, 3),
+                powerM = LethalNum.new(7.5, 2),
+                powerA = LethalNum.new(5, 3),
+                powerB = LethalNum.new(1, 5),
+                instability = LethalNum.new(2.5, 3)
+            },
+            {
+                icon = "rbxassetid://11336494956",
+                displayName = "Tera Prism",
+                cstype = 14,
+                tier = 6,
+                resource = "lines",
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(1, 14),
+                power = LethalNum.new(2.5, 4),
+                powerR = LethalNum.new(2.4, 4),
+                powerM = LethalNum.new(2.5, 3),
+                powerA = LethalNum.new(4, 4),
+                powerB = LethalNum.new(1, 6),
+                instability = LethalNum.new(2, 4)
+            },
+            {
+                icon = "rbxassetid://11336494956",
+                displayName = "Peta Prism",
+                cstype = 14,
+                tier = 7,
+                resource = "lines",
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(1, 17),
+                power = LethalNum.new(1, 5),
+                powerR = LethalNum.new(1, 5),
+                powerM = LethalNum.new(7, 3),
+                powerA = LethalNum.new(2, 5),
+                powerB = LethalNum.new(1, 7),
+                instability = LethalNum.new(3, 5)
+            },
+            {
+                icon = "rbxassetid://11336494956",
+                displayName = "Exa Prism",
+                cstype = 14,
+                tier = 8,
+                resource = "lines",
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(1, 20),
+                power = LethalNum.new(4, 5),
+                powerR = LethalNum.new(4, 5),
+                powerM = LethalNum.new(2, 4),
+                powerA = LethalNum.new(3, 6),
+                powerB = LethalNum.new(1, 8),
+                instability = LethalNum.new(4, 6)
+            },
+            {
+                icon = "rbxassetid://11336494956",
+                displayName = "Zetta Prism",
+                cstype = 14,
+                tier = 9,
+                resource = "lines",
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(1, 24),
+                power = LethalNum.new(2, 6),
+                powerR = LethalNum.new(2, 6),
+                powerM = LethalNum.new(6, 4),
+                powerA = LethalNum.new(1, 7),
+                powerB = LethalNum.new(1, 9),
+                instability = LethalNum.new(5, 7)
+            },
+            {
+                icon = "rbxassetid://11336494956",
+                displayName = "Yotta Prism",
+                cstype = 14,
+                tier = 10,
+                resource = "lines",
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(1, 28),
+                power = LethalNum.new(1.5, 7),
+                powerR = LethalNum.new(1, 7),
+                powerM = LethalNum.new(4, 5),
+                powerA = LethalNum.new(1, 8),
+                powerB = LethalNum.new(1, 10),
+                instability = LethalNum.new(6, 8)
+            },
+            {
+                icon = "rbxassetid://11336643660",
+                displayName = "Basic Mega-Prism",
+                cstype = 14,
+                tier = 11,
+                resource = "lines",
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 45),
+                power = LethalNum.new(1, 9),
+                powerR = LethalNum.new(2, 8),
+                powerM = LethalNum.new(1, 7),
+                powerA = LethalNum.new(1, 9),
+                powerB = LethalNum.new(1, 13),
+                instability = LethalNum.new(1, 10)
+            },
+            {
+                icon = "rbxassetid://11336643660",
+                displayName = "Advanced Mega-Prism",
+                cstype = 14,
+                tier = 12,
+                resource = "lines",
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(1, 55),
+                power = LethalNum.new(1, 11),
+                powerR = LethalNum.new(2, 9),
+                powerM = LethalNum.new(1, 10),
+                powerA = LethalNum.new(1, 10),
+                powerB = LethalNum.new(1, 15),
+                instability = LethalNum.new(1, 11)
+            },
+            {
+                icon = "rbxassetid://11336643660",
+                displayName = "Powerful Mega-Prism",
+                cstype = 14,
+                tier = 13,
+                resource = "lines",
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(1, 65),
+                power = LethalNum.new(1, 13),
+                powerR = LethalNum.new(2, 10),
+                powerM = LethalNum.new(1, 11),
+                powerA = LethalNum.new(1, 11),
+                powerB = LethalNum.new(1, 17),
+                instability = LethalNum.new(1, 12)
+            },
+            {
+                icon = "rbxassetid://11336643660",
+                displayName = "Mega Mega-Prism",
+                cstype = 14,
+                tier = 14,
+                resource = "lines",
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(1, 75),
+                power = LethalNum.new(1, 15),
+                powerR = LethalNum.new(2, 11),
+                powerM = LethalNum.new(1, 12),
+                powerA = LethalNum.new(1, 12),
+                powerB = LethalNum.new(1, 19),
+                instability = LethalNum.new(1, 13)
+            },
+            {
+                icon = "rbxassetid://11336643660",
+                displayName = "Giga Mega-Prism",
+                cstype = 14,
+                tier = 15,
+                resource = "lines",
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(1, 85),
+                power = LethalNum.new(1, 17),
+                powerR = LethalNum.new(2, 12),
+                powerM = LethalNum.new(1, 13),
+                powerA = LethalNum.new(1, 13),
+                powerB = LethalNum.new(1, 21),
+                instability = LethalNum.new(1, 14)
+            },
+            {
+                icon = "rbxassetid://11336643660",
+                displayName = "Tera Mega-Prism",
+                cstype = 14,
+                tier = 16,
+                resource = "lines",
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(1, 95),
+                power = LethalNum.new(1, 19),
+                powerR = LethalNum.new(2, 13),
+                powerM = LethalNum.new(1, 14),
+                powerA = LethalNum.new(1, 14),
+                powerB = LethalNum.new(1, 23),
+                instability = LethalNum.new(1, 15)
+            },
+            {
+                icon = "rbxassetid://11336643660",
+                displayName = "Peta Mega-Prism",
+                cstype = 14,
+                tier = 17,
+                resource = "lines",
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(1, 105),
+                power = LethalNum.new(1, 21),
+                powerR = LethalNum.new(2, 14),
+                powerM = LethalNum.new(1, 15),
+                powerA = LethalNum.new(1, 15),
+                powerB = LethalNum.new(1, 25),
+                instability = LethalNum.new(1, 16)
+            },
+            {
+                icon = "rbxassetid://11336643660",
+                displayName = "Exa Mega-Prism",
+                cstype = 14,
+                tier = 18,
+                resource = "lines",
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(1, 115),
+                power = LethalNum.new(1, 23),
+                powerR = LethalNum.new(2, 15),
+                powerM = LethalNum.new(1, 16),
+                powerA = LethalNum.new(1, 16),
+                powerB = LethalNum.new(1, 27),
+                instability = LethalNum.new(1, 17)
+            },
+            {
+                icon = "rbxassetid://11336643660",
+                displayName = "Zetta Mega-Prism",
+                cstype = 14,
+                tier = 19,
+                resource = "lines",
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(1, 125),
+                power = LethalNum.new(1, 25),
+                powerR = LethalNum.new(2, 16),
+                powerM = LethalNum.new(1, 17),
+                powerA = LethalNum.new(1, 17),
+                powerB = LethalNum.new(1, 29),
+                instability = LethalNum.new(1, 18)
+            },
+            {
+                icon = "rbxassetid://11336643660",
+                displayName = "Yotta Mega-Prism",
+                cstype = 14,
+                tier = 20,
+                resource = "lines",
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(1, 135),
+                power = LethalNum.new(1, 27),
+                powerR = LethalNum.new(2, 17),
+                powerM = LethalNum.new(1, 18),
+                powerA = LethalNum.new(1, 18),
+                powerB = LethalNum.new(1, 31),
+                instability = LethalNum.new(1, 19)
+            },
+            {
+                icon = "rbxassetid://11367357152",
+                displayName = "Last Prism",
+                cstype = 14,
+                tier = 21,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 135),
+                power = LethalNum.new(1, 33),
+                powerR = LethalNum.new(2, 23),
+                powerM = LethalNum.new(1, 24),
+                powerA = LethalNum.new(1, 24),
+                powerB = LethalNum.new(1, 37),
+                instability = LethalNum.new(0, 0)
+            }
+        },
+        {
+            {
+                icon = "rbxassetid://11367613795",
+                displayName = "Basic Ray",
+                cstype = 15,
+                tier = 1,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 135),
+                power = LethalNum.new(1, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11367613795",
+                displayName = "Advanced Ray",
+                cstype = 15,
+                tier = 2,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(1, 150),
+                power = LethalNum.new(2, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11367613795",
+                displayName = "Powerful Ray",
+                cstype = 15,
+                tier = 3,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(1, 165),
+                power = LethalNum.new(4, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11367613795",
+                displayName = "Mega Ray",
+                cstype = 15,
+                tier = 4,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(1, 190),
+                power = LethalNum.new(8, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11367613795",
+                displayName = "Giga Ray",
+                cstype = 15,
+                tier = 5,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(1, 220),
+                power = LethalNum.new(1.6, 2),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11367613795",
+                displayName = "Tera Ray",
+                cstype = 15,
+                tier = 6,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(1, 2),
+                power = LethalNum.new(1, 3),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11367613795",
+                displayName = "Peta Ray",
+                cstype = 15,
+                tier = 7,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(1, 5),
+                power = LethalNum.new(1, 4),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11367613795",
+                displayName = "Exa Ray",
+                cstype = 15,
+                tier = 8,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(1, 8),
+                power = LethalNum.new(1, 5),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11367613795",
+                displayName = "Zetta Ray",
+                cstype = 15,
+                tier = 9,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(1, 11),
+                power = LethalNum.new(1, 6),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11367613795",
+                displayName = "Yotta Ray",
+                cstype = 15,
+                tier = 10,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(1, 14),
+                power = LethalNum.new(1, 7),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11367613795",
+                displayName = "Ronna Ray",
+                cstype = 15,
+                tier = 11,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(255/255, 0/255, 0/255),
+                cost = LethalNum.new(1, 17),
+                power = LethalNum.new(1, 8),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11367613795",
+                displayName = "Quetta Ray",
+                cstype = 15,
+                tier = 12,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.584314, 0),
+                cost = LethalNum.new(1, 20),
+                power = LethalNum.new(1, 9),
+                instability = LethalNum.new(0, 0)
+            }
+        },
+        {
+            {
+                icon = "rbxassetid://11372451869",
+                displayName = "Basic Constellation Grid",
+                cstype = 16,
+                tier = 1,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 135),
+                power = LethalNum.new(1, 8),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11372451869",
+                displayName = "Advanced Constellation Grid",
+                cstype = 16,
+                tier = 2,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(1, 150),
+                power = LethalNum.new(1, 10),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11372451869",
+                displayName = "Powerful Constellation Grid",
+                cstype = 16,
+                tier = 3,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(1, 165),
+                power = LethalNum.new(1, 15),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11372451869",
+                displayName = "Mega Constellation Grid",
+                cstype = 16,
+                tier = 4,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(1, 185),
+                power = LethalNum.new(1, 20),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11372451869",
+                displayName = "Giga Constellation Grid",
+                cstype = 16,
+                tier = 5,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(1, 215),
+                power = LethalNum.new(1, 25),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11372451869",
+                displayName = "Tera Constellation Grid",
+                cstype = 16,
+                tier = 6,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(1, 3),
+                power = LethalNum.new(1, 30),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11372451869",
+                displayName = "Peta Constellation Grid",
+                cstype = 16,
+                tier = 7,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(1, 6),
+                power = LethalNum.new(1, 40),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11372451869",
+                displayName = "Exa Constellation Grid",
+                cstype = 16,
+                tier = 8,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(1, 9),
+                power = LethalNum.new(1, 50),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11372451869",
+                displayName = "Zetta Constellation Grid",
+                cstype = 16,
+                tier = 9,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(1, 12),
+                power = LethalNum.new(1, 60),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11372451869",
+                displayName = "Yotta Constellation Grid",
+                cstype = 16,
+                tier = 10,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(1, 15),
+                power = LethalNum.new(1, 70),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11372451869",
+                displayName = "Ronna Constellation Grid",
+                cstype = 16,
+                tier = 11,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(255/255, 0/255, 0/255),
+                cost = LethalNum.new(1, 18),
+                power = LethalNum.new(1, 80),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11372451869",
+                displayName = "Quetta Constellation Grid",
+                cstype = 16,
+                tier = 12,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.584314, 0),
+                cost = LethalNum.new(1, 21),
+                power = LethalNum.new(1, 90),
+                instability = LethalNum.new(0, 0)
+            }
+        },
+        {
+            {
+                icon = "rbxassetid://14903180821",
+                displayName = "Basic Galaxy",
+                cstype = 17,
+                tier = 1,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 135),
+                power = LethalNum.new(1, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://14903180821",
+                displayName = "Advanced Galaxy",
+                cstype = 17,
+                tier = 2,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(1, 150),
+                power = LethalNum.new(2, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://14903180821",
+                displayName = "Powerful Galaxy",
+                cstype = 17,
+                tier = 3,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(1, 165),
+                power = LethalNum.new(4, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://14903180821",
+                displayName = "Mega Galaxy",
+                cstype = 17,
+                tier = 4,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(1, 200),
+                power = LethalNum.new(8, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://14903180821",
+                displayName = "Giga Galaxy",
+                cstype = 17,
+                tier = 5,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(1, 235),
+                power = LethalNum.new(1.6, 2),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://14903180821",
+                displayName = "Tera Galaxy",
+                cstype = 17,
+                tier = 6,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(1, 4),
+                power = LethalNum.new(1, 3),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://14903180821",
+                displayName = "Peta Galaxy",
+                cstype = 17,
+                tier = 7,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(1, 7),
+                power = LethalNum.new(1, 5),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://14903180821",
+                displayName = "Exa Galaxy",
+                cstype = 17,
+                tier = 8,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(1, 13),
+                power = LethalNum.new(1, 7),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://14903180821",
+                displayName = "Zetta Galaxy",
+                cstype = 17,
+                tier = 9,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(1, 22),
+                power = LethalNum.new(1, 9),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://14903180821",
+                displayName = "Yotta Galaxy",
+                cstype = 17,
+                tier = 10,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(1, 31),
+                power = LethalNum.new(1, 11),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://14903180821",
+                displayName = "Ronna Galaxy",
+                cstype = 17,
+                tier = 11,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(255/255, 0/255, 0/255),
+                cost = LethalNum.new(1, 42),
+                power = LethalNum.new(1, 12),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://14903180821",
+                displayName = "Quetta Galaxy",
+                cstype = 17,
+                tier = 12,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.584314, 0),
+                cost = LethalNum.new(1, 54),
+                power = LethalNum.new(1, 14),
+                instability = LethalNum.new(0, 0)
+            }
+        },
+        {
+            {
+                icon = "rbxassetid://11381719186",
+                displayName = "Basic Star",
+                cstype = 18,
+                tier = 1,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 135),
+                power = LethalNum.new(3, 0),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381719186",
+                displayName = "Advanced Star",
+                cstype = 18,
+                tier = 2,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(1, 150),
+                power = LethalNum.new(6, 0),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381719186",
+                displayName = "Powerful Star",
+                cstype = 18,
+                tier = 3,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(1, 165),
+                power = LethalNum.new(9, 0),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381719186",
+                displayName = "Mega Star",
+                cstype = 18,
+                tier = 4,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(1, 200),
+                power = LethalNum.new(1.2, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381719186",
+                displayName = "Giga Star",
+                cstype = 18,
+                tier = 5,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(1, 235),
+                power = LethalNum.new(1.5, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381719186",
+                displayName = "Tera Star",
+                cstype = 18,
+                tier = 6,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(1, 4),
+                power = LethalNum.new(1.8, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381719186",
+                displayName = "Peta Star",
+                cstype = 18,
+                tier = 7,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(1, 7),
+                power = LethalNum.new(2.1, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381719186",
+                displayName = "Exa Star",
+                cstype = 18,
+                tier = 8,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(1, 10),
+                power = LethalNum.new(2.4, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381719186",
+                displayName = "Zetta Star",
+                cstype = 18,
+                tier = 9,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(1, 13),
+                power = LethalNum.new(2.7, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381719186",
+                displayName = "Yotta Star",
+                cstype = 18,
+                tier = 10,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(1, 16),
+                power = LethalNum.new(3, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381719186",
+                displayName = "Ronna Star",
+                cstype = 18,
+                tier = 11,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(255/255, 0/255, 0/255),
+                cost = LethalNum.new(1, 19),
+                power = LethalNum.new(3.3, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381719186",
+                displayName = "Quetta Star",
+                cstype = 18,
+                tier = 12,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.584314, 0),
+                cost = LethalNum.new(1, 22),
+                power = LethalNum.new(3.6, 1),
+                instability = LethalNum.new(0, 0)
+            }
+        },
+        {
+            {
+                icon = "rbxassetid://11381720966",
+                displayName = "Basic Improver",
+                cstype = 19,
+                tier = 1,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 135),
+                power = LethalNum.new(1, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381720966",
+                displayName = "Advanced Improver",
+                cstype = 19,
+                tier = 2,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(1, 150),
+                power = LethalNum.new(2, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381720966",
+                displayName = "Powerful Improver",
+                cstype = 19,
+                tier = 3,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(1, 165),
+                power = LethalNum.new(3, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381720966",
+                displayName = "Mega Improver",
+                cstype = 19,
+                tier = 4,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(1, 195),
+                power = LethalNum.new(4, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381720966",
+                displayName = "Giga Improver",
+                cstype = 19,
+                tier = 5,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(1, 225),
+                power = LethalNum.new(5, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381720966",
+                displayName = "Tera Improver",
+                cstype = 19,
+                tier = 6,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(1, 4),
+                power = LethalNum.new(6, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381720966",
+                displayName = "Peta Improver",
+                cstype = 19,
+                tier = 7,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(1, 7),
+                power = LethalNum.new(7, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381720966",
+                displayName = "Exa Improver",
+                cstype = 19,
+                tier = 8,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(1, 10),
+                power = LethalNum.new(8, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381720966",
+                displayName = "Zetta Improver",
+                cstype = 19,
+                tier = 9,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(1, 13),
+                power = LethalNum.new(9, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381720966",
+                displayName = "Yotta Improver",
+                cstype = 19,
+                tier = 10,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(1, 16),
+                power = LethalNum.new(1, 2),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381720966",
+                displayName = "Ronna Improver",
+                cstype = 19,
+                tier = 11,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(255/255, 0/255, 0/255),
+                cost = LethalNum.new(1, 19),
+                power = LethalNum.new(1.1, 2),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11381720966",
+                displayName = "Quetta Improver",
+                cstype = 19,
+                tier = 12,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.584314, 0),
+                cost = LethalNum.new(1, 22),
+                power = LethalNum.new(1.2, 2),
+                instability = LethalNum.new(0, 0)
+            }
+        },
+        {
+            {
+                icon = "rbxassetid://11777042737",
+                displayName = "Basic Sword",
+                cstype = 20,
+                tier = 1,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 250),
+                power = LethalNum.new(1, 0),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042737",
+                displayName = "Advanced Sword",
+                cstype = 20,
+                tier = 2,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(1, 6),
+                power = LethalNum.new(2, 0),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042737",
+                displayName = "Powerful Sword",
+                cstype = 20,
+                tier = 3,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(1, 9),
+                power = LethalNum.new(4, 0),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042737",
+                displayName = "Mega Sword",
+                cstype = 20,
+                tier = 4,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(1, 13),
+                power = LethalNum.new(1, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042737",
+                displayName = "Giga Sword",
+                cstype = 20,
+                tier = 5,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(1, 17),
+                power = LethalNum.new(3, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042737",
+                displayName = "Tera Sword",
+                cstype = 20,
+                tier = 6,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(1, 22),
+                power = LethalNum.new(1, 2),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042737",
+                displayName = "Peta Sword",
+                cstype = 20,
+                tier = 7,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(1, 26),
+                power = LethalNum.new(1, 3),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042737",
+                displayName = "Exa Sword",
+                cstype = 20,
+                tier = 8,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(1, 31),
+                power = LethalNum.new(1, 4),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042737",
+                displayName = "Zetta Sword",
+                cstype = 20,
+                tier = 9,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(1, 36),
+                power = LethalNum.new(1, 6),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042737",
+                displayName = "Yotta Sword",
+                cstype = 20,
+                tier = 10,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(1, 42),
+                power = LethalNum.new(1, 8),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042737",
+                displayName = "Ronna Sword",
+                cstype = 20,
+                tier = 11,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(255/255, 0/255, 0/255),
+                cost = LethalNum.new(1, 48),
+                power = LethalNum.new(1, 10),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042737",
+                displayName = "Quetta Sword",
+                cstype = 20,
+                tier = 12,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.584314, 0),
+                cost = LethalNum.new(1, 54),
+                power = LethalNum.new(1, 12),
+                instability = LethalNum.new(0, 0)
+            }
+        },
+        {
+            {
+                icon = "rbxassetid://11777042892",
+                displayName = "Basic Soul",
+                cstype = 21,
+                tier = 1,
+                resource = "lines",
+                persistent = true,
+                color = Color3.new(255/255, 255/255, 255/255),
+                cost = LethalNum.new(1, 250),
+                power = LethalNum.new(3, 0),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042892",
+                displayName = "Advanced Soul",
+                cstype = 21,
+                tier = 2,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(0.439216, 1, 0.458824),
+                cost = LethalNum.new(2.5, 5),
+                power = LethalNum.new(5, 0),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042892",
+                displayName = "Powerful Soul",
+                cstype = 21,
+                tier = 3,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(0.529412, 0.976471, 1),
+                cost = LethalNum.new(1, 9),
+                power = LethalNum.new(8, 0),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042892",
+                displayName = "Mega Soul",
+                cstype = 21,
+                tier = 4,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(0.588235, 0.572549, 1),
+                cost = LethalNum.new(1, 13),
+                power = LethalNum.new(1.5, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042892",
+                displayName = "Giga Soul",
+                cstype = 21,
+                tier = 5,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(0.823529, 0.470588, 1),
+                cost = LethalNum.new(1, 17),
+                power = LethalNum.new(2.5, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042892",
+                displayName = "Tera Soul",
+                cstype = 21,
+                tier = 6,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.482353, 0.819608),
+                cost = LethalNum.new(1, 22),
+                power = LethalNum.new(4, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042892",
+                displayName = "Peta Soul",
+                cstype = 21,
+                tier = 7,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.45098, 0.45098),
+                cost = LethalNum.new(1, 26),
+                power = LethalNum.new(7, 1),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042892",
+                displayName = "Exa Soul",
+                cstype = 21,
+                tier = 8,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.72549, 0.447059),
+                cost = LethalNum.new(1, 31),
+                power = LethalNum.new(1, 2),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042892",
+                displayName = "Zetta Soul",
+                cstype = 21,
+                tier = 9,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.964706, 0.419608),
+                cost = LethalNum.new(1, 36),
+                power = LethalNum.new(1.5, 2),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042892",
+                displayName = "Yotta Soul",
+                cstype = 21,
+                tier = 10,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(0.654902, 0.654902, 0.654902),
+                cost = LethalNum.new(1, 42),
+                power = LethalNum.new(2.5, 2),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042892",
+                displayName = "Ronna Soul",
+                cstype = 21,
+                tier = 11,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(255/255, 0/255, 0/255),
+                cost = LethalNum.new(1, 48),
+                power = LethalNum.new(5, 2),
+                instability = LethalNum.new(0, 0)
+            },
+            {
+                icon = "rbxassetid://11777042892",
+                displayName = "Quetta Soul",
+                cstype = 21,
+                tier = 12,
+                resource = "dark",
+                persistent = true,
+                color = Color3.new(1, 0.584314, 0),
+                cost = LethalNum.new(1, 54),
+                power = LethalNum.new(1, 3),
+                instability = LethalNum.new(0, 0)
+            }
+        }
+    }
+}
+
+function t.GetConstellation(p1, p2) --[[ GetConstellation | Line: 3566 | Upvalues: t (copy) ]]
+    if t.Constellations[p1] then
+        return t.Constellations[p1][p2]
+    end
+
+    return t.Constellations[1][1]
+end
+function t.GetSlot(p1, p2, p3) --[[ GetSlot | Line: 3573 | Upvalues: t (copy) ]]
+    if p3 then
+        return p3.UpgradeLevels.constellation["" .. p1 .. "/" .. p2]
+    end
+
+    return t.Slots["" .. p1 .. "/" .. p2]
+end
+function t.GetImportant(p1) --[[ GetImportant | Line: 3581 ]]
+    local t = {
+        ["1"] = "Lines",
+        ["4"] = "Lunar",
+        ["5"] = "Rings",
+        ["7"] = "Arcs",
+        ["13"] = "Bolts",
+        ["14"] = "Prisms"
+    }
+    local v1 = ""
+
+    if type(p1) ~= "table" then
+        return "Unknown"
+    end
+
+    for k, v in pairs(p1) do
+        if t["" .. k] ~= nil then
+            v1 = if v1 == "" then v1 .. "" .. t["" .. k] else v1 .. "/" .. t["" .. k]
+        end
+    end
+
+    return v1
+end
+t.gridSizes = {
+    ["5"] = {
+        size = 185,
+        lower = 1,
+        upper = 6
+    },
+    ["6"] = {
+        size = 151,
+        lower = 0,
+        upper = 6
+    },
+    ["7"] = {
+        size = 135,
+        lower = 0,
+        upper = 7
+    },
+    ["8"] = {
+        size = 118,
+        lower = 0,
+        upper = 8
+    },
+    ["9"] = {
+        size = 101,
+        lower = -1,
+        upper = 8
+    },
+    ["10"] = {
+        size = 90,
+        lower = -1,
+        upper = 9
+    },
+    ["11"] = {
+        size = 83,
+        lower = -2,
+        upper = 9
+    }
+}
+function t.ResizeGrid(p1) --[[ ResizeGrid | Line: 3645 | Upvalues: Data (copy), t (copy) ]]
+    local UIGridLayout = Data.ImportantData.Misc.player.PlayerGui:WaitForChild("W1").ConstellationBoard.Board.Grid.UIGridLayout
+    local v1 = t.gridSizes[p1]
+
+    if v1 == nil then
+        UIGridLayout.CellSize = UDim2.new(0, 135, 0, 135)
+    else
+        UIGridLayout.CellSize = UDim2.new(0, v1.size, 0, v1.size)
+    end
+
+    for k, v in pairs(t.Slots) do
+        v.o.Visible = if v.row >= v1.lower and (v.row < v1.upper and v.col >= v1.lower) then if v.col < v1.upper then true else false else false
+
+        if not v.o.Visible then
+            v.t = 0
+            v.c = 0
+        end
+    end
+
+    t.UpdateGrid()
+end
+function t.AddResource(p1, p2) --[[ AddResource | Line: 3667 | Upvalues: CurrencyTypes (copy) ]]
+    CurrencyTypes.ReAddCurrency(p2, p1)
+end
+function t.SubResource(p1, p2) --[[ SubResource | Line: 3677 | Upvalues: CurrencyTypes (copy) ]]
+    CurrencyTypes.SubtractCurrency(p2, p1)
+end
+
+local v1 = nil
+local v2 = nil
+local v3 = nil
+
+function t.UpdateGrid() --[[ UpdateGrid | Line: 3690 | Upvalues: Data (copy), v1 (ref), v2 (ref), v3 (ref), t (copy), LethalNum (copy), Format (copy) ]]
+    local Bonuses = Data.ImportantData.Misc.player.PlayerGui:WaitForChild("W1").ConstellationBoard.Board.Bonuses
+
+    if not v1 then
+        v1 = Bonuses.Tier.Toggle.On
+    end
+
+    if not v2 then
+        v2 = Bonuses.Multi.Toggle.On
+    end
+
+    if not v3 then
+        v3 = Bonuses.Inst.Toggle.On
+    end
+
+    for k, v in pairs(t.Slots) do
+        if v.c == 0 then
+            v.info.icon.Image = ""
+            v.info.info.Text = ""
+
+            continue
+        end
+
+        local v12 = t.GetConstellation(v.c, v.t)
+
+        v.info.icon.Image = v12.icon
+        v.info.icon.ImageColor3 = v12.color
+
+        if v.s ~= nil then
+            local v22 = ""
+
+            if LethalNum.isGreaterE(v.s.u, LethalNum.new(1, 0)) and (v3 and v3.Visible) then
+                v22 = v22 .. "<font color=\"#ff0000\">+" .. LethalNum.getString(v.s.u) .. "</font>"
+            end
+
+            if v.s.p ~= 1 and (v2 and v2.Visible) then
+                if v22 ~= "" then
+                    v22 = v22 .. "\n"
+                end
+
+                v22 = v22 .. "<font color=\"#00ffff\">x" .. Format.Format(v.s.p) .. "</font>"
+            end
+
+            if v1 and v1.Visible then
+                if v22 ~= "" then
+                    v22 = v22 .. "\n"
+                end
+
+                v22 = v22 .. "<font color=\"#ffffff\">T" .. Format.Format(v.t) .. "</font>"
+            end
+
+            if v22 == "" then
+                v.info.info.Text = ""
+
+                continue
+            end
+
+            v.info.info.Text = "<b>" .. v22 .. "</b>"
+        end
+    end
+end
+t.Effects = {
+    totalGeneration = LethalNum.new(0, 0),
+    arcs = LethalNum.new(0, 0),
+    arcsCap = LethalNum.new(0, 0),
+    arcsTaken = LethalNum.new(0, 0),
+    totalInstability = LethalNum.new(0, 0),
+    totalICap = LethalNum.new(0, 0),
+    bulwark = LethalNum.new(1, 2),
+    magnify = LethalNum.new(1, 2),
+    darkmoon = LethalNum.new(1, 2),
+    totalLP = LethalNum.new(0, 0),
+    totalR = LethalNum.new(0, 0),
+    totalDC = LethalNum.new(0, 0),
+    stab = LethalNum.new(1, 0),
+    rays = LethalNum.new(1, 2),
+    star = LethalNum.new(1, 2),
+    sword = LethalNum.new(1, 2),
+    soul = LethalNum.new(0, 0),
+    instCap = LethalNum.new(1, 2)
+}
+function t.ConstellationBehavior(p1, p2, p3) --[[ ConstellationBehavior | Line: 3758 | Upvalues: LethalNum (copy), t (copy), Data (copy) ]]
+    local t2 = {
+        p = 1,
+        i = 1,
+        d = 1,
+        g = LethalNum.new(0, 0),
+        s = LethalNum.new(0, 0),
+        u = LethalNum.new(0, 0)
+    }
+    local ConstellationEffects = p3.Misc.ConstellationEffects
+    local v1 = t.GetAdjacents(p1, p3)
+
+    for k, v in pairs(v1) do
+        if p2.cstype == 1 and v.c == 1 or (p2.cstype == 4 and v.c == 4 or (p2.cstype == 13 and v.c == 13 or (p2.cstype == 14 and (v.c == 14 and v.t < 21) or p2.cstype == 5 and v.c == 5))) then
+            t2.p = t2.p + 0.4
+            t2.i = t2.i + 0.4
+        end
+
+        if v.c == 2 then
+            t2.s = LethalNum.add(t2.s, LethalNum.multiply(t.GetConstellation(v.c, v.t).power, ConstellationEffects.stab))
+        end
+
+        if v.c == 6 and (p2.cstype ~= 6 and LethalNum.isGreaterE(p2.instability, LethalNum.new(1, 0))) then
+            t2.p = t2.p + LethalNum.toNumber(t.GetConstellation(v.c, v.t).power)
+            t2.i = t2.i + LethalNum.toNumber(t.GetConstellation(v.c, v.t).power) / 1.5
+        end
+
+        if v.c == 8 then
+            t2.i = t2.i + 1
+        end
+
+        if v.c == 9 then
+            t2.d = t2.d + LethalNum.toNumber(t.GetConstellation(v.c, v.t).power)
+        end
+
+        if v.c == 12 and (p2.cstype ~= 6 and (p2.cstype ~= 12 and (p2.cstype ~= 8 and (p2.cstype ~= 9 and (p2.cstype ~= 2 and not p2.persistent))))) then
+            if k == 3 then
+                t2.p = t2.p + LethalNum.toNumber(t.GetConstellation(v.c, v.t).power)
+            end
+
+            if k == 1 then
+                t2.p = t2.p / LethalNum.toNumber(t.GetConstellation(v.c, v.t).power)
+            end
+        end
+
+        if v.c == 19 and (p2.persistent and (p2.cstype ~= 19 and p2.cstype ~= 21)) then
+            t2.p = t2.p + LethalNum.toNumber(t.GetConstellation(v.c, v.t).power) / 100
+        end
+    end
+
+    t2.i = t2.i / t2.d
+
+    local v2 = LethalNum.multiply(p2.power, t2.p)
+    local v3 = if p2.cstype == 2 or (p2.cstype == 9 or (p2.cstype == 3 or (p2.cstype == 10 or not LethalNum.isGreaterE(Data.ImportantData.Stats.inst, ConstellationEffects.instCap)))) then v2 else LethalNum.new(0, 0)
+    local v5 = LethalNum.multiply(p2.instability, LethalNum.new(t2.i, 0))
+    local v6 = if LethalNum.isGreaterE(t2.s, LethalNum.new(1, 0)) then if LethalNum.isGreaterE(t2.s, v5) then LethalNum.new(0, 0) else LethalNum.subtract(v5, t2.s) else v5
+
+    if p2.cstype == 1 then
+        ConstellationEffects.totalGeneration = LethalNum.add(ConstellationEffects.totalGeneration, v3)
+    end
+
+    if p2.cstype == 2 and (p3 and p3.Stats.pTrial > 0) then
+        p3.Stats.Accomplish.stab = 1
+    end
+
+    if p2.cstype == 3 then
+        ConstellationEffects.totalICap = LethalNum.add(ConstellationEffects.totalICap, v3)
+
+        if p3 and p3.Stats.pTrial > 0 then
+            p3.Stats.Accomplish.rein = 1
+        end
+    end
+
+    if p2.cstype == 4 then
+        ConstellationEffects.totalLP = LethalNum.add(ConstellationEffects.totalLP, v3)
+
+        if p2.tier > 10 then
+            ConstellationEffects.darkmoon = LethalNum.add(ConstellationEffects.darkmoon, LethalNum.new(v3.n, v3.e - 5))
+        end
+    end
+
+    if p2.cstype == 5 then
+        ConstellationEffects.totalR = LethalNum.add(ConstellationEffects.totalR, v3)
+    end
+
+    if p2.cstype == 13 then
+        ConstellationEffects.totalDC = LethalNum.add(ConstellationEffects.totalDC, v3)
+    end
+
+    if p2.cstype == 7 then
+        local count = 0
+
+        for k, v in pairs(v1) do
+            if v.c == 4 and math.min(10, p2.tier + 4) <= v.t then
+                count = count + 1
+            end
+        end
+
+        if count >= 2 then
+            ConstellationEffects.arcs = LethalNum.add(ConstellationEffects.arcs, v3)
+        end
+    end
+
+    if p2.cstype == 8 then
+        ConstellationEffects.arcsCap = LethalNum.add(ConstellationEffects.arcsCap, p2.power)
+    end
+
+    if p2.cstype == 10 then
+        ConstellationEffects.bulwark = LethalNum.add(ConstellationEffects.bulwark, v3)
+    end
+
+    if p2.cstype == 11 then
+        ConstellationEffects.magnify = LethalNum.add(ConstellationEffects.magnify, v3)
+    end
+
+    if p2.cstype == 14 then
+        local v10 = LethalNum.multiply(p2.powerB, t2.p)
+        local v11 = LethalNum.multiply(p2.powerR, t2.p)
+        local v12 = LethalNum.multiply(p2.powerM, t2.p)
+        local v13 = LethalNum.multiply(p2.powerA, t2.p)
+
+        ConstellationEffects.totalGeneration = LethalNum.add(ConstellationEffects.totalGeneration, v3)
+        ConstellationEffects.arcs = LethalNum.add(ConstellationEffects.arcs, v13)
+        ConstellationEffects.totalDC = LethalNum.add(ConstellationEffects.totalDC, v10)
+        ConstellationEffects.totalR = LethalNum.add(ConstellationEffects.totalR, v11)
+        ConstellationEffects.totalLP = LethalNum.add(ConstellationEffects.totalLP, v12)
+    end
+
+    if p2.cstype == 15 then
+        ConstellationEffects.rays = LethalNum.add(ConstellationEffects.rays, v3)
+    end
+
+    if p2.cstype == 16 then
+        ConstellationEffects.magnify = LethalNum.add(ConstellationEffects.magnify, v3)
+        ConstellationEffects.darkmoon = LethalNum.add(ConstellationEffects.darkmoon, LethalNum.multiply(v3, LethalNum.new(1, 10)))
+    end
+
+    if p2.cstype == 17 then
+        ConstellationEffects.rays = LethalNum.add(ConstellationEffects.rays, LethalNum.multiply(v3, 10))
+        ConstellationEffects.star = LethalNum.add(ConstellationEffects.star, LethalNum.multiply(LethalNum.new(1, 2), p2.tier))
+        ConstellationEffects.sword = LethalNum.add(ConstellationEffects.sword, LethalNum.multiply(v3, 3))
+        ConstellationEffects.soul = LethalNum.add(ConstellationEffects.soul, p2.power)
+    end
+
+    if p2.cstype == 18 then
+        ConstellationEffects.star = LethalNum.add(ConstellationEffects.star, v3)
+    end
+
+    if p2.cstype == 20 then
+        ConstellationEffects.sword = LethalNum.add(ConstellationEffects.sword, v3)
+    end
+
+    if p2.cstype == 21 then
+        ConstellationEffects.soul = LethalNum.add(ConstellationEffects.soul, v3)
+    end
+
+    if LethalNum.isGreaterE(p2.instability, LethalNum.new(1, 0)) then
+        ConstellationEffects.totalInstability = LethalNum.add(ConstellationEffects.totalInstability, v6)
+    end
+
+    if not p2.stel then
+        t2.u = v6
+        p1.s = t2
+
+        return t2
+    end
+
+    ConstellationEffects.arcsTaken = LethalNum.add(ConstellationEffects.arcsTaken, p2.stel)
+    t2.u = v6
+    p1.s = t2
+
+    return t2
+end
+function t.GetAdjacents(p1, p2) --[[ GetAdjacents | Line: 3925 | Upvalues: t (copy) ]]
+    local r = p1.r
+    local l = p1.l
+    local t2 = {}
+
+    if r - 1 >= 0 then
+        t2[0] = t.GetSlot(r - 1, l, p2)
+    end
+
+    if l - 1 >= 0 then
+        t2[1] = t.GetSlot(r, l - 1, p2)
+    end
+
+    if r + 1 < 7 then
+        t2[2] = t.GetSlot(r + 1, l, p2)
+    end
+
+    if l + 1 < 7 then
+        t2[3] = t.GetSlot(r, l + 1, p2)
+    end
+
+    return t2
+end
+t.hoveredRow = 0
+t.hoveredCol = 0
+Data.ImportantData.Events.updateUpgrades.Event:Connect(t.UpdateGrid)
+
+return t
