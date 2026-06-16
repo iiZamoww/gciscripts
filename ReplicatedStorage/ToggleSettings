@@ -1,0 +1,20 @@
+local t = {}
+local Toggle = game:GetService("ReplicatedStorage").Remotes:WaitForChild("Toggle")
+
+function t.Toggle(p1) --[[ Toggle | Line: 7 | Upvalues: Toggle (copy) ]]
+    Toggle:FireServer(p1, "setting")
+end
+function t.SetTier(p1) --[[ SetTier | Line: 11 | Upvalues: Toggle (copy) ]]
+    Toggle:FireServer(p1, "tier")
+end
+function t.ChangeDisplay(p1) --[[ ChangeDisplay | Line: 15 | Upvalues: Toggle (copy) ]]
+    Toggle:FireServer(p1, "display")
+end
+function t.ToggleAutobuyer(p1) --[[ ToggleAutobuyer | Line: 19 | Upvalues: Toggle (copy) ]]
+    Toggle:FireServer(p1, "autobuy")
+end
+function t.ChangeTitle(p1) --[[ ChangeTitle | Line: 23 | Upvalues: Toggle (copy) ]]
+    Toggle:FireServer(p1, "title")
+end
+
+return t
