@@ -1,0 +1,36 @@
+return {
+    Nebulas = {
+        ["1"] = {
+            level = 0,
+            challenge = 1,
+            displayName = "Arcless",
+            desc = function() --[[ desc | Line: 8 ]]
+                return "Arcs are disabled"
+            end
+        },
+        ["2"] = {
+            level = 0,
+            challenge = 2,
+            displayName = "Smaller Grid",
+            desc = function() --[[ desc | Line: 16 ]]
+                return "The grid size is reduced to 5x5"
+            end
+        },
+        ["3"] = {
+            level = 0,
+            challenge = 3,
+            displayName = "Flawless",
+            desc = function() --[[ desc | Line: 24 ]]
+                return "Reinforcements are disabled"
+            end
+        },
+        ["4"] = {
+            level = 0,
+            challenge = 4,
+            displayName = "Stability",
+            desc = function() --[[ desc | Line: 32 ]]
+                return "Instability does not exist, but your lines are capped based on your instability cap\nReinforcements are much stronger"
+            end
+        }
+    }
+}
