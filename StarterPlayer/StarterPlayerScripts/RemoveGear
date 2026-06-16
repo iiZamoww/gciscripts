@@ -1,0 +1,25 @@
+local LocalPlayer = game:GetService("Players").LocalPlayer
+local v1 = LocalPlayer.Character or LocalPlayer.CharacterAdded:wait()
+
+game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, false)
+
+local function removeTools() --[[ removeTools | Line: 6 | Upvalues: LocalPlayer (copy), v1 (ref) ]]
+    for k, v in pairs(LocalPlayer.Backpack:GetChildren()) do
+        if v:IsA("Tool") then
+            v:Destroy()
+        end
+    end
+
+    for k, v in pairs(v1:GetChildren()) do
+        if v:IsA("Tool") then
+            v:Destroy()
+        end
+    end
+end
+
+removeTools()
+LocalPlayer.CharacterAdded:Connect(function(p1) --[[ Line: 21 | Upvalues: v1 (ref), removeTools (copy) ]]
+    v1 = p1
+    task.wait()
+    removeTools()
+end)
