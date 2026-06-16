@@ -1,0 +1,450 @@
+return {
+    Items = {
+        dev = {
+            displayName = "Developer",
+            tagColor = "#bf00ff",
+            tagText = "Dev",
+            angle = 90,
+            unlockReq = "",
+            secret = true,
+            obj = nil,
+            order = -100,
+            color = ColorSequence.new({ ColorSequenceKeypoint.new(0, Color3.new(0.831373, 0, 1)), ColorSequenceKeypoint.new(1, Color3.new(0.901961, 0.509804, 1)) }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 14 ]]
+                return p1.Stats.specialTags.dev
+            end
+        },
+        music = {
+            displayName = "Music Guy",
+            tagColor = "#00ffd9",
+            tagText = "Music Producer",
+            angle = 90,
+            unlockReq = "",
+            secret = true,
+            obj = nil,
+            order = -100,
+            color = ColorSequence.new({ ColorSequenceKeypoint.new(0, Color3.new(0, 0.784314, 1)), ColorSequenceKeypoint.new(1, Color3.new(0, 1, 0.666667)) }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 31 ]]
+                return p1.Stats.specialTags.music
+            end
+        },
+        test = {
+            displayName = "Tester",
+            tagColor = "#ff0000",
+            tagText = "Tester",
+            angle = 90,
+            unlockReq = "",
+            secret = true,
+            obj = nil,
+            order = -99,
+            color = ColorSequence.new({ ColorSequenceKeypoint.new(0, Color3.new(1, 0.239216, 0.239216)), ColorSequenceKeypoint.new(1, Color3.new(1, 0.705882, 0.705882)) }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 48 ]]
+                return p1.Stats.specialTags.tester
+            end
+        },
+        r6 = {
+            displayName = "Shiny",
+            tagColor = "#74ffff",
+            tagText = "Shiny",
+            angle = -90,
+            unlockReq = "Discover a shiny item",
+            obj = nil,
+            order = 12,
+            color = ColorSequence.new({ ColorSequenceKeypoint.new(0, Color3.new(0, 1, 0.882353)), ColorSequenceKeypoint.new(0.6, Color3.new(255/255, 255/255, 255/255)), ColorSequenceKeypoint.new(1, Color3.new(255/255, 255/255, 255/255)) }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 66 ]]
+                return p1.Stats.flags.shiny
+            end
+        },
+        r7 = {
+            displayName = "Luminous",
+            tagColor = "#ffea00",
+            tagText = "Luminous",
+            angle = -90,
+            unlockReq = "Discover a luminous item",
+            obj = nil,
+            order = 11,
+            color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.new(0.972549, 1, 0.792157)),
+                ColorSequenceKeypoint.new(0.3, Color3.new(0.976471, 1, 0.54902)),
+                ColorSequenceKeypoint.new(0.45, Color3.new(255/255, 255/255, 0/255)),
+                ColorSequenceKeypoint.new(0.7, Color3.new(1, 0.533333, 0)),
+                ColorSequenceKeypoint.new(1, Color3.new(255/255, 0/255, 0/255))
+            }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 86 ]]
+                return p1.Stats.flags.lumin
+            end
+        },
+        r8 = {
+            displayName = "Cosmic",
+            tagColor = "#00ffa2",
+            tagText = "Cosmic",
+            angle = -90,
+            unlockReq = "Discover a cosmic item",
+            obj = nil,
+            order = 10,
+            color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.new(0, 1, 0.45098)),
+                ColorSequenceKeypoint.new(0.2, Color3.new(0, 1, 0.45098)),
+                ColorSequenceKeypoint.new(0.35, Color3.new(0, 1, 0.968627)),
+                ColorSequenceKeypoint.new(0.5, Color3.new(0, 1, 0.968627)),
+                ColorSequenceKeypoint.new(0.7, Color3.new(0.443137, 0, 0.984314)),
+                ColorSequenceKeypoint.new(0.85, Color3.new(0.992157, 0.517647, 0.929412)),
+                ColorSequenceKeypoint.new(1, Color3.new(0.701961, 0, 1))
+            }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 108 ]]
+                return p1.Stats.flags.cosmic
+            end
+        },
+        f1 = {
+            displayName = "Supporter I",
+            tagColor = "#ffac70",
+            tagText = "Cool",
+            angle = 90,
+            unlockReq = "",
+            secret = true,
+            obj = nil,
+            order = -80,
+            color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.new(255/255, 255/255, 255/255)),
+                ColorSequenceKeypoint.new(0.35, Color3.new(0.619608, 0.443137, 0.301961)),
+                ColorSequenceKeypoint.new(0.5, Color3.new(255/255, 255/255, 255/255)),
+                ColorSequenceKeypoint.new(0.65, Color3.new(0.619608, 0.443137, 0.301961)),
+                ColorSequenceKeypoint.new(1, Color3.new(255/255, 255/255, 255/255))
+            }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 128 ]]
+                return false
+            end
+        },
+        f2 = {
+            displayName = "Supporter II",
+            tagColor = "#dbf9ff",
+            tagText = "Cool",
+            angle = 90,
+            unlockReq = "",
+            secret = true,
+            obj = nil,
+            order = -81,
+            color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.new(255/255, 255/255, 255/255)),
+                ColorSequenceKeypoint.new(0.35, Color3.new(0.52549, 0.6, 0.619608)),
+                ColorSequenceKeypoint.new(0.5, Color3.new(255/255, 255/255, 255/255)),
+                ColorSequenceKeypoint.new(0.65, Color3.new(0.52549, 0.6, 0.619608)),
+                ColorSequenceKeypoint.new(1, Color3.new(255/255, 255/255, 255/255))
+            }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 148 ]]
+                return false
+            end
+        },
+        f3 = {
+            displayName = "Supporter III",
+            tagColor = "#ffc43a",
+            tagText = "Cool",
+            angle = 90,
+            unlockReq = "",
+            secret = true,
+            obj = nil,
+            order = -82,
+            color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.new(255/255, 255/255, 255/255)),
+                ColorSequenceKeypoint.new(0.35, Color3.new(1, 0.701961, 0)),
+                ColorSequenceKeypoint.new(0.5, Color3.new(255/255, 255/255, 255/255)),
+                ColorSequenceKeypoint.new(0.65, Color3.new(1, 0.784314, 0)),
+                ColorSequenceKeypoint.new(1, Color3.new(255/255, 255/255, 255/255))
+            }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 168 ]]
+                return false
+            end
+        },
+        f4 = {
+            displayName = "Supporter IV",
+            tagColor = "#f36cff",
+            tagText = "Cool",
+            angle = 90,
+            unlockReq = "",
+            secret = true,
+            obj = nil,
+            order = -83,
+            color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.new(255/255, 255/255, 255/255)),
+                ColorSequenceKeypoint.new(0.35, Color3.new(0.905882, 0.52549, 1)),
+                ColorSequenceKeypoint.new(0.5, Color3.new(255/255, 255/255, 255/255)),
+                ColorSequenceKeypoint.new(0.65, Color3.new(0.905882, 0.52549, 1)),
+                ColorSequenceKeypoint.new(1, Color3.new(255/255, 255/255, 255/255))
+            }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 188 ]]
+                return false
+            end
+        },
+        ["0"] = {
+            displayName = "New",
+            tagColor = "#ffffff",
+            tagText = "New",
+            angle = 90,
+            unlockReq = "",
+            obj = nil,
+            order = 100,
+            color = ColorSequence.new({ ColorSequenceKeypoint.new(0, Color3.new(255/255, 255/255, 255/255)), ColorSequenceKeypoint.new(1, Color3.new(255/255, 255/255, 255/255)) }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 205 ]]
+                return true
+            end
+        },
+        ["1"] = {
+            displayName = "Good",
+            tagColor = "#58ffff",
+            tagText = "Good",
+            angle = -90,
+            unlockReq = "Prestige once",
+            obj = nil,
+            order = 99,
+            color = ColorSequence.new({ ColorSequenceKeypoint.new(0, Color3.new(0.345098, 1, 1)), ColorSequenceKeypoint.new(1, Color3.new(0.345098, 1, 1)) }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 221 ]]
+                return p1.Currency.resets.prestige.b > 0
+            end
+        },
+        ["2"] = {
+            displayName = "Advanced",
+            tagColor = "#f789ff",
+            tagText = "Advanced",
+            angle = -90,
+            unlockReq = "Crystallize once",
+            obj = nil,
+            order = 98,
+            color = ColorSequence.new({ ColorSequenceKeypoint.new(0, Color3.new(0.968627, 0.537255, 1)), ColorSequenceKeypoint.new(1, Color3.new(0.968627, 0.537255, 1)) }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 237 ]]
+                return p1.Currency.resets.crystallize.b > 0
+            end
+        },
+        ["3"] = {
+            displayName = "Experienced",
+            tagColor = "#00ff00",
+            tagText = "Experienced",
+            angle = -90,
+            unlockReq = "Grasshop once",
+            obj = nil,
+            order = 97,
+            color = ColorSequence.new({ ColorSequenceKeypoint.new(0, Color3.new(0.203922, 1, 0.145098)), ColorSequenceKeypoint.new(1, Color3.new(0.203922, 1, 0.145098)) }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 253 ]]
+                return p1.Currency.resets.grasshop.b > 0
+            end
+        },
+        ["4"] = {
+            displayName = "Pro",
+            tagColor = "#9830ff",
+            tagText = "Pro",
+            angle = -90,
+            unlockReq = "Galactic once",
+            obj = nil,
+            order = 96,
+            color = ColorSequence.new({ ColorSequenceKeypoint.new(0, Color3.new(0.317647, 0.145098, 1)), ColorSequenceKeypoint.new(1, Color3.new(0.596078, 0.188235, 1)) }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 269 ]]
+                return p1.Currency.resets.galactic.b > 0
+            end
+        },
+        ["5"] = {
+            displayName = "Godly",
+            tagColor = "#ffec1a",
+            tagText = "Godly",
+            angle = -90,
+            unlockReq = "Supernova once",
+            obj = nil,
+            order = 95,
+            color = ColorSequence.new({ ColorSequenceKeypoint.new(0, Color3.new(0.905882, 1, 0.482353)), ColorSequenceKeypoint.new(1, Color3.new(1, 0.333333, 0)) }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 285 ]]
+                return p1.Currency.resets.supernova.b > 0
+            end
+        },
+        ["6"] = {
+            displayName = "Loopy",
+            tagColor = "#ffffff",
+            tagText = "Loopy",
+            angle = -90,
+            unlockReq = "Loop once",
+            obj = nil,
+            order = 94,
+            color = ColorSequence.new({ ColorSequenceKeypoint.new(0, Color3.new(0/255, 0/255, 0/255)), ColorSequenceKeypoint.new(0.5, Color3.new(255/255, 255/255, 255/255)), ColorSequenceKeypoint.new(1, Color3.new(0/255, 0/255, 0/255)) }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 302 ]]
+                return p1.Currency.resets.loop1.b > 0
+            end
+        },
+        ["7"] = {
+            displayName = "Mega",
+            tagColor = "#00ff00",
+            tagText = "Mega",
+            angle = -90,
+            unlockReq = "Mega Loop once",
+            obj = nil,
+            order = 93,
+            color = ColorSequence.new({ ColorSequenceKeypoint.new(0, Color3.new(0/255, 0/255, 0/255)), ColorSequenceKeypoint.new(0.5, Color3.new(0/255, 255/255, 0/255)), ColorSequenceKeypoint.new(1, Color3.new(0/255, 0/255, 0/255)) }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 319 ]]
+                return p1.Currency.resets.loop2.b > 0
+            end
+        },
+        ["8"] = {
+            displayName = "Super",
+            tagColor = "#00ffff",
+            tagText = "Super",
+            angle = -90,
+            unlockReq = "Super Mega Loop once",
+            obj = nil,
+            order = 92,
+            color = ColorSequence.new({ ColorSequenceKeypoint.new(0, Color3.new(0/255, 0/255, 0/255)), ColorSequenceKeypoint.new(0.5, Color3.new(0/255, 255/255, 255/255)), ColorSequenceKeypoint.new(1, Color3.new(0/255, 0/255, 0/255)) }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 336 ]]
+                return p1.Currency.resets.loop3.b > 0
+            end
+        },
+        ["9"] = {
+            displayName = "Ultra",
+            tagColor = "#ff00ff",
+            tagText = "Ultra",
+            angle = -90,
+            unlockReq = "Super Ultra Mega Loop once",
+            obj = nil,
+            order = 91,
+            color = ColorSequence.new({ ColorSequenceKeypoint.new(0, Color3.new(0/255, 0/255, 0/255)), ColorSequenceKeypoint.new(0.5, Color3.new(255/255, 0/255, 255/255)), ColorSequenceKeypoint.new(1, Color3.new(0/255, 0/255, 0/255)) }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 353 ]]
+                return p1.Currency.resets.loop4.b > 0
+            end
+        },
+        ["10"] = {
+            displayName = "Omega",
+            tagColor = "#ff0000",
+            tagText = "Omega",
+            angle = -90,
+            unlockReq = "Omega Loop once",
+            obj = nil,
+            order = 90,
+            color = ColorSequence.new({ ColorSequenceKeypoint.new(0, Color3.new(0/255, 0/255, 0/255)), ColorSequenceKeypoint.new(0.5, Color3.new(255/255, 0/255, 0/255)), ColorSequenceKeypoint.new(1, Color3.new(0/255, 0/255, 0/255)) }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 370 ]]
+                return p1.Currency.resets.loop5.b > 0
+            end
+        },
+        ["11"] = {
+            displayName = "Certified Grass Avoider",
+            tagColor = "#ff0000",
+            tagText = "Omega+",
+            angle = -90,
+            unlockReq = "Do the True End reset once",
+            obj = nil,
+            order = 89,
+            color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.new(0/255, 0/255, 0/255)),
+                ColorSequenceKeypoint.new(0.25, Color3.new(255/255, 0/255, 0/255)),
+                ColorSequenceKeypoint.new(0.5, Color3.new(255/255, 255/255, 255/255)),
+                ColorSequenceKeypoint.new(0.75, Color3.new(255/255, 0/255, 0/255)),
+                ColorSequenceKeypoint.new(1, Color3.new(0/255, 0/255, 0/255))
+            }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 389 ]]
+                return p1.Currency.resets.trueEnd.a > 0
+            end
+        },
+        ["1a"] = {
+            displayName = "Runic",
+            tagColor = "#a6ff00",
+            tagText = "Runic",
+            angle = -90,
+            unlockReq = "Rune Convert once",
+            obj = nil,
+            order = 70,
+            color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.new(0.27451, 0.313725, 0.258824)),
+                ColorSequenceKeypoint.new(0.25, Color3.new(0.27451, 0.313725, 0.258824)),
+                ColorSequenceKeypoint.new(0.5, Color3.new(0.65098, 1, 0)),
+                ColorSequenceKeypoint.new(0.75, Color3.new(0.27451, 0.313725, 0.258824)),
+                ColorSequenceKeypoint.new(1, Color3.new(0.27451, 0.313725, 0.258824))
+            }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 408 ]]
+                return p1.Currency.resets.rune.b > 0
+            end
+        },
+        ["2a"] = {
+            displayName = "Precious",
+            tagColor = "#0066ff",
+            tagText = "Precious",
+            angle = -90,
+            unlockReq = "Sapphire Form once",
+            obj = nil,
+            order = 69,
+            color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.new(0, 0.615686, 1)),
+                ColorSequenceKeypoint.new(0.2, Color3.new(0, 0.14902, 1)),
+                ColorSequenceKeypoint.new(0.45, Color3.new(0, 0.615686, 1)),
+                ColorSequenceKeypoint.new(0.8, Color3.new(255/255, 255/255, 255/255)),
+                ColorSequenceKeypoint.new(1, Color3.new(255/255, 255/255, 255/255))
+            }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 427 ]]
+                return p1.Currency.resets.sapphire.b > 0
+            end
+        },
+        ["3a"] = {
+            displayName = "Awoken",
+            tagColor = "#efffa0",
+            tagText = "Awoken",
+            angle = -90,
+            unlockReq = "Awaken once",
+            obj = nil,
+            order = 68,
+            color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.new(255/255, 255/255, 255/255)),
+                ColorSequenceKeypoint.new(0.2, Color3.new(0.937255, 1, 0.627451)),
+                ColorSequenceKeypoint.new(0.45, Color3.new(0.568627, 1, 0)),
+                ColorSequenceKeypoint.new(0.8, Color3.new(255/255, 255/255, 255/255)),
+                ColorSequenceKeypoint.new(1, Color3.new(255/255, 255/255, 255/255))
+            }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 446 ]]
+                return p1.Currency.resets.temple.b > 0
+            end
+        },
+        ["4a"] = {
+            displayName = "Sleepless",
+            tagColor = "#00ff95",
+            tagText = "Sleepless",
+            angle = -90,
+            unlockReq = "True Awaken once",
+            obj = nil,
+            order = 67,
+            color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.new(255/255, 255/255, 255/255)),
+                ColorSequenceKeypoint.new(0.2, Color3.new(0.6, 0.839216, 1)),
+                ColorSequenceKeypoint.new(0.45, Color3.new(0, 1, 0.584314)),
+                ColorSequenceKeypoint.new(0.8, Color3.new(255/255, 255/255, 255/255)),
+                ColorSequenceKeypoint.new(1, Color3.new(255/255, 255/255, 255/255))
+            }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 465 ]]
+                return p1.Currency.resets.l4.b > 0
+            end
+        },
+        ["5a"] = {
+            displayName = "Mirage",
+            tagColor = "#ffb300",
+            tagText = "Mirage",
+            angle = -90,
+            unlockReq = "Reach Desert",
+            obj = nil,
+            order = 66,
+            color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.new(1, 0.976471, 0.65098)),
+                ColorSequenceKeypoint.new(0.35, Color3.new(1, 0.92549, 0.54902)),
+                ColorSequenceKeypoint.new(0.55, Color3.new(1, 0.701961, 0)),
+                ColorSequenceKeypoint.new(0.8, Color3.new(1, 0.368627, 0)),
+                ColorSequenceKeypoint.new(1, Color3.new(1, 0.976471, 0.65098))
+            }),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 484 ]]
+                return if p1.Stats.prog2 >= 1 then true else p1.Stats.prog2a >= 1
+            end
+        },
+        ["6a"] = {
+            displayName = "Reality Breaker",
+            tagColor = "#ffffff",
+            tagText = "Reality Breaker",
+            angle = -90,
+            unlockReq = "???",
+            obj = nil,
+            order = 65,
+            color = Color3.new(0/255, 0/255, 0/255),
+            strokeColor = Color3.new(255/255, 255/255, 255/255),
+            unlockCondition = function(p1) --[[ unlockCondition | Line: 498 ]]
+                return p1.Stats.prog2a >= 1
+            end
+        }
+    }
+}
