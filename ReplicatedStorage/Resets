@@ -1,0 +1,4572 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local Data = require(ReplicatedStorage.Data)
+local Currencies = require(ReplicatedStorage.Currencies)
+local Multipliers = require(ReplicatedStorage.Multipliers)
+local Upgrades = require(ReplicatedStorage.Upgrades)
+local TabManager = require(ReplicatedStorage.TabManager)
+local Accomplishments = require(ReplicatedStorage.Accomplishments)
+local GrassTypes = require(ReplicatedStorage.GrassTypes)
+local CommonFunctions = require(ReplicatedStorage.CommonFunctions)
+local ChangeVisual = require(ReplicatedStorage.ChangeVisual)
+local Planets = require(ReplicatedStorage.Planets)
+local TreeItems = require(ReplicatedStorage.TreeItems)
+local LunarItems = require(ReplicatedStorage.LunarItems)
+
+require(ReplicatedStorage.Soundificator)
+
+local Star = require(ReplicatedStorage.Star)
+local CurrencyTypes = require(ReplicatedStorage.CurrencyTypes)
+local Solarians = require(ReplicatedStorage.Solarians)
+local Portaling = require(ReplicatedStorage.Portaling)
+local SolarChallenges = require(ReplicatedStorage.SolarChallenges)
+local SingularityChart = require(ReplicatedStorage.SingularityChart)
+local Synthesis = require(ReplicatedStorage.Synthesis)
+local MapTeles = require(ReplicatedStorage.MapTeles)
+local Notifications = require(ReplicatedStorage.Notifications)
+local Fields = require(ReplicatedStorage.Fields)
+local GalaxyGen = require(ReplicatedStorage.GalaxyGen)
+local InfoStore = require(ReplicatedStorage.InfoStore)
+local t = {}
+local TriggerReset = ReplicatedStorage.Remotes:WaitForChild("TriggerReset")
+
+t.canReset = true
+function t.Reset(p1, p2) --[[ Reset | Line: 36 | Upvalues: t (copy), Data (copy), TriggerReset (copy), TabManager (copy) ]]
+    if not t.canReset then
+        return
+    end
+
+    if Data.ImportantData.Stats.resetActions > 0 then
+        return
+    end
+
+    if Data.ImportantData.Stats.tslsu >= 5 then
+        return
+    end
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.resetActions = Stats.resetActions + 1
+    t.canReset = false
+    TriggerReset:FireServer(p1, p2)
+    t.FieldClears(p1, p2)
+    t.UpdateStuff()
+    task.wait(1)
+    t.canReset = true
+
+    if p1 == "loop" then
+        TabManager.menus.soulsShop.Souls1.Visible = true
+        TabManager.menus.soulsShop.Souls2.Visible = false
+        TabManager.menus.soulsShop.Souls3.Visible = false
+        Data.ImportantData.Stats.sunrise = 1
+        Data.ImportantData.Stats.souls = 1
+        Data.ImportantData.Stats.chalSelected = "none"
+        task.wait(6)
+        t.ClearFieldTier()
+    end
+
+    t.FieldClears(p1, p2)
+end
+function t.FieldClears(p1, p2) --[[ FieldClears | Line: 69 | Upvalues: t (copy) ]]
+    if p1 == "prestige" or (p1 == "crystallize" or (p1 == "grasshop" or (p1 == "rocketPart" or (p1 == "galactic" or p1 == "supernova")))) then
+        t.ClearField("main")
+    end
+
+    if p1 == "anonymity" or (p1 == "liquefy" or p1 == "grassskip") then
+        t.ClearField("anti")
+    end
+
+    if p1 == "normality" or p1 == "grassJump" then
+        t.ClearField("un")
+    end
+
+    if p1 == "formRing" or (p1 == "astrolabe" or (p1 == "quadrant" or (p1 == "planetary" or p1 == "constellation"))) then
+        t.ClearField("planet")
+    end
+
+    if p1 == "bluestige" or (p1 == "plasma" or p1 == "grassTouch") then
+        t.ClearField("blue")
+    end
+
+    if p1 == "rune" or (p1 == "ruby" or (p1 == "sapphire" or p1 == "awaken")) then
+        t.ClearField("jungle")
+    end
+
+    if p1 == "opal" or (p1 == "bulb" or p1 == "absorb") then
+        t.ClearField("cavern")
+    end
+
+    if p1 == "prestigeS" or (p1 == "crystallizeS" or p1 == "grasshopS") then
+        t.ClearField("normS")
+    end
+
+    if p1 == "trueAwaken" or (p1 == "collapse" or (p1 == "startCC" or (p1 == "destabilize" or (p1 == "midnight2" or p1 == "rift")))) then
+        t.ClearField("jungle")
+        t.ClearField("cavern")
+        t.ClearField("understand")
+    end
+
+    if p1 == "break" or (p1 == "discovery" or p1 == "epiphany") then
+        t.ClearField("understand")
+    end
+
+    if p1 == "twilight2" or (p1 == "midnight2" or p1 == "rift") then
+        t.ClearField("desert")
+        t.ClearField("temple")
+    end
+
+    if p1 == "cactus1" or (p1 == "cactus2" or (p1 == "cactus3" or (p1 == "cactusTrialEnd" or p1 == "rift"))) then
+        t.ClearField("cactus")
+    end
+
+    if p1 == "rift" then
+        t.ClearField("rift")
+    end
+
+    if p1 ~= "quality" then
+        return
+    end
+
+    for i = 1, p2.floor or 1 do
+        t.ClearField("9_F" .. i)
+    end
+end
+function t.ClearFieldTier() --[[ ClearFieldTier | Line: 120 | Upvalues: t (copy) ]]
+    t.ClearField("main")
+    t.ClearField("anti")
+    t.ClearField("planet")
+end
+function t.ClearField(p1) --[[ ClearField | Line: 126 | Upvalues: Fields (copy) ]]
+    local v1 = Fields.Fields[p1]
+
+    if not v1 then
+        return
+    end
+
+    v1.counter = 0
+
+    for v2, v3 in v1.objects do
+        v2.Transparency = 1
+        v2.CanCollide = false
+        v2.CanTouch = false
+
+        if v2:FindFirstChild("Temp") then
+            v2.Temp:Destroy()
+        end
+
+        v1.disabled[v2] = true
+        v1.objects[v2] = nil
+    end
+end
+function t.RemoveGrass() --[[ RemoveGrass | Line: 143 | Upvalues: Data (copy) ]]
+    for k, v in pairs(Data.ImportantData.GrassObjects.grassObjects) do
+        k.Transparency = 1
+        k.CanCollide = false
+        k.CanTouch = false
+
+        if k:FindFirstChild("Temp") then
+            k.Temp:Destroy()
+        end
+
+        Data.removeGrassObj(k)
+        Data.addDisabled(k)
+    end
+
+    Data.ImportantData.Dynamic.currentGrass = 0
+end
+function t.RemoveBrass() --[[ RemoveBrass | Line: 156 | Upvalues: Data (copy) ]]
+    for k, v in pairs(Data.ImportantData.GrassObjects.blueObjects) do
+        k.Transparency = 1
+        k.CanCollide = false
+        k.CanTouch = false
+
+        if k:FindFirstChild("Temp") then
+            k.Temp:Destroy()
+        end
+
+        Data.ImportantData.GrassObjects.blueObjects[k] = nil
+        Data.ImportantData.GrassObjects.disabledBlueObjects[k] = true
+    end
+
+    Data.ImportantData.Dynamic.currentBlue = 0
+end
+function t.Prestige(p1) --[[ Prestige | Line: 170 | Upvalues: Multipliers (copy), LethalNum (copy), Data (copy), t (copy), CurrencyTypes (copy), Notifications (copy), Upgrades (copy) ]]
+    local prestigeToEarn = Multipliers.getMulti().prestigeToEarn
+
+    if not (LethalNum.isGreaterE(prestigeToEarn, LethalNum.new(1, 0)) or Data.ImportantData.Stats.totalCrystallize > 0) then
+        return
+    end
+
+    t.AccomplishConditions("prestige")
+
+    local v1 = Data.ImportantData.UpgradeLevels.upgrades.keepPerks.level > 0 and Data.ImportantData.Misc.toggles.keepPerksP.Visible or CurrencyTypes.GetInfinity("pp")
+
+    if Data.ImportantData.Stats.realm == "normal" then
+        CurrencyTypes.AddCurrency("pp", prestigeToEarn)
+
+        if not p1 then
+            Notifications.addCurrPopup("pp", prestigeToEarn)
+        end
+    end
+
+    if Data.ImportantData.Stats.totalPrestige <= 0 and Data.ImportantData.Stats.loopsTotal < 1 then
+        Data.updateDisplaySettings("tiers")
+    end
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.currentPrestige = Stats.currentPrestige + 1
+
+    local Stats2 = Data.ImportantData.Stats
+
+    Stats2.totalPrestige = Stats2.totalPrestige + 1
+    Data.ImportantData.Stats.totalGrassP = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.Accomplish.timeP = 0
+    Data.ImportantData.Stats.Accomplish.grassBoughtP = 0
+    Data.ImportantData.Stats.Accomplish.grassCutP = 0
+    CurrencyTypes.SetCurrency("grass", LethalNum.new(0, 0))
+
+    if not v1 and Data.ImportantData.Stats.realm == "normal" then
+        CurrencyTypes.SetCurrency("perks", LethalNum.new(0, 0))
+        Data.ImportantData.Stats.perksSpent = LethalNum.new(0, 0)
+    end
+
+    CurrencyTypes.Levels.level.progress = LethalNum.new(0, 0)
+    CurrencyTypes.Levels.level.level = 1
+
+    if Data.ImportantData.Stats.totalSupernova > 0 then
+        t.UpdateGH()
+    end
+
+    for k, v in pairs(Upgrades.Basic) do
+        if (v.tier == "basic" or v.tier == "perk") and (v.shopType ~= "automation" and (v.tier ~= "perk" or not v1 and Data.ImportantData.Stats.realm == "normal")) then
+            v.level = 0
+        end
+    end
+
+    t.RemoveGrass()
+    t.UpdateStuff()
+end
+
+local v1 = true
+local v2 = false
+
+function t.InnerRing() --[[ InnerRing | Line: 239 | Upvalues: Multipliers (copy), Data (copy), LethalNum (copy), Planets (copy), v1 (ref), v2 (ref), t (copy), CurrencyTypes (copy), Upgrades (copy) ]]
+    local ringMultiToEarn = Multipliers.getMulti().ringMultiToEarn
+
+    if not (Data.ImportantData.Stats.highestZeroGrassskip >= 45 and (LethalNum.isGreaterE(Planets.Planets.planetoid[1].bestScore, LethalNum.new(5, 8)) and v1)) then
+        return
+    end
+
+    v2 = true
+    t.Sacrifice()
+    v1 = false
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.innerRingsBroken = Stats.innerRingsBroken + 1
+    CurrencyTypes.Levels.planetLevel.level = 1
+    CurrencyTypes.Levels.planetLevel.progress = LethalNum.new(0, 0)
+    CurrencyTypes.SetCurrency("darkMatter", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("rings", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("stars", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("planetarium", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("astro", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("measure", LethalNum.new(0, 0))
+    Planets.Planets.planetoid[1].bestScore = LethalNum.new(0, 0)
+    Planets.Planets.planetoid[1].highestLevel = 0
+
+    for k, v in pairs(Upgrades.Basic) do
+        if (v.tier == "darkMatter" or (v.tier == "rings" or (v.tier == "rings" or (v.tier == "stars" or (v.tier == "astro" or (v.tier == "measure" or v.tier == "planetarium")))))) and (v.shopType ~= "automation" and (v.tier ~= "stars" or v.shopType == "ultBranch")) then
+            v.level = 0
+        end
+    end
+
+    Data.ImportantData.Stats.scoreRingMulti = LethalNum.add(Data.ImportantData.Stats.scoreRingMulti, ringMultiToEarn)
+    v1 = true
+    v2 = false
+    t.RemoveGrass()
+    t.UpdateStuff()
+end
+function t.FormRing() --[[ FormRing | Line: 294 | Upvalues: Multipliers (copy), LethalNum (copy), CurrencyTypes (copy), v1 (ref), Data (copy), Upgrades (copy), Notifications (copy), Planets (copy), t (copy) ]]
+    local ringsToEarn = Multipliers.getMulti().ringsToEarn
+    local v12 = LethalNum.floor(LethalNum.multiply(Multipliers.getMulti().resPercentage / 100, CurrencyTypes.GetCurrencyAmt("obs")))
+
+    if CurrencyTypes.GetInfinity("obs") then
+        v12 = LethalNum.new(1, 500)
+    end
+
+    if not (CurrencyTypes.Levels.planetLevel.level >= 5 and v1) then
+        return
+    end
+
+    v1 = false
+    CurrencyTypes.Levels.planetLevel.level = 1
+    CurrencyTypes.Levels.planetLevel.progress = LethalNum.new(0, 0)
+    CurrencyTypes.SetCurrency("planetarium", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("perks2", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("astro", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("measure", LethalNum.new(0, 0))
+    Data.ImportantData.Stats.tempGPS = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.gps = LethalNum.new(0, 0)
+    CurrencyTypes.SetCurrency("obs", LethalNum.new(0, 0))
+
+    for k, v in pairs(Upgrades.Basic) do
+        if (v.tier == "perk2" or (v.tier == "planetarium" or (v.tier == "astro" or v.tier == "measure"))) and (v.shopType ~= "automation" and (v.tier ~= "perk2" or not (Multipliers.getUpgradeLevel("RSpra5") > 0))) then
+            v.level = 0
+        end
+    end
+
+    CurrencyTypes.AddCurrency("rings", ringsToEarn)
+    Notifications.addCurrPopup("rings", ringsToEarn)
+
+    local v3 = Planets.Planets.planetoid[1]
+
+    if LethalNum.isGreater(ringsToEarn, v3.bestScore) then
+        v3.bestScore = LethalNum.new(ringsToEarn.n, ringsToEarn.e)
+    end
+
+    CurrencyTypes.AddCurrency("res", v12)
+    Notifications.addCurrPopup("res", v12)
+    v1 = true
+    t.RemoveGrass()
+    t.UpdateStuff()
+end
+function t.Astrolabe(p1) --[[ Astrolabe | Line: 350 | Upvalues: Multipliers (copy), LethalNum (copy), CurrencyTypes (copy), v1 (ref), Data (copy), Upgrades (copy), Notifications (copy), t (copy) ]]
+    local astroToEarn = Multipliers.getMulti().astroToEarn
+
+    if not (LethalNum.isGreaterE(astroToEarn, LethalNum.new(1, 0)) and (CurrencyTypes.Levels.planetLevel.level >= 31 and v1)) then
+        return
+    end
+
+    v1 = false
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.totalAstrolabe = Stats.totalAstrolabe + 1
+    CurrencyTypes.SetCurrency("planetarium", LethalNum.new(0, 0))
+
+    if not (Multipliers.getUpgradeLevel("RSpra1") > 0) then
+        CurrencyTypes.SetCurrency("perks2", LethalNum.new(0, 0))
+    end
+
+    CurrencyTypes.Levels.planetLevel.level = 1
+    CurrencyTypes.Levels.planetLevel.progress = LethalNum.new(0, 0)
+
+    for k, v in pairs(Upgrades.Basic) do
+        if (v.tier == "planetarium" or v.tier == "perk2") and (v.shopType ~= "automation" and (v.tier ~= "perk2" or not (Multipliers.getUpgradeLevel("RSpra1") > 0))) then
+            v.level = 0
+        end
+    end
+
+    CurrencyTypes.AddCurrency("astro", astroToEarn)
+
+    if not p1 then
+        Notifications.addCurrPopup("astro", astroToEarn)
+    end
+
+    v1 = true
+    t.RemoveGrass()
+    t.UpdateStuff()
+end
+function t.Quadrant(p1) --[[ Quadrant | Line: 386 | Upvalues: Multipliers (copy), LethalNum (copy), CurrencyTypes (copy), v1 (ref), t (copy), Data (copy), Upgrades (copy), Notifications (copy) ]]
+    local measureToEarn = Multipliers.getMulti().measureToEarn
+
+    if not (LethalNum.isGreaterE(measureToEarn, LethalNum.new(1, 0)) and (CurrencyTypes.Levels.planetLevel.level >= 101 and v1)) then
+        return
+    end
+
+    t.Astrolabe(true)
+    v1 = false
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.totalQuadrant = Stats.totalQuadrant + 1
+    CurrencyTypes.SetCurrency("astro", LethalNum.new(0, 0))
+
+    for k, v in pairs(Upgrades.Basic) do
+        if (v.tier == "astro" or v.tier == "perk2") and (v.shopType ~= "automation" and (v.tier ~= "perk2" or not (Multipliers.getUpgradeLevel("RSpra2") > 0))) then
+            v.level = 0
+        end
+    end
+
+    CurrencyTypes.AddCurrency("measure", measureToEarn)
+
+    if not p1 then
+        Notifications.addCurrPopup("measure", measureToEarn)
+    end
+
+    v1 = true
+    t.RemoveGrass()
+    t.UpdateStuff()
+end
+function t.Planetary(p1) --[[ Planetary | Line: 417 | Upvalues: Multipliers (copy), Data (copy), CurrencyTypes (copy), v1 (ref), t (copy), LethalNum (copy), Upgrades (copy), Notifications (copy) ]]
+    local planetsToEarn = Multipliers.getMulti().planetsToEarn
+    local level = CurrencyTypes.Levels.planetLevel.level
+
+    if not (Data.ImportantData.Stats.pDif > 0 and (CurrencyTypes.Levels.planetLevel.level >= 201 and v1)) then
+        return
+    end
+
+    if Data.ImportantData.Stats.currentPlanetary >= 2000 then
+        return
+    end
+
+    local v2 = if 201 + Data.ImportantData.Stats.currentPlanetary * 10 <= CurrencyTypes.Levels.planetLevel.level then true else false
+
+    t.Quadrant(true)
+    v1 = false
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.totalPlanetary = Stats.totalPlanetary + 1
+
+    if v2 then
+        local count = 1
+        local v3 = 201 + (Data.ImportantData.Stats.currentPlanetary + 1) * 10
+
+        if Data.ImportantData.Misc.toggles.bulkPT.Visible then
+            while v3 <= level do
+                count = count + 1
+                v3 = 201 + (Data.ImportantData.Stats.currentPlanetary + count) * 10
+            end
+        end
+
+        local Stats2 = Data.ImportantData.Stats
+
+        Stats2.currentPlanetary = Stats2.currentPlanetary + count
+
+        if Data.ImportantData.Stats.currentPlanetary > Data.ImportantData.Stats.highestPlanetary then
+            Data.ImportantData.Stats.highestPlanetary = Data.ImportantData.Stats.currentPlanetary
+        end
+    end
+
+    CurrencyTypes.SetCurrency("measure", LethalNum.new(0, 0))
+
+    for k, v in pairs(Upgrades.Basic) do
+        if (v.tier == "measure" or v.tier == "perk2") and (v.shopType ~= "automation" and (v.tier ~= "perk2" or not (Multipliers.getUpgradeLevel("RSpra3") > 0))) then
+            v.level = 0
+        end
+    end
+
+    CurrencyTypes.AddCurrency("planets", planetsToEarn)
+
+    if not p1 then
+        Notifications.addCurrPopup("planets", planetsToEarn)
+    end
+
+    v1 = true
+    t.RemoveGrass()
+    t.UpdateStuff()
+end
+function t.Constellation() --[[ Constellation | Line: 474 | Upvalues: LethalNum (copy), Data (copy), CurrencyTypes (copy), v1 (ref), t (copy), Upgrades (copy), Multipliers (copy), Notifications (copy) ]]
+    local v12 = LethalNum.new(3, 0)
+
+    if LethalNum.isGreater(Data.ImportantData.Stats.bestLineGen, LethalNum.new(1, 1)) then
+        v12 = Data.ImportantData.Stats.bestLineGen
+    end
+
+    if not (Data.ImportantData.Stats.pDif > 0 and (CurrencyTypes.Levels.planetLevel.level >= 301 and v1)) then
+        return
+    end
+
+    t.Planetary(true)
+    v1 = false
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.totalConstellation = Stats.totalConstellation + 1
+    CurrencyTypes.SetCurrency("planets", LethalNum.new(0, 0))
+
+    for k, v in pairs(Upgrades.Basic) do
+        if (v.tier == "planetary" or v.tier == "perk2") and (v.shopType ~= "automation" and (v.tier ~= "perk2" or not (Multipliers.getUpgradeLevel("RSpra4") > 0))) then
+            v.level = 0
+        end
+    end
+
+    CurrencyTypes.AddCurrency("lines", v12)
+    Notifications.addCurrPopup("lines", v12)
+
+    if LethalNum.isGreater(Data.ImportantData.Stats.bestArcsGen, LethalNum.new(1, 1)) then
+        local bestArcsGen = Data.ImportantData.Stats.bestArcsGen
+
+        CurrencyTypes.AddCurrency("arcs", bestArcsGen)
+        Notifications.addCurrPopup("arcs", bestArcsGen)
+    end
+
+    Data.ImportantData.Stats.bestLineGen = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.bestArcsGen = LethalNum.new(0, 0)
+    v1 = true
+    t.RemoveGrass()
+    t.UpdateStuff()
+end
+function t.Nebula() --[[ Nebula | Line: 518 | Upvalues: LethalNum (copy), Data (copy), CurrencyTypes (copy), v1 (ref), t (copy), Upgrades (copy), Multipliers (copy) ]]
+    LethalNum.new(1, 0)
+
+    local _ = Data.ImportantData.Stats.pDif > 0 and (CurrencyTypes.Levels.planetLevel.level >= 401 and v1)
+end
+function t.EventHorizon() --[[ EventHorizon | Line: 547 | Upvalues: LethalNum (copy), Data (copy), CurrencyTypes (copy), v1 (ref), t (copy), Upgrades (copy) ]]
+    LethalNum.new(1, 0)
+
+    if not (Data.ImportantData.Stats.pDif >= 4 and (CurrencyTypes.Levels.planetLevel.level >= 601 and v1)) then
+        return
+    end
+
+    t.Supernova()
+    v1 = false
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.totalEventHorizon = Stats.totalEventHorizon + 1
+
+    for k, v in pairs(Upgrades.Basic) do
+        if v.tier == "supernova" and v.shopType ~= "automation" then
+            v.level = 0
+        end
+    end
+
+    v1 = true
+    t.RemoveGrass()
+    t.UpdateStuff()
+end
+
+local v3 = false
+
+function t.Crystallize(p1) --[[ Crystallize | Line: 573 | Upvalues: v3 (ref), Multipliers (copy), LethalNum (copy), Data (copy), CurrencyTypes (copy), t (copy), Notifications (copy), Upgrades (copy) ]]
+    if v3 then
+        return
+    end
+
+    local crystalsToEarn = Multipliers.getMulti().crystalsToEarn
+
+    if not LethalNum.isGreaterE(crystalsToEarn, LethalNum.new(1, 0)) then
+        return
+    end
+
+    v3 = true
+
+    local v1 = Data.ImportantData.UpgradeLevels.upgrades.keepPerks2.level > 0 and Data.ImportantData.Misc.toggles.keepPerksC.Visible or CurrencyTypes.GetInfinity("crystals")
+
+    t.AccomplishConditions("crystal")
+    t.Prestige(true)
+
+    if Data.ImportantData.Stats.realm == "normal" then
+        CurrencyTypes.AddCurrency("crystals", crystalsToEarn)
+
+        if not p1 then
+            Notifications.addCurrPopup("crystals", crystalsToEarn)
+        end
+    end
+
+    Data.ImportantData.Stats.Accomplish.timeC = 0
+    Data.ImportantData.Stats.Accomplish.grassBoughtC = 0
+    Data.ImportantData.Stats.Accomplish.prestigeBoughtC = 0
+    Data.ImportantData.Stats.Accomplish.grassCutC = 0
+    Data.ImportantData.Stats.currentPrestige = 0
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.currentCrystallize = Stats.currentCrystallize + 1
+
+    local Stats2 = Data.ImportantData.Stats
+
+    Stats2.totalCrystallize = Stats2.totalCrystallize + 1
+
+    if Data.ImportantData.Stats.loopsTotal > 0 then
+        Data.ImportantData.Stats.totalCrystallize = math.max(Data.ImportantData.Stats.totalCrystallize, 3)
+    end
+
+    CurrencyTypes.SetCurrency("pp", LethalNum.new(0, 0))
+    Data.ImportantData.Currencies.tierProgress = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.currentTier = "basic"
+    Data.ImportantData.Stats.infTier = 0
+
+    if not v1 and Data.ImportantData.Stats.realm == "normal" then
+        CurrencyTypes.SetCurrency("perks", LethalNum.new(0, 0))
+        Data.ImportantData.Stats.perksSpent = LethalNum.new(0, 0)
+    end
+
+    for k, v in pairs(Upgrades.Basic) do
+        if (v.tier == "prestige" or v.tier == "perk") and (v.shopType ~= "automation" and (v.tier ~= "perk" or not v1 and Data.ImportantData.Stats.realm == "normal")) then
+            v.level = 0
+        end
+    end
+
+    t.UpdateStuff()
+    v3 = false
+end
+
+local v4 = false
+
+function t.Grasshop() --[[ Grasshop | Line: 652 | Upvalues: v4 (ref), Data (copy), Multipliers (copy), t (copy), CurrencyTypes (copy), CommonFunctions (copy), LethalNum (copy), Upgrades (copy), Accomplishments (copy) ]]
+    if v4 then
+        return
+    end
+
+    local v1 = 201 + Data.ImportantData.Stats.currentGrasshop
+
+    if Data.ImportantData.Stats.currentGrasshop > 7 then
+        v1 = 231 + (Data.ImportantData.Stats.currentGrasshop - 8) * 10
+    end
+
+    local v2 = Multipliers.getUpgradeLevel("Sgh")
+
+    if v2 > 0 then
+        if Data.ImportantData.Stats.currentGrasshop < 8 * v2 then
+            local v3 = if Data.ImportantData.Misc.toggles.bulkGrasshop.Visible then 8 * v2 - Data.ImportantData.Stats.currentGrasshop else 1
+            local Stats = Data.ImportantData.Stats
+
+            Stats.totalGrasshop = Stats.totalGrasshop + v3
+
+            local Stats2 = Data.ImportantData.Stats
+
+            Stats2.currentGrasshop = Stats2.currentGrasshop + v3
+            t.UpdateStuff()
+
+            return
+        end
+
+        v4 = false
+    end
+
+    if not (v1 <= CurrencyTypes.Levels.level.level and Data.ImportantData.Stats.currentGrasshop < 2000) then
+        return
+    end
+
+    v4 = true
+
+    local level = CurrencyTypes.Levels.level.level
+    local v42 = Data.ImportantData.Stats.currentGrasshop > 7 and Data.ImportantData.Misc.toggles.keepPerksG.Visible or CurrencyTypes.GetInfinity("steel")
+    local v5 = CommonFunctions.getFadeObj()
+
+    if Data.ImportantData.Stats.totalGrasshop < 16 and Data.ImportantData.Stats.loopsTotal < 1 then
+        v5.BackgroundColor3 = Color3.new(255/255, 255/255, 255/255)
+        CommonFunctions.fade(v5, 3, true, "frame")
+        task.wait(5)
+
+        local TextLabel = Instance.new("TextLabel", v5)
+
+        TextLabel.Font = "Cartoon"
+        TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+        TextLabel.Position = UDim2.new(UDim.new(0.5, 0), UDim.new(0.5, 0))
+        TextLabel.Size = UDim2.new(UDim.new(0.9, 0), UDim.new(0.4, 0))
+        TextLabel.TextScaled = true
+        TextLabel.BackgroundTransparency = 1
+        TextLabel.RichText = true
+        TextLabel.TextStrokeTransparency = 0
+        TextLabel.TextTransparency = 1
+        TextLabel.TextStrokeTransparency = 1
+        TextLabel.TextColor3 = Color3.new(255/255, 255/255, 255/255)
+        Instance.new("UITextSizeConstraint", TextLabel).MaxTextSize = 100
+
+        local v6 = "<b>"
+
+        TextLabel.Text = (if Data.ImportantData.Stats.currentGrasshop == 0 then v6 .. "You have Grasshopped for the first time!\n\nCheck out the Grasshop Milestones board" else v6 .. "You have Grasshopped\n\n<font color=\"#00ff00\">" .. Data.ImportantData.Stats.currentGrasshop + 1 .. "</font>\n\ntimes") .. "</b>"
+        CommonFunctions.fade(TextLabel, 2, true, "text")
+        task.wait(8)
+        CommonFunctions.fade(TextLabel, 1, false, "text")
+        task.wait(2)
+        CommonFunctions.fade(v5, 1, false, "frame")
+    end
+
+    t.Crystallize(true)
+    Data.ImportantData.Stats.Accomplish.timeG = 0
+    Data.ImportantData.Stats.Accomplish.grassBoughtG = 0
+    Data.ImportantData.Stats.Accomplish.prestigeBoughtG = 0
+    Data.ImportantData.Stats.Accomplish.crystalBoughtG = 0
+    Data.ImportantData.Stats.Accomplish.grassCutG = 0
+    Data.ImportantData.Stats.currentCrystallize = 0
+
+    local count = 1
+    local v8 = 201 + (Data.ImportantData.Stats.currentGrasshop + 1)
+
+    if Data.ImportantData.Stats.currentGrasshop + 1 > 7 then
+        v8 = 231 + (Data.ImportantData.Stats.currentGrasshop + 1 - 8) * 10
+    end
+
+    if Data.ImportantData.Misc.toggles.bulkGrasshop.Visible then
+        while v8 <= level do
+            count = count + 1
+            v8 = 201 + (Data.ImportantData.Stats.currentGrasshop + count)
+
+            if Data.ImportantData.Stats.currentGrasshop + count > 7 then
+                v8 = 231 + (Data.ImportantData.Stats.currentGrasshop + count - 8) * 10
+            end
+        end
+    end
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.totalGrasshop = Stats.totalGrasshop + count
+
+    local Stats2 = Data.ImportantData.Stats
+
+    Stats2.currentGrasshop = Stats2.currentGrasshop + count
+    CurrencyTypes.SetCurrency("charge", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("crystals", LethalNum.new(0, 0))
+
+    if not v42 then
+        CurrencyTypes.SetCurrency("perks", LethalNum.new(0, 0))
+        Data.ImportantData.Stats.perksSpent = LethalNum.new(0, 0)
+    end
+
+    for k, v in pairs(Upgrades.Basic) do
+        if (v.tier == "prestige" or (v.tier == "crystal" or v.tier == "perk")) and (v.shopType ~= "automation" and (v.tier ~= "perk" or not v42)) then
+            v.level = 0
+        end
+    end
+
+    if Data.ImportantData.Stats.lowestGGrasshop > 7 then
+        local v9 = if Data.ImportantData.Stats.currentGrasshop > 1 then Data.ImportantData.Stats.currentGrasshop or 0 else 0
+
+        for k, v in pairs(Accomplishments.Basic) do
+            if not ((v.special or 0) > 0) then
+                local v10 = Data.ImportantData.UpgradeLevels.accomplishments[k]
+
+                v10.level = math.min(v10.level, v9)
+            end
+        end
+    end
+
+    t.UpdateStuff()
+
+    if Data.ImportantData.Stats.totalGrasshop < 16 then
+        task.wait(2)
+        CommonFunctions.clearFadeObj(v5)
+    end
+
+    v4 = false
+end
+function t.GrassJump() --[[ GrassJump | Line: 798 | Upvalues: v4 (ref), Data (copy), CurrencyTypes (copy), CommonFunctions (copy), t (copy), ChangeVisual (copy), LethalNum (copy), Upgrades (copy) ]]
+    if v4 or (not (251 + Data.ImportantData.Stats.currentGrassJump * 10 <= CurrencyTypes.Levels.unLevel.level) or (Data.ImportantData.Stats.realm ~= "recelerated" or not (Data.ImportantData.Stats.currentPlanetary >= 3))) then
+        return
+    end
+
+    if Data.ImportantData.Stats.currentGrassJump >= 2000 then
+        return
+    end
+
+    v4 = true
+
+    local level = CurrencyTypes.Levels.unLevel.level
+
+    if Data.ImportantData.Stats.currentGrassJump == 0 then
+        Data.ImportantData.Misc.toggles.evil.Visible = false
+
+        local Stats = Data.ImportantData.Stats
+
+        Stats.evil = Stats.evil + 1
+
+        local Stats2 = Data.ImportantData.Stats
+
+        Stats2.maxEvil = Stats2.maxEvil + 1
+    end
+
+    local v1 = CommonFunctions.getFadeObj()
+
+    if Data.ImportantData.Stats.totalGrassJump < 10 and Data.ImportantData.Stats.loopsTotal < 1 then
+        v1.BackgroundColor3 = Color3.new(0/255, 0/255, 0/255)
+        CommonFunctions.fade(v1, 3, true, "frame")
+        task.wait(5)
+
+        local TextLabel = Instance.new("TextLabel", v1)
+
+        TextLabel.Font = "Cartoon"
+        TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+        TextLabel.Position = UDim2.new(UDim.new(0.5, 0), UDim.new(0.5, 0))
+        TextLabel.Size = UDim2.new(UDim.new(0.4, 0), UDim.new(0.4, 0))
+        TextLabel.TextScaled = true
+        TextLabel.BackgroundTransparency = 1
+        TextLabel.RichText = true
+        TextLabel.TextStrokeTransparency = 0
+        TextLabel.TextTransparency = 1
+        TextLabel.TextStrokeTransparency = 1
+        TextLabel.TextColor3 = Color3.new(255/255, 255/255, 255/255)
+        Instance.new("UITextSizeConstraint", TextLabel).MaxTextSize = 100
+
+        local v2 = "<b>"
+
+        TextLabel.Text = (if Data.ImportantData.Stats.currentGrassJump == 0 then v2 .. "<font color=\"#ffffff\">You start rolling the ball. For there is no turning back.</font>" else v2 .. "<font color=\"#ffffff\">\n" .. Data.ImportantData.Stats.currentGrassJump + 1 .. "\n</font>") .. "</b>"
+        CommonFunctions.fade(TextLabel, 2, true, "text")
+        t.Vaporize()
+
+        local Stats = Data.ImportantData.Stats
+
+        Stats.evil = Stats.evil + 1
+        ChangeVisual.ToEarth()
+        task.wait(8)
+        CommonFunctions.fade(TextLabel, 1, false, "text")
+        task.wait(2)
+        CommonFunctions.fade(v1, 1, false, "frame")
+    else
+        t.Vaporize()
+
+        local Stats = Data.ImportantData.Stats
+
+        Stats.evil = Stats.evil + 1
+    end
+
+    local count = 1
+    local v42 = 251 + (Data.ImportantData.Stats.currentGrassJump + 1) * 10
+
+    if Data.ImportantData.Misc.toggles.bulkGrassjump.Visible then
+        while v42 <= level do
+            count = count + 1
+            v42 = 251 + (Data.ImportantData.Stats.currentGrassJump + count) * 10
+        end
+    end
+
+    CurrencyTypes.Levels.unLevel.level = 1
+    CurrencyTypes.Levels.unLevel.progress = LethalNum.new(0, 0)
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.totalGrassJump = Stats.totalGrassJump + count
+
+    local Stats2 = Data.ImportantData.Stats
+
+    Stats2.currentGrassJump = Stats2.currentGrassJump + count
+    Data.ImportantData.Stats.currentVaporize = 0
+    CurrencyTypes.SetCurrency("clouds", LethalNum.new(0, 0))
+
+    for k, v in pairs(Upgrades.Basic) do
+        if v.tier == "vaporize" then
+            v.level = 0
+        end
+    end
+
+    t.UpdateStuff()
+
+    if Data.ImportantData.Stats.totalGrassJump < 1000000 then
+        task.wait(2)
+        CommonFunctions.clearFadeObj(v1)
+    end
+
+    v4 = false
+end
+function t.HSJ() --[[ HSJ | Line: 900 | Upvalues: v4 (ref), Data (copy), CurrencyTypes (copy), CommonFunctions (copy), t (copy), ChangeVisual (copy) ]]
+    if v4 or (not (1000 + Data.ImportantData.Stats.currentSGJ * 4300 <= CurrencyTypes.Levels.unLevel.level) or (Data.ImportantData.Stats.realm ~= "recelerated" or not (Data.ImportantData.Stats.currentGrassJump >= Data.ImportantData.Reqs.gj.sgj))) then
+        return
+    end
+
+    v4 = true
+
+    local v1 = CommonFunctions.getFadeObj()
+
+    if Data.ImportantData.Stats.loopsTotal < 1 then
+        v1.BackgroundColor3 = Color3.new(255/255, 255/255, 255/255)
+        CommonFunctions.fade(v1, 3, true, "frame")
+        task.wait(5)
+
+        local TextLabel = Instance.new("TextLabel", v1)
+
+        TextLabel.Font = "Cartoon"
+        TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+        TextLabel.Position = UDim2.new(UDim.new(0.5, 0), UDim.new(0.5, 0))
+        TextLabel.Size = UDim2.new(UDim.new(0.8, 0), UDim.new(0.2, 0))
+        TextLabel.TextScaled = true
+        TextLabel.BackgroundTransparency = 1
+        TextLabel.RichText = true
+        TextLabel.TextStrokeTransparency = 0
+        TextLabel.TextTransparency = 1
+        TextLabel.TextStrokeTransparency = 1
+        TextLabel.TextColor3 = Color3.new(255/255, 255/255, 255/255)
+        Instance.new("UITextSizeConstraint", TextLabel).MaxTextSize = 100
+        TextLabel.Text = "<b><font color=\"#ffffff\">Soon</font></b>"
+        CommonFunctions.fade(TextLabel, 2, true, "text")
+        t.Vaporize()
+
+        local Stats = Data.ImportantData.Stats
+
+        Stats.evil = Stats.evil + 1
+        ChangeVisual.ToEarth()
+        task.wait(2)
+        v1.BackgroundColor3 = Color3.new(0.682353, 1, 0)
+        TextLabel.TextColor3 = Color3.new(0.682353, 1, 0)
+        task.wait(2)
+        v1.BackgroundColor3 = Color3.new(0, 0.952941, 1)
+        TextLabel.TextColor3 = Color3.new(0, 0.952941, 1)
+        task.wait(2)
+        v1.BackgroundColor3 = Color3.new(0/255, 0/255, 0/255)
+        TextLabel.TextColor3 = Color3.new(0/255, 0/255, 0/255)
+        task.wait(2)
+        v1.BackgroundColor3 = Color3.new(255/255, 255/255, 255/255)
+        TextLabel.TextColor3 = Color3.new(255/255, 255/255, 255/255)
+        CommonFunctions.fade(TextLabel, 1, false, "text")
+        task.wait(2)
+        CommonFunctions.fade(v1, 1, false, "frame")
+    end
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.currentSGJ = Stats.currentSGJ + 1
+    t.UpdateStuff()
+
+    if Data.ImportantData.Stats.loopsTotal < 1 then
+        task.wait(2)
+        CommonFunctions.clearFadeObj(v1)
+    end
+
+    v4 = false
+end
+function t.Steelie(p1) --[[ Steelie | Line: 968 | Upvalues: Multipliers (copy), v4 (ref), Data (copy), CurrencyTypes (copy), t (copy), LethalNum (copy), Notifications (copy), Upgrades (copy), Accomplishments (copy) ]]
+    local steelToEarn = Multipliers.getMulti().steelToEarn
+
+    if v4 then
+        return
+    end
+
+    local v1 = Data.ImportantData.Stats.currentGrasshop > 7 and Data.ImportantData.Misc.toggles.keepPerksG.Visible or CurrencyTypes.GetInfinity("steel")
+
+    t.AccomplishConditions("steelie")
+    t.Crystallize(true)
+    Data.ImportantData.Stats.Accomplish.timeS = 0
+    Data.ImportantData.Stats.Accomplish.grassBoughtG = 0
+    Data.ImportantData.Stats.Accomplish.prestigeBoughtG = 0
+    Data.ImportantData.Stats.Accomplish.crystalBoughtG = 0
+    Data.ImportantData.Stats.Accomplish.grassCutG = 0
+    CurrencyTypes.SetCurrency("charge", LethalNum.new(0, 0))
+    Data.ImportantData.Stats.currentCrystallize = 0
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.totalSteelie = Stats.totalSteelie + 1
+    CurrencyTypes.AddCurrency("steel", steelToEarn)
+
+    if not p1 then
+        Notifications.addCurrPopup("steel", steelToEarn)
+    end
+
+    CurrencyTypes.SetCurrency("crystals", LethalNum.new(0, 0))
+
+    if not v1 and Data.ImportantData.Stats.realm == "normal" then
+        CurrencyTypes.SetCurrency("perks", LethalNum.new(0, 0))
+        Data.ImportantData.Stats.perksSpent = LethalNum.new(0, 0)
+    end
+
+    for k, v in pairs(Upgrades.Basic) do
+        if (v.tier == "prestige" or (v.tier == "crystal" or v.tier == "perk")) and (v.shopType ~= "automation" and (v.tier ~= "perk" or not v1 and Data.ImportantData.Stats.realm == "normal")) then
+            v.level = 0
+        end
+    end
+
+    if Data.ImportantData.Stats.lowestGGrasshop > 7 then
+        local v2 = if Data.ImportantData.Stats.currentGrasshop > 1 then Data.ImportantData.Stats.currentGrasshop or 0 else 0
+
+        for k, v in pairs(Accomplishments.Basic) do
+            if not ((v.special or 0) > 0) then
+                local v3 = Data.ImportantData.UpgradeLevels.accomplishments[k]
+
+                v3.level = math.min(v3.level, v2)
+            end
+        end
+    end
+
+    t.RemoveGrass()
+    t.UpdateStuff()
+end
+function t.Funify() --[[ Funify | Line: 1031 | Upvalues: Multipliers (copy), Data (copy), CurrencyTypes (copy), t (copy), LethalNum (copy), Notifications (copy) ]]
+    local funToEarn = Multipliers.getMulti().funToEarn
+
+    if not (271 + Data.ImportantData.Stats.currentGFunify * 10 <= CurrencyTypes.Levels.antiLevel.level) or Data.ImportantData.Stats.realm ~= "decelerated" then
+        return
+    end
+
+    t.Liquefy(true)
+    Data.ImportantData.Stats.currentLiquefy = 0
+    Data.ImportantData.Stats.Accomplish.timeA = 0
+    CurrencyTypes.SetCurrency("oil", LethalNum.new(0, 0))
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.totalFunify = Stats.totalFunify + 1
+
+    local Stats2 = Data.ImportantData.Stats
+
+    Stats2.currentGFunify = Stats2.currentGFunify + 1
+    CurrencyTypes.AddCurrency("fun", funToEarn)
+    Notifications.addCurrPopup("fun", funToEarn)
+    t.RemoveGrass()
+    t.UpdateStuff()
+end
+function t.ToggleDecelerate() --[[ ToggleDecelerate | Line: 1053 | Upvalues: Data (copy), Multipliers (copy), t (copy), CurrencyTypes (copy), LethalNum (copy), Upgrades (copy) ]]
+    local v1 = Data.ImportantData.Stats.currentSGJ > 0
+
+    if Data.ImportantData.Stats.realm == "decelerated" or Data.ImportantData.Stats.realm == "recelerated" then
+        Multipliers.updateAllMultis()
+
+        if v1 then
+            t.RemoveGrass()
+            t.UpdateStuff()
+
+            return
+        end
+
+        t.AccomplishConditions("steelie")
+        CurrencyTypes.SetCurrency("grass", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("pp", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("crystals", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("charge", LethalNum.new(0, 0))
+        Data.ImportantData.Currencies.tierProgress = LethalNum.new(0, 0)
+        Data.ImportantData.Stats.currentTier = "basic"
+        Data.ImportantData.Stats.infTier = 0
+
+        for k, v in pairs(Upgrades.Basic) do
+            if (v.tier == "prestige" or v.tier == "crystal") and v.shopType ~= "automation" then
+                v.level = 0
+            end
+        end
+    else
+        if v1 then
+            t.RemoveGrass()
+            t.UpdateStuff()
+
+            return
+        end
+
+        Data.ImportantData.Stats.Accomplish.grassBoughtG = 0
+        Data.ImportantData.Stats.Accomplish.prestigeBoughtG = 0
+        Data.ImportantData.Stats.Accomplish.crystalBoughtG = 0
+        Data.ImportantData.Stats.Accomplish.grassCutG = 0
+        CurrencyTypes.SetCurrency("charge", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("grass", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("pp", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("crystals", LethalNum.new(0, 0))
+        Data.ImportantData.Stats.Accomplish.grassBoughtC = 0
+        Data.ImportantData.Stats.Accomplish.prestigeBoughtC = 0
+        Data.ImportantData.Stats.Accomplish.grassCutC = 0
+        Data.ImportantData.Stats.totalGrassP = LethalNum.new(0, 0)
+        Data.ImportantData.Stats.Accomplish.grassBoughtP = 0
+        Data.ImportantData.Stats.Accomplish.grassCutP = 0
+        Data.ImportantData.Stats.currentPrestige = 0
+        Data.ImportantData.Stats.currentCrystallize = 0
+        Data.ImportantData.Currencies.tierProgress = LethalNum.new(0, 0)
+        Data.ImportantData.Stats.currentTier = "basic"
+        Data.ImportantData.Stats.infTier = 0
+
+        for k, v in pairs(Upgrades.Basic) do
+            if (v.tier == "basic" or (v.tier == "crystal" or v.tier == "prestige")) and v.shopType ~= "automation" then
+                v.level = 0
+            end
+        end
+    end
+
+    t.RemoveGrass()
+    t.UpdateStuff()
+end
+function t.Anonymity(p1) --[[ Anonymity | Line: 1128 | Upvalues: Multipliers (copy), LethalNum (copy), t (copy), CurrencyTypes (copy), Notifications (copy), Data (copy), Upgrades (copy) ]]
+    local anonymityToEarn = Multipliers.getMulti().anonymityToEarn
+
+    if not LethalNum.isGreaterE(anonymityToEarn, LethalNum.new(0, 0)) then
+        return
+    end
+
+    t.AccomplishConditions("anonymity")
+    CurrencyTypes.AddCurrency("ap", anonymityToEarn)
+
+    if not p1 then
+        Notifications.addCurrPopup("ap", anonymityToEarn)
+    end
+
+    if Data.ImportantData.Stats.realm == "decelerated" and LethalNum.isGreater(anonymityToEarn, Data.ImportantData.Stats.lastAnonymityAP) then
+        Data.ImportantData.Stats.lastAnonymityAP = anonymityToEarn
+    end
+
+    Data.ImportantData.Stats.Accomplish.agrassBoughtA = 0
+    Data.ImportantData.Stats.Accomplish.timeA = 0
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.currentAnonymity = Stats.currentAnonymity + 1
+
+    local Stats2 = Data.ImportantData.Stats
+
+    Stats2.totalAnonymity = Stats2.totalAnonymity + 1
+    CurrencyTypes.SetCurrency("charge", LethalNum.new(0, 0))
+    CurrencyTypes.Levels.antiLevel.progress = LethalNum.new(0, 0)
+    CurrencyTypes.Levels.antiLevel.level = 1
+
+    if not (Data.ImportantData.UpgradeLevels.upgrades.antigrassSave.level > 0) then
+        CurrencyTypes.SetCurrency("agrass", LethalNum.new(0, 0))
+
+        for k, v in pairs(Upgrades.Basic) do
+            if v.tier == "antigrass" then
+                v.level = 0
+            end
+        end
+    end
+
+    t.RemoveGrass()
+    t.UpdateStuff()
+end
+function t.Liquefy(p1) --[[ Liquefy | Line: 1173 | Upvalues: Multipliers (copy), LethalNum (copy), t (copy), CurrencyTypes (copy), Notifications (copy), Data (copy), Upgrades (copy) ]]
+    local oilToEarn = Multipliers.getMulti().oilToEarn
+
+    if not LethalNum.isGreaterE(oilToEarn, LethalNum.new(0, 0)) then
+        return
+    end
+
+    t.AccomplishConditions("liquefy")
+    t.Anonymity(true)
+    CurrencyTypes.AddCurrency("oil", oilToEarn)
+
+    if not p1 then
+        Notifications.addCurrPopup("oil", oilToEarn)
+    end
+
+    if Data.ImportantData.Stats.realm == "decelerated" and LethalNum.isGreater(oilToEarn, Data.ImportantData.Stats.lastLiquefyOil) then
+        Data.ImportantData.Stats.lastLiquefyOil = oilToEarn
+    end
+
+    Data.ImportantData.Stats.Accomplish.anonymityBoughtL = 0
+    Data.ImportantData.Stats.Accomplish.agrassBoughtL = 0
+    Data.ImportantData.Stats.Accomplish.timeC = 0
+    Data.ImportantData.Stats.Accomplish.timeA = 0
+    Data.ImportantData.Stats.currentAnonymity = 0
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.currentLiquefy = Stats.currentLiquefy + 1
+
+    local Stats2 = Data.ImportantData.Stats
+
+    Stats2.totalLiquefy = Stats2.totalLiquefy + 1
+    Data.ImportantData.Currencies.tierProgress = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.currentTier = "basic"
+    Data.ImportantData.Stats.antiTier = "basic"
+    Data.ImportantData.Stats.infTier = 0
+    CurrencyTypes.SetCurrency("ap", LethalNum.new(0, 0))
+
+    for k, v in pairs(Upgrades.Basic) do
+        if v.tier == "anonymity" then
+            v.level = 0
+        end
+    end
+
+    t.RemoveGrass()
+    t.UpdateStuff()
+end
+
+local v5 = true
+
+function t.RocketPart() --[[ RocketPart | Line: 1217 | Upvalues: Data (copy), LethalNum (copy), CurrencyTypes (copy), v5 (ref), t (copy), Multipliers (copy), Notifications (copy), Upgrades (copy), Currencies (copy) ]]
+    local currentRocketParts = Data.ImportantData.Stats.currentRocketParts
+    local v1 = LethalNum.multiply(LethalNum.new(currentRocketParts + 1, 0), LethalNum.new(1, 20))
+    local v2 = LethalNum.multiply(LethalNum.new(currentRocketParts, 0), LethalNum.new(10, 0))
+
+    if Data.ImportantData.Stats.highestZeroGrassskip >= Data.ImportantData.Reqs.g then
+        if currentRocketParts > 0 then
+            local v3 = LethalNum.multiply(LethalNum.new(1, 36), LethalNum.pow(LethalNum.new(1, 3), currentRocketParts - 1))
+
+            v1, v2 = v3, LethalNum.multiply(LethalNum.new(1, 6), LethalNum.pow(LethalNum.new(1, 2), currentRocketParts - 1))
+        else
+            local v52 = LethalNum.new(1, 21)
+
+            v1, v2 = v52, LethalNum.new(9, 1)
+        end
+    end
+
+    if not (LethalNum.isGreaterE(CurrencyTypes.GetCurrencyAmt("steel"), v1) and (LethalNum.isGreaterE(Data.ImportantData.Stats.totalGRocketFuel, v2) and currentRocketParts < Data.ImportantData.Stats.partsRequired) and v5) then
+        return
+    end
+
+    v5 = false
+    t.Liquefy(true)
+
+    local momentumToEarn = Multipliers.getMulti().momentumToEarn
+
+    if Data.ImportantData.Stats.bestStarTier >= 1 and LethalNum.isGreaterE(LethalNum.new(1, 0), momentumToEarn) then
+        momentumToEarn = LethalNum.multiply(momentumToEarn, LethalNum.new(1, 1))
+    end
+
+    CurrencyTypes.AddCurrency("momentum", momentumToEarn)
+    Notifications.addCurrPopup("momentum", momentumToEarn)
+    Data.ImportantData.Stats.currentLiquefy = 0
+    Data.ImportantData.Stats.Accomplish.timeA = 0
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.currentRocketParts = Stats.currentRocketParts + 1
+
+    local Stats2 = Data.ImportantData.Stats
+
+    Stats2.totalRocketParts = Stats2.totalRocketParts + 1
+    Data.ImportantData.Stats.totalGRocketFuel = LethalNum.new(0, 0)
+    CurrencyTypes.SetCurrency("oil", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("steel", LethalNum.new(0, 0))
+
+    for k, v in pairs(Upgrades.Basic) do
+        if v.tier == "liquefy" then
+            v.level = 0
+        end
+    end
+
+    t.RemoveGrass()
+    t.UpdateStuff()
+    Currencies.updateRocketPartDisplay()
+    v5 = true
+end
+function t.Grassskip() --[[ Grassskip | Line: 1273 | Upvalues: Data (copy), CurrencyTypes (copy), t (copy), LethalNum (copy), Currencies (copy) ]]
+    if not (Data.ImportantData.Stats.totalGalactic > 0) or (not (201 + Data.ImportantData.Stats.currentGrassskip * 10 <= CurrencyTypes.Levels.antiLevel.level) or Data.ImportantData.Stats.realm ~= "decelerated") then
+        return
+    end
+
+    if Data.ImportantData.Stats.currentGrassskip >= 2000 then
+        return
+    end
+
+    local level = CurrencyTypes.Levels.antiLevel.level
+
+    t.Liquefy(true)
+    Data.ImportantData.Stats.currentLiquefy = 0
+    Data.ImportantData.Stats.Accomplish.timeA = 0
+    CurrencyTypes.SetCurrency("oil", LethalNum.new(0, 0))
+
+    local count = 1
+    local v2 = 201 + (Data.ImportantData.Stats.currentGrassskip + 1) * 10
+
+    if Data.ImportantData.Misc.toggles.bulkGrassskip.Visible then
+        while v2 <= level do
+            count = count + 1
+            v2 = 201 + (Data.ImportantData.Stats.currentGrassskip + count) * 10
+        end
+    end
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.currentGrassskip = Stats.currentGrassskip + count
+
+    local Stats2 = Data.ImportantData.Stats
+
+    Stats2.totalGrassskip = Stats2.totalGrassskip + count
+    t.RemoveGrass()
+    t.UpdateStuff()
+    Currencies.updateGrassskipDisplay()
+end
+function t.Normality(p1) --[[ Normality | Line: 1309 | Upvalues: Multipliers (copy), LethalNum (copy), Data (copy), v2 (ref), CurrencyTypes (copy), Notifications (copy), Upgrades (copy), t (copy) ]]
+    local normalityToEarn = Multipliers.getMulti().normalityToEarn
+
+    if (not LethalNum.isGreaterE(normalityToEarn, LethalNum.new(0, 0)) or Data.ImportantData.Stats.realm ~= "recelerated") and not v2 then
+        return
+    end
+
+    CurrencyTypes.AddCurrency("np", normalityToEarn)
+
+    if not p1 then
+        Notifications.addCurrPopup("np", normalityToEarn)
+    end
+
+    if Data.ImportantData.Stats.realm == "recelerated" and LethalNum.isGreater(normalityToEarn, Data.ImportantData.Stats.lastNormalityNP) then
+        Data.ImportantData.Stats.lastNormalityNP = normalityToEarn
+    end
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.currentNormality = Stats.currentNormality + 1
+
+    local Stats2 = Data.ImportantData.Stats
+
+    Stats2.totalNormality = Stats2.totalNormality + 1
+    CurrencyTypes.SetCurrency("charge", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("ugrass", LethalNum.new(0, 0))
+    Data.ImportantData.Stats.currentAstralLevel = 1
+    Data.ImportantData.Currencies.astralProgress = LethalNum.new(0, 0)
+    CurrencyTypes.Levels.unLevel.progress = LethalNum.new(0, 0)
+    CurrencyTypes.Levels.unLevel.level = 1
+
+    for k, v in pairs(Upgrades.Basic) do
+        if v.tier == "ugrass" then
+            v.level = 0
+        end
+    end
+
+    t.RemoveGrass()
+    t.UpdateStuff()
+end
+function t.Vaporize() --[[ Vaporize | Line: 1347 | Upvalues: Multipliers (copy), LethalNum (copy), Data (copy), v2 (ref), t (copy), CurrencyTypes (copy), Upgrades (copy) ]]
+    local cloudsToEarn = Multipliers.getMulti().cloudsToEarn
+
+    if (not LethalNum.isGreaterE(cloudsToEarn, LethalNum.new(0, 0)) or Data.ImportantData.Stats.realm ~= "recelerated") and not v2 then
+        return
+    end
+
+    t.Normality()
+    CurrencyTypes.AddCurrency("clouds", cloudsToEarn)
+    Data.ImportantData.Stats.currentNormality = 0
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.currentVaporize = Stats.currentVaporize + 1
+
+    local Stats2 = Data.ImportantData.Stats
+
+    Stats2.totalVaporize = Stats2.totalVaporize + 1
+    Data.ImportantData.Currencies.tierProgress = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.currentTier = "basic"
+    Data.ImportantData.Stats.unnaturalTier = "basic"
+    Data.ImportantData.Stats.infTier = 0
+    CurrencyTypes.SetCurrency("np", LethalNum.new(0, 0))
+
+    for k, v in pairs(Upgrades.Basic) do
+        if v.tier == "normality" then
+            v.level = 0
+        end
+    end
+
+    t.RemoveGrass()
+    t.UpdateStuff()
+end
+
+local v6 = false
+
+function t.Galactic(p1, p2) --[[ Galactic | Line: 1378 | Upvalues: Multipliers (copy), Data (copy), v6 (ref), CommonFunctions (copy), LethalNum (copy), CurrencyTypes (copy), Upgrades (copy), Accomplishments (copy), t (copy), Notifications (copy), ChangeVisual (copy), Currencies (copy) ]]
+    local starsToEarn = Multipliers.getMulti().starsToEarn
+    local v1 = if Data.ImportantData.Stats.currentRocketParts >= Data.ImportantData.Stats.partsRequired then true else false
+
+    if Data.ImportantData.Stats.highestZeroGrassskip >= Data.ImportantData.Reqs.g then
+        v1 = Data.ImportantData.Stats.currentRocketParts > 0
+    end
+
+    if (not v1 or v6) and not p1 then
+        return
+    end
+
+    v6 = true
+
+    local v2 = CommonFunctions.getFadeObj()
+
+    if Data.ImportantData.Stats.totalSacrifice < 1 and (not p1 and Data.ImportantData.Stats.loopsTotal < 1) then
+        v2.BackgroundColor3 = Color3.new(0/255, 0/255, 0/255)
+        CommonFunctions.fade(v2, 3, true, "frame")
+        task.wait(5)
+
+        local TextLabel = Instance.new("TextLabel", v2)
+
+        TextLabel.Font = "Cartoon"
+        TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+        TextLabel.Position = UDim2.new(UDim.new(0.5, 0), UDim.new(0.5, 0))
+        TextLabel.Size = UDim2.new(UDim.new(0.9, 0), UDim.new(0.4, 0))
+        TextLabel.TextScaled = true
+        TextLabel.BackgroundTransparency = 1
+        TextLabel.RichText = true
+        TextLabel.TextStrokeTransparency = 0
+        TextLabel.TextTransparency = 1
+        TextLabel.TextStrokeTransparency = 1
+        TextLabel.TextColor3 = Color3.new(0.25098, 0.000015259, 0.501961)
+        Instance.new("UITextSizeConstraint", TextLabel).MaxTextSize = 100
+
+        local v3 = "<b>"
+
+        TextLabel.Text = (if Data.ImportantData.Stats.currentGalactic == 0 then v3 .. "You have left this world" else v3 .. "You have left\n\n<font color=\"#00ff00\">" .. Data.ImportantData.Stats.currentGalactic + 1 .. "</font>\n\nworlds") .. "</b>"
+        CommonFunctions.fade(TextLabel, 2, true, "text")
+        task.wait(8)
+        CommonFunctions.fade(TextLabel, 1, false, "text")
+        task.wait(2)
+        CommonFunctions.fade(v2, 1, false, "frame")
+    end
+
+    if Data.ImportantData.Stats.totalGalactic == 0 then
+        Data.ImportantData.Stats.lowestGGrasshop = math.max(Data.ImportantData.Stats.currentGrasshop, 30)
+        Data.ImportantData.Stats.highestZeroGrassskip = 0
+    end
+
+    if Data.ImportantData.Stats.loopsTotal > 0 then
+        Data.ImportantData.Stats.totalGalactic = math.max(Data.ImportantData.Stats.totalGalactic, 3)
+    end
+
+    if Data.ImportantData.Stats.totalGalactic >= 1 or Data.ImportantData.Stats.lowestGGrasshop <= 25 then
+        if Data.ImportantData.Stats.lowestGGrasshop > Data.ImportantData.Stats.currentGrasshop then
+            Data.ImportantData.Stats.lowestGGrasshop = Data.ImportantData.Stats.currentGrasshop
+        end
+
+        if Data.ImportantData.Stats.currentGrassskip > Data.ImportantData.Stats.highestZeroGrassskip and Data.ImportantData.Stats.currentGrasshop == 0 then
+            Data.ImportantData.Stats.highestZeroGrassskip = math.min(60, Data.ImportantData.Stats.currentGrassskip)
+        end
+    end
+
+    Data.ImportantData.Stats.Accomplish.anonymityBoughtL = 0
+    Data.ImportantData.Stats.Accomplish.agrassBoughtA = 0
+    Data.ImportantData.Stats.Accomplish.agrassBoughtL = 0
+    Data.ImportantData.Stats.Accomplish.prestigeBoughtC = 0
+    Data.ImportantData.Stats.Accomplish.prestigeBoughtG = 0
+    Data.ImportantData.Stats.Accomplish.crystalBoughtG = 0
+    Data.ImportantData.Stats.Accomplish.grassBoughtP = 0
+    Data.ImportantData.Stats.Accomplish.grassBoughtC = 0
+    Data.ImportantData.Stats.Accomplish.grassBoughtG = 0
+    Data.ImportantData.Stats.Accomplish.timeA = 0
+    Data.ImportantData.Stats.Accomplish.timeP = 0
+    Data.ImportantData.Stats.Accomplish.timeC = 0
+    Data.ImportantData.Stats.Accomplish.timeG = 0
+    Data.ImportantData.Stats.Accomplish.timeS = 0
+    Data.ImportantData.Stats.Accomplish.timeGl = 0
+    Data.ImportantData.Stats.realm = "normal"
+    Data.ImportantData.Stats.totalGRocketFuel = LethalNum.new(0, 0)
+
+    if Multipliers.getUpgradeLevel("RSng") <= 0 then
+        Data.ImportantData.Stats.lastLiquefyOil = LethalNum.new(0, 0)
+        Data.ImportantData.Stats.lastAnonymityAP = LethalNum.new(0, 0)
+    end
+
+    Data.ImportantData.Stats.currentPrestige = 0
+    Data.ImportantData.Stats.currentCrystallize = 0
+    Data.ImportantData.Stats.currentAnonymity = 0
+    Data.ImportantData.Stats.currentLiquefy = 0
+
+    if not (Multipliers.getUpgradeLevel("RSmg") > 0) then
+        Data.ImportantData.Stats.currentRocketParts = 0
+    end
+
+    if Data.ImportantData.Stats.bestStarTier < 5 and not p2 then
+        CurrencyTypes.SetCurrency("perks", LethalNum.new(0, 0))
+        CurrencyTypes.Levels.level.level = 1
+        CurrencyTypes.Levels.antiLevel.level = 1
+        CurrencyTypes.Levels.level.progress = LethalNum.new(0, 0)
+        CurrencyTypes.Levels.antiLevel.progress = LethalNum.new(0, 0)
+        Data.ImportantData.Stats.currentTier = "basic"
+        Data.ImportantData.Currencies.tierProgress = LethalNum.new(0, 0)
+        Data.ImportantData.Stats.infTier = 0
+        Data.ImportantData.Stats.antiTier = "basic"
+    end
+
+    if Data.ImportantData.Stats.bestStarTier < 5 and p2 then
+        CurrencyTypes.Levels.level.level = 1
+        CurrencyTypes.Levels.antiLevel.level = 1
+        CurrencyTypes.Levels.level.progress = LethalNum.new(0, 0)
+        CurrencyTypes.Levels.antiLevel.progress = LethalNum.new(0, 0)
+        Data.ImportantData.Stats.currentTier = "basic"
+        Data.ImportantData.Currencies.tierProgress = LethalNum.new(0, 0)
+        Data.ImportantData.Stats.infTier = 0
+        Data.ImportantData.Stats.antiTier = "basic"
+    end
+
+    CurrencyTypes.SetCurrency("agrass", LethalNum.new(0, 0))
+    Data.ImportantData.Stats.bestCharge = LethalNum.new(0, 0)
+
+    if not (Data.ImportantData.Stats.highestZeroGrassskip >= Data.ImportantData.Reqs.gss) then
+        Data.ImportantData.Stats.currentGrasshop = 0
+        Data.ImportantData.Stats.currentGrassskip = 0
+    end
+
+    Data.ImportantData.Stats.currentGFunify = 0
+    Data.ImportantData.Stats.gps = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.perksSpent = LethalNum.new(0, 0)
+    CurrencyTypes.SetCurrency("charge", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("grass", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("pp", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("crystals", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("steel", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("ap", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("oil", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("rocketFuel", LethalNum.new(0, 0))
+
+    if Data.ImportantData.Stats.highestZeroGrassskip < Data.ImportantData.Reqs.m then
+        CurrencyTypes.SetCurrency("momentum", LethalNum.new(0, 0))
+    end
+
+    if Data.ImportantData.Stats.highestZeroGrassskip < 15 then
+        CurrencyTypes.SetCurrency("platinum", LethalNum.new(0, 0))
+    end
+
+    local v5 = if Multipliers.getUpgradeLevel("stAuto1") > 0 then true else false
+    local v62 = if Multipliers.getUpgradeLevel("stAuto2a") > 0 then true else false
+    local v7 = if Multipliers.getUpgradeLevel("stAuto2") > 0 then true else false
+    local v8 = if Multipliers.getUpgradeLevel("stAuto3") > 0 then true else false
+    local v9 = if Multipliers.getUpgradeLevel("stAuto3a") > 0 then true else false
+    local v10 = if Multipliers.getUpgradeLevel("stAuto4") > 0 then true else false
+    local v11 = if Multipliers.getUpgradeLevel("stAuto5") > 0 then true else false
+    local v12 = if Multipliers.getUpgradeLevel("stAuto6") > 0 then true else false
+    local v13 = if Multipliers.getUpgradeLevel("stAuto7") > 0 then true else false
+
+    for k, v in pairs(Upgrades.Basic) do
+        if (v.tier == "basic" or (v.tier == "perk" or (v.tier == "prestige" or (v.tier == "platinum" or (v.tier == "crystal" or (v.tier == "steel" or (v.tier == "antigrass" or (v.tier == "anonymity" or (v.tier == "liquefy" or v.tier == "momentum"))))))))) and ((v.tier ~= "perk" or not (Data.ImportantData.Stats.bestStarTier >= 5 and p2)) and ((v.tier ~= "platinum" or k ~= "fp1") and (v.tier ~= "momentum" or not (Data.ImportantData.Stats.highestZeroGrassskip >= Data.ImportantData.Reqs.m)))) then
+            if k ~= "keepSpeed" and k ~= "platAutoCut1" and v.shopType == "automation" then
+                if not (Data.ImportantData.Stats.bestStarTier > 0 or v5 and string.find(k, "upgradeSave")) and (not (v62 and string.find(k, "autoCut")) and ((not v7 or not string.find(k, "prestigeAutobuy") and k ~= "passivePP") and ((not v8 or not string.find(k, "crystalAutobuy") and k ~= "passiveC") and not (v9 and string.find(k, "keepPerks") or v10 and string.find(k, "perksAutobuy"))))) then
+                    if v.shopType == "antiantiautomation" then
+                        if not (Data.ImportantData.Stats.bestStarTier > 0) and (not v11 or not string.find(k, "antigrassAutobuy") and (k ~= "autoCutValueR" and k ~= "returnToTier")) and ((not v12 or not string.find(k, "apAutobuy") and k ~= "antigrassSave") and not (v13 and string.find(k, "oilAutobuy"))) then
+                            v.level = 0
+                        end
+                    else
+                        v.level = 0
+                    end
+                end
+            elseif k ~= "keepSpeed" and k ~= "platAutoCut1" and v.shopType == "antiantiautomation" then
+                if not (Data.ImportantData.Stats.bestStarTier > 0) and (not v11 or not string.find(k, "antigrassAutobuy") and (k ~= "autoCutValueR" and k ~= "returnToTier")) and ((not v12 or not string.find(k, "apAutobuy") and k ~= "antigrassSave") and not (v13 and string.find(k, "oilAutobuy"))) then
+                    v.level = 0
+                end
+            elseif k ~= "keepSpeed" and k ~= "platAutoCut1" then
+                v.level = 0
+            end
+        end
+    end
+
+    if Data.ImportantData.Stats.bestStarTier < 3 and Data.ImportantData.Stats.highestZeroGrassskip < 60 then
+        for k, v in pairs(Accomplishments.Basic) do
+            if not ((v.special or 0) > 0) then
+                Data.ImportantData.UpgradeLevels.accomplishments[k].level = 0
+            end
+        end
+    end
+
+    Data.ImportantData.Stats.totalGrassP = LethalNum.new(0, 0)
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.currentGalactic = Stats.currentGalactic + 1
+
+    local Stats2 = Data.ImportantData.Stats
+
+    Stats2.totalGalactic = Stats2.totalGalactic + 1
+    t.UpdateGH()
+
+    if not p1 then
+        CurrencyTypes.AddCurrency("stars", starsToEarn)
+        Notifications.addCurrPopup("stars", starsToEarn)
+        Data.ImportantData.Misc.player.Character:PivotTo(CFrame.new(535.303, 4095.329, 551.373) * CFrame.Angles(0, 0, 0))
+    end
+
+    ChangeVisual.ToSpace()
+    t.RemoveGrass()
+    t.UpdateStuff()
+    Currencies.updateGalacticDisplay()
+    Currencies.updateAstralBonuses()
+
+    local decelerateButton = Currencies.getDisplay().decelerateButton
+
+    decelerateButton.Text = if Data.ImportantData.Stats.realm == "decelerated" then "<b>Accelerate</b>" else "<b>Decelerate</b>"
+
+    local recelerateButton = Currencies.getDisplay().recelerateButton
+
+    recelerateButton.Text = if Data.ImportantData.Stats.realm == "recelerated" then "<b>Accelerate</b>" else "<b>Recelerate</b>"
+
+    if Data.ImportantData.Stats.totalGalactic < 100000000 and not p1 then
+        task.wait(2)
+        CommonFunctions.clearFadeObj(v2)
+    end
+
+    v6 = false
+end
+function t.ResetPlanetTele() --[[ ResetPlanetTele | Line: 1717 | Upvalues: t (copy), Data (copy), LethalNum (copy), ChangeVisual (copy), TabManager (copy) ]]
+    t.Galactic(true, true)
+    Data.ImportantData.Stats.tempGPS = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.gps = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.pDif = if Data.ImportantData.Stats.pDif > 0 then 0 else 1
+    ChangeVisual.ToEarth()
+    t.RemoveGrass()
+    t.UpdateStuff()
+    TabManager.ShowHideTabs()
+end
+function t.ResetPlanet(p1) --[[ ResetPlanet | Line: 1731 | Upvalues: t (copy), Data (copy), LethalNum (copy), ChangeVisual (copy), TabManager (copy) ]]
+    t.Galactic(true, true)
+    Data.ImportantData.Stats.tempGPS = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.gps = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.pDif = if Data.ImportantData.Stats.pDif > 0 then 0 else 1
+
+    if not p1 and Data.ImportantData.Stats.pDif > 0 then
+        Data.ImportantData.Misc.player.Character:PivotTo(CFrame.new(-617.495, 5060, 3308.501) * CFrame.Angles(0, 0, 0))
+    elseif not p1 then
+        Data.ImportantData.Misc.player.Character:PivotTo(CFrame.new(-13, -18, 87) * CFrame.Angles(0, 0, 0))
+    end
+
+    if Data.ImportantData.Stats.pDif > 0 then
+        ChangeVisual.ToPlanet()
+    else
+        ChangeVisual.ToEarth()
+    end
+
+    t.RemoveGrass()
+    t.UpdateStuff()
+    TabManager.ShowHideTabs()
+end
+function t.ChangeDifficulty(p1) --[[ ChangeDifficulty | Line: 1782 | Upvalues: Data (copy), t (copy) ]]
+    if Data.ImportantData.Stats.pDif == p1 then
+        return
+    end
+
+    t.ResetPlanet(true)
+end
+function t.Sacrifice() --[[ Sacrifice | Line: 1788 | Upvalues: Multipliers (copy), Data (copy), t (copy), LethalNum (copy), CurrencyTypes (copy), Upgrades (copy), Notifications (copy), Currencies (copy) ]]
+    local darkMatterToEarn = Multipliers.getMulti().darkMatterToEarn
+
+    if not (Data.ImportantData.Stats.highestZeroGrassskip >= 18 and darkMatterToEarn.n > 0) then
+        return
+    end
+
+    t.Galactic(true)
+    Data.ImportantData.Stats.currentAstralLevel = 1
+    Data.ImportantData.Currencies.astralProgress = LethalNum.new(0, 0)
+    CurrencyTypes.SetCurrency("stars", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("sfrgt", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("fun", LethalNum.new(0, 0))
+
+    for k, v in pairs(Upgrades.Basic) do
+        if v.tier == "fun" and (v.shopType ~= "funnyMachine" and not (Multipliers.getUpgradeLevel("RSfx") > 0)) then
+            v.level = 0
+        end
+    end
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.currentSacrifice = Stats.currentSacrifice + 1
+
+    local Stats2 = Data.ImportantData.Stats
+
+    Stats2.totalSacrifice = Stats2.totalSacrifice + 1
+    CurrencyTypes.AddCurrency("darkMatter", darkMatterToEarn)
+    Notifications.addCurrPopup("darkMatter", darkMatterToEarn)
+    t.RemoveGrass()
+    t.UpdateStuff()
+    Currencies.updateGalacticDisplay()
+    Currencies.updateAstralBonuses()
+end
+function t.AstralPrestige() --[[ AstralPrestige | Line: 1829 | Upvalues: Data (copy), t (copy) ]]
+    if not (Data.ImportantData.Stats.currentAstralLevel >= 100) then
+        return
+    end
+
+    Data.ImportantData.Stats.currentAstralLevel = 0
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.currentAstralPrestige = Stats.currentAstralPrestige + 1
+
+    if Data.ImportantData.Stats.currentAstralPrestige > Data.ImportantData.Stats.highestAstralPrestige then
+        Data.ImportantData.Stats.highestAstralPrestige = Data.ImportantData.Stats.currentAstralPrestige
+    end
+
+    t.RemoveGrass()
+    t.UpdateStuff()
+end
+
+local v7 = false
+local v8 = true
+
+function t.Supernova() --[[ Supernova | Line: 1845 | Upvalues: v7 (ref), Multipliers (copy), Data (copy), v8 (ref), LethalNum (copy), CommonFunctions (copy), CurrencyTypes (copy), Planets (copy), TreeItems (copy), LunarItems (copy), Accomplishments (copy), Upgrades (copy), t (copy), Notifications (copy), ChangeVisual (copy) ]]
+    if v7 then
+        return
+    end
+
+    local solarToEarn = Multipliers.getMulti().solarToEarn
+    local raysToEarn = Multipliers.getMulti().raysToEarn
+
+    if not (Data.ImportantData.Stats.starTier > 0 and (Data.ImportantData.Stats.bestStarTier < 7 and v8)) then
+        return
+    end
+
+    v8 = false
+
+    local v1 = LethalNum.pow(LethalNum.new(1, 1), Data.ImportantData.Stats.starTier - 1)
+    local v2 = CommonFunctions.getFadeObj()
+
+    if Data.ImportantData.Stats.bestStarTier < 100 and Data.ImportantData.Stats.loopsTotal < 1 then
+        v2.BackgroundColor3 = Color3.new(0.972549, 1, 0.733333)
+        CommonFunctions.fade(v2, 3, true, "frame")
+        task.wait(5)
+
+        local TextLabel = Instance.new("TextLabel", v2)
+
+        TextLabel.Font = "Cartoon"
+        TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+        TextLabel.Position = UDim2.new(UDim.new(0.5, 0), UDim.new(0.5, 0))
+        TextLabel.Size = UDim2.new(UDim.new(0.9, 0), UDim.new(0.4, 0))
+        TextLabel.TextScaled = true
+        TextLabel.BackgroundTransparency = 1
+        TextLabel.RichText = true
+        TextLabel.TextStrokeTransparency = 0
+        TextLabel.TextTransparency = 1
+        TextLabel.TextStrokeTransparency = 1
+        TextLabel.TextColor3 = Color3.new(0.984314, 1, 0)
+        Instance.new("UITextSizeConstraint", TextLabel).MaxTextSize = 100
+
+        local v3 = "<b>"
+
+        TextLabel.Text = (if Data.ImportantData.Stats.currentSupernova == 0 then v3 .. "All of your progress disintegrates before your eyes" else v3 .. "Supernova Tier: <font color=\"#00ff00\">" .. Data.ImportantData.Stats.starTier .. "</font>\n\n") .. "</b>"
+        CommonFunctions.fade(TextLabel, 2, true, "text")
+        task.wait(8)
+        CommonFunctions.fade(TextLabel, 1, false, "text")
+        task.wait(2)
+        CommonFunctions.fade(v2, 1, false, "frame")
+    end
+
+    if Data.ImportantData.Stats.starTier > Data.ImportantData.Stats.bestStarTier then
+        Data.ImportantData.Stats.bestStarTier = Data.ImportantData.Stats.starTier
+    end
+
+    Data.ImportantData.Stats.lowestGGrasshop = 101
+    Data.ImportantData.Stats.highestZeroGrassskip = 0
+    Data.ImportantData.Stats.tempGPS = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.gps = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.pDif = 0
+    Data.ImportantData.Stats.Accomplish.anonymityBoughtL = 0
+    Data.ImportantData.Stats.Accomplish.agrassBoughtA = 0
+    Data.ImportantData.Stats.Accomplish.agrassBoughtL = 0
+    Data.ImportantData.Stats.Accomplish.prestigeBoughtC = 0
+    Data.ImportantData.Stats.Accomplish.prestigeBoughtG = 0
+    Data.ImportantData.Stats.Accomplish.crystalBoughtG = 0
+    Data.ImportantData.Stats.Accomplish.grassBoughtP = 0
+    Data.ImportantData.Stats.Accomplish.grassBoughtC = 0
+    Data.ImportantData.Stats.Accomplish.grassBoughtG = 0
+    Data.ImportantData.Stats.Accomplish.timeA = 0
+    Data.ImportantData.Stats.Accomplish.timeP = 0
+    Data.ImportantData.Stats.Accomplish.timeC = 0
+    Data.ImportantData.Stats.Accomplish.timeG = 0
+    Data.ImportantData.Stats.Accomplish.timeS = 0
+    Data.ImportantData.Stats.Accomplish.timeGl = 0
+    Data.ImportantData.Stats.Accomplish.timeSn = 0
+    Data.ImportantData.Stats.realm = "normal"
+    Data.ImportantData.Stats.totalGRocketFuel = LethalNum.new(0, 0)
+
+    if Data.ImportantData.Stats.bestStarTier < 3 then
+        Data.ImportantData.Stats.lastLiquefyOil = LethalNum.new(0, 0)
+        Data.ImportantData.Stats.lastAnonymityAP = LethalNum.new(0, 0)
+        Data.ImportantData.Stats.lastNormalityNP = LethalNum.new(0, 0)
+        Data.ImportantData.Stats.lastVaporizeClouds = LethalNum.new(0, 0)
+    end
+
+    Data.ImportantData.Stats.currentPrestige = 0
+    Data.ImportantData.Stats.currentCrystallize = 0
+    Data.ImportantData.Stats.currentAnonymity = 0
+    Data.ImportantData.Stats.currentLiquefy = 0
+    Data.ImportantData.Stats.currentNormality = 0
+    Data.ImportantData.Stats.currentGalactic = 0
+    Data.ImportantData.Stats.currentSacrifice = 0
+    Data.ImportantData.Stats.currentRocketParts = 0
+
+    if Data.ImportantData.Stats.bestStarTier < 5 then
+        CurrencyTypes.Levels.level.progress = LethalNum.new(0, 0)
+        CurrencyTypes.Levels.antiLevel.progress = LethalNum.new(0, 0)
+        CurrencyTypes.Levels.unLevel.progress = LethalNum.new(0, 0)
+        CurrencyTypes.Levels.planetLevel.progress = LethalNum.new(0, 0)
+        CurrencyTypes.Levels.level.level = 1
+        CurrencyTypes.Levels.antiLevel.level = 1
+        CurrencyTypes.Levels.unLevel.level = 1
+        CurrencyTypes.Levels.planetLevel.level = 1
+        Data.ImportantData.Stats.currentTier = "basic"
+        Data.ImportantData.Stats.antiTier = "basic"
+        Data.ImportantData.Stats.unnaturalTier = "basic"
+        CurrencyTypes.SetCurrency("perks", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("perks2", LethalNum.new(0, 0))
+    end
+
+    CurrencyTypes.SetCurrency("agrass", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("planetarium", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("ugrass", LethalNum.new(0, 0))
+    Data.ImportantData.Stats.bestCharge = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.bestDarkCharge = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.currentGrasshop = 0
+    Data.ImportantData.Stats.currentGrassskip = 0
+    Data.ImportantData.Stats.currentGrassJump = 0
+    Data.ImportantData.Stats.currentPlanetary = 0
+    Data.ImportantData.Stats.currentGFunify = 0
+    Data.ImportantData.Stats.innerRingsBroken = 0
+    Data.ImportantData.Stats.gps = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.perksSpent = LethalNum.new(0, 0)
+
+    local v5 = Multipliers.getUpgradeLevel("Ssm")
+
+    CurrencyTypes.SetCurrency("charge", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("dcharge", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("grass", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("pp", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("crystals", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("steel", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("ap", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("oil", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("rocketFuel", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("stars", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("darkMatter", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("darkFruits", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("astro", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("measure", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("planets", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("lines", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("arcs", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("stardust", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("np", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("clouds", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("moonstone", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("obs", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("res", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("rings", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("sfrgt", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("fun", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("platinum", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("momentum", LethalNum.new(v5, 0))
+    Data.ImportantData.Stats.bestLineGen = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.bestArcsGen = LethalNum.new(0, 0)
+    Data.ImportantData.Currencies.astralProgress = LethalNum.new(0, 0)
+    Data.ImportantData.Currencies.dfProgress = 0
+    Data.ImportantData.Stats.starTier = 0
+    Data.ImportantData.Stats.starProgress = LethalNum.new(0, 0)
+    Planets.Planets.planetoid[1].bestScore = LethalNum.new(0, 0)
+    Planets.Planets.planetoid[1].highestLevel = 0
+    Multipliers.ClearGrid()
+
+    for k, v in pairs(TreeItems.Items) do
+        v.level = LethalNum.new(0, 0)
+    end
+
+    for k, v in pairs(LunarItems.Items) do
+        v.level = LethalNum.new(0, 0)
+        v.progress = LethalNum.new(0, 0)
+        v.activated = false
+    end
+
+    Data.ImportantData.Stats.currentAstralPrestige = 0
+    Data.ImportantData.Stats.currentAstralLevel = 1
+
+    if Data.ImportantData.Stats.bestStarTier < 3 then
+        for k, v in pairs(Accomplishments.Basic) do
+            if not ((v.special or 0) > 0) then
+                Data.ImportantData.UpgradeLevels.accomplishments[k].level = 0
+            end
+        end
+    end
+
+    if Data.ImportantData.Stats.bestStarTier < 5 then
+        for k, v in pairs(Accomplishments.Trial) do
+            v.level = 0
+        end
+    end
+
+    for k, v in pairs(Upgrades.Basic) do
+        if (v.tier == "basic" or (v.tier == "perk" or (v.tier == "perk2" or (v.tier == "prestige" or (v.tier == "platinum" or (v.tier == "crystal" or (v.tier == "steel" or (v.tier == "fun" or (v.tier == "antigrass" or (v.tier == "anonymity" or (v.tier == "liquefy" or (v.tier == "rocketFuel" or (v.tier == "momentum" or (v.tier == "moonstone" or (v.tier == "stars" or (v.tier == "darkMatter" or (v.tier == "darkFruit" or (v.tier == "ugrass" or (v.tier == "normality" or (v.tier == "planetarium" or (v.tier == "observatorium" or (v.tier == "astro" or (v.tier == "rings" or (v.tier == "reservatorium" or (v.tier == "vaporize" or (v.tier == "measure" or (v.tier == "planetary" or (v.tier == "constellation" or (v.tier == "arc" or v.tier == "nebula"))))))))))))))))))))))))))))) and (v.shopType ~= "automation" and v.shopType ~= "antiantiautomation") then
+            if v.tier == "moonstone" or v.tier == "rocketFuel" then
+                if not (Data.ImportantData.Stats.bestStarTier >= 4) then
+                    v.level = 0
+                end
+            else
+                v.level = 0
+            end
+        end
+    end
+
+    if Multipliers.getUpgradeLevel("Ssrg") > 0 then
+        Data.ImportantData.Stats.fightMulti = Multipliers.getMulti().newFM
+        t.ResetSolarians()
+    end
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.totalSupernova = Stats.totalSupernova + 1
+
+    local Stats2 = Data.ImportantData.Stats
+
+    Stats2.currentSupernova = Stats2.currentSupernova + 1
+    t.UpdateGH()
+    Data.ImportantData.Stats.solarScore = LethalNum.add(Data.ImportantData.Stats.solarScore, v1)
+    CurrencyTypes.AddCurrency("solarShards", solarToEarn)
+    Notifications.addCurrPopup("solarShards", solarToEarn)
+
+    if LethalNum.isGreater(solarToEarn, Data.ImportantData.Stats.bestSupernova) then
+        Data.ImportantData.Stats.bestSupernova = LethalNum.copy(solarToEarn)
+    end
+
+    if Data.ImportantData.Stats.bestStarTier >= 2 then
+        Data.ImportantData.Currencies.eclipseProgress = LethalNum.add(Data.ImportantData.Currencies.eclipseProgress, raysToEarn)
+    end
+
+    Data.ImportantData.Misc.player.Character:PivotTo(CFrame.new(-1032.682, 4399.767, -1940.549) * CFrame.Angles(0, -2.6179938779914944, 0))
+    t.UpdateStuff()
+
+    if Data.ImportantData.Stats.bestStarTier < 100 then
+        task.wait(2)
+        CommonFunctions.clearFadeObj(v2)
+    end
+
+    v8 = true
+    ChangeVisual.ToStar()
+    t.RemoveGrass()
+    t.UpdateStuff()
+    t.RemoveGrass()
+end
+function t.SolarReset(p1) --[[ SolarReset | Line: 2152 | Upvalues: v8 (ref), Multipliers (copy), Data (copy), v7 (ref), Portaling (copy), CurrencyTypes (copy), Notifications (copy), LethalNum (copy), Upgrades (copy), t (copy), Currencies (copy) ]]
+    if not v8 then
+        return
+    end
+
+    local sunToEarn = Multipliers.getMulti().sunToEarn
+    local v1 = if Multipliers.getSCLevel("sol") > 0 then true else false
+
+    if not (Data.ImportantData.Stats.currentEclipse >= 100 or v1) then
+        return
+    end
+
+    if v7 then
+        return
+    end
+
+    if v1 and Portaling.PortalingState.stage < 2 then
+        return
+    end
+
+    v7 = true
+    CurrencyTypes.AddCurrency("sunstone", sunToEarn)
+
+    if not p1 then
+        Notifications.addCurrPopup("sunstone", sunToEarn)
+    end
+
+    if Data.ImportantData.Stats.bestStarTier < 8 then
+        CurrencyTypes.SetCurrency("remnants", LethalNum.new(0, 0))
+        Data.ImportantData.Stats.bestEclipse = math.max(Data.ImportantData.Stats.bestEclipse, Data.ImportantData.Stats.currentEclipse)
+        Data.ImportantData.Currencies.eclipseProgress = LethalNum.new(0, 0)
+        Data.ImportantData.Stats.currentEclipse = 1
+    else
+        Data.ImportantData.Stats.bestEclipse = math.max(Data.ImportantData.Stats.bestEclipse, Data.ImportantData.Stats.currentEclipse)
+    end
+
+    Data.ImportantData.Stats.Accomplish.timeSun = 0
+
+    if Data.ImportantData.Stats.bestStarTier < 8 then
+        for k, v in pairs(Upgrades.Basic) do
+            if v.tier == "remnant" then
+                v.level = 0
+            end
+        end
+    end
+
+    if Multipliers.getSCLevel("sol") > 0 then
+        local fightMulti = Data.ImportantData.Stats.fightMulti
+
+        Data.ImportantData.Stats.fightMulti = Multipliers.getMulti().newFM
+
+        if Multipliers.InChallenge() and (Multipliers.GetChallenge().autoSunrise and LethalNum.isGreater(fightMulti, Data.ImportantData.Stats.fightMulti)) then
+            Data.ImportantData.Stats.fightMulti = LethalNum.copy(fightMulti)
+        end
+
+        local solarToEarn = Multipliers.getMulti().solarToEarn
+
+        CurrencyTypes.AddCurrency("solarShards", solarToEarn)
+
+        if not p1 then
+            Notifications.addCurrPopup("solarShards", solarToEarn)
+        end
+
+        t.ResetSolarians()
+    end
+
+    t.UpdateStuff()
+    Currencies.updateSolarObelisk()
+    v7 = false
+end
+function t.ForceSunrise() --[[ ForceSunrise | Line: 2221 | Upvalues: Portaling (copy), t (copy) ]]
+    if not (Portaling.PortalingState.stage < 2) then
+        t.SolarReset()
+
+        return
+    end
+
+    Portaling.PortalingState.stage = 2
+    t.SolarReset()
+end
+function t.ResetSolarians() --[[ ResetSolarians | Line: 2228 | Upvalues: Data (copy), LethalNum (copy), CurrencyTypes (copy), Solarians (copy), Multipliers (copy), Portaling (copy), t (copy) ]]
+    Data.ImportantData.Stats.solarians = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.solarianCap = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.solariansProg = 0
+    CurrencyTypes.SetCurrency("sol", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("lightLog", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("portalStones", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("fragments", LethalNum.new(0, 0))
+
+    if Data.ImportantData.Stats.bestStarTier < 8 then
+        CurrencyTypes.SetCurrency("grassp", LethalNum.new(0, 0))
+    end
+
+    CurrencyTypes.SetCurrency("inf", LethalNum.new(0, 0))
+
+    for k, v in pairs(Solarians.CompressionItems) do
+        v.level = LethalNum.add(v.level, v.allocated)
+        v.allocated = LethalNum.new(0, 0)
+    end
+
+    if Multipliers.getSCLevel("ss1") > 0 then
+        local v1 = if Multipliers.getSCLevel("ss2") > 0 then 41 else 21
+
+        if Multipliers.getSCLevel("ss3") > 0 then
+            v1 = 61
+        end
+
+        if Multipliers.getSCLevel("ss4") > 0 then
+            v1 = 81
+        end
+
+        if Multipliers.getSCLevel("ss5") > 0 then
+            v1 = 101
+        end
+
+        local v2 = LethalNum.pow(LethalNum.new(3, 0), (math.min(100, v1 - 1)))
+
+        if LethalNum.isGreater(v2, Data.ImportantData.Stats.fightMulti) then
+            Data.ImportantData.Stats.fightMulti = LethalNum.copy(v2)
+        end
+
+        Portaling.PortalingState.stage = v1
+    else
+        Portaling.PortalingState.stage = 1
+    end
+
+    Portaling.PortalingState.fighting = false
+
+    local v3 = if Multipliers.getSCLevel("kr1") > 0 then 10 else -1
+
+    if Multipliers.getSCLevel("kr2") > 0 then
+        v3 = 8
+    end
+
+    if Multipliers.getSCLevel("kr3") > 0 then
+        v3 = 6
+    end
+
+    if Multipliers.getSCLevel("kr4") > 0 then
+        v3 = 4
+    end
+
+    if Multipliers.getSCLevel("kr5") > 0 then
+        v3 = 2
+    end
+
+    if Multipliers.getSCLevel("kr6") > 0 then
+        v3 = 0
+    end
+
+    for k, v in pairs(Solarians.Bars) do
+        if v.powerType == 0 or v.powerType == 1 then
+            if Data.ImportantData.Stats.bestStarTier >= 6 and (k == "ss" or (k == "line" or (k == "compact" or k == "comp"))) then
+                v.allocated = LethalNum.new(0, 0)
+
+                continue
+            end
+
+            if v.parent == 7 then
+                v.allocated = LethalNum.new(0, 0)
+
+                continue
+            end
+
+            v.level = LethalNum.new(0, 0)
+            v.totalLevel = LethalNum.new(0, 0)
+
+            if v3 < 0 then
+                v.rank = 0
+            else
+                v.rank = math.max(0, v.rank - v3)
+                v.level = LethalNum.new(v.rank, 0)
+                v.totalLevel = LethalNum.new(v.rank, 0)
+            end
+
+            v.progress = LethalNum.new(0, 0)
+            v.rankProgress = LethalNum.new(0, 0)
+            v.allocated = LethalNum.new(0, 0)
+        end
+
+        if v.powerType == 2 then
+            v.allocated = LethalNum.new(0, 0)
+        end
+    end
+
+    if Data.ImportantData.Misc.toggles.starterSol.Visible then
+        local v5 = LethalNum.floor(LethalNum.multiply(Data.ImportantData.Stats.solarianMax, 0.01))
+
+        if Multipliers.getSCLevel("auto1") > 0 then
+            Solarians.Bars.sol.allocated = v5
+            Solarians.Bars.ll.allocated = v5
+            Solarians.Bars.ps.allocated = v5
+            Solarians.Bars.f.allocated = v5
+
+            if Data.ImportantData.Stats.bestStarTier >= 8 then
+                Solarians.Bars.ge.allocated = v5
+            end
+
+            Data.ImportantData.Stats.solarianCap = LethalNum.add(Data.ImportantData.Stats.solarianCap, LethalNum.multiply(Data.ImportantData.Stats.solarianMax, 0.04))
+        end
+
+        if Multipliers.getSCLevel("auto2") > 0 then
+            Solarians.Bars.off.allocated = v5
+            Solarians.Bars.def.allocated = v5
+            Solarians.Bars.fm.allocated = v5
+            Data.ImportantData.Stats.solarianCap = LethalNum.add(Data.ImportantData.Stats.solarianCap, LethalNum.multiply(Data.ImportantData.Stats.solarianMax, 0.03))
+        end
+
+        if Multipliers.getSCLevel("auto4") > 0 then
+            Solarians.Bars.solU.allocated = v5
+            Solarians.Bars.llU.allocated = v5
+            Solarians.Bars.psU.allocated = v5
+            Solarians.Bars.fU.allocated = v5
+            Data.ImportantData.Stats.solarianCap = LethalNum.add(Data.ImportantData.Stats.solarianCap, LethalNum.multiply(Data.ImportantData.Stats.solarianMax, 0.04))
+        end
+    end
+
+    Portaling.NewEnemyStats()
+    t.UpdateStuff()
+end
+
+local v9 = false
+
+function t.Subparnova() --[[ Subparnova | Line: 2345 | Upvalues: v9 (ref), LethalNum (copy), Data (copy), CurrencyTypes (copy), t (copy), Currencies (copy) ]]
+    if v9 then
+        return
+    end
+
+    if not (LethalNum.isGreaterE(Data.ImportantData.Stats.starProgress, Data.ImportantData.Stats.starGoal) and (if Data.ImportantData.Stats.currentEclipse >= Data.ImportantData.Stats.eclipseReq then LethalNum.isGreaterE(CurrencyTypes.GetCurrencyAmt("magic"), Data.ImportantData.Stats.manaReq) and Data.ImportantData.Stats.starTier >= 5 else false)) then
+        return
+    end
+
+    v9 = true
+    CurrencyTypes.SubtractCurrency("magic", Data.ImportantData.Stats.manaReq)
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.bestStarTier = Stats.bestStarTier + 1
+    t.UpdateStuff()
+    Currencies.updateStarGoal()
+    Currencies.UpdateSol()
+    v9 = false
+end
+function t.ResetSolarians2() --[[ ResetSolarians2 | Line: 2370 | Upvalues: Solarians (copy), LethalNum (copy), Upgrades (copy), Data (copy), Multipliers (copy), CurrencyTypes (copy), SolarChallenges (copy), Notifications (copy) ]]
+    for k, v in pairs(Solarians.SoulItems) do
+        if v.resource == "souls" then
+            v.level = LethalNum.new(0, 0)
+        end
+    end
+
+    for k, v in pairs(Solarians.CompressionItems) do
+        if k ~= "5" and (k ~= "6" and k ~= "7") then
+            v.level = LethalNum.new(0, 0)
+            v.allocated = LethalNum.new(0, 0)
+        end
+    end
+
+    for k, v in pairs(Solarians.CompressionBars) do
+        if k ~= "5" and (k ~= "6" and k ~= "7") then
+            v.progress = LethalNum.new(0, 0)
+            v.owned = LethalNum.new(0, 0)
+        end
+    end
+
+    for k, v in pairs(Upgrades.Basic) do
+        if v.shopType == "sunstone" and (v.shopType ~= "sunstone" or (k == "Soff" or k == "Sdef")) then
+            if k == "Soff" or k == "Sdef" then
+                if not (Data.ImportantData.Stats.bestStarTier >= 7) and v.currency ~= "goldenStars" then
+                    v.level = 0
+                end
+            elseif v.currency ~= "goldenStars" then
+                v.level = 0
+            end
+        end
+    end
+
+    local v1 = if Multipliers.getSCLevel("skr1") > 0 then 10 else -1
+
+    if Multipliers.getSCLevel("skr2") > 0 then
+        v1 = 8
+    end
+
+    if Multipliers.getSCLevel("skr3") > 0 then
+        v1 = 6
+    end
+
+    if Multipliers.getSCLevel("skr4") > 0 then
+        v1 = 4
+    end
+
+    if Multipliers.getSCLevel("skr5") > 0 then
+        v1 = 2
+    end
+
+    if Multipliers.getSCLevel("skr6") > 0 then
+        v1 = 0
+    end
+
+    for k, v in pairs(Solarians.Bars) do
+        if Data.ImportantData.Stats.bestStarTier >= 7 and (k == "ss" or (k == "line" or k == "compact")) then
+            v.allocated = LethalNum.new(0, 0)
+
+            continue
+        end
+
+        if Data.ImportantData.Stats.bestStarTier >= Data.ImportantData.Reqs.autofight and k == "comp" then
+            v.allocated = LethalNum.new(0, 0)
+
+            continue
+        end
+
+        if v.powerType == 0 or (v.powerType == 1 or k == "div") then
+            if v.parent == 7 then
+                v.allocated = LethalNum.new(0, 0)
+
+                continue
+            end
+
+            v.level = LethalNum.new(0, 0)
+            v.totalLevel = LethalNum.new(0, 0)
+
+            if v1 < 0 then
+                v.rank = 0
+            else
+                v.rank = math.max(0, v.rank - v1)
+                v.level = LethalNum.new(v.rank, 0)
+                v.totalLevel = LethalNum.new(v.rank, 0)
+            end
+
+            v.progress = LethalNum.new(0, 0)
+            v.rankProgress = LethalNum.new(0, 0)
+            v.allocated = LethalNum.new(0, 0)
+        end
+
+        if v.powerType == 2 then
+            v.allocated = LethalNum.new(0, 0)
+        end
+    end
+
+    CurrencyTypes.SetCurrency("grassp", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("souls", LethalNum.new(0, 0))
+
+    local v3
+
+    if not (SolarChallenges.Challenges.cs.completions > 0) then
+        CurrencyTypes.Currencies.souls.totalAmount = LethalNum.new(1, 0)
+        v3 = LethalNum.copy(CurrencyTypes.GetCurrencyAmt("magic"))
+        CurrencyTypes.SetCurrency("sunstone", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("compSol", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("magic", LethalNum.new(0, 0))
+        CurrencyTypes.AddCurrency("dark", v3)
+        Notifications.addCurrPopup("dark", v3)
+
+        return
+    end
+
+    for i = 1, SolarChallenges.Challenges.cs.completions do
+        for k, v in pairs(SolarChallenges.Challenges) do
+            if v.tier == 1 and v.completions < v.maxCompletions then
+                v.grantReward()
+                v.completions = math.min(v.maxCompletions, i)
+            end
+        end
+    end
+
+    CurrencyTypes.Currencies.souls.totalAmount = LethalNum.new(1, 0)
+    v3 = LethalNum.copy(CurrencyTypes.GetCurrencyAmt("magic"))
+    CurrencyTypes.SetCurrency("sunstone", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("compSol", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("magic", LethalNum.new(0, 0))
+    CurrencyTypes.AddCurrency("dark", v3)
+    Notifications.addCurrPopup("dark", v3)
+end
+function t.ResetSolarians3() --[[ ResetSolarians3 | Line: 2500 | Upvalues: Solarians (copy), LethalNum (copy), SingularityChart (copy), Multipliers (copy), Data (copy), CurrencyTypes (copy) ]]
+    for k, v in pairs(Solarians.SoulItems) do
+        if v.resource == "souls2" then
+            v.level = LethalNum.new(0, 0)
+        end
+    end
+
+    for k, v in pairs(SingularityChart.Upgrades) do
+        if (k == "kr4" or (k == "kr5" or k == "kr6")) and ((k ~= "kr4" or not (Multipliers.getSCLevel("kkr4") > 0)) and ((k ~= "kr5" or not (Multipliers.getSCLevel("kkr5") > 0)) and (k ~= "kr6" or not (Multipliers.getSCLevel("kkr6") > 0)))) then
+            v.level = 0
+        end
+    end
+
+    for k, v in pairs(Solarians.CompressionItems) do
+        v.level = LethalNum.new(0, 0)
+        v.allocated = LethalNum.new(0, 0)
+    end
+
+    for k, v in pairs(Solarians.CompressionBars) do
+        v.progress = LethalNum.new(0, 0)
+        v.owned = LethalNum.new(0, 0)
+        v.lastProg = LethalNum.new(0, 0)
+    end
+
+    for k, v in pairs(Solarians.Bars) do
+        if v.powerType == 0 or (v.powerType == 1 or v.powerType == 2) then
+            if k == "ss" or (k == "line" or (k == "compact" or (k == "sg" or (k == "dod" or (k == "dgold" or k == "dupg"))))) then
+                v.allocated = LethalNum.new(0, 0)
+
+                continue
+            end
+
+            if Data.ImportantData.Stats.bestStarTier >= 12 and (v.powerType == 2 and (k == "p1" or (k == "p2" or (k == "p3" or (k == "p4" or (k == "p5" or (k == "p6" or (k == "p7" or (k == "p8" or (k == "p9" or k == "p10a")))))))))) then
+                v.allocated = LethalNum.new(0, 0)
+
+                continue
+            end
+
+            if Data.ImportantData.Stats.bestStarTier >= Data.ImportantData.Reqs.restore and v.powerType == 2 then
+                v.allocated = LethalNum.new(0, 0)
+
+                continue
+            end
+
+            if k == "advCol" or (k == "advForm" or k == "advSoul") then
+                if Data.ImportantData.Stats.mods.hard then
+                    v.level = LethalNum.new(0, 0)
+                    v.totalLevel = LethalNum.new(0, 0)
+                    v.rank = 0
+                    v.progress = LethalNum.new(0, 0)
+                    v.rankProgress = LethalNum.new(0, 0)
+                    v.allocated = LethalNum.new(0, 0)
+                end
+            else
+                v.level = LethalNum.new(0, 0)
+                v.totalLevel = LethalNum.new(0, 0)
+                v.rank = 0
+                v.progress = LethalNum.new(0, 0)
+                v.rankProgress = LethalNum.new(0, 0)
+                v.allocated = LethalNum.new(0, 0)
+            end
+        end
+    end
+
+    CurrencyTypes.SetCurrency("grassp", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("souls", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("souls2", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("dark", LethalNum.new(0, 0))
+end
+function t.Sunrise2(p1) --[[ Sunrise2 | Line: 2589 | Upvalues: Data (copy), Portaling (copy), v7 (ref), CurrencyTypes (copy), LethalNum (copy), Upgrades (copy), Multipliers (copy), Notifications (copy), t (copy), Currencies (copy) ]]
+    if (not (Data.ImportantData.Stats.bestStarTier >= 6) or (not (Portaling.PortalingState.stage >= 40) or v7)) and not p1 then
+        return
+    end
+
+    if Data.ImportantData.Stats.Accomplish.timeSun2 < 120 and not p1 then
+        return
+    end
+
+    v7 = true
+
+    if Data.ImportantData.Stats.bestStarTier < 8 then
+        CurrencyTypes.SetCurrency("remnants", LethalNum.new(0, 0))
+        Data.ImportantData.Stats.bestEclipse = math.max(Data.ImportantData.Stats.bestEclipse, Data.ImportantData.Stats.currentEclipse)
+        Data.ImportantData.Currencies.eclipseProgress = LethalNum.new(0, 0)
+        Data.ImportantData.Stats.currentEclipse = 1
+    else
+        Data.ImportantData.Stats.bestEclipse = math.max(Data.ImportantData.Stats.bestEclipse, Data.ImportantData.Stats.currentEclipse)
+    end
+
+    Data.ImportantData.Stats.Accomplish.timeSun = 0
+
+    if Data.ImportantData.Stats.bestStarTier < 8 then
+        for k, v in pairs(Upgrades.Basic) do
+            if v.tier == "remnant" then
+                v.level = 0
+            end
+        end
+    end
+
+    Data.ImportantData.Stats.fightMulti = LethalNum.new(1, 0)
+    Multipliers.InChallenge()
+
+    local souls2ToEarn = Multipliers.getMulti().souls2ToEarn
+
+    if not (p1 and Data.ImportantData.Stats.Accomplish.timeSun2 < 120) then
+        CurrencyTypes.AddCurrency("souls2", souls2ToEarn)
+        Notifications.addCurrPopup("souls2", souls2ToEarn)
+    end
+
+    Data.ImportantData.Stats.Accomplish.timeSun2 = 0
+    t.ResetSolarians()
+    t.ResetSolarians2()
+    t.UpdateStuff()
+    Currencies.updateSolarObelisk()
+    v7 = false
+end
+function t.Sunrise3(p1, p2) --[[ Sunrise3 | Line: 2643 | Upvalues: Data (copy), Portaling (copy), v7 (ref), Upgrades (copy), Synthesis (copy), LethalNum (copy), CurrencyTypes (copy), Multipliers (copy), Notifications (copy), t (copy), Currencies (copy) ]]
+    if Data.ImportantData.Stats.prog < 1 then
+        return
+    end
+
+    if (not (Data.ImportantData.Stats.bestStarTier >= 8) or (not (Portaling.PortalingState.stage >= 150) or v7)) and not p1 then
+        return
+    end
+
+    if Data.ImportantData.Stats.Accomplish.timeSun3 < 60 then
+        return
+    end
+
+    v7 = true
+
+    local v1 = 150 + 10 * Data.ImportantData.Stats.twilightb
+    local count = 0
+    local twilightb = Data.ImportantData.Stats.twilightb
+    local v2 = if Data.ImportantData.Stats.bestStarTier >= 13 then 10 else 15
+
+    while v1 <= Data.ImportantData.Stats.currStage do
+        local Stats = Data.ImportantData.Stats
+
+        Stats.twilightb = Stats.twilightb + 1
+        count = count + 1
+        v1 = 150 + 10 * twilightb + count * v2
+    end
+
+    Data.ImportantData.Stats.Accomplish.timeSun = 0
+    Data.ImportantData.Stats.Accomplish.timeSun2 = 0
+    Data.ImportantData.Stats.Accomplish.timeSun3 = 0
+
+    for k, v in pairs(Upgrades.Basic) do
+        if (v.tier == "remnant" or (v.tier == "gold" or v.tier == "cs")) and ((v.tier ~= "remnant" or not (Data.ImportantData.Stats.bestStarTier >= 8)) and (v.currency ~= "goldenStars" and (v.currency ~= "platStars" and (v.tier ~= "cs" or not (Data.ImportantData.Stats.bestStarTier >= 14))))) then
+            v.level = 0
+        end
+    end
+
+    if Data.ImportantData.Stats.bestStarTier < 14 then
+        local count2 = 1
+
+        for k, v in pairs(Synthesis.SynthesisSlots) do
+            if v.current == "none" or not (Synthesis.SynthesisItems[v.current].multiType > 1) then
+                Synthesis.CompleteSynthesis(count2)
+                v.tier = 0
+                v.level = 0
+                v.progress = LethalNum.new(0, 0)
+                v.levelProgress = LethalNum.new(0, 0)
+                v.current = "none"
+
+                if v.obj.Crystal.Value ~= nil then
+                    v.obj.Crystal.Value:Destroy()
+                    v.obj.Crystal.Value = nil
+                end
+
+                count2 = count2 + 1
+            end
+        end
+
+        Data.ImportantData.Events.synth:Fire()
+        CurrencyTypes.SetCurrency("cs", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("fs", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("gb", LethalNum.new(0, 0))
+    end
+
+    Data.ImportantData.Stats.fightMulti = LethalNum.new(1, 0)
+
+    if p2 then
+        local Stats = Data.ImportantData.Stats
+
+        Stats.twilight = Stats.twilight + 1
+    end
+
+    local souls3ToEarn = Multipliers.getMulti().souls3ToEarn
+
+    CurrencyTypes.AddCurrency("souls3", souls3ToEarn)
+    Notifications.addCurrPopup("souls3", souls3ToEarn)
+    t.ResetSolarians()
+    t.ResetSolarians2()
+    t.ResetSolarians3()
+    Multipliers.ClearGrid2()
+    t.UpdateStuff()
+    Currencies.updateSolarObelisk()
+    v7 = false
+end
+function t.StartChallenge() --[[ StartChallenge | Line: 2741 | Upvalues: Data (copy), SolarChallenges (copy), t (copy), LethalNum (copy), Solarians (copy), CurrencyTypes (copy) ]]
+    if Data.ImportantData.Stats.solChal ~= "none" then
+        return
+    end
+
+    Data.ImportantData.Stats.solChal = Data.ImportantData.Stats.chalSelected
+
+    local v1 = SolarChallenges.Challenges[Data.ImportantData.Stats.solChal]
+
+    if v1 == nil then
+        return
+    end
+
+    if v1.tier == 1 then
+        t.SolarReset()
+
+        if v1.resetMulti then
+            Data.ImportantData.Stats.fightMulti = LethalNum.new(1, 0)
+        end
+
+        if v1.resetSouls then
+            for k, v in pairs(Solarians.SoulItems) do
+                if v.resource == "souls" then
+                    Data.ImportantData.UpgradeLevels.soulBackup[k] = {
+                        level = v.level
+                    }
+                end
+            end
+
+            for k, v in pairs(Solarians.SoulItems) do
+                if v.resource == "souls" then
+                    v.level = LethalNum.new(0, 0)
+                end
+            end
+
+            Data.ImportantData.Stats.soulsStored = CurrencyTypes.GetCurrencyAmt("souls")
+            CurrencyTypes.SetCurrency("souls", LethalNum.new(0, 0))
+        end
+
+        if v1.startSouls then
+            CurrencyTypes.SetCurrency("souls", v1.startSoulsAmnt)
+        end
+    end
+
+    if v1.tier == 2 then
+        t.Sunrise2(true)
+    end
+
+    if v1.tier ~= 3 then
+        return
+    end
+
+    t.Sunrise3(true)
+end
+function t.EndChallenge() --[[ EndChallenge | Line: 2791 | Upvalues: Data (copy), SolarChallenges (copy), Solarians (copy), CurrencyTypes (copy), LethalNum (copy), t (copy), Currencies (copy), Portaling (copy) ]]
+    if Data.ImportantData.Stats.solChal == "none" then
+        return
+    end
+
+    local solChal = Data.ImportantData.Stats.solChal
+
+    Data.ImportantData.Stats.chalSelected = solChal
+    Data.ImportantData.Stats.solChal = "none"
+
+    local v1 = SolarChallenges.Challenges[solChal]
+
+    if v1 ~= nil and (v1.tier == 1 and v1.resetSouls) then
+        for k, v in pairs(Data.ImportantData.UpgradeLevels.soulBackup) do
+            Solarians.SoulItems[k].level = v.level
+        end
+
+        Data.ImportantData.UpgradeLevels.soulBackup = {}
+        CurrencyTypes.SetCurrency("souls", LethalNum.new(0, 0))
+        CurrencyTypes.ReAddCurrency("souls", Data.ImportantData.Stats.soulsStored)
+        Data.ImportantData.Stats.chalSouls = LethalNum.new(0, 0)
+        Data.ImportantData.Stats.soulsStored = LethalNum.new(0, 0)
+        Data.ImportantData.Stats.soulsTotal = LethalNum.new(0, 0)
+    end
+
+    t.UpdateStuff()
+    Currencies.UpdateSolarChallenges()
+    Portaling.NewEnemyStats()
+end
+function t.ClearChallenge() --[[ ClearChallenge | Line: 2823 | Upvalues: Data (copy), SolarChallenges (copy), CurrencyTypes (copy), LethalNum (copy), t (copy) ]]
+    if Data.ImportantData.Stats.solChal == "none" then
+        return
+    end
+
+    local v1 = false
+    local v2 = SolarChallenges.Challenges[Data.ImportantData.Stats.solChal]
+
+    if v2 ~= nil then
+        if Data.ImportantData.Stats.bestStarTier >= 6 and v2.tier == 1 then
+            v1 = true
+        end
+
+        if Data.ImportantData.Stats.bestStarTier >= 10 and v2.tier == 2 then
+            v1 = true
+        end
+
+        if v1 then
+            while v2.clearCondition() and v2.completions < v2.maxCompletions do
+                v2.grantReward()
+                v2.completions = v2.completions + 1
+            end
+        else
+            v2.grantReward()
+            v2.completions = v2.completions + 1
+        end
+
+        if v2.tier == 1 and v2.resetSouls then
+            CurrencyTypes.SetCurrency("souls", LethalNum.new(0, 0))
+        end
+    end
+
+    t.EndChallenge()
+end
+
+local v10 = false
+
+function t.Centralize(p1) --[[ Centralize | Line: 2862 | Upvalues: v10 (ref), Data (copy), CommonFunctions (copy), ChangeVisual (copy), t (copy), CurrencyTypes (copy), LethalNum (copy), Currencies (copy), Notifications (copy), MapTeles (copy) ]]
+    if v10 then
+        return
+    end
+
+    v10 = true
+
+    if Data.ImportantData.Stats.loopsTotal < 1 then
+        local v1 = CommonFunctions.getFadeObj()
+
+        v1.BackgroundColor3 = Color3.new(0/255, 0/255, 0/255)
+        CommonFunctions.fade(v1, 3, true, "frame")
+        task.wait(5)
+
+        if Data.ImportantData.Stats.prog < 1 then
+            local TextLabel = Instance.new("TextLabel", v1)
+
+            TextLabel.Font = "Cartoon"
+            TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+            TextLabel.Position = UDim2.new(UDim.new(0.5, 0), UDim.new(0.5, 0))
+            TextLabel.Size = UDim2.new(UDim.new(0.9, 0), UDim.new(0.2, 0))
+            TextLabel.TextScaled = true
+            TextLabel.BackgroundTransparency = 1
+            TextLabel.RichText = true
+            TextLabel.TextStrokeTransparency = 0
+            TextLabel.TextTransparency = 1
+            TextLabel.TextStrokeTransparency = 1
+            TextLabel.TextColor3 = Color3.new(255/255, 255/255, 255/255)
+            Instance.new("UITextSizeConstraint", TextLabel).MaxTextSize = 100
+            TextLabel.Text = "<b>As you say your last goodbye,\nmemories come rushing back</b>"
+            CommonFunctions.fade(TextLabel, 2, true, "text")
+            task.wait(7)
+            CommonFunctions.fade(TextLabel, 1, false, "text")
+            task.wait(3)
+        end
+
+        local TextLabel = Instance.new("TextLabel", v1)
+
+        TextLabel.Font = "Cartoon"
+        TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+        TextLabel.Position = UDim2.new(UDim.new(0.5, 0), UDim.new(0.5, 0))
+        TextLabel.Size = UDim2.new(UDim.new(0.9, 0), UDim.new(0.3, 0))
+        TextLabel.TextScaled = true
+        TextLabel.BackgroundTransparency = 1
+        TextLabel.RichText = true
+        TextLabel.TextStrokeTransparency = 0
+        TextLabel.TextTransparency = 1
+        TextLabel.TextStrokeTransparency = 1
+        TextLabel.TextColor3 = Color3.new(255/255, 255/255, 255/255)
+        Instance.new("UITextSizeConstraint", TextLabel).MaxTextSize = 100
+
+        local v2 = "<b>"
+        local v3 = "<b>"
+
+        if p1 == "pp" then
+            v2 = v2 .. "Do you remember the time you did your first prestige?\n\nIt feels so long ago now..."
+            v3 = v3 .. "That was where your journey began"
+        end
+
+        if p1 == "crystals" then
+            v2 = v2 .. "How about crystallize?\n\nYou sacrificed so much for so little"
+            v3 = v3 .. "But that was just scratching the surface"
+        end
+
+        if p1 == "steel" then
+            v2 = v2 .. "Remember when you first unlocked the factory?\n\nYou must have been wondering what that had to do with cutting grass"
+            v3 = v3 .. "This is his world"
+        end
+
+        if p1 == "agrass" then
+            v2 = v2 .. "Having to slow down everything must have been so strange at time\n\nHow would this help me? You wondered"
+            v3 = v3 .. "Look how far you have come now"
+        end
+
+        if p1 == "ap" then
+            v2 = v2 .. "Another reset disappears...\n\nWhat is going to happen when it is all gone?"
+            v3 = v3 .. "At least this one was forgettable..."
+        end
+
+        if p1 == "oil" then
+            v2 = v2 .. "One of the resources required for rocket fuel\n\nThis was the first step towards building your rocket!"
+            v3 = v3 .. "Will the rocket eventually disappear too?"
+        end
+
+        if p1 == "rocketFuel" then
+            Data.ImportantData.Misc.toggles.rocketFuel.Visible = false
+            v2 = v2 .. "Rocket fuel before charge???\n\nThis is truly the strangest of times..."
+            v3 = v3 .. "The refinery sees its last use"
+        end
+
+        if p1 == "charge" then
+            v2 = v2 .. "The driving force for early progression\n\nYou needed it for everything until the very end"
+            v3 = v3 .. "Now you need it no more"
+        end
+
+        if p1 == "platinum" then
+            v2 = v2 .. "Once brought joy and then sadness\n\nA blessing and then a curse"
+            v3 = v3 .. "The last platinum grows"
+        end
+
+        if p1 == "stars" then
+            v2 = v2 .. "From days, to hours, to minutes, to seconds\n\nWhat was once a monumental moment had become just a small step"
+            v3 = v3 .. "That step is now gone"
+        end
+
+        if p1 == "fun" then
+            v2 = v2 .. "How wonderful it was to experience fun for the first time!\n\nThose memories will have to be cherished for days to come..."
+            v3 = v3 .. "Because now, there is no more fun"
+        end
+
+        if p1 == "darkMatter" then
+            v1.BackgroundColor3 = Color3.new(255/255, 255/255, 255/255)
+            TextLabel.TextColor3 = Color3.new(0/255, 0/255, 0/255)
+            ChangeVisual.ToVoid()
+            Data.ImportantData.Misc.toggles.ui.Visible = false
+            Data.ImportantData.Misc.player.Character:PivotTo(CFrame.new(18270.248, 9238.999, -9861.357) * CFrame.Angles(0, 0, 0))
+            v2 = v2 .. "..."
+            v3 = v3 .. "The darkness consumes you"
+        end
+
+        if p1 == "sfrgt" then
+            v2 = v2 .. "20"
+        end
+
+        if p1 == "momentum" then
+            v2 = v2 .. "19"
+        end
+
+        if p1 == "ugrass" then
+            v2 = v2 .. "18"
+        end
+
+        if p1 == "np" then
+            v2 = v2 .. "17"
+        end
+
+        if p1 == "clouds" then
+            v2 = v2 .. "16"
+        end
+
+        if p1 == "moonstone" then
+            v2 = v2 .. "15"
+        end
+
+        if p1 == "darkFruits" then
+            v2 = v2 .. "14"
+        end
+
+        if p1 == "rings" then
+            v2 = v2 .. "13"
+        end
+
+        if p1 == "planetarium" then
+            v2 = v2 .. "12"
+        end
+
+        if p1 == "astro" then
+            v2 = v2 .. "11"
+        end
+
+        if p1 == "measure" then
+            v2 = v2 .. "10"
+        end
+
+        if p1 == "planets" then
+            v2 = v2 .. "9"
+        end
+
+        if p1 == "lines" then
+            v2 = v2 .. "8"
+        end
+
+        if p1 == "arcs" then
+            v2 = v2 .. "7"
+        end
+
+        if p1 == "obs" then
+            v2 = v2 .. "6"
+        end
+
+        if p1 == "res" then
+            v2 = v2 .. "5"
+        end
+
+        if p1 == "dcharge" then
+            v2 = v2 .. "4"
+        end
+
+        if p1 == "stardust" then
+            v2 = v2 .. "3"
+        end
+
+        if p1 == "perks2" then
+            t.ChangeDifficulty(0)
+            v2 = v2 .. "2"
+        end
+
+        if p1 == "perks" then
+            v2 = v2 .. "1"
+        end
+
+        CurrencyTypes.Currencies[p1].infinity = true
+        CurrencyTypes.AddCurrency("singularity", LethalNum.new(1, 0))
+
+        for k, v in pairs(Data.ImportantData.Stats.currPins) do
+            if v.curr == p1 then
+                Currencies.PinCurrency(p1)
+            end
+        end
+
+        if Data.ImportantData.Stats.currDisplay == p1 then
+            Currencies.ChangeCurrDisplay(p1)
+        end
+
+        local Accomplish = Data.ImportantData.Stats.Accomplish
+
+        Accomplish.fsTime = Accomplish.fsTime + 604800
+        TextLabel.Text = v2 .. "</b>"
+        CommonFunctions.fade(TextLabel, 2, true, "text")
+        task.wait(7)
+        v1.BackgroundColor3 = Color3.new(0/255, 0/255, 0/255)
+        TextLabel.TextColor3 = Color3.new(255/255, 255/255, 255/255)
+        CommonFunctions.fade(TextLabel, 1, false, "text")
+        task.wait(3)
+
+        if Data.ImportantData.Stats.prog < 1 then
+            local TextLabel2 = Instance.new("TextLabel", v1)
+
+            TextLabel2.Font = "Cartoon"
+            TextLabel2.AnchorPoint = Vector2.new(0.5, 0.5)
+            TextLabel2.Position = UDim2.new(UDim.new(0.5, 0), UDim.new(0.5, 0))
+            TextLabel2.Size = UDim2.new(UDim.new(0.9, 0), UDim.new(0.3, 0))
+            TextLabel2.TextScaled = true
+            TextLabel2.BackgroundTransparency = 1
+            TextLabel2.RichText = true
+            TextLabel2.TextStrokeTransparency = 0
+            TextLabel2.TextTransparency = 1
+            TextLabel2.TextStrokeTransparency = 1
+            TextLabel2.TextColor3 = Color3.new(255/255, 255/255, 255/255)
+            Instance.new("UITextSizeConstraint", TextLabel2).MaxTextSize = 100
+            TextLabel2.Text = v3 .. "</b>"
+            CommonFunctions.fade(TextLabel2, 2, true, "text")
+            task.wait(4)
+            CommonFunctions.fade(TextLabel2, 1, false, "text")
+            task.wait(2)
+        end
+
+        CommonFunctions.fade(v1, 1, false, "frame")
+        task.wait(2)
+        CommonFunctions.clearFadeObj(v1)
+    else
+        if p1 == "darkMatter" and not LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("gg"), LethalNum.new(1, 0)) then
+            CurrencyTypes.AddCurrency("gg", LethalNum.new(1, 0))
+            Notifications.addCurrPopup("gg", LethalNum.new(1, 0))
+        end
+
+        CurrencyTypes.Currencies[p1].infinity = true
+        CurrencyTypes.AddCurrency("singularity", LethalNum.new(1, 0))
+        Notifications.addCurrPopup("singularity", LethalNum.new(1, 0))
+
+        for k, v in pairs(Data.ImportantData.Stats.currPins) do
+            if v.curr == p1 then
+                Currencies.PinCurrency(p1)
+            end
+        end
+
+        if Data.ImportantData.Stats.currDisplay == p1 then
+            Currencies.ChangeCurrDisplay(p1)
+        end
+
+        local Accomplish = Data.ImportantData.Stats.Accomplish
+
+        Accomplish.fsTime = Accomplish.fsTime + 604800
+    end
+
+    MapTeles.AutoRemovePins()
+    v10 = false
+end
+
+local v11 = true
+
+function t.EndGame(p1) --[[ EndGame | Line: 3132 | Upvalues: Data (copy), v11 (ref), Multipliers (copy), t (copy), CommonFunctions (copy), Currencies (copy), Synthesis (copy), LethalNum (copy), CurrencyTypes (copy), Upgrades (copy), Solarians (copy), SingularityChart (copy), SolarChallenges (copy), Planets (copy), TreeItems (copy), LunarItems (copy), Accomplishments (copy), TabManager (copy), Notifications (copy), Portaling (copy), MapTeles (copy), ChangeVisual (copy) ]]
+    if not ((if Data.ImportantData.Stats.bestStage >= 1000 then true elseif p1 > 1 then true else false) and v11) then
+        return
+    end
+
+    if p1 == 2 and Data.ImportantData.Stats.loops < 10 then
+        return
+    end
+
+    if p1 == 3 and Data.ImportantData.Stats.loops2 < 10 then
+        return
+    end
+
+    if p1 == 4 and Data.ImportantData.Stats.loops3 < 10 then
+        return
+    end
+
+    if p1 == 5 and Data.ImportantData.Stats.loops4 < 10 then
+        return
+    end
+
+    local loop1Earn = Multipliers.getMulti().loop1Earn
+    local loop2Earn = Multipliers.getMulti().loop2Earn
+    local loop3Earn = Multipliers.getMulti().loop3Earn
+    local loop4Earn = Multipliers.getMulti().loop4Earn
+
+    v11 = false
+    t.RemoveGrass()
+
+    local v2 = (p1 ~= 1 or not (Data.ImportantData.Stats.loopsTotal2 > 0)) and true or false
+
+    if p1 == 2 and Data.ImportantData.Stats.loopsTotal3 > 0 then
+        v2 = false
+    end
+
+    if p1 == 3 and Data.ImportantData.Stats.loopsTotal4 > 0 then
+        v2 = false
+    end
+
+    if p1 == 4 and Data.ImportantData.Stats.loopsTotal5 > 0 then
+        v2 = false
+    end
+
+    if p1 == 5 and Data.ImportantData.Stats.loopsTotal5 > 10 then
+        v2 = false
+    end
+
+    local v3 = CommonFunctions.getFadeObj()
+    local v4 = nil
+
+    if v2 then
+        v3.BackgroundColor3 = Color3.new(0/255, 0/255, 0/255)
+        CommonFunctions.fade(v3, 3, true, "frame")
+        task.wait(5)
+
+        local TextLabel = Instance.new("TextLabel", v3)
+
+        TextLabel.Font = "Cartoon"
+        TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+        TextLabel.Position = UDim2.new(UDim.new(0.5, 0), UDim.new(0.5, 0))
+        TextLabel.Size = UDim2.new(UDim.new(0.9, 0), UDim.new(0.4, 0))
+        TextLabel.TextScaled = true
+        TextLabel.BackgroundTransparency = 1
+        TextLabel.RichText = true
+        TextLabel.TextStrokeTransparency = 0
+        TextLabel.TextTransparency = 1
+        TextLabel.TextStrokeTransparency = 1
+        Instance.new("UITextSizeConstraint", TextLabel).MaxTextSize = 100
+
+        if p1 == 1 then
+            TextLabel.TextColor3 = Color3.new(255/255, 255/255, 255/255)
+            TextLabel.Text = "<b>The end has come\n\nLoops: " .. Data.ImportantData.Stats.loops + Multipliers.getMulti().loop1Earn .. "</b>"
+        end
+
+        if p1 == 2 then
+            TextLabel.TextColor3 = Color3.new(0/255, 255/255, 0/255)
+            TextLabel.Text = "<b>The end has come again\n\nMega Loops: " .. Data.ImportantData.Stats.loops2 + Multipliers.getMulti().loop2Earn .. "</b>"
+        end
+
+        if p1 == 3 then
+            TextLabel.TextColor3 = Color3.new(0/255, 255/255, 255/255)
+            TextLabel.Text = "<b>The end has come once again\n\nSuper Mega Loops: " .. Data.ImportantData.Stats.loops3 + Multipliers.getMulti().loop3Earn .. "</b>"
+        end
+
+        if p1 == 4 then
+            TextLabel.TextColor3 = Color3.new(255/255, 0/255, 255/255)
+            TextLabel.Text = "<b>You can quit anytime\n\nSuper Ultra Mega Loops: " .. Data.ImportantData.Stats.loops4 + Multipliers.getMulti().loop4Earn .. "</b>"
+        end
+
+        if p1 == 5 then
+            TextLabel.TextColor3 = Color3.new(255/255, 0/255, 0/255)
+            TextLabel.Text = "<b>Touch grass\n\nOmega Loops: " .. Data.ImportantData.Stats.loops5 + 1 .. "</b>"
+        end
+
+        CommonFunctions.fade(TextLabel, 2, true, "text")
+        task.wait(6)
+
+        if Data.ImportantData.Stats.currDisplay ~= "none" then
+            Currencies.ChangeCurrDisplay(Data.ImportantData.Stats.currDisplay)
+        end
+
+        if Data.ImportantData.Stats.levelDisplay ~= "none" then
+            Currencies.ChangeLevelDisplay(Data.ImportantData.Stats.levelDisplay)
+        end
+
+        Data.ImportantData.Stats.cLock = false
+        Data.updateTierSettings("auto")
+
+        if not Data.ImportantData.Misc.displaySettings.loops.Visible then
+            Data.updateDisplaySettings("tiers")
+        end
+
+        task.wait(2)
+        v4 = TextLabel
+    else
+        if Data.ImportantData.Stats.currDisplay ~= "none" then
+            Currencies.ChangeCurrDisplay(Data.ImportantData.Stats.currDisplay)
+        end
+
+        if Data.ImportantData.Stats.levelDisplay ~= "none" then
+            Currencies.ChangeLevelDisplay(Data.ImportantData.Stats.levelDisplay)
+        end
+
+        Data.ImportantData.Stats.cLock = false
+    end
+
+    t.RemoveGrass()
+
+    local count = 1
+
+    for k, v in pairs(Synthesis.SynthesisSlots) do
+        Synthesis.CompleteSynthesis(count)
+        v.tier = 0
+        v.level = 0
+        v.progress = LethalNum.new(0, 0)
+        v.levelProgress = LethalNum.new(0, 0)
+        v.current = "none"
+
+        if v.obj.Crystal.Value ~= nil then
+            v.obj.Crystal.Value:Destroy()
+            v.obj.Crystal.Value = nil
+        end
+
+        count = count + 1
+    end
+
+    Data.ImportantData.Events.synth:Fire()
+
+    for k, v in pairs(CurrencyTypes.Currencies) do
+        if k ~= "flowers" and (k ~= "mp" and (k ~= "arrow" and (k ~= "gold" and (k ~= "shard" and (k ~= "loop1" and (k ~= "loop2" and (k ~= "loop3" and (k ~= "loop4" and (k ~= "loop5" and (not (p1 <= 2) or k ~= "lcharge")))))))))) and (not (p1 <= 3) or k ~= "brass" and (k ~= "ir" and (k ~= "blue" and k ~= "plasma"))) then
+            v.amount = LethalNum.new(0, 0)
+            v.totalAmount = LethalNum.new(0, 0)
+            v.infinity = false
+        end
+    end
+
+    for k, v in pairs(Upgrades.Basic) do
+        if v.currency ~= "mp" and (v.tier ~= "flower" and (v.tier ~= "flower2" and (v.tier ~= "blautomation" and (k ~= "keepSpeed" and (v.tier ~= "arrow" and (not (p1 <= 2) or v.tier ~= "lime")))))) and (not (p1 <= 3) or v.tier ~= "brass" and (v.tier ~= "ir" and (v.tier ~= "blue" and v.tier ~= "plasma"))) then
+            if v.tier == "loop" then
+                if p1 ~= 1 and (p1 ~= 2 or v.currency ~= "loop2" and (v.currency ~= "loop3" and (v.currency ~= "loop4" and v.currency ~= "loop5"))) and ((p1 ~= 3 or v.currency ~= "loop3" and (v.currency ~= "loop4" and v.currency ~= "loop5")) and ((p1 ~= 4 or v.currency ~= "loop4" and v.currency ~= "loop5") and ((p1 ~= 5 or v.currency ~= "loop5") and (k ~= "l1a" and (k ~= "l1b" and k ~= "l1c"))))) then
+                    v.level = 0
+                end
+            else
+                v.level = 0
+            end
+        end
+    end
+
+    for k, v in pairs(Solarians.SoulItems) do
+        v.level = LethalNum.new(0, 0)
+    end
+
+    for k, v in pairs(SingularityChart.Upgrades) do
+        v.level = 0
+    end
+
+    for k, v in pairs(SolarChallenges.Challenges) do
+        v.completions = 0
+    end
+
+    for k, v in pairs(Solarians.CompressionItems) do
+        v.level = LethalNum.new(0, 0)
+        v.allocated = LethalNum.new(0, 0)
+    end
+
+    for k, v in pairs(Solarians.CompressionBars) do
+        v.progress = LethalNum.new(0, 0)
+        v.owned = LethalNum.new(0, 0)
+        v.lastProg = LethalNum.new(0, 0)
+    end
+
+    for k, v in pairs(Solarians.Bars) do
+        if k == "dod" or (k == "dgold" or k == "dupg") then
+            v.allocated = LethalNum.new(0, 0)
+
+            continue
+        end
+
+        v.level = LethalNum.new(0, 0)
+        v.totalLevel = LethalNum.new(0, 0)
+        v.rank = 0
+        v.progress = LethalNum.new(0, 0)
+        v.rankProgress = LethalNum.new(0, 0)
+        v.allocated = LethalNum.new(0, 0)
+    end
+
+    Data.ImportantData.Stats.lowestGGrasshop = 101
+    Data.ImportantData.Stats.highestZeroGrassskip = 0
+    Data.ImportantData.Stats.tempGPS = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.gps = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.pDif = 0
+    Data.ImportantData.Stats.Accomplish.anonymityBoughtL = 0
+    Data.ImportantData.Stats.Accomplish.agrassBoughtA = 0
+    Data.ImportantData.Stats.Accomplish.agrassBoughtL = 0
+    Data.ImportantData.Stats.Accomplish.prestigeBoughtC = 0
+    Data.ImportantData.Stats.Accomplish.prestigeBoughtG = 0
+    Data.ImportantData.Stats.Accomplish.crystalBoughtG = 0
+    Data.ImportantData.Stats.Accomplish.grassBoughtP = 0
+    Data.ImportantData.Stats.Accomplish.grassBoughtC = 0
+    Data.ImportantData.Stats.Accomplish.grassBoughtG = 0
+    Data.ImportantData.Stats.Accomplish.timeA = 0
+    Data.ImportantData.Stats.Accomplish.timeP = 0
+    Data.ImportantData.Stats.Accomplish.timeC = 0
+    Data.ImportantData.Stats.Accomplish.timeG = 0
+    Data.ImportantData.Stats.Accomplish.timeS = 0
+    Data.ImportantData.Stats.Accomplish.timeGl = 0
+    Data.ImportantData.Stats.Accomplish.timeSn = 0
+    Data.ImportantData.Stats.Accomplish.timeSun2 = 0
+    Data.ImportantData.Stats.Accomplish.timeSun3 = 0
+    Data.ImportantData.Stats.totalGrassP = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.realm = "normal"
+    Data.ImportantData.Stats.totalGRocketFuel = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.lastLiquefyOil = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.lastAnonymityAP = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.lastNormalityNP = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.lastVaporizeClouds = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.currentPrestige = 0
+    Data.ImportantData.Stats.currentCrystallize = 0
+    Data.ImportantData.Stats.currentAnonymity = 0
+    Data.ImportantData.Stats.currentLiquefy = 0
+    Data.ImportantData.Stats.currentNormality = 0
+    Data.ImportantData.Stats.currentGalactic = 0
+    Data.ImportantData.Stats.currentSacrifice = 0
+    Data.ImportantData.Stats.totalPrestige = 0
+    Data.ImportantData.Stats.totalCrystallize = 0
+    Data.ImportantData.Stats.totalGrasshop = 0
+    Data.ImportantData.Stats.totalSteelie = 0
+    Data.ImportantData.Stats.totalAnonymity = 0
+    Data.ImportantData.Stats.totalLiquefy = 0
+    Data.ImportantData.Stats.totalGalactic = 0
+    Data.ImportantData.Stats.totalFunify = 0
+    Data.ImportantData.Stats.totalSacrifice = 0
+    Data.ImportantData.Stats.totalGrassskip = 0
+    Data.ImportantData.Stats.totalAstrolabe = 0
+    Data.ImportantData.Stats.totalQuadrant = 0
+    Data.ImportantData.Stats.totalPlanetary = 0
+    Data.ImportantData.Stats.totalConstellation = 0
+    Data.ImportantData.Stats.totalNebula = 0
+    Data.ImportantData.Stats.totalSupernova = 0
+    Data.ImportantData.Stats.totalGrassJump = 0
+    Data.ImportantData.Stats.totalNormality = 0
+    Data.ImportantData.Stats.totalRocketParts = 0
+    Data.ImportantData.Stats.currentRocketParts = 0
+    Data.ImportantData.Stats.highestPlanetary = 0
+    Data.ImportantData.Stats.savedTrialLevels = {}
+    CurrencyTypes.Levels.level.progress = LethalNum.new(0, 0)
+    CurrencyTypes.Levels.antiLevel.progress = LethalNum.new(0, 0)
+    CurrencyTypes.Levels.unLevel.progress = LethalNum.new(0, 0)
+    CurrencyTypes.Levels.planetLevel.progress = LethalNum.new(0, 0)
+    CurrencyTypes.Levels.level.level = 1
+    CurrencyTypes.Levels.antiLevel.level = 1
+    CurrencyTypes.Levels.unLevel.level = 1
+    CurrencyTypes.Levels.planetLevel.level = 1
+    CurrencyTypes.Levels.level.highestLevel = 1
+    CurrencyTypes.Levels.antiLevel.highestLevel = 1
+    CurrencyTypes.Levels.unLevel.highestLevel = 1
+    CurrencyTypes.Levels.planetLevel.highestLevel = 1
+    CurrencyTypes.Levels.astral.highestLevel = 1
+    CurrencyTypes.Levels.stage.highestLevel = 1
+
+    for k, v in pairs(CurrencyTypes.Multis) do
+        v.multi = LethalNum.new(0, 0)
+    end
+
+    Data.ImportantData.Stats.bestCharge = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.bestDarkCharge = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.currentGrasshop = 0
+    Data.ImportantData.Stats.currentGrassskip = 0
+    Data.ImportantData.Stats.currentGrassJump = 0
+    Data.ImportantData.Stats.currentPlanetary = 0
+    Data.ImportantData.Stats.currentSGJ = 0
+    Data.ImportantData.Stats.prog = 0
+    Data.ImportantData.Stats.currentGFunify = 0
+    Data.ImportantData.Stats.innerRingsBroken = 0
+    Data.ImportantData.Stats.bestStarTier = 0
+    Data.ImportantData.Stats.gps = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.perksSpent = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.bestLineGen = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.bestArcsGen = LethalNum.new(0, 0)
+    Data.ImportantData.Currencies.dfProgress = 0
+    Data.ImportantData.Stats.starTier = 0
+    Data.ImportantData.Stats.starProgress = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.visualST = -1
+    Planets.Planets.planetoid[1].bestScore = LethalNum.new(0, 0)
+    Planets.Planets.planetoid[1].highestLevel = 0
+    Data.ImportantData.Currencies.tierProgress = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.infTier = 0
+    Data.ImportantData.Stats.currentTier = "basic"
+    Data.ImportantData.Stats.antiTier = "basic"
+    Data.ImportantData.Stats.unnaturalTier = "basic"
+    Data.ImportantData.Stats.highestTier = 0
+
+    for k, v in pairs(TreeItems.Items) do
+        v.level = LethalNum.new(0, 0)
+    end
+
+    for k, v in pairs(LunarItems.Items) do
+        v.level = LethalNum.new(0, 0)
+        v.progress = LethalNum.new(0, 0)
+        v.activated = false
+    end
+
+    Data.ImportantData.Currencies.astralProgress = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.highestAstralPrestige = 0
+    Data.ImportantData.Stats.currentAstralPrestige = 0
+    Data.ImportantData.Stats.currentAstralLevel = 1
+
+    for k, v in pairs(Accomplishments.Basic) do
+        local v5 = Data.ImportantData.UpgradeLevels.accomplishments[k]
+
+        if not (p1 <= 3 and (v.special or 0) > 0) then
+            v5.level = 0
+        end
+    end
+
+    for k, v in pairs(Accomplishments.Trial) do
+        v.level = 0
+    end
+
+    Data.ImportantData.Stats.fightMulti = LethalNum.new(1, 0)
+    Data.ImportantData.Stats.currentSupernova = 0
+    t.UpdateGH()
+    Data.ImportantData.Stats.solarScore = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.bestSupernova = LethalNum.new(0, 0)
+    Data.ImportantData.Currencies.eclipseProgress = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.currentEclipse = 1
+    Data.ImportantData.Stats.bestEclipse = 1
+    Data.ImportantData.Stats.highestEclipse = 1
+    Data.ImportantData.Stats.twilight = 0
+    Data.ImportantData.Stats.twilightb = 0
+    Data.ImportantData.Stats.soulsTS = LethalNum.new(1, 0)
+    Data.ImportantData.Stats.soulG = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.soulsStored = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.bestArcsGen = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.bestLineGen = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.sunrise = 1
+    Data.ImportantData.Stats.souls = 1
+    TabManager.menus.soulsShop.Souls1.Visible = true
+    TabManager.menus.soulsShop.Souls2.Visible = false
+    TabManager.menus.soulsShop.Souls3.Visible = false
+    Data.ImportantData.Stats.solChal = "none"
+
+    if p1 == 1 then
+        local Stats = Data.ImportantData.Stats
+
+        Stats.loops = Stats.loops + loop1Earn
+
+        local Stats2 = Data.ImportantData.Stats
+
+        Stats2.loopsTotal = Stats2.loopsTotal + loop1Earn
+        CurrencyTypes.AddCurrency("loop1", LethalNum.new(loop1Earn, 0))
+        Notifications.addCurrPopup("loop1", LethalNum.new(loop1Earn, 0))
+
+        if Data.ImportantData.Stats.totalBluestige > 0 then
+            t.AccomplishConditions("bluestige", 1)
+        end
+    end
+
+    if p1 == 2 then
+        local Stats = Data.ImportantData.Stats
+
+        Stats.loops2 = Stats.loops2 + loop2Earn
+
+        local Stats2 = Data.ImportantData.Stats
+
+        Stats2.loopsTotal2 = Stats2.loopsTotal2 + loop2Earn
+        CurrencyTypes.AddCurrency("loop2", LethalNum.new(loop2Earn, 0))
+        Notifications.addCurrPopup("loop2", LethalNum.new(loop2Earn, 0))
+        Data.ImportantData.Stats.loops = 0
+
+        if Data.ImportantData.Stats.loopsTotal3 > 0 then
+            CurrencyTypes.AddCurrency("arrow", LethalNum.copy(CurrencyTypes.GetCurrencyAmt("loop1")))
+            Notifications.addCurrPopup("arrow", LethalNum.copy(CurrencyTypes.GetCurrencyAmt("loop1")))
+        end
+
+        CurrencyTypes.SetCurrency("loop1", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("lcharge", LethalNum.new(0, 0))
+
+        if Data.ImportantData.Stats.totalBluestige > 0 then
+            t.AccomplishConditions("bluestige", 2)
+        end
+
+        Data.ImportantData.Stats.Accomplish.timeSun5 = 0
+    end
+
+    if p1 == 3 then
+        local Stats = Data.ImportantData.Stats
+
+        Stats.loops3 = Stats.loops3 + loop3Earn
+
+        local Stats2 = Data.ImportantData.Stats
+
+        Stats2.loopsTotal3 = Stats2.loopsTotal3 + loop3Earn
+        CurrencyTypes.AddCurrency("loop3", LethalNum.new(loop3Earn, 0))
+        Notifications.addCurrPopup("loop3", LethalNum.new(loop3Earn, 0))
+        Data.ImportantData.Stats.loops = 0
+        Data.ImportantData.Stats.loops2 = 0
+
+        if Data.ImportantData.Stats.loopsTotal3 > 0 then
+            local v7 = LethalNum.add(LethalNum.copy(CurrencyTypes.GetCurrencyAmt("loop1")), LethalNum.multiply(CurrencyTypes.GetCurrencyAmt("loop2"), 10))
+
+            CurrencyTypes.AddCurrency("arrow", v7)
+            Notifications.addCurrPopup("arrow", v7)
+        end
+
+        CurrencyTypes.SetCurrency("loop1", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("loop2", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("lcharge", LethalNum.new(0, 0))
+        Data.ImportantData.Stats.bestLimeCharge = LethalNum.new(0, 0)
+
+        if Data.ImportantData.Stats.totalBluestige > 0 then
+            t.AccomplishConditions("bluestige", 3)
+        end
+
+        Data.ImportantData.Stats.Accomplish.timeSun5 = 0
+        Data.ImportantData.Stats.Accomplish.timeSun6 = 0
+    end
+
+    if p1 == 4 then
+        local Stats = Data.ImportantData.Stats
+
+        Stats.loops4 = Stats.loops4 + loop4Earn
+
+        local Stats2 = Data.ImportantData.Stats
+
+        Stats2.loopsTotal4 = Stats2.loopsTotal4 + loop4Earn
+        CurrencyTypes.AddCurrency("loop4", LethalNum.new(loop4Earn, 0))
+        Notifications.addCurrPopup("loop4", LethalNum.new(loop4Earn, 0))
+        Data.ImportantData.Stats.loops = 0
+        Data.ImportantData.Stats.loops2 = 0
+        Data.ImportantData.Stats.loops3 = 0
+
+        local v10 = LethalNum.add(LethalNum.add(LethalNum.copy(CurrencyTypes.GetCurrencyAmt("loop1")), LethalNum.multiply(CurrencyTypes.GetCurrencyAmt("loop2"), 10)), LethalNum.multiply(CurrencyTypes.GetCurrencyAmt("loop3"), 100))
+
+        CurrencyTypes.AddCurrency("arrow", v10)
+        Notifications.addCurrPopup("arrow", v10)
+        CurrencyTypes.SetCurrency("loop1", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("loop2", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("loop3", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("lcharge", LethalNum.new(0, 0))
+        Data.ImportantData.Stats.bestLimeCharge = LethalNum.new(0, 0)
+        CurrencyTypes.Levels.blevel.level = 1
+        CurrencyTypes.Levels.blevel.progress = LethalNum.new(0, 0)
+        Data.ImportantData.Stats.bluestige = 0
+        Data.ImportantData.Stats.plasma = 0
+
+        if Data.ImportantData.Stats.totalBluestige > 0 then
+            t.AccomplishConditions("bluestige", 4)
+        end
+
+        Data.ImportantData.Stats.Accomplish.timeSun5 = 0
+        Data.ImportantData.Stats.Accomplish.timeSun6 = 0
+        Data.ImportantData.Stats.Accomplish.timeSun7 = 0
+        t.RemoveBrass()
+    end
+
+    if p1 == 5 then
+        local Stats = Data.ImportantData.Stats
+
+        Stats.loops5 = Stats.loops5 + 1
+
+        local Stats2 = Data.ImportantData.Stats
+
+        Stats2.loopsTotal5 = Stats2.loopsTotal5 + 1
+        CurrencyTypes.AddCurrency("loop5", LethalNum.new(1, 0))
+        Notifications.addCurrPopup("loop5", LethalNum.new(1, 0))
+        Data.ImportantData.Stats.loops = 0
+        Data.ImportantData.Stats.loops2 = 0
+        Data.ImportantData.Stats.loops3 = 0
+        Data.ImportantData.Stats.loops4 = 0
+
+        local v14 = LethalNum.add(LethalNum.add(LethalNum.add(LethalNum.copy(CurrencyTypes.GetCurrencyAmt("loop1")), LethalNum.multiply(CurrencyTypes.GetCurrencyAmt("loop2"), 10)), LethalNum.multiply(CurrencyTypes.GetCurrencyAmt("loop3"), 100)), LethalNum.multiply(CurrencyTypes.GetCurrencyAmt("loop4"), 1000))
+
+        CurrencyTypes.AddCurrency("arrow", v14)
+        Notifications.addCurrPopup("arrow", v14)
+        CurrencyTypes.SetCurrency("loop1", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("loop2", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("loop3", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("loop4", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("lcharge", LethalNum.new(0, 0))
+        Data.ImportantData.Stats.bestLimeCharge = LethalNum.new(0, 0)
+        CurrencyTypes.Levels.blevel.level = 1
+        CurrencyTypes.Levels.blevel.progress = LethalNum.new(0, 0)
+        Data.ImportantData.Stats.bluestige = 0
+        Data.ImportantData.Stats.plasma = 0
+
+        if Data.ImportantData.Stats.totalBluestige > 0 then
+            t.AccomplishConditions("bluestige", 5)
+        end
+
+        Data.ImportantData.Stats.Accomplish.timeSun5 = 0
+        Data.ImportantData.Stats.Accomplish.timeSun6 = 0
+        Data.ImportantData.Stats.Accomplish.timeSun7 = 0
+        Data.ImportantData.Stats.Accomplish.timeSun8 = 0
+        t.RemoveBrass()
+    end
+
+    Data.ImportantData.Stats.bestStage = 1
+    Portaling.PortalingState.stage = 1
+    Portaling.NewEnemyStats()
+    Multipliers.ClearGrid3()
+    Data.ImportantData.Stats.unlockSelected = "none"
+    SingularityChart.UpdateSelected()
+
+    for k, v in pairs(Upgrades.Basic) do
+        if v.tier == "loop" then
+            if p1 > 1 and k == "l1a" then
+                v.level = 0
+            end
+
+            if p1 > 2 and k == "l1b" then
+                v.level = 0
+            end
+
+            if p1 > 3 and k == "l1c" then
+                v.level = 0
+            end
+        end
+    end
+
+    Data.ImportantData.Stats.Accomplish.timeSun4 = 0
+    MapTeles.AutoRemovePins()
+
+    for k, v in pairs(Data.ImportantData.Stats.currPins) do
+        if v.curr ~= "none" then
+            Currencies.PinCurrency(v.curr)
+        end
+    end
+
+    for k, v in pairs(Data.ImportantData.Stats.levelPins) do
+        if v.level ~= "none" then
+            Currencies.PinLevel(v.level)
+        end
+    end
+
+    for k, v in pairs(Data.ImportantData.Stats.multiPins) do
+        v.multi = "none"
+    end
+
+    Currencies.UpdateMultiPin()
+    Currencies.UpdatePins()
+    t.UpdateStuff()
+
+    if v2 then
+        ChangeVisual.ToEarth()
+        Data.ImportantData.Misc.player.Character:PivotTo(CFrame.new(-13, -18, 87) * CFrame.Angles(0, -2.6179938779914944, 0))
+        CommonFunctions.fade(v4, 1, false, "text")
+        task.wait(2)
+        CommonFunctions.fade(v3, 1, false, "frame")
+        task.wait(1)
+        CommonFunctions.clearFadeObj(v3)
+    end
+
+    t.RemoveGrass()
+    t.UpdateStuff()
+    t.RemoveGrass()
+    v11 = true
+end
+function t.TrueEndGame() --[[ TrueEndGame | Line: 3778 | Upvalues: Data (copy), v11 (ref), t (copy), CommonFunctions (copy), Currencies (copy), Synthesis (copy), LethalNum (copy), CurrencyTypes (copy), Upgrades (copy), Solarians (copy), SingularityChart (copy), SolarChallenges (copy), GalaxyGen (copy), Portaling (copy), Planets (copy), Multipliers (copy), TreeItems (copy), LunarItems (copy), Accomplishments (copy), TabManager (copy), MapTeles (copy), ChangeVisual (copy) ]]
+    if not (Data.ImportantData.Stats.loops5 >= 10 and v11) then
+        return
+    end
+
+    v11 = false
+    t.RemoveGrass()
+
+    local v2 = CommonFunctions.getFadeObj()
+
+    v2.BackgroundColor3 = Color3.new(0/255, 0/255, 0/255)
+    CommonFunctions.fade(v2, 3, true, "frame")
+    task.wait(5)
+
+    local TextLabel = Instance.new("TextLabel", v2)
+
+    TextLabel.Font = "Cartoon"
+    TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+    TextLabel.Position = UDim2.new(UDim.new(0.5, 0), UDim.new(0.5, 0))
+    TextLabel.Size = UDim2.new(UDim.new(0.9, 0), UDim.new(0.4, 0))
+    TextLabel.TextScaled = true
+    TextLabel.BackgroundTransparency = 1
+    TextLabel.RichText = true
+    TextLabel.TextStrokeTransparency = 0
+    TextLabel.TextTransparency = 1
+    TextLabel.TextStrokeTransparency = 1
+    Instance.new("UITextSizeConstraint", TextLabel).MaxTextSize = 100
+    TextLabel.TextColor3 = Color3.new(255/255, 0/255, 0/255)
+    TextLabel.Text = "<b>Why are you still here\n\nTrue End: " .. Data.ImportantData.Stats.loops6 + 1 .. "</b>"
+    CommonFunctions.fade(TextLabel, 2, true, "text")
+    task.wait(6)
+
+    if Data.ImportantData.Stats.currDisplay ~= "none" then
+        Currencies.ChangeCurrDisplay(Data.ImportantData.Stats.currDisplay)
+    end
+
+    if Data.ImportantData.Stats.levelDisplay ~= "none" then
+        Currencies.ChangeLevelDisplay(Data.ImportantData.Stats.levelDisplay)
+    end
+
+    Data.ImportantData.Stats.cLock = false
+    Data.updateTierSettings("auto")
+    Data.updateDisplaySettings("tiers")
+    task.wait(2)
+    t.RemoveGrass()
+
+    local count, v3 = 1, TextLabel
+
+    for k, v in pairs(Synthesis.SynthesisSlots) do
+        Synthesis.CompleteSynthesis(count)
+        v.tier = 0
+        v.level = 0
+        v.progress = LethalNum.new(0, 0)
+        v.levelProgress = LethalNum.new(0, 0)
+        v.current = "none"
+
+        if v.obj.Crystal.Value ~= nil then
+            v.obj.Crystal.Value:Destroy()
+            v.obj.Crystal.Value = nil
+        end
+
+        count = count + 1
+    end
+
+    Data.ImportantData.Events.synth:Fire()
+
+    for k, v in pairs(CurrencyTypes.Currencies) do
+        if k ~= "flowers" then
+            v.amount = LethalNum.new(0, 0)
+            v.totalAmount = LethalNum.new(0, 0)
+            v.infinity = false
+        end
+    end
+
+    for k, v in pairs(Upgrades.Basic) do
+        if v.tier ~= "flower" and v.tier ~= "flower2" then
+            v.level = 0
+        end
+    end
+
+    for k, v in pairs(Solarians.SoulItems) do
+        v.level = LethalNum.new(0, 0)
+    end
+
+    for k, v in pairs(SingularityChart.Upgrades) do
+        v.level = 0
+    end
+
+    for k, v in pairs(SolarChallenges.Challenges) do
+        v.completions = 0
+    end
+
+    for k, v in pairs(Solarians.CompressionItems) do
+        v.level = LethalNum.new(0, 0)
+        v.allocated = LethalNum.new(0, 0)
+    end
+
+    for k, v in pairs(Solarians.CompressionBars) do
+        v.progress = LethalNum.new(0, 0)
+        v.owned = LethalNum.new(0, 0)
+        v.lastProg = LethalNum.new(0, 0)
+    end
+
+    for k, v in pairs(Solarians.Bars) do
+        v.level = LethalNum.new(0, 0)
+        v.totalLevel = LethalNum.new(0, 0)
+        v.rank = 0
+        v.progress = LethalNum.new(0, 0)
+        v.rankProgress = LethalNum.new(0, 0)
+        v.allocated = LethalNum.new(0, 0)
+    end
+
+    for k, v in pairs(Data.ImportantData.UpgradeLevels.dungeonStats) do
+        v.highestCleared = 0
+        v.timesCleared = 0
+        v.timesClearedD = 0
+        v.pity = 0
+    end
+
+    for k, v in pairs(Data.ImportantData.Dynamic.inventory) do
+        if v.obj ~= nil then
+            v.obj:Destroy()
+        end
+    end
+
+    Data.ImportantData.Dynamic.inventory = {}
+
+    for k, v in pairs(GalaxyGen.Items) do
+        if v.itemType ~= 9 then
+            v.discovered = false
+            v.ml = 0
+            v.mp = 0
+            v.filter = false
+        end
+    end
+
+    Data.ImportantData.Stats.lowestGGrasshop = 101
+    Data.ImportantData.Stats.highestZeroGrassskip = 0
+    Data.ImportantData.Stats.tempGPS = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.gps = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.pDif = 0
+    Data.ImportantData.Stats.Accomplish.anonymityBoughtL = 0
+    Data.ImportantData.Stats.Accomplish.agrassBoughtA = 0
+    Data.ImportantData.Stats.Accomplish.agrassBoughtL = 0
+    Data.ImportantData.Stats.Accomplish.prestigeBoughtC = 0
+    Data.ImportantData.Stats.Accomplish.prestigeBoughtG = 0
+    Data.ImportantData.Stats.Accomplish.crystalBoughtG = 0
+    Data.ImportantData.Stats.Accomplish.grassBoughtP = 0
+    Data.ImportantData.Stats.Accomplish.grassBoughtC = 0
+    Data.ImportantData.Stats.Accomplish.grassBoughtG = 0
+    Data.ImportantData.Stats.Accomplish.timeA = 0
+    Data.ImportantData.Stats.Accomplish.timeP = 0
+    Data.ImportantData.Stats.Accomplish.timeC = 0
+    Data.ImportantData.Stats.Accomplish.timeG = 0
+    Data.ImportantData.Stats.Accomplish.timeS = 0
+    Data.ImportantData.Stats.Accomplish.timeGl = 0
+    Data.ImportantData.Stats.Accomplish.timeSn = 0
+    Data.ImportantData.Stats.Accomplish.timeSun2 = 0
+    Data.ImportantData.Stats.Accomplish.timeSun3 = 0
+    Data.ImportantData.Stats.totalGrassP = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.realm = "normal"
+    Data.ImportantData.Stats.totalGRocketFuel = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.lastLiquefyOil = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.lastAnonymityAP = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.lastNormalityNP = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.lastVaporizeClouds = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.currentPrestige = 0
+    Data.ImportantData.Stats.currentCrystallize = 0
+    Data.ImportantData.Stats.currentAnonymity = 0
+    Data.ImportantData.Stats.currentLiquefy = 0
+    Data.ImportantData.Stats.currentNormality = 0
+    Data.ImportantData.Stats.currentGalactic = 0
+    Data.ImportantData.Stats.currentSacrifice = 0
+    Data.ImportantData.Stats.totalPrestige = 0
+    Data.ImportantData.Stats.totalCrystallize = 0
+    Data.ImportantData.Stats.totalGrasshop = 0
+    Data.ImportantData.Stats.totalSteelie = 0
+    Data.ImportantData.Stats.totalAnonymity = 0
+    Data.ImportantData.Stats.totalLiquefy = 0
+    Data.ImportantData.Stats.totalGalactic = 0
+    Data.ImportantData.Stats.totalFunify = 0
+    Data.ImportantData.Stats.totalSacrifice = 0
+    Data.ImportantData.Stats.totalGrassskip = 0
+    Data.ImportantData.Stats.totalAstrolabe = 0
+    Data.ImportantData.Stats.totalQuadrant = 0
+    Data.ImportantData.Stats.totalPlanetary = 0
+    Data.ImportantData.Stats.totalConstellation = 0
+    Data.ImportantData.Stats.totalNebula = 0
+    Data.ImportantData.Stats.totalSupernova = 0
+    Data.ImportantData.Stats.totalGrassJump = 0
+    Data.ImportantData.Stats.totalNormality = 0
+    Data.ImportantData.Stats.totalRocketParts = 0
+    Data.ImportantData.Stats.currentRocketParts = 0
+    Data.ImportantData.Stats.highestPlanetary = 0
+    Portaling.PortalingState.stage = 1
+    Data.ImportantData.Stats.bestStage = 1
+    Data.ImportantData.Stats.savedTrialLevels = {}
+    CurrencyTypes.Levels.level.progress = LethalNum.new(0, 0)
+    CurrencyTypes.Levels.antiLevel.progress = LethalNum.new(0, 0)
+    CurrencyTypes.Levels.unLevel.progress = LethalNum.new(0, 0)
+    CurrencyTypes.Levels.planetLevel.progress = LethalNum.new(0, 0)
+    CurrencyTypes.Levels.level.level = 1
+    CurrencyTypes.Levels.antiLevel.level = 1
+    CurrencyTypes.Levels.unLevel.level = 1
+    CurrencyTypes.Levels.planetLevel.level = 1
+    CurrencyTypes.Levels.level.highestLevel = 1
+    CurrencyTypes.Levels.antiLevel.highestLevel = 1
+    CurrencyTypes.Levels.unLevel.highestLevel = 1
+    CurrencyTypes.Levels.planetLevel.highestLevel = 1
+    CurrencyTypes.Levels.astral.highestLevel = 1
+    CurrencyTypes.Levels.stage.highestLevel = 1
+
+    for k, v in pairs(CurrencyTypes.Multis) do
+        v.multi = LethalNum.new(0, 0)
+    end
+
+    Data.ImportantData.Stats.bestCharge = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.bestDarkCharge = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.currentGrasshop = 0
+    Data.ImportantData.Stats.currentGrassskip = 0
+    Data.ImportantData.Stats.currentGrassJump = 0
+    Data.ImportantData.Stats.currentPlanetary = 0
+    Data.ImportantData.Stats.currentSGJ = 0
+    Data.ImportantData.Stats.prog = 0
+    Data.ImportantData.Stats.currentGFunify = 0
+    Data.ImportantData.Stats.innerRingsBroken = 0
+    Data.ImportantData.Stats.bestStarTier = 0
+    Data.ImportantData.Stats.gps = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.perksSpent = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.bestLineGen = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.bestArcsGen = LethalNum.new(0, 0)
+    Data.ImportantData.Currencies.dfProgress = 0
+    Data.ImportantData.Stats.starTier = 0
+    Data.ImportantData.Stats.starProgress = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.visualST = -1
+    Planets.Planets.planetoid[1].bestScore = LethalNum.new(0, 0)
+    Planets.Planets.planetoid[1].highestLevel = 0
+    Data.ImportantData.Currencies.tierProgress = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.infTier = 0
+    Data.ImportantData.Stats.currentTier = "basic"
+    Data.ImportantData.Stats.antiTier = "basic"
+    Data.ImportantData.Stats.unnaturalTier = "basic"
+    Data.ImportantData.Stats.highestTier = 0
+    Data.ImportantData.Stats.highestAntiTier = 0
+    Data.ImportantData.Stats.highestUnnaturalTier = 0
+    Data.ImportantData.Stats.highestSpeed = 16
+    Data.ImportantData.Stats.cr = 1
+    Multipliers.ClearGrid3()
+    Data.ImportantData.Stats.unlockSelected = "none"
+    SingularityChart.UpdateSelected()
+
+    for k, v in pairs(TreeItems.Items) do
+        v.level = LethalNum.new(0, 0)
+    end
+
+    for k, v in pairs(LunarItems.Items) do
+        v.level = LethalNum.new(0, 0)
+        v.progress = LethalNum.new(0, 0)
+        v.activated = false
+    end
+
+    Data.ImportantData.Currencies.astralProgress = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.highestAstralPrestige = 0
+    Data.ImportantData.Stats.currentAstralPrestige = 0
+    Data.ImportantData.Stats.currentAstralLevel = 1
+    Data.ImportantData.Stats.highestAstralLevel = 1
+
+    for k, v in pairs(Accomplishments.Basic) do
+        Data.ImportantData.UpgradeLevels.accomplishments[k].level = 0
+    end
+
+    for k, v in pairs(Accomplishments.Trial) do
+        v.level = 0
+    end
+
+    Data.ImportantData.Stats.fightMulti = LethalNum.new(1, 0)
+    Data.ImportantData.Stats.currentSupernova = 0
+    t.UpdateGH()
+    Data.ImportantData.Stats.solarScore = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.bestSupernova = LethalNum.new(0, 0)
+    Data.ImportantData.Currencies.eclipseProgress = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.currentEclipse = 1
+    Data.ImportantData.Stats.bestEclipse = 1
+    Data.ImportantData.Stats.highestEclipse = 1
+    Data.ImportantData.Stats.twilight = 0
+    Data.ImportantData.Stats.twilightb = 0
+    Data.ImportantData.Stats.soulsTS = LethalNum.new(1, 0)
+    Data.ImportantData.Stats.soulG = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.soulsStored = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.bestArcsGen = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.bestLineGen = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.solChal = "none"
+    Data.ImportantData.Stats.sunrise = 1
+    Data.ImportantData.Stats.souls = 1
+    TabManager.menus.soulsShop.Souls1.Visible = true
+    TabManager.menus.soulsShop.Souls2.Visible = false
+    TabManager.menus.soulsShop.Souls3.Visible = false
+    Data.ImportantData.Stats.loops = 0
+    Data.ImportantData.Stats.loops2 = 0
+    Data.ImportantData.Stats.loops3 = 0
+    Data.ImportantData.Stats.loops4 = 0
+    Data.ImportantData.Stats.loops5 = 0
+    Data.ImportantData.Stats.loopsTotal = 0
+    Data.ImportantData.Stats.loopsTotal2 = 0
+    Data.ImportantData.Stats.loopsTotal3 = 0
+    Data.ImportantData.Stats.loopsTotal4 = 0
+    Data.ImportantData.Stats.loopsTotal5 = 0
+    Data.ImportantData.Stats.bestLimeCharge = LethalNum.new(0, 0)
+    CurrencyTypes.Levels.blevel.level = 1
+    CurrencyTypes.Levels.blevel.progress = LethalNum.new(0, 0)
+    Data.ImportantData.Stats.bluestige = 0
+    Data.ImportantData.Stats.totalBluestige = 0
+    Data.ImportantData.Stats.plasma = 0
+    Data.ImportantData.Stats.totalPlasma = 0
+    Data.ImportantData.Stats.currentGrassTouch = 0
+    Data.ImportantData.Stats.totalGrassTouch = 0
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.loops6 = Stats.loops6 + 1
+    Data.ImportantData.Stats.Accomplish.timeSun4 = 0
+    MapTeles.AutoRemovePins()
+
+    for k, v in pairs(Data.ImportantData.Stats.currPins) do
+        if v.curr ~= "none" then
+            Currencies.PinCurrency(v.curr)
+        end
+    end
+
+    for k, v in pairs(Data.ImportantData.Stats.levelPins) do
+        if v.level ~= "none" then
+            Currencies.PinLevel(v.level)
+        end
+    end
+
+    for k, v in pairs(Data.ImportantData.Stats.multiPins) do
+        v.multi = "none"
+    end
+
+    Currencies.UpdateMultiPin()
+    Currencies.UpdatePins()
+    t.UpdateStuff()
+    ChangeVisual.ToEarth()
+    Data.ImportantData.Misc.player.Character:PivotTo(CFrame.new(-13, -18, 87) * CFrame.Angles(0, -2.6179938779914944, 0))
+    CommonFunctions.fade(v3, 1, false, "text")
+    task.wait(2)
+    CommonFunctions.fade(v2, 1, false, "frame")
+    task.wait(1)
+    CommonFunctions.clearFadeObj(v2)
+    t.RemoveGrass()
+    t.UpdateStuff()
+    t.RemoveGrass()
+    t.RemoveBrass()
+    v11 = true
+end
+function t.PlanetaryTrial() --[[ PlanetaryTrial | Line: 4204 | Upvalues: Data (copy), t (copy), CurrencyTypes (copy), Upgrades (copy), Multipliers (copy), LethalNum (copy), ChangeVisual (copy), Planets (copy), TreeItems (copy) ]]
+    if Data.ImportantData.Stats.pTrial > 0 then
+        t.CompleteTrials()
+        CurrencyTypes.SetCurrency("rings", Data.ImportantData.Stats.trialSaves.rings)
+        CurrencyTypes.SetCurrency("lines", Data.ImportantData.Stats.trialSaves.lines)
+        CurrencyTypes.SetCurrency("arcs", Data.ImportantData.Stats.trialSaves.arcs)
+        CurrencyTypes.SetCurrency("dcharge", Data.ImportantData.Stats.trialSaves.dcharge)
+        Data.ImportantData.Stats.currentPlanetary = Data.ImportantData.Stats.trialSaves.pt
+
+        for k, v in pairs(Data.ImportantData.Stats.savedTrialLevels) do
+            Upgrades.Basic[k].level = v
+        end
+
+        Multipliers.LoadGridTrial()
+        Data.ImportantData.Stats.bestLineGen = LethalNum.copy(Data.ImportantData.Stats.bestLineGenT)
+        Data.ImportantData.Stats.bestArcsGen = LethalNum.copy(Data.ImportantData.Stats.bestArcsGenT)
+        CurrencyTypes.SetCurrency("obs", Data.ImportantData.Stats.obsT)
+        Data.ImportantData.Stats.pTrial = 0
+        ChangeVisual.ToPlanet()
+        t.RemoveGrass()
+        t.UpdateStuff()
+        t.RemoveGrass()
+    else
+        Multipliers.SaveGridTrial()
+
+        if Data.ImportantData.Stats.bestStarTier < 5 then
+            Multipliers.ClearGrid()
+        end
+
+        Data.ImportantData.Stats.trialSaves = {
+            rings = CurrencyTypes.GetCurrencyAmt("rings"),
+            lines = CurrencyTypes.GetCurrencyAmt("lines"),
+            arcs = CurrencyTypes.GetCurrencyAmt("arcs"),
+            dcharge = CurrencyTypes.GetCurrencyAmt("dcharge"),
+            pt = Data.ImportantData.Stats.currentPlanetary
+        }
+        CurrencyTypes.Levels.planetLevel.progress = LethalNum.new(0, 0)
+        CurrencyTypes.Levels.planetLevel.level = 1
+        CurrencyTypes.SetCurrency("perks2", LethalNum.new(0, 0))
+        Data.ImportantData.Stats.bestDarkCharge = LethalNum.new(0, 0)
+        Data.ImportantData.Stats.currentPlanetary = 0
+        CurrencyTypes.SetCurrency("dcharge", LethalNum.new(0, 0))
+        Data.ImportantData.Stats.bestLineGenT = LethalNum.copy(Data.ImportantData.Stats.bestLineGen)
+        Data.ImportantData.Stats.bestArcsGenT = LethalNum.copy(Data.ImportantData.Stats.bestArcsGen)
+        Data.ImportantData.Stats.obsT = LethalNum.copy(CurrencyTypes.GetCurrencyAmt("obs"))
+        CurrencyTypes.SetCurrency("planetarium", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("astro", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("measure", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("planets", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("lines", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("arcs", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("obs", LethalNum.new(0, 0))
+        CurrencyTypes.SetCurrency("rings", LethalNum.new(0, 0))
+        Data.ImportantData.Stats.bestLineGen = LethalNum.new(0, 0)
+        Data.ImportantData.Stats.bestArcsGen = LethalNum.new(0, 0)
+        Planets.Planets.planetoid[1].bestScore = LethalNum.new(0, 0)
+        Planets.Planets.planetoid[1].highestLevel = 0
+        Data.ImportantData.Currencies.astralProgress = LethalNum.new(0, 0)
+
+        for k, v in pairs(TreeItems.Items) do
+            v.obj.InvestButton.Visible = true
+        end
+
+        local toggles = Data.ImportantData.Misc.toggles
+
+        toggles.bulkGrasshop.Visible = false
+        toggles.bulkGrassskip.Visible = false
+        toggles.bulkGrassjump.Visible = false
+
+        for k, v in pairs(Upgrades.Basic) do
+            if (v.tier == "perk2" or (v.tier == "planetarium" or (v.tier == "observatorium" or (v.tier == "astro" or (v.tier == "rings" or (v.tier == "measure" or v.tier == "planetary")))))) and (v.upgradeType == "pt" or (v.upgradeType == "cp" or (v.upgradeType == "astro" or (v.upgradeType == "measure" or (v.upgradeType == "obs" or (v.upgradeType == "grassCap2" or (v.upgradeType == "grassGrowSpeed" or k == "rl"))))))) then
+                Data.ImportantData.Stats.savedTrialLevels[k] = v.level
+                v.level = 0
+            end
+        end
+
+        Data.ImportantData.Stats.Accomplish.planetariumBought = 0
+        Data.ImportantData.Stats.Accomplish.perks2Bought = 0
+        Data.ImportantData.Stats.Accomplish.ringBought = 0
+        Data.ImportantData.Stats.Accomplish.astroBought = 0
+        Data.ImportantData.Stats.Accomplish.measureBought = 0
+        Data.ImportantData.Stats.Accomplish.planetBought = 0
+        Data.ImportantData.Stats.Accomplish.obsBought = 0
+        Data.ImportantData.Stats.Accomplish.rein = 0
+        Data.ImportantData.Stats.Accomplish.stab = 0
+        Data.ImportantData.Stats.pTrial = 1
+        Data.ImportantData.Stats.pTime = 600
+        t.RemoveGrass()
+        t.UpdateStuff()
+        t.RemoveGrass()
+        Data.ImportantData.Stats.pDif = 1
+        ChangeVisual.ToPlanet()
+    end
+
+    Data.ImportantData.Misc.player.Character:PivotTo(CFrame.new(-617.495, 5060, 3308.501) * CFrame.Angles(0, 0, 0))
+end
+function t.Bluestige() --[[ Bluestige | Line: 4338 | Upvalues: Multipliers (copy), LethalNum (copy), CurrencyTypes (copy), Notifications (copy), Data (copy), Upgrades (copy), t (copy) ]]
+    local blue = Multipliers.getMulti().blue
+
+    if not LethalNum.isGreaterE(blue, LethalNum.new(1, 0)) then
+        return
+    end
+
+    CurrencyTypes.AddCurrency("blue", blue)
+    Notifications.addCurrPopup("blue", blue)
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.bluestige = Stats.bluestige + 1
+
+    local Stats2 = Data.ImportantData.Stats
+
+    Stats2.totalBluestige = Stats2.totalBluestige + 1
+    CurrencyTypes.SetCurrency("brass", LethalNum.new(0, 0))
+    CurrencyTypes.Levels.blevel.progress = LethalNum.new(0, 0)
+    CurrencyTypes.Levels.blevel.level = 1
+
+    for k, v in pairs(Upgrades.Basic) do
+        if v.tier == "brass" then
+            v.level = 0
+        end
+    end
+
+    t.RemoveBrass()
+    t.UpdateStuff()
+end
+function t.Plasma() --[[ Plasma | Line: 4365 | Upvalues: Multipliers (copy), LethalNum (copy), CurrencyTypes (copy), Notifications (copy), Data (copy), Upgrades (copy), t (copy) ]]
+    local plasma = Multipliers.getMulti().plasma
+
+    if not LethalNum.isGreaterE(plasma, LethalNum.new(1, 0)) then
+        return
+    end
+
+    CurrencyTypes.AddCurrency("plasma", plasma)
+    Notifications.addCurrPopup("plasma", plasma)
+    Data.ImportantData.Stats.bluestige = 0
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.plasma = Stats.plasma + 1
+
+    local Stats2 = Data.ImportantData.Stats
+
+    Stats2.totalPlasma = Stats2.totalPlasma + 1
+    CurrencyTypes.SetCurrency("brass", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("blue", LethalNum.new(0, 0))
+    CurrencyTypes.Levels.blevel.progress = LethalNum.new(0, 0)
+    CurrencyTypes.Levels.blevel.level = 1
+
+    for k, v in pairs(Upgrades.Basic) do
+        if v.tier == "brass" or v.tier == "blue" then
+            v.level = 0
+        end
+    end
+
+    t.RemoveBrass()
+    t.UpdateStuff()
+end
+
+local v12 = false
+
+function t.GrassTouch() --[[ GrassTouch | Line: 4395 | Upvalues: v12 (ref), Data (copy), CurrencyTypes (copy), LethalNum (copy), Upgrades (copy), t (copy) ]]
+    if v12 or not (200 + Data.ImportantData.Stats.currentGrassTouch * 25 <= CurrencyTypes.Levels.blevel.level) then
+        return
+    end
+
+    v12 = true
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.currentGrassTouch = Stats.currentGrassTouch + 1
+
+    local Stats2 = Data.ImportantData.Stats
+
+    Stats2.totalGrassTouch = Stats2.totalGrassTouch + 1
+    Data.ImportantData.Stats.bluestige = 0
+    Data.ImportantData.Stats.plasma = 0
+    CurrencyTypes.SetCurrency("brass", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("blue", LethalNum.new(0, 0))
+    CurrencyTypes.SetCurrency("plasma", LethalNum.new(0, 0))
+    CurrencyTypes.Levels.blevel.progress = LethalNum.new(0, 0)
+    CurrencyTypes.Levels.blevel.level = 1
+
+    for k, v in pairs(Upgrades.Basic) do
+        if v.tier == "brass" or (v.tier == "blue" or v.tier == "plasma") then
+            v.level = 0
+        end
+    end
+
+    t.RemoveBrass()
+    t.UpdateStuff()
+    v12 = false
+end
+function t.GLG() --[[ GLG | Line: 4429 | Upvalues: v6 (ref), CommonFunctions (copy), LethalNum (copy), CurrencyTypes (copy), Data (copy), ChangeVisual (copy) ]]
+    v6 = true
+
+    local v1 = CommonFunctions.getFadeObj()
+
+    v1.BackgroundColor3 = Color3.new(0/255, 0/255, 0/255)
+    CommonFunctions.fade(v1, 3, true, "frame")
+    task.wait(5)
+
+    local TextLabel = Instance.new("TextLabel", v1)
+
+    TextLabel.Font = "Cartoon"
+    TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+    TextLabel.Position = UDim2.new(UDim.new(0.5, 0), UDim.new(0.5, 0))
+    TextLabel.Size = UDim2.new(UDim.new(0.9, 0), UDim.new(0.4, 0))
+    TextLabel.TextScaled = true
+    TextLabel.BackgroundTransparency = 1
+    TextLabel.RichText = true
+    TextLabel.TextStrokeTransparency = 0
+    TextLabel.TextTransparency = 1
+    TextLabel.TextStrokeTransparency = 1
+    TextLabel.TextColor3 = Color3.new(0.501961, 0.501961, 0.501961)
+    Instance.new("UITextSizeConstraint", TextLabel).MaxTextSize = 100
+    TextLabel.Text = "<b>You have left this world</b>"
+    CommonFunctions.fade(TextLabel, 2, true, "text")
+    task.wait(8)
+    CommonFunctions.fade(TextLabel, 1, false, "text")
+    task.wait(2)
+    CommonFunctions.fade(v1, 1, false, "frame")
+
+    if LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("gg"), LethalNum.new(1, 0)) then
+        Data.ImportantData.Misc.player.Character:PivotTo(CFrame.new(-1165.397, 4404.25, -1573.75) * CFrame.Angles(0, 0, 0))
+        ChangeVisual.ToStar()
+        Data.ImportantData.Misc.toggles.ui.Visible = true
+        CommonFunctions.clearFadeObj(v1)
+        v6 = false
+
+        return
+    end
+
+    CurrencyTypes.AddCurrency("gg", LethalNum.new(1, 0))
+    Data.ImportantData.Misc.player.Character:PivotTo(CFrame.new(-1165.397, 4404.25, -1573.75) * CFrame.Angles(0, 0, 0))
+    ChangeVisual.ToStar()
+    Data.ImportantData.Misc.toggles.ui.Visible = true
+    CommonFunctions.clearFadeObj(v1)
+    v6 = false
+end
+
+local v13 = false
+
+function t.FTGrassland() --[[ FTGrassland | Line: 4475 | Upvalues: v13 (ref), Data (copy), CommonFunctions (copy), ChangeVisual (copy), CurrencyTypes (copy), LethalNum (copy), t (copy), MapTeles (copy) ]]
+    if v13 then
+        return
+    end
+
+    v13 = true
+
+    if Data.ImportantData.Stats.loopsTotal < 1 then
+        local v1 = CommonFunctions.getFadeImg()
+
+        v1.ImageColor3 = Color3.new(255/255, 255/255, 255/255)
+        v1.Image = "rbxassetid://12399461749"
+        CommonFunctions.fade(v1, 3, true, "image")
+        task.wait(5)
+
+        local TextLabel = Instance.new("TextLabel", v1)
+
+        TextLabel.Font = "Cartoon"
+        TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+        TextLabel.Position = UDim2.new(UDim.new(0.5, 0), UDim.new(0.5, 0))
+        TextLabel.Size = UDim2.new(UDim.new(0.9, 0), UDim.new(0.4, 0))
+        TextLabel.TextScaled = true
+        TextLabel.BackgroundTransparency = 1
+        TextLabel.RichText = true
+        TextLabel.TextStrokeTransparency = 0
+        TextLabel.TextTransparency = 1
+        TextLabel.TextStrokeTransparency = 1
+        TextLabel.TextColor3 = Color3.new(255/255, 255/255, 255/255)
+        Instance.new("UITextSizeConstraint", TextLabel).MaxTextSize = 100
+        TextLabel.Text = "<b>You get whisked away to a whimsical land...</b>"
+        CommonFunctions.fade(TextLabel, 2, true, "text")
+        task.wait(8)
+        CommonFunctions.fade(TextLabel, 1, false, "text")
+        ChangeVisual.ToGrassland()
+        Data.ImportantData.Misc.player.Character:PivotTo(CFrame.new(26763.648, 9351.752, -31026.291) * CFrame.Angles(0, 1.5707963267948966, 0))
+        task.wait(2)
+        CommonFunctions.fade(v1, 1, false, "image")
+        Data.ImportantData.Stats.prog = math.max(Data.ImportantData.Stats.prog, 1)
+
+        for k, v in pairs(Data.ImportantData.UpgradeLevels.upgrades) do
+            local ok, result = pcall(function() --[[ Line: 4518 | Upvalues: v (copy) ]]
+                v.Parent.Variables.Autobuy.Value = true
+            end)
+
+            if not ok then
+                print(result)
+            end
+        end
+
+        Data.ImportantData.Misc.toggles.autoGrasshop.Visible = true
+        Data.ImportantData.Misc.toggles.autoGrassskip.Visible = true
+        Data.ImportantData.Misc.toggles.autoGrassjump.Visible = true
+        Data.ImportantData.Stats.realm = "normal"
+        CurrencyTypes.Currencies.ap.totalAmount = LethalNum.copy(CurrencyTypes.Currencies.ap.centralize)
+        t.UpdateStuff()
+        task.wait(2)
+        CommonFunctions.clearFadeObj(v1)
+    else
+        ChangeVisual.ToGrassland()
+        Data.ImportantData.Misc.player.Character:PivotTo(CFrame.new(26763.648, 9351.752, -31026.291) * CFrame.Angles(0, 1.5707963267948966, 0))
+        Data.ImportantData.Stats.prog = math.max(Data.ImportantData.Stats.prog, 1)
+
+        for k, v in pairs(Data.ImportantData.UpgradeLevels.upgrades) do
+            local ok, result = pcall(function() --[[ Line: 4544 | Upvalues: v (copy) ]]
+                v.Parent.Variables.Autobuy.Value = true
+            end)
+
+            if not ok then
+                print(result)
+            end
+        end
+
+        Data.ImportantData.Misc.toggles.autoGrasshop.Visible = true
+        Data.ImportantData.Misc.toggles.autoGrassskip.Visible = true
+        Data.ImportantData.Misc.toggles.autoGrassjump.Visible = true
+        Data.ImportantData.Stats.realm = "normal"
+        t.UpdateStuff()
+    end
+
+    MapTeles.AutoRemovePins()
+    v13 = false
+end
+function t.ActivateSynthesis() --[[ ActivateSynthesis | Line: 4564 | Upvalues: Data (copy), TabManager (copy), t (copy) ]]
+    Data.ImportantData.Stats.prog = math.max(Data.ImportantData.Stats.prog, 2)
+    TabManager.UpdateSynth()
+    t.UpdateStuff()
+end
+function t.UpdateGH() --[[ UpdateGH | Line: 4570 | Upvalues: Multipliers (copy), Data (copy), Upgrades (copy), LethalNum (copy) ]]
+    local v1 = Multipliers.getUpgradeLevel("Sgs")
+
+    if v1 > 0 then
+        Data.ImportantData.Stats.currentGrassskip = math.max(4 * v1, Data.ImportantData.Stats.currentGrassskip)
+    end
+
+    local v2 = Multipliers.getUpgradeLevel("Spt")
+
+    if v2 > 0 then
+        Data.ImportantData.Stats.currentPlanetary = math.max(2 * v2, Data.ImportantData.Stats.currentPlanetary)
+    end
+
+    local v3 = Multipliers.getUpgradeLevel("Sgj")
+
+    if v3 > 0 then
+        Data.ImportantData.Stats.currentGrassJump = math.max(2 * v3, Data.ImportantData.Stats.currentGrassJump)
+    end
+
+    local v4 = Multipliers.getUpgradeLevel("Sagh")
+
+    if v4 > 0 then
+        Data.ImportantData.Stats.lowestGGrasshop = math.max((math.min(0, 30 - v4 * 3, Data.ImportantData.Stats.lowestGGrasshop)))
+
+        if v4 > 10 then
+            Data.ImportantData.Stats.highestZeroGrassskip = math.min(60, (math.max(3 * (v4 - 10), Data.ImportantData.Stats.highestZeroGrassskip)))
+        end
+    end
+
+    local v7 = Multipliers.getUpgradeLevel("Sast")
+
+    if v7 > 0 then
+        Data.ImportantData.Stats.currentAstralPrestige = math.max(v7, Data.ImportantData.Stats.currentAstralPrestige)
+    end
+
+    if Data.ImportantData.Stats.bestStarTier >= 1 then
+        for k, v in pairs(Upgrades.Basic) do
+            if v.shopType == "autoBranch" then
+                v.level = v.object.Variables.LevelCap.Value
+            end
+        end
+    end
+
+    if Data.ImportantData.Stats.bestStarTier >= 2 then
+        for k, v in pairs(Upgrades.Basic) do
+            if string.find(k, "generatorSteel") or string.find(k, "RSrg") then
+                v.level = v.object.Variables.LevelCap.Value
+            end
+        end
+    end
+
+    local v8 = Multipliers.getUpgradeLevel("Ssch")
+
+    if v8 > 0 then
+        local v9 = LethalNum.pow(LethalNum.new(1, 2), v8)
+
+        for k, v in pairs(Upgrades.Basic) do
+            if (v.shopType == "progBranch" or v.shopType == "speedBranch") and LethalNum.isGreater(v9, (LethalNum.new(v.baseCost, v.baseCostExponent))) then
+                v.level = v.object.Variables.LevelCap.Value
+            end
+        end
+    end
+
+    local v11 = Multipliers.getUpgradeLevel("Sres")
+
+    if v11 > 0 then
+        local v12 = LethalNum.pow(LethalNum.new(1, 3), v11)
+
+        for k, v in pairs(Upgrades.Basic) do
+            if v.tier == "reservatorium" and LethalNum.isGreaterE(v12, (LethalNum.new(v.baseCost, v.baseCostExponent))) then
+                v.level = v.object.Variables.LevelCap.Value
+            end
+        end
+    end
+
+    local v14 = Multipliers.getUpgradeLevel("Srng")
+
+    if v14 > 0 then
+        local v15 = LethalNum.pow(LethalNum.new(1, 3), v14)
+
+        for k, v in pairs(Upgrades.Basic) do
+            if v.tier == "rings" and v.currency == "rings" and LethalNum.isGreaterE(v15, (LethalNum.new(v.baseCost, v.baseCostExponent))) then
+                v.level = v.object.Variables.LevelCap.Value
+            end
+        end
+    end
+
+    if Multipliers.getUpgradeLevel("Ssm") > 0 then
+        for k, v in pairs(Upgrades.Basic) do
+            if v.tier == "momentum" then
+                local v17 = LethalNum.new(v.baseCost, v.baseCostExponent)
+
+                if LethalNum.isGreaterE(LethalNum.new(1, 0), v17) then
+                    v.level = v.object.Variables.LevelCap.Value
+                end
+            end
+        end
+    end
+
+    if Multipliers.getUpgradeLevel("Ssm") > 0 then
+        Upgrades.Basic.launchPad.level = math.max(Upgrades.Basic.launchPad.level, Multipliers.getUpgradeLevel("Ssm") * 10)
+    end
+
+    if not (Multipliers.getUpgradeLevel("Sbr") > 0) then
+        return
+    end
+
+    Data.ImportantData.Stats.innerRingsBroken = 1
+end
+function t.AccomplishConditions(p1, p2) --[[ AccomplishConditions | Line: 4675 | Upvalues: Data (copy), t (copy), GrassTypes (copy), Accomplishments (copy) ]]
+    local v1 = p2 or 0
+
+    if Data.ImportantData.Stats.totalCrystallize < 3 and Data.ImportantData.Stats.loopsTotal < 1 then
+        return
+    end
+
+    local v2
+
+    if p1 == "prestige" or p1 == "steelie" then
+        v2 = t.Levels.level
+    else
+        if p1 == "anonymity" or p1 == "liquefy" then
+            local antiLevel = t.Levels.antiLevel
+        end
+
+        v2 = if p1 == "bluestige" or p1 == "plasma" then 1000000000 else GrassTypes.TierLevels[Data.ImportantData.Stats.currentTier]
+    end
+
+    for k, v in pairs(Accomplishments.Basic) do
+        if k ~= "impossible" and (not (v1 > 0) or (v.special or 0) == v1) and v.tier == p1 then
+            local v3 = Data.ImportantData.UpgradeLevels.accomplishments[k]
+
+            if not (v3.level >= v3.maxLevel) then
+                local v4 = v.goals[v3.level]
+
+                while v4 <= v2 and v.condition(v3.level) do
+                    v3.level = v3.level + 1
+
+                    if v3.level >= v3.maxLevel then
+                        break
+                    end
+
+                    v4 = v.goals[v3.level]
+                end
+            end
+        end
+    end
+
+    Data.ImportantData.Stats.accomplishmentsCleared = Accomplishments.getAccomplishmentsCleared()
+end
+function t.CompleteTrials() --[[ CompleteTrials | Line: 4731 | Upvalues: Accomplishments (copy), CurrencyTypes (copy), Currencies (copy) ]]
+    for k, v in pairs(Accomplishments.Trial) do
+        if v.obj.Visible and v.condition() then
+            local level = CurrencyTypes.Levels.planetLevel.level
+
+            if v.level < level then
+                v.level = math.min(level, v.maxLevel)
+            end
+        end
+    end
+
+    Currencies.UpdateTrialTotals()
+end
+function t.UpdateStuff() --[[ UpdateStuff | Line: 4746 | Upvalues: t (copy), Data (copy), Currencies (copy), Star (copy), Synthesis (copy), TabManager (copy) ]]
+    t.LoopUnlocks()
+    Data.updateColliderSize()
+    Currencies.updateGHMilestones()
+    Currencies.updateGSMilestones()
+    Currencies.updateGJMilestones()
+    Currencies.updateAGHMilestones()
+    Currencies.updatePTGMilestones()
+    Currencies.updatePLMilestones()
+    Currencies.updateSNMilestones()
+    Currencies.GTMilestones()
+    Currencies.UpdateAPDesc()
+    Data.ImportantData.Events.updateUpgrades:Fire()
+    Currencies.updateGrass()
+    Currencies.updateGrassCap()
+    Currencies.UpdateLevelBars()
+    Currencies.updateRocketPartDisplay()
+    Currencies.updatePlatinum()
+    Currencies.updateStardust()
+    Currencies.updateBlackholes()
+    Currencies.UpdateSolarChallenges()
+    Currencies.updateSNDisplay()
+    Currencies.UpdateFeatureList()
+    Star.UpdateStarColors()
+    Synthesis.UpdateSyn()
+    TabManager.UpdateSynth()
+    Currencies.allCurrencies()
+    TabManager.ShowHideTabs()
+    Currencies.UpdateGameProgress()
+    Data.ImportantData.Events.updateTree:Fire()
+    Data.ImportantData.Events.reconnectAutobuyers:Fire()
+end
+function t.LoopUnlocks() --[[ LoopUnlocks | Line: 4794 | Upvalues: InfoStore (copy), Multipliers (copy) ]]
+    if not (InfoStore.Resets.loop1.b > 0) then
+        return
+    end
+
+    if Multipliers.getUpgradeLevel("l2d") > 0 then
+        Multipliers.SetUpgradeLevel("l2c", 1)
+        Multipliers.SetUpgradeLevel("l3c", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l2c") > 0 then
+        Multipliers.SetUpgradeLevel("l2b", 1)
+        Multipliers.SetUpgradeLevel("l3b", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l2b") > 0 then
+        Multipliers.SetUpgradeLevel("l2a", 1)
+        Multipliers.SetUpgradeLevel("l3a", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l2a") > 0 then
+        Multipliers.SetUpgradeLevel("l1", 1)
+        Multipliers.SetUpgradeLevel("l2", 1)
+        Multipliers.SetUpgradeLevel("stAuto3b", 1)
+        Multipliers.SetUpgradeLevel("stBulkGS", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l1") > 0 then
+        Multipliers.SetUpgradeLevel("upgradeSave1-3", 1)
+        Multipliers.SetUpgradeLevel("upgradeSave4-6", 1)
+        Multipliers.SetUpgradeLevel("prestigeAutobuy1", 1)
+        Multipliers.SetUpgradeLevel("prestigeAutobuy2", 1)
+        Multipliers.SetUpgradeLevel("prestigeAutobuy3", 1)
+        Multipliers.SetUpgradeLevel("crystalAutobuy1", 1)
+        Multipliers.SetUpgradeLevel("crystalAutobuy2", 1)
+        Multipliers.SetUpgradeLevel("perksAutobuy1", 1)
+        Multipliers.SetUpgradeLevel("perksAutobuy2", 1)
+        Multipliers.SetUpgradeLevel("factoryAuto", 1)
+        Multipliers.SetUpgradeLevel("foundryAuto", 1)
+        Multipliers.SetUpgradeLevel("generatorAuto", 1)
+        Multipliers.SetUpgradeLevel("assemblerAuto", 1)
+        Multipliers.SetUpgradeLevel("oilRigAuto", 1)
+        Multipliers.SetUpgradeLevel("RSsaa", 1)
+        Multipliers.SetUpgradeLevel("RSma2", 1)
+        Multipliers.SetUpgradeLevel("stAuto7a", 1)
+        Multipliers.SetUpgradeLevel("stAuto5a", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l2") > 0 then
+        Multipliers.SetUpgradeLevel("antigrassAutobuy1", 1)
+        Multipliers.SetUpgradeLevel("antigrassAutobuy2", 1)
+        Multipliers.SetUpgradeLevel("apAutobuy1", 1)
+        Multipliers.SetUpgradeLevel("apAutobuy2", 1)
+        Multipliers.SetUpgradeLevel("oilAutobuy1", 1)
+        Multipliers.SetUpgradeLevel("oilAutobuy2", 1)
+        Multipliers.SetUpgradeLevel("oilAutobuy3", 1)
+        Multipliers.SetUpgradeLevel("Sfma", 1)
+        Multipliers.SetUpgradeLevel("Sfda", 1)
+        Multipliers.SetUpgradeLevel("RSsfa", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l3a") > 0 then
+        Multipliers.SetUpgradeLevel("l3", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l3") > 0 then
+        Multipliers.SetUpgradeLevel("RSua", 1)
+        Multipliers.SetUpgradeLevel("RSna", 1)
+        Multipliers.SetUpgradeLevel("RSca", 1)
+        Multipliers.SetUpgradeLevel("RSdma2", 1)
+        Multipliers.SetUpgradeLevel("Sdfa", 1)
+        Multipliers.SetUpgradeLevel("RSuta", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l3b") > 0 then
+        Multipliers.SetUpgradeLevel("l4a", 1)
+        Multipliers.SetUpgradeLevel("l5a", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l4a") > 0 then
+        Multipliers.SetUpgradeLevel("l4", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l4") > 0 then
+        Multipliers.SetUpgradeLevel("RSpta", 1)
+        Multipliers.SetUpgradeLevel("RSaa", 1)
+        Multipliers.SetUpgradeLevel("RSmea", 1)
+        Multipliers.SetUpgradeLevel("Sorb", 1)
+        Multipliers.SetUpgradeLevel("Sp2a", 1)
+        Multipliers.SetUpgradeLevel("Soba", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l5a") > 0 then
+        Multipliers.SetUpgradeLevel("l5", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l5") > 0 then
+        Multipliers.SetUpgradeLevel("Sla", 1)
+        Multipliers.SetUpgradeLevel("Sara", 1)
+        Multipliers.SetUpgradeLevel("Sr3a", 1)
+        Multipliers.SetUpgradeLevel("Sstra", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l3c") > 0 then
+        Multipliers.SetUpgradeLevel("l4b", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l4b") > 0 then
+        Multipliers.SetUpgradeLevel("l6a", 1)
+        Multipliers.SetUpgradeLevel("Srema", 1)
+        Multipliers.SetUpgradeLevel("Srema2", 1)
+        Multipliers.SetUpgradeLevel("Srema3", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l6a") > 0 then
+        Multipliers.SetUpgradeLevel("l6", 1)
+        Multipliers.SetUpgradeLevel("l7", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l3d") > 0 then
+        Multipliers.SetUpgradeLevel("l4c", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l4c") > 0 then
+        Multipliers.SetUpgradeLevel("l5b", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l5b") > 0 then
+        Multipliers.SetUpgradeLevel("l7a", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l7a") > 0 then
+        Multipliers.SetUpgradeLevel("l8", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l6d") > 0 then
+        Multipliers.SetUpgradeLevel("l5c", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l5c") > 0 then
+        Multipliers.SetUpgradeLevel("l6b", 1)
+        Multipliers.SetUpgradeLevel("Sray", 1)
+        Multipliers.SetUpgradeLevel("Sstar", 1)
+        Multipliers.SetUpgradeLevel("Simp", 1)
+        Multipliers.SetUpgradeLevel("GSsw", 5)
+        Multipliers.SetUpgradeLevel("GSso", 5)
+        Multipliers.SetUpgradeLevel("SSray", 10)
+        Multipliers.SetUpgradeLevel("SSimp", 10)
+    end
+
+    if Multipliers.getUpgradeLevel("l6b") > 0 then
+        Multipliers.SetUpgradeLevel("l8a", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l8a") > 0 then
+        Multipliers.SetUpgradeLevel("l9", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l9") > 0 then
+        Multipliers.SetUpgradeLevel("Sprism", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l7d") > 0 then
+        Multipliers.SetUpgradeLevel("l6c", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l6c") > 0 then
+        Multipliers.SetUpgradeLevel("l8b", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l8b") > 0 then
+        Multipliers.SetUpgradeLevel("l10a", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l10c") > 0 then
+        Multipliers.SetUpgradeLevel("l9b", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l5d") > 0 then
+        Multipliers.SetUpgradeLevel("l9c", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l9c") > 0 then
+        Multipliers.SetUpgradeLevel("l7b", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l7b") > 0 then
+        Multipliers.SetUpgradeLevel("l9a", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("l9a") > 0 then
+        Multipliers.SetUpgradeLevel("l10", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("lc1") > 0 then
+        Multipliers.SetUpgradeLevel("grassUpgradesEL", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("lc2") > 0 then
+        Multipliers.SetUpgradeLevel("prestigeUpgradesEL", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("lc3") > 0 then
+        Multipliers.SetUpgradeLevel("crystalUpgradesEL", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("lc5") > 0 then
+        Multipliers.SetUpgradeLevel("antigrassUpgradesEL", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("lc6") > 0 then
+        Multipliers.SetUpgradeLevel("anonymityUpgradesEL", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("lc7") > 0 then
+        Multipliers.SetUpgradeLevel("oilUpgradesEL", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("lc8") > 0 then
+        Multipliers.SetUpgradeLevel("RSua3", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("lc9") > 0 then
+        Multipliers.SetUpgradeLevel("RSna3", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("lc10") > 0 then
+        Multipliers.SetUpgradeLevel("RSca3", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("lc11") > 0 then
+        Multipliers.SetUpgradeLevel("RSptel", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("lc12") > 0 then
+        Multipliers.SetUpgradeLevel("RSael", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("lc13") > 0 then
+        Multipliers.SetUpgradeLevel("RSmea3", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("lc14") > 0 then
+        Multipliers.SetUpgradeLevel("RSdma3", 1)
+    end
+
+    if Multipliers.getUpgradeLevel("lc15") > 0 then
+        Multipliers.SetUpgradeLevel("RSma3", 1)
+    end
+
+    if not (Multipliers.getUpgradeLevel("lc16") > 0) then
+        return
+    end
+
+    Multipliers.SetUpgradeLevel("stAuto5a", 1)
+end
+
+return t
