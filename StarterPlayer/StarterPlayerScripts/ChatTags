@@ -1,0 +1,47 @@
+local Players = game:GetService("Players")
+local TextChatService = game:GetService("TextChatService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Titles = require(ReplicatedStorage.Titles)
+
+function TextChatService.OnIncomingMessage(p1) --[[ Line: 7 | Upvalues: Players (copy), Titles (copy) ]]
+    local TextSource = p1.TextSource
+
+    if not TextSource then
+        return nil
+    end
+
+    local v1 = Players:GetPlayerByUserId(TextSource.UserId)
+
+    if not v1 then
+        return nil
+    end
+
+    local TextChatMessageProperties = Instance.new("TextChatMessageProperties")
+    local v2 = Titles.Items[v1:GetAttribute("title")]
+    local v3 = if v2 then "<font color=\"" .. v2.tagColor .. "\">[" .. v2.tagText .. "]</font> " else ""
+    local v4 = ""
+    local v5 = v1:GetAttribute("tester")
+    local v6 = v1:GetAttribute("musicDeveloper")
+    local v7 = v1:GetAttribute("vet")
+
+    if v1:GetAttribute("loading") then
+        v3 = ""
+        v4 = "<font color=\"#5f5f5f\">[Loading]</font> "
+    else
+        if v7 then
+            v4 = "<font color=\"#00fff7\">[Vet]</font> "
+        end
+
+        if v5 then
+            v4 = "<font color=\"#ff0000\">[Tester]</font> "
+        end
+
+        if v6 then
+            v4 = "<font color=\"#00ffcc\">[Music Developer]</font> "
+        end
+    end
+
+    TextChatMessageProperties.PrefixText = v3 .. v4 .. p1.PrefixText
+
+    return TextChatMessageProperties
+end
