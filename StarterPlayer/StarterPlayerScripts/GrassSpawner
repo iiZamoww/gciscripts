@@ -1,0 +1,58 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Currencies = require(ReplicatedStorage.Currencies)
+local Data = require(ReplicatedStorage.Data)
+local Fields = require(ReplicatedStorage.Fields)
+local FieldFunctions = require(ReplicatedStorage.FieldFunctions)
+local Resets = require(ReplicatedStorage.Resets)
+local g = ReplicatedStorage.Templates.FieldObjects.Grass:Clone()
+
+g.Name = "g"
+g.Transparency = 0
+g.CanCollide = true
+g.CanTouch = true
+g.Parent = workspace.GrassObjects
+g:SetAttribute("id", "magic")
+
+local v1 = CFrame.new
+
+g.CFrame = v1((Vector3.new(0, math.random(-10000, -1000), 0)))
+task.wait(1)
+
+local function onStepped(p1, p2) --[[ onStepped | Line: 22 | Upvalues: Fields (copy), Data (copy), FieldFunctions (copy), Currencies (copy), Resets (copy) ]]
+    for v1, v2 in Fields.Fields do
+        local sum
+
+        if (v2.world == Data.ImportantData.Stats.world or v2.world == -1) and (v2.growSpeed > 0 and v2.max > 0) then
+            v2.timer = v2.timer + p2 * v2.growSpeed
+
+            if v2.timer >= 1 then
+                sum = if v2.timer > 2 then math.floor(v2.timer - 1) else 0
+
+                if v2.opGrow and v2.opGrow > 0 then
+                    sum = sum + v2.opGrow
+                    v2.opGrow = 0
+                end
+
+                v2.timer = 0
+
+                if v2.counter < v2.max and v2.counter < FieldFunctions.hardCap then
+                    for i = 1, math.min(1000, v2.growAmount + sum) do
+                        if not (v2.counter < v2.max) then
+                            break
+                        end
+
+                        FieldFunctions.CreateObject(v1, false)
+                    end
+
+                    Currencies.updateGrassCap()
+                end
+
+                if v2.counter >= v2.max * 5 then
+                    Resets.ClearField(v1)
+                end
+            end
+        end
+    end
+end
+
+game:GetService("RunService").Stepped:Connect(onStepped)
