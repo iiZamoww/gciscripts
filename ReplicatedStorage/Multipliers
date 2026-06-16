@@ -1,0 +1,114 @@
+local t = {}
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Data = require(ReplicatedStorage.Data)
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local GrassTypes = require(ReplicatedStorage.GrassTypes)
+
+require(ReplicatedStorage.Planets)
+require(ReplicatedStorage.TreeItems)
+require(ReplicatedStorage.LunarItems)
+require(ReplicatedStorage.Solarians)
+require(ReplicatedStorage.Portaling)
+require(ReplicatedStorage.ConstellationGrid)
+require(ReplicatedStorage.CurrencyTypes)
+require(ReplicatedStorage.CommonFunctions)
+
+local SolarChallenges = require(ReplicatedStorage.SolarChallenges)
+
+require(ReplicatedStorage.Accomplishments)
+
+local SingularityChart = require(ReplicatedStorage.SingularityChart)
+local t2 = {}
+
+t.baseMultis = {}
+function t.calculateGrassWeights() --[[ calculateGrassWeights | Line: 22 | Upvalues: GrassTypes (copy), t2 (copy), Data (copy), LethalNum (copy) ]]
+    for k, v in pairs(GrassTypes.Types) do
+        t2[k] = 0
+    end
+
+    local currentTier = Data.ImportantData.Stats.currentTier
+    local tierUpRequirement = GrassTypes.Types[currentTier].tierUpRequirement
+    local tierProgress = Data.ImportantData.Currencies.tierProgress
+
+    if Data.ImportantData.Stats.pDif > 0 then
+        tierProgress = LethalNum.copy(tierUpRequirement)
+    end
+
+    local v2 = LethalNum.toNumber(LethalNum.divide(tierProgress, tierUpRequirement))
+
+    t2[currentTier] = 100 - v2 * 100
+    t2[GrassTypes.Types[currentTier].nextTier] = v2 * 100
+end
+t.ConstCaps = {
+    ["14"] = {
+        cap = 1,
+        curr = 0
+    },
+    ["15"] = {
+        cap = 5,
+        curr = 0
+    },
+    ["16"] = {
+        cap = 1,
+        curr = 0
+    },
+    ["17"] = {
+        cap = 1,
+        curr = 0
+    },
+    ["18"] = {
+        cap = 5,
+        curr = 0
+    },
+    ["19"] = {
+        cap = 3,
+        curr = 0
+    },
+    ["20"] = {
+        cap = 5,
+        curr = 0
+    },
+    ["21"] = {
+        cap = 3,
+        curr = 0
+    }
+}
+function t.getMulti() --[[ getMulti | Line: 75 | Upvalues: Data (copy) ]]
+    return Data.ImportantData.Multipliers
+end
+function t.getWeights() --[[ getWeights | Line: 79 | Upvalues: t2 (copy) ]]
+    return t2
+end
+function t.getUpgradeLevel(p1) --[[ getUpgradeLevel | Line: 83 | Upvalues: Data (copy) ]]
+    if Data.ImportantData.UpgradeLevels.upgrades[p1] then
+        return Data.ImportantData.UpgradeLevels.upgrades[p1].level
+    end
+
+    return 0
+end
+function t.SetUpgradeLevel(p1, p2) --[[ SetUpgradeLevel | Line: 91 | Upvalues: Data (copy) ]]
+    if not Data.ImportantData.UpgradeLevels.upgrades[p1] then
+        return
+    end
+
+    Data.ImportantData.UpgradeLevels.upgrades[p1].level = p2
+end
+function t.getSCLevel(p1) --[[ getSCLevel | Line: 97 | Upvalues: SingularityChart (copy) ]]
+    if SingularityChart.Upgrades[p1] then
+        return SingularityChart.Upgrades[p1].level
+    end
+
+    return 0
+end
+function t.InChallenge() --[[ InChallenge | Line: 106 | Upvalues: Data (copy) ]]
+    return Data.ImportantData.Stats.solChal ~= "none"
+end
+function t.GetChallenge() --[[ GetChallenge | Line: 113 | Upvalues: Data (copy), SolarChallenges (copy) ]]
+    if Data.ImportantData.Stats.solChal == "none" then
+        return nil
+    end
+
+    return SolarChallenges.Challenges[Data.ImportantData.Stats.solChal]
+end
+
+return t
