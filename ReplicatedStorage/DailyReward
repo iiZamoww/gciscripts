@@ -1,0 +1,172 @@
+local t = {}
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Data = require(ReplicatedStorage.Data)
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local Format = require(ReplicatedStorage.Format)
+local Players = game:GetService("Players")
+local Notifications = require(ReplicatedStorage.Notifications)
+local CurrencyTypes = require(ReplicatedStorage.CurrencyTypes)
+
+t.rewards = {
+    {
+        {
+            weight = 100,
+            amount = 250
+        }
+    },
+    {
+        {
+            weight = 100,
+            amount = 250
+        }
+    },
+    {
+        {
+            weight = 100,
+            amount = 250
+        }
+    },
+    {
+        {
+            weight = 100,
+            amount = 250
+        }
+    },
+    {
+        {
+            weight = 100,
+            amount = 250
+        }
+    },
+    {
+        {
+            weight = 100,
+            amount = 250
+        }
+    },
+    {
+        {
+            weight = 100,
+            amount = 250
+        }
+    },
+    {
+        {
+            weight = 100,
+            amount = 250
+        }
+    },
+    {
+        {
+            weight = 100,
+            amount = 250
+        }
+    },
+    {
+        {
+            weight = 100,
+            amount = 250
+        }
+    }
+}
+
+local t2 = {
+    [2] = 3,
+    [3] = 10,
+    [4] = 20,
+    [5] = 50,
+    [6] = 100,
+    [7] = 180,
+    [8] = 365,
+    [9] = 600,
+    [10] = 1000,
+    [11] = 1500
+}
+
+function t.determineLevel() --[[ determineLevel | Line: 95 | Upvalues: Data (copy), t2 (copy) ]]
+    local dailiesClaimed = Data.ImportantData.Stats.dailiesClaimed
+    local count = 1
+
+    for k, v in pairs(t2) do
+        if v <= dailiesClaimed then
+            count = count + 1
+        end
+    end
+
+    return count
+end
+function t.getReq() --[[ getReq | Line: 107 | Upvalues: Data (copy), t (copy), t2 (copy) ]]
+    local v1 = t.determineLevel()
+
+    if v1 + 1 > 10 then
+        return 0
+    end
+
+    return t2[v1 + 1] - Data.ImportantData.Stats.dailiesClaimed
+end
+
+local v1 = false
+
+function t.rollReward() --[[ rollReward | Line: 124 | Upvalues: Data (copy), v1 (ref), t (copy), LethalNum (copy), Players (copy), CurrencyTypes (copy), Notifications (copy) ]]
+    if not (Data.ImportantData.Stats.dailyTimeRemaining <= 86400) or v1 then
+        return
+    end
+
+    v1 = true
+
+    local v2 = 0
+    local tbl = {}
+
+    for k, v in pairs(t.rewards[t.determineLevel()]) do
+        local v3 = v2 + v.weight
+
+        tbl[k] = {
+            startValue = v2,
+            endValue = v3,
+            amount = v.amount
+        }
+        v2 = v3
+    end
+
+    local v4 = math.random(0, v2)
+    local v5 = LethalNum.new(0, 0)
+
+    for k, v in pairs(tbl) do
+        if v4 <= v.endValue and v.startValue <= v4 then
+            v5.n = v.amount
+
+            break
+        end
+    end
+
+    local v6 = LethalNum.multiply(v5, 1)
+    local v7 = if Players.LocalPlayer.MembershipType == Enum.MembershipType.Premium then LethalNum.multiply(v6, 1.1) else v6
+
+    CurrencyTypes.AddCurrency("flowers", v7)
+
+    local Stats = Data.ImportantData.Stats
+
+    Stats.dailyTimeRemaining = Stats.dailyTimeRemaining + 86400
+
+    local Stats2 = Data.ImportantData.Stats
+
+    Stats2.dailiesClaimed = Stats2.dailiesClaimed + 1
+    t.updateDailyReward()
+    Notifications.earnageText("dr", "+" .. LethalNum.getString(v7), 30, "rbxassetid://9561512733", v7, true)
+    v1 = false
+end
+
+local v2 = nil
+
+function t.updateDailyReward() --[[ updateDailyReward | Line: 171 | Upvalues: v2 (ref), Data (copy), Format (copy) ]]
+    if v2 then
+        v2.Text = "+" .. Format.Format(250) .. " Flowers"
+
+        return
+    end
+
+    v2 = Data.ImportantData.Misc.player.PlayerGui:WaitForChild("W1"):WaitForChild("DailyReward").DailyReward.Desc
+    v2.Text = "+" .. Format.Format(250) .. " Flowers"
+end
+
+return t
