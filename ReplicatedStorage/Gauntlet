@@ -1,0 +1,1204 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local InfoStore = require(ReplicatedStorage.InfoStore)
+local Data = require(ReplicatedStorage.Data)
+local t = {
+    Areas = {
+        none = {
+            display = "Safe Zone",
+            maxLevels = 0,
+            healthScaling = 1.8,
+            powBlockScaling = 1.8,
+            rewardScaling = 1.7,
+            order = 0,
+            safeZone = true,
+            location = "any",
+            powerType = "location",
+            recPower = LethalNum.new(1.5, 2),
+            health = LethalNum.new(1, 4),
+            powBlock = LethalNum.new(1, 2),
+            reward = LethalNum.new(1, 1),
+            drops = {},
+            unlockReq = function(p1) --[[ unlockReq | Line: 21 ]]
+                return true
+            end
+        },
+        start = {
+            display = "Relic Chamber",
+            maxLevels = 40,
+            healthScaling = 2,
+            powBlockScaling = 2,
+            rewardScaling = 1.7,
+            order = 1,
+            location = "temple",
+            powerType = "tap",
+            recPower = LethalNum.new(1, 2),
+            health = LethalNum.new(1, 4),
+            powBlock = LethalNum.new(9, 1),
+            reward = LethalNum.new(1, 1),
+            drops = {},
+            unlockReq = function(p1) --[[ unlockReq | Line: 41 ]]
+                return true
+            end
+        },
+        jc = {
+            display = "Jungle Chamber",
+            maxLevels = 40,
+            healthScaling = 2,
+            powBlockScaling = 2,
+            rewardScaling = 1.6,
+            order = 2,
+            location = "temple",
+            powerType = "tap",
+            recPower = LethalNum.new(5, 2),
+            health = LethalNum.new(1, 5),
+            powBlock = LethalNum.new(4, 2),
+            reward = LethalNum.new(2, 1),
+            drops = {
+                {
+                    id = "jungle",
+                    typ = "artifact",
+                    amount = LethalNum.new(1, 0),
+                    amountScaling = LethalNum.new(1, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 61 ]]
+                return true
+            end
+        },
+        pc = {
+            display = "Cavern Chamber",
+            maxLevels = 40,
+            healthScaling = 2,
+            powBlockScaling = 2,
+            rewardScaling = 1.6,
+            unlockDesc = "TAL 3",
+            order = 3,
+            location = "temple",
+            powerType = "tap",
+            recPower = LethalNum.new(1, 4),
+            health = LethalNum.new(2, 6),
+            powBlock = LethalNum.new(9, 3),
+            reward = LethalNum.new(1.2, 2),
+            drops = {
+                {
+                    id = "cavern",
+                    typ = "artifact",
+                    amount = LethalNum.new(1, 0),
+                    amountScaling = LethalNum.new(1, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 82 | Upvalues: InfoStore (copy) ]]
+                if p1 then
+                    return p1.Currency.resets.trueAwaken.a >= 3
+                end
+
+                return InfoStore.Resets.trueAwaken.a >= 3
+            end
+        },
+        cc = {
+            display = "Power Chamber",
+            maxLevels = 40,
+            healthScaling = 2,
+            powBlockScaling = 2,
+            rewardScaling = 1.6,
+            unlockDesc = "TAL 4",
+            order = 4,
+            location = "temple",
+            powerType = "tap",
+            recPower = LethalNum.new(1, 5),
+            health = LethalNum.new(3, 7),
+            powBlock = LethalNum.new(7, 4),
+            reward = LethalNum.new(3, 2),
+            drops = {
+                {
+                    id = "power",
+                    typ = "artifact",
+                    amount = LethalNum.new(2, 0),
+                    amountScaling = LethalNum.new(2, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 107 | Upvalues: InfoStore (copy) ]]
+                if p1 then
+                    return p1.Currency.resets.trueAwaken.a >= 4
+                end
+
+                return InfoStore.Resets.trueAwaken.a >= 4
+            end
+        },
+        ce = {
+            display = "Creation Chamber",
+            maxLevels = 40,
+            healthScaling = 2,
+            powBlockScaling = 2,
+            rewardScaling = 1.6,
+            unlockDesc = "TAL 5",
+            order = 5,
+            location = "temple",
+            powerType = "tap",
+            recPower = LethalNum.new(3, 5),
+            health = LethalNum.new(9, 7),
+            powBlock = LethalNum.new(2.7, 5),
+            reward = LethalNum.new(1.5, 3),
+            drops = {
+                {
+                    id = "ce",
+                    typ = "artifact",
+                    amount = LethalNum.new(2, 0),
+                    amountScaling = LethalNum.new(2, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 132 | Upvalues: InfoStore (copy) ]]
+                if p1 then
+                    return p1.Currency.resets.trueAwaken.a >= 5
+                end
+
+                return InfoStore.Resets.trueAwaken.a >= 5
+            end
+        },
+        purity = {
+            display = "Purity Chamber",
+            maxLevels = 40,
+            healthScaling = 2,
+            powBlockScaling = 2,
+            rewardScaling = 1.6,
+            unlockDesc = "Pure",
+            order = 6,
+            location = "temple",
+            powerType = "tap",
+            recPower = LethalNum.new(1.5, 6),
+            health = LethalNum.new(4.5, 8),
+            powBlock = LethalNum.new(1.3, 6),
+            reward = LethalNum.new(7, 3),
+            drops = {
+                {
+                    id = "pot",
+                    typ = "artifact",
+                    amount = LethalNum.new(1, 0),
+                    amountScaling = LethalNum.new(1, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 157 | Upvalues: InfoStore (copy) ]]
+                if p1 then
+                    return p1.UpgradeLevels.cc.p.c
+                end
+
+                return InfoStore.Store.purity
+            end
+        },
+        life = {
+            display = "Life Chamber",
+            maxLevels = 50,
+            healthScaling = 2,
+            powBlockScaling = 2,
+            rewardScaling = 1.6,
+            unlockDesc = "Heart",
+            order = 7,
+            location = "temple",
+            powerType = "tap",
+            recPower = LethalNum.new(2, 8),
+            health = LethalNum.new(6, 10),
+            powBlock = LethalNum.new(1.5, 8),
+            reward = LethalNum.new(1.2, 6),
+            drops = {
+                {
+                    id = "heart",
+                    typ = "artifact",
+                    amount = LethalNum.new(3, 0),
+                    amountScaling = LethalNum.new(2, 0)
+                },
+                {
+                    id = "regen",
+                    typ = "currency",
+                    amount = LethalNum.new(1, 3),
+                    amountScaling = LethalNum.new(1.5, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 184 | Upvalues: InfoStore (copy) ]]
+                if p1 then
+                    return p1.UpgradeLevels.cc.r.c
+                end
+
+                return InfoStore.Store.regen
+            end
+        },
+        int = {
+            display = "Abstract Chamber",
+            maxLevels = 40,
+            healthScaling = 2,
+            powBlockScaling = 2,
+            rewardScaling = 1.6,
+            unlockDesc = "TAL 10",
+            order = 8,
+            location = "temple",
+            powerType = "tap",
+            recPower = LethalNum.new(2.5, 10),
+            health = LethalNum.new(5, 12),
+            powBlock = LethalNum.new(2, 10),
+            reward = LethalNum.new(1, 7),
+            drops = {
+                {
+                    id = "int",
+                    typ = "artifact",
+                    amount = LethalNum.new(1, 0),
+                    amountScaling = LethalNum.new(1, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 209 | Upvalues: InfoStore (copy) ]]
+                if p1 then
+                    return p1.Currency.resets.trueAwaken.a >= 10
+                end
+
+                return InfoStore.Resets.trueAwaken.a >= 10
+            end
+        },
+        desert = {
+            display = "Deserted Chamber",
+            maxLevels = 40,
+            healthScaling = 2,
+            powBlockScaling = 2,
+            rewardScaling = 1.6,
+            unlockDesc = "TAL 12",
+            order = 9,
+            location = "temple",
+            powerType = "tap",
+            recPower = LethalNum.new(1, 12),
+            health = LethalNum.new(2, 14),
+            powBlock = LethalNum.new(9, 11),
+            reward = LethalNum.new(1, 8),
+            drops = {
+                {
+                    id = "desert",
+                    typ = "artifact",
+                    amount = LethalNum.new(1, 0),
+                    amountScaling = LethalNum.new(1, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 234 | Upvalues: InfoStore (copy) ]]
+                if p1 then
+                    return p1.Currency.resets.trueAwaken.a >= 12
+                end
+
+                return InfoStore.Resets.trueAwaken.a >= 12
+            end
+        },
+        ss = {
+            display = "Sandstorm Chamber",
+            maxLevels = 40,
+            healthScaling = 2,
+            powBlockScaling = 2,
+            rewardScaling = 1.6,
+            unlockDesc = "???",
+            order = 9,
+            location = "temple",
+            powerType = "tap",
+            recPower = LethalNum.new(1, 13),
+            health = LethalNum.new(5, 15),
+            powBlock = LethalNum.new(9, 12),
+            reward = LethalNum.new(1, 9),
+            drops = {
+                {
+                    id = "ssp",
+                    typ = "artifact",
+                    amount = LethalNum.new(1, 0),
+                    amountScaling = LethalNum.new(1, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 259 | Upvalues: InfoStore (copy) ]]
+                if p1 then
+                    return p1.Currency.resets.sandstorm.a >= 5
+                end
+
+                return InfoStore.Resets.sandstorm.a >= 5
+            end
+        },
+        great = {
+            display = "Great Chamber",
+            maxLevels = 40,
+            healthScaling = 2,
+            powBlockScaling = 2,
+            rewardScaling = 1.5,
+            unlockDesc = "Great",
+            order = 10,
+            location = "temple",
+            powerType = "tap",
+            recPower = LethalNum.new(1, 14),
+            health = LethalNum.new(5, 16),
+            powBlock = LethalNum.new(9, 13),
+            reward = LethalNum.new(1, 12),
+            drops = {
+                {
+                    id = "pot2",
+                    typ = "artifact",
+                    amount = LethalNum.new(1, 0),
+                    amountScaling = LethalNum.new(1, 0)
+                },
+                {
+                    id = "pot",
+                    typ = "artifact",
+                    amount = LethalNum.new(2, 1),
+                    amountScaling = LethalNum.new(2, 1)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 285 | Upvalues: InfoStore (copy) ]]
+                if p1 then
+                    return p1.UpgradeLevels.cc.g.c
+                end
+
+                return InfoStore.Store.great
+            end
+        },
+        rad = {
+            display = "Rad Chamber",
+            maxLevels = 40,
+            healthScaling = 2,
+            powBlockScaling = 2,
+            rewardScaling = 1.5,
+            unlockDesc = "Great",
+            order = 11,
+            location = "temple",
+            powerType = "tap",
+            recPower = LethalNum.new(5, 14),
+            health = LethalNum.new(2.5, 17),
+            powBlock = LethalNum.new(4, 14),
+            reward = LethalNum.new(1, 13),
+            drops = {
+                {
+                    id = "jungle",
+                    typ = "artifact",
+                    amount = LethalNum.new(3, 2),
+                    amountScaling = LethalNum.new(3, 2)
+                },
+                {
+                    id = "cavern",
+                    typ = "artifact",
+                    amount = LethalNum.new(3, 2),
+                    amountScaling = LethalNum.new(3, 2)
+                },
+                {
+                    id = "int",
+                    typ = "artifact",
+                    amount = LethalNum.new(3, 2),
+                    amountScaling = LethalNum.new(3, 2)
+                },
+                {
+                    id = "desert",
+                    typ = "artifact",
+                    amount = LethalNum.new(1.5, 1),
+                    amountScaling = LethalNum.new(1.5, 1)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 313 | Upvalues: InfoStore (copy) ]]
+                if p1 then
+                    return p1.UpgradeLevels.cc.g.c
+                end
+
+                return InfoStore.Store.great
+            end
+        },
+        temple = {
+            display = "Temple Chamber",
+            maxLevels = 40,
+            healthScaling = 2,
+            powBlockScaling = 2,
+            rewardScaling = 1.5,
+            unlockDesc = "TAL 22",
+            order = 12,
+            location = "temple",
+            powerType = "tap",
+            recPower = LethalNum.new(1, 22),
+            health = LethalNum.new(3, 24),
+            powBlock = LethalNum.new(8, 21),
+            reward = LethalNum.new(1, 14),
+            drops = {
+                {
+                    id = "temple",
+                    typ = "artifact",
+                    amount = LethalNum.new(1, 0),
+                    amountScaling = LethalNum.new(1, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 338 | Upvalues: InfoStore (copy) ]]
+                if p1 then
+                    return p1.Currency.resets.trueAwaken.a >= 22
+                end
+
+                return InfoStore.Resets.trueAwaken.a >= 22
+            end
+        },
+        start2 = {
+            display = "The Dunes",
+            maxLevels = 50,
+            healthScaling = 2,
+            powBlockScaling = 2,
+            rewardScaling = 1.7,
+            order = 1,
+            respawn = 1,
+            location = "desert",
+            powerType = "ssp",
+            recPower = LethalNum.new(1, 1),
+            health = LethalNum.new(5, 2),
+            powBlock = LethalNum.new(5, 0),
+            reward = LethalNum.new(1, 9),
+            drops = {
+                {
+                    id = "relic2",
+                    typ = "currency",
+                    amount = LethalNum.new(5, 0),
+                    amountScaling = LethalNum.new(2, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 363 ]]
+                return true
+            end
+        },
+        cactus = {
+            display = "The Cactus",
+            maxLevels = 10,
+            healthScaling = 2,
+            powBlockScaling = 2,
+            rewardScaling = 1.6,
+            order = 2,
+            respawn = 1,
+            location = "desert",
+            powerType = "ssp",
+            recPower = LethalNum.new(1, 2),
+            health = LethalNum.new(1, 4),
+            powBlock = LethalNum.new(9, 1),
+            reward = LethalNum.new(1, 12),
+            drops = {
+                {
+                    id = "relic2",
+                    typ = "currency",
+                    amount = LethalNum.new(7, 1),
+                    amountScaling = LethalNum.new(1.6, 0)
+                },
+                {
+                    id = "cactus",
+                    typ = "artifact",
+                    amount = LethalNum.new(1, 0),
+                    amountScaling = LethalNum.new(1, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 385 ]]
+                return true
+            end
+        },
+        water = {
+            display = "The Oasis",
+            maxLevels = 10,
+            healthScaling = 2,
+            powBlockScaling = 2,
+            rewardScaling = 1.6,
+            order = 3,
+            respawn = 1,
+            location = "desert",
+            powerType = "ssp",
+            recPower = LethalNum.new(1, 3),
+            health = LethalNum.new(1, 5),
+            powBlock = LethalNum.new(9, 2),
+            reward = LethalNum.new(1, 13),
+            drops = {
+                {
+                    id = "relic2",
+                    typ = "currency",
+                    amount = LethalNum.new(5, 2),
+                    amountScaling = LethalNum.new(1.6, 0)
+                },
+                {
+                    id = "water",
+                    typ = "artifact",
+                    amount = LethalNum.new(1, 0),
+                    amountScaling = LethalNum.new(1, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 407 ]]
+                return true
+            end
+        },
+        doom = {
+            display = "The Dooms",
+            maxLevels = 10,
+            healthScaling = 5,
+            powBlockScaling = 5,
+            rewardScaling = 1.6,
+            order = 4,
+            respawn = 1,
+            location = "desert",
+            powerType = "ssp",
+            recPower = LethalNum.new(2, 3),
+            health = LethalNum.new(2, 5),
+            powBlock = LethalNum.new(1.8, 3),
+            reward = LethalNum.new(2, 13),
+            drops = {
+                {
+                    id = "relic2",
+                    typ = "currency",
+                    amount = LethalNum.new(1, 3),
+                    amountScaling = LethalNum.new(1.6, 0)
+                },
+                {
+                    id = "doom",
+                    typ = "currency",
+                    amount = LethalNum.new(1, 1),
+                    amountScaling = LethalNum.new(2, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 429 ]]
+                return true
+            end
+        },
+        night = {
+            display = "The Stars",
+            maxLevels = 10,
+            healthScaling = 2,
+            powBlockScaling = 2,
+            rewardScaling = 1.6,
+            unlockDesc = "TAL 22",
+            order = 5,
+            respawn = 1,
+            location = "desert",
+            powerType = "ssp",
+            recPower = LethalNum.new(1, 6),
+            health = LethalNum.new(1, 8),
+            powBlock = LethalNum.new(8, 5),
+            reward = LethalNum.new(1, 15),
+            drops = {
+                {
+                    id = "relic2",
+                    typ = "currency",
+                    amount = LethalNum.new(1, 6),
+                    amountScaling = LethalNum.new(1.6, 0)
+                },
+                {
+                    id = "sf",
+                    typ = "artifact",
+                    amount = LethalNum.new(1, 0),
+                    amountScaling = LethalNum.new(1, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 452 | Upvalues: InfoStore (copy) ]]
+                if p1 then
+                    return p1.Currency.resets.trueAwaken.a >= 22
+                end
+
+                return InfoStore.Resets.trueAwaken.a >= 22
+            end
+        },
+        remain = {
+            display = "The Remains",
+            maxLevels = 10,
+            healthScaling = 2,
+            powBlockScaling = 2,
+            rewardScaling = 1.6,
+            unlockDesc = "Found",
+            order = 6,
+            respawn = 1,
+            location = "desert",
+            powerType = "ssp",
+            recPower = LethalNum.new(1, 8),
+            health = LethalNum.new(1, 10),
+            powBlock = LethalNum.new(8, 7),
+            reward = LethalNum.new(1, 17),
+            drops = {
+                {
+                    id = "relic2",
+                    typ = "currency",
+                    amount = LethalNum.new(1, 8),
+                    amountScaling = LethalNum.new(1.6, 0)
+                },
+                {
+                    id = "bone",
+                    typ = "artifact",
+                    amount = LethalNum.new(1, 0),
+                    amountScaling = LethalNum.new(1, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 479 | Upvalues: InfoStore (copy) ]]
+                if p1 then
+                    return p1.UpgradeLevels.cc.f.c
+                end
+
+                return InfoStore.Store.found
+            end
+        },
+        twi = {
+            display = "The Twilight",
+            maxLevels = 10,
+            healthScaling = 2,
+            powBlockScaling = 2,
+            rewardScaling = 1.6,
+            unlockDesc = "???",
+            order = 7,
+            respawn = 1,
+            location = "desert",
+            powerType = "ssp",
+            recPower = LethalNum.new(1, 10),
+            health = LethalNum.new(1, 12),
+            powBlock = LethalNum.new(8, 9),
+            reward = LethalNum.new(1, 19),
+            drops = {
+                {
+                    id = "relic2",
+                    typ = "currency",
+                    amount = LethalNum.new(1, 10),
+                    amountScaling = LethalNum.new(1.6, 0)
+                },
+                {
+                    id = "twi",
+                    typ = "artifact",
+                    amount = LethalNum.new(1, 0),
+                    amountScaling = LethalNum.new(1, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 506 | Upvalues: InfoStore (copy) ]]
+                if p1 then
+                    return p1.Currency.resets.midnight2.a >= 1
+                end
+
+                return InfoStore.Resets.midnight2.a >= 1
+            end
+        },
+        mid = {
+            display = "The Midnight",
+            maxLevels = 10,
+            healthScaling = 2,
+            powBlockScaling = 2,
+            rewardScaling = 1.6,
+            unlockDesc = "TAL 36",
+            order = 8,
+            respawn = 1,
+            location = "desert",
+            powerType = "ssp",
+            recPower = LethalNum.new(1, 13),
+            health = LethalNum.new(1, 15),
+            powBlock = LethalNum.new(8, 12),
+            reward = LethalNum.new(1, 22),
+            drops = {
+                {
+                    id = "relic2",
+                    typ = "currency",
+                    amount = LethalNum.new(1, 13),
+                    amountScaling = LethalNum.new(1.6, 0)
+                },
+                {
+                    id = "mid",
+                    typ = "artifact",
+                    amount = LethalNum.new(1, 0),
+                    amountScaling = LethalNum.new(1, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 533 | Upvalues: InfoStore (copy) ]]
+                if p1 then
+                    return p1.Currency.resets.trueAwaken.a >= 36
+                end
+
+                return InfoStore.Resets.trueAwaken.a >= 36
+            end
+        },
+        gnarly = {
+            display = "The Gnarly",
+            maxLevels = 10,
+            healthScaling = 2,
+            powBlockScaling = 2,
+            rewardScaling = 1.6,
+            unlockDesc = "???",
+            order = 9,
+            respawn = 1,
+            location = "desert",
+            powerType = "ssp",
+            recPower = LethalNum.new(1, 6),
+            health = LethalNum.new(1, 8),
+            powBlock = LethalNum.new(8, 5),
+            reward = LethalNum.new(1, 16),
+            drops = {
+                {
+                    id = "relic2",
+                    typ = "currency",
+                    amount = LethalNum.new(1, 8),
+                    amountScaling = LethalNum.new(1.6, 0)
+                },
+                {
+                    id = "cactus",
+                    typ = "artifact",
+                    amount = LethalNum.new(1, 3),
+                    amountScaling = LethalNum.new(1, 3)
+                },
+                {
+                    id = "water",
+                    typ = "artifact",
+                    amount = LethalNum.new(1, 3),
+                    amountScaling = LethalNum.new(1, 3)
+                },
+                {
+                    id = "sf",
+                    typ = "artifact",
+                    amount = LethalNum.new(5, 0),
+                    amountScaling = LethalNum.new(5, 0)
+                },
+                {
+                    id = "bone",
+                    typ = "artifact",
+                    amount = LethalNum.new(1, 0),
+                    amountScaling = LethalNum.new(1, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 563 | Upvalues: InfoStore (copy) ]]
+                if p1 then
+                    return p1.Currency.resets.rift.a >= 2
+                end
+
+                return InfoStore.Resets.rift.a >= 2
+            end
+        },
+        start0 = {
+            display = "Rift 0",
+            maxLevels = 50,
+            healthScaling = 10,
+            powBlockScaling = 10,
+            rewardScaling = 1,
+            order = 1,
+            respawn = 1,
+            location = "chamber2",
+            powerType = "grp",
+            recPower = LethalNum.new(1, 2),
+            health = LethalNum.new(1, 2),
+            powBlock = LethalNum.new(5, 1),
+            reward = LethalNum.new(1, 0),
+            drops = {
+                {
+                    id = "relic0",
+                    typ = "currency",
+                    amount = LethalNum.new(5, 0),
+                    amountScaling = LethalNum.new(7, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 589 ]]
+                return true
+            end
+        },
+        rift1 = {
+            display = "Rift 1",
+            maxLevels = 50,
+            healthScaling = 10,
+            powBlockScaling = 10,
+            rewardScaling = 1,
+            order = 2,
+            respawn = 1,
+            location = "chamber2",
+            powerType = "grp",
+            recPower = LethalNum.new(1, 2),
+            health = LethalNum.new(5, 2),
+            powBlock = LethalNum.new(5, 1),
+            reward = LethalNum.new(1, 0),
+            drops = {
+                {
+                    id = "rift1a",
+                    typ = "artifact",
+                    scalingType = "pow",
+                    amount = LethalNum.new(1, 0),
+                    amountScaling = LethalNum.new(5, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 610 ]]
+                return true
+            end
+        },
+        rift2 = {
+            display = "Rift 2",
+            maxLevels = 50,
+            healthScaling = 10,
+            powBlockScaling = 10,
+            rewardScaling = 1,
+            unlockDesc = "GRL 2",
+            order = 3,
+            respawn = 1,
+            location = "chamber2",
+            powerType = "grp",
+            recPower = LethalNum.new(1, 2),
+            health = LethalNum.new(5, 3),
+            powBlock = LethalNum.new(9, 1),
+            reward = LethalNum.new(1, 0),
+            drops = {
+                {
+                    id = "rift2",
+                    typ = "artifact",
+                    scalingType = "pow",
+                    amount = LethalNum.new(1, 0),
+                    amountScaling = LethalNum.new(5, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 632 | Upvalues: InfoStore (copy) ]]
+                if p1 then
+                    return p1.Currency.resets.rift.a >= 2
+                end
+
+                return InfoStore.Resets.rift.a >= 2
+            end
+        },
+        rift3 = {
+            display = "Rift 3",
+            maxLevels = 50,
+            healthScaling = 10,
+            powBlockScaling = 10,
+            rewardScaling = 1,
+            unlockDesc = "GRL 3",
+            order = 4,
+            respawn = 1,
+            location = "chamber2",
+            powerType = "grp",
+            recPower = LethalNum.new(1, 3),
+            health = LethalNum.new(5, 4),
+            powBlock = LethalNum.new(9, 2),
+            reward = LethalNum.new(1, 0),
+            drops = {
+                {
+                    id = "rift1",
+                    typ = "artifact",
+                    scalingType = "pow",
+                    amount = LethalNum.new(1, 0),
+                    amountScaling = LethalNum.new(5, 0)
+                }
+            },
+            unlockReq = function(p1) --[[ unlockReq | Line: 658 | Upvalues: InfoStore (copy) ]]
+                if p1 then
+                    return p1.Currency.resets.rift.a >= 3
+                end
+
+                return InfoStore.Resets.rift.a >= 3
+            end
+        }
+    }
+}
+
+t.Artifacts = {
+    jungle = {
+        display = "Jungle Artifact",
+        icon = "rbxassetid://18277434270",
+        asc = 0,
+        order = 0,
+        tier = 1,
+        location = "temple",
+        color = Color3.new(153/255, 255/255, 0/255),
+        desc = function() --[[ desc | Line: 677 | Upvalues: t (copy), LethalNum (copy) ]]
+            local jungle = t.Artifacts.jungle
+
+            return "Increases jungle experience by <font color=\"#00ff00\">+100%</font> per level\nTotal: <font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(LethalNum.add(jungle.level, jungle.extra), 100)) .. "%</font>"
+        end,
+        level = LethalNum.new(0, 0),
+        extra = LethalNum.new(0, 0)
+    },
+    cavern = {
+        display = "Cavern Artifact",
+        icon = "rbxassetid://18277434679",
+        asc = 0,
+        order = 1,
+        tier = 1,
+        location = "temple",
+        color = Color3.new(0.901961, 0.352941, 1),
+        desc = function() --[[ desc | Line: 692 | Upvalues: t (copy), LethalNum (copy) ]]
+            local cavern = t.Artifacts.cavern
+
+            return "Increases cavern experience by <font color=\"#00ff00\">+100%</font> per level\nTotal: <font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(LethalNum.add(cavern.level, cavern.extra), 100)) .. "%</font>"
+        end,
+        level = LethalNum.new(0, 0),
+        extra = LethalNum.new(0, 0)
+    },
+    power = {
+        display = "Artifact of Power",
+        icon = "rbxassetid://18277433656",
+        asc = 0,
+        order = 2,
+        tier = 1,
+        location = "temple",
+        color = Color3.new(0, 1, 0.533333),
+        desc = function() --[[ desc | Line: 712 | Upvalues: t (copy), LethalNum (copy) ]]
+            local power = t.Artifacts.power
+
+            return "Increases TAP by <font color=\"#00ff00\">+1%</font> per level\nTotal: <font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.add(power.level, power.extra)) .. "%</font>"
+        end,
+        level = LethalNum.new(0, 0),
+        extra = LethalNum.new(0, 0)
+    },
+    ce = {
+        display = "Artifact of Creation",
+        icon = "rbxassetid://18277458537",
+        asc = 0,
+        order = 3,
+        tier = 1,
+        location = "temple",
+        color = Color3.new(0.45098, 0, 1),
+        desc = function() --[[ desc | Line: 733 | Upvalues: t (copy), LethalNum (copy) ]]
+            local ce = t.Artifacts.ce
+
+            return "Increases creation energy generated and creation energy cap by a diminishing amount per level\nTotal: <font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.pow(LethalNum.add(ce.level, ce.extra), 0.7)) .. "%</font>"
+        end,
+        level = LethalNum.new(0, 0),
+        extra = LethalNum.new(0, 0)
+    },
+    pot = {
+        display = "Artifact of Potential",
+        icon = "rbxassetid://18277433924",
+        asc = 0,
+        order = 4,
+        tier = 2,
+        location = "temple",
+        color = Color3.new(1, 0.882353, 0),
+        desc = function() --[[ desc | Line: 748 | Upvalues: t (copy), LethalNum (copy) ]]
+            local pot = t.Artifacts.pot
+
+            return "Increases max artifact level for tier 1 artifacts by <font color=\"#00ff00\">+10</font> per level\nTotal: <font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(LethalNum.add(pot.level, pot.extra), LethalNum.new(1, 1))) .. "</font>"
+        end,
+        level = LethalNum.new(0, 0),
+        extra = LethalNum.new(0, 0)
+    },
+    heart = {
+        display = "Artifact of Life",
+        icon = "rbxassetid://18277435006",
+        asc = 0,
+        order = 5,
+        tier = 2,
+        location = "temple",
+        color = Color3.new(0.239216, 1, 0.227451),
+        desc = function() --[[ desc | Line: 763 | Upvalues: t (copy), LethalNum (copy) ]]
+            local heart = t.Artifacts.heart
+
+            return "Increases base rp generation by <font color=\"#00ff00\">+1</font> per level\nTotal: <font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.add(heart.level, heart.extra)) .. "/s</font>"
+        end,
+        level = LethalNum.new(0, 0),
+        extra = LethalNum.new(0, 0)
+    },
+    int = {
+        display = "Intersection Artifact",
+        icon = "rbxassetid://18303121054",
+        asc = 0,
+        order = 6,
+        tier = 1,
+        location = "temple",
+        color = Color3.new(0.694118, 0.694118, 0.694118),
+        desc = function() --[[ desc | Line: 778 | Upvalues: t (copy), LethalNum (copy) ]]
+            local int = t.Artifacts.int
+
+            return "Increases intersection experience by <font color=\"#00ff00\">+100%</font> per level\nTotal: <font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(LethalNum.add(int.level, int.extra), 100)) .. "%</font>"
+        end,
+        level = LethalNum.new(0, 0),
+        extra = LethalNum.new(0, 0)
+    },
+    desert = {
+        display = "Desert Artifact",
+        icon = "rbxassetid://18429980909",
+        asc = 0,
+        order = 7,
+        tier = 3,
+        location = "temple",
+        color = Color3.new(1, 0.819608, 0.458824),
+        desc = function() --[[ desc | Line: 793 | Upvalues: Data (copy), t (copy), LethalNum (copy) ]]
+            if Data.ImportantData.Stats.prog2 >= 2 then
+                local desert = t.Artifacts.desert
+
+                return "Increases desert experience by <font color=\"#00ff00\">+10%</font> per level\nTotal: <font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(LethalNum.add(desert.level, desert.extra), 10)) .. "%</font>"
+            end
+
+            return "???"
+        end,
+        level = LethalNum.new(0, 0),
+        extra = LethalNum.new(0, 0)
+    },
+    ssp = {
+        display = "Artifact of Sandstorms",
+        icon = "rbxassetid://18429552493",
+        asc = 0,
+        order = 8,
+        tier = 3,
+        location = "temple",
+        color = Color3.new(1, 1, 0.219608),
+        desc = function() --[[ desc | Line: 812 | Upvalues: t (copy), LethalNum (copy) ]]
+            local ssp = t.Artifacts.ssp
+
+            return "Increases SSP by <font color=\"#00ff00\">+1%</font> per level\nTotal: <font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.add(ssp.level, ssp.extra)) .. "%</font>"
+        end,
+        level = LethalNum.new(0, 0),
+        extra = LethalNum.new(0, 0)
+    },
+    pot2 = {
+        display = "Artifact of Great Potential",
+        icon = "rbxassetid://18659731364",
+        asc = 0,
+        order = 9,
+        tier = 3,
+        location = "temple",
+        color = Color3.new(1, 0.317647, 0),
+        desc = function() --[[ desc | Line: 833 | Upvalues: t (copy), LethalNum (copy) ]]
+            local pot2 = t.Artifacts.pot2
+
+            return "Increases max artifact level for tier 2 artifacts by <font color=\"#00ff00\">+10</font> per level\nTotal: <font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(LethalNum.add(pot2.level, pot2.extra), LethalNum.new(1, 1))) .. "</font>"
+        end,
+        level = LethalNum.new(0, 0),
+        extra = LethalNum.new(0, 0)
+    },
+    temple = {
+        display = "Temple Artifact",
+        icon = "rbxassetid://18673565054",
+        asc = 0,
+        order = 10,
+        tier = 3,
+        location = "temple",
+        color = Color3.new(0.435294, 0.384314, 1),
+        desc = function() --[[ desc | Line: 848 | Upvalues: t (copy), LethalNum (copy) ]]
+            local temple = t.Artifacts.temple
+
+            return "Increases temple experience by <font color=\"#00ff00\">+10%</font> per level\nTotal: <font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(LethalNum.add(temple.level, temple.extra), 10)) .. "%</font>"
+        end,
+        level = LethalNum.new(0, 0),
+        extra = LethalNum.new(0, 0)
+    },
+    cactus = {
+        display = "Artifact of Cactus",
+        icon = "rbxassetid://18429552249",
+        asc = 0,
+        order = 1,
+        tier = 2,
+        location = "desert",
+        color = Color3.new(0.709804, 1, 0.239216),
+        desc = function() --[[ desc | Line: 864 | Upvalues: t (copy), LethalNum (copy) ]]
+            local cactus = t.Artifacts.cactus
+
+            return "Increases cactus value by <font color=\"#00ff00\">+100%</font> per level\nTotal: <font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(LethalNum.add(cactus.level, cactus.extra), 100)) .. "%</font>"
+        end,
+        level = LethalNum.new(0, 0),
+        extra = LethalNum.new(0, 0)
+    },
+    water = {
+        display = "Artifact of Water",
+        icon = "rbxassetid://18429552057",
+        asc = 0,
+        order = 2,
+        tier = 2,
+        location = "desert",
+        color = Color3.new(0, 0.384314, 1),
+        desc = function() --[[ desc | Line: 879 | Upvalues: t (copy), LethalNum (copy) ]]
+            local water = t.Artifacts.water
+
+            return "Increases water generated by <font color=\"#00ff00\">+100%</font> per level\nTotal: <font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(LethalNum.add(water.level, water.extra), 100)) .. "%</font>"
+        end,
+        level = LethalNum.new(0, 0),
+        extra = LethalNum.new(0, 0)
+    },
+    sf = {
+        display = "Artifact of Stars",
+        icon = "rbxassetid://18673564834",
+        asc = 0,
+        order = 3,
+        tier = 3,
+        location = "desert",
+        color = Color3.new(0.435294, 0.384314, 1),
+        desc = function() --[[ desc | Line: 894 | Upvalues: t (copy), LethalNum (copy) ]]
+            local sf = t.Artifacts.sf
+
+            return "Increases star fragments earned by <font color=\"#00ff00\">+10%</font> per level\nTotal: <font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(LethalNum.add(sf.level, sf.extra), 10)) .. "%</font>"
+        end,
+        level = LethalNum.new(0, 0),
+        extra = LethalNum.new(0, 0)
+    },
+    bone = {
+        display = "Artifact of Remains",
+        icon = "rbxassetid://18694946109",
+        asc = 0,
+        order = 4,
+        tier = 3,
+        location = "desert",
+        color = Color3.new(1, 0.921569, 0.815686),
+        desc = function() --[[ desc | Line: 909 | Upvalues: t (copy), LethalNum (copy) ]]
+            local bone = t.Artifacts.bone
+
+            return "Increases bones earned by <font color=\"#00ff00\">+10%</font> per level\nTotal: <font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(LethalNum.add(bone.level, bone.extra), 10)) .. "%</font>"
+        end,
+        level = LethalNum.new(0, 0),
+        extra = LethalNum.new(0, 0)
+    },
+    twi = {
+        display = "Artifact of Twilight",
+        icon = "rbxassetid://18738932859",
+        asc = 0,
+        order = 5,
+        tier = 3,
+        location = "desert",
+        color = Color3.new(0.729412, 0.352941, 1),
+        desc = function() --[[ desc | Line: 924 | Upvalues: t (copy), LethalNum (copy) ]]
+            local twi = t.Artifacts.twi
+
+            return "Increases twilight essence earned by <font color=\"#00ff00\">+10%</font> per level\nTotal: <font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(LethalNum.add(twi.level, twi.extra), 10)) .. "%</font>"
+        end,
+        level = LethalNum.new(0, 0),
+        extra = LethalNum.new(0, 0)
+    },
+    mid = {
+        display = "Artifact of Midnight",
+        icon = "rbxassetid://18738933091",
+        asc = 0,
+        order = 6,
+        tier = 4,
+        location = "desert",
+        color = Color3.new(0.529412, 0.529412, 1),
+        desc = function() --[[ desc | Line: 939 | Upvalues: t (copy), LethalNum (copy) ]]
+            local mid = t.Artifacts.mid
+
+            return "Increases midnight essence earned by <font color=\"#00ff00\">+10%</font> per level\nTotal: <font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(LethalNum.add(mid.level, mid.extra), 10)) .. "%</font>"
+        end,
+        level = LethalNum.new(0, 0),
+        extra = LethalNum.new(0, 0)
+    },
+    rift1a = {
+        display = "Bonus",
+        icon = "rbxassetid://94662158042845",
+        asc = 0,
+        order = 1,
+        tier = 0,
+        style = 0,
+        location = "chamber2",
+        color = Color3.new(255/255, 255/255, 255/255),
+        desc = function() --[[ desc | Line: 955 | Upvalues: t (copy), LethalNum (copy) ]]
+            local rift1a = t.Artifacts.rift1a
+
+            return "Increases the Jungle, Cavern, Intersection, Desert, and Temple artifacts bonus levels by <font color=\"#00ff00\">1</font> per level\nTotal: <font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.add(rift1a.level, rift1a.extra)) .. "</font>"
+        end,
+        level = LethalNum.new(0, 0),
+        extra = LethalNum.new(0, 0)
+    },
+    rift1 = {
+        display = "Essence",
+        icon = "rbxassetid://19001431801",
+        asc = 0,
+        order = 3,
+        tier = 0,
+        style = 0,
+        location = "chamber2",
+        color = Color3.new(255/255, 255/255, 255/255),
+        desc = function() --[[ desc | Line: 971 | Upvalues: t (copy), LethalNum (copy) ]]
+            local rift1 = t.Artifacts.rift1
+
+            return "Increases rift essence earned by <font color=\"#00ff00\">+100%</font> per level\nTotal: <font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(LethalNum.add(rift1.level, rift1.extra), 100)) .. "%</font>"
+        end,
+        level = LethalNum.new(0, 0),
+        extra = LethalNum.new(0, 0)
+    },
+    rift2 = {
+        display = "Energy",
+        icon = "rbxassetid://19001431924",
+        asc = 0,
+        order = 2,
+        tier = 0,
+        style = 0,
+        location = "chamber2",
+        color = Color3.new(255/255, 255/255, 255/255),
+        desc = function() --[[ desc | Line: 987 | Upvalues: t (copy), LethalNum (copy) ]]
+            local rift2 = t.Artifacts.rift2
+
+            return "Increases rift energy value by <font color=\"#00ff00\">+10%</font> per level\nTotal: <font color=\"#00ff00\">+" .. LethalNum.getString(LethalNum.multiply(LethalNum.add(rift2.level, rift2.extra), 10)) .. "%</font>"
+        end,
+        level = LethalNum.new(0, 0),
+        extra = LethalNum.new(0, 0)
+    }
+}
+
+return t
