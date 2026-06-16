@@ -1,0 +1,9 @@
+local t = {}
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local EarnGrass = require(ReplicatedStorage.EarnGrass)
+
+function t.collect() --[[ collect | Line: 8 | Upvalues: EarnGrass (copy), ReplicatedStorage (copy) ]]
+    EarnGrass.collect(ReplicatedStorage.GrassOwned)
+end
+
+return t
