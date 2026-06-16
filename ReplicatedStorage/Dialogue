@@ -1,0 +1,1629 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Data = require(ReplicatedStorage.Data)
+
+require(ReplicatedStorage.Format)
+
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local Currencies = require(ReplicatedStorage.Currencies)
+local SaveObject = require(ReplicatedStorage.SaveObject)
+local CurrencyTypes = require(ReplicatedStorage.CurrencyTypes)
+local InfoStore = require(ReplicatedStorage.InfoStore)
+local BuyUpgrade = require(ReplicatedStorage.BuyUpgrade)
+local Resets = require(ReplicatedStorage.Resets)
+local t = {}
+local v1 = 0
+local v2 = nil
+local v3 = nil
+local v4 = false
+
+function t.SetDialogue(p1, p2, p3) --[[ SetDialogue | Line: 18 | Upvalues: Currencies (copy), t (copy), v2 (ref), v3 (ref), v4 (ref), v1 (ref), Data (copy), BuyUpgrade (copy) ]]
+    local diabox = Currencies.getDisplay().diabox
+    local Option1 = diabox.Options.Option1
+    local Option2 = diabox.Options.Option2
+    local Option3 = diabox.Options.Option3
+    local Cont = diabox.Cont
+    local v12 = t.Dialogue[p1]
+    local v22 = v12[p2]
+
+    if v2 == v22 and (v3 == v12 and (diabox.Position.Y.Scale > 0 and not p3)) then
+        return
+    end
+
+    if v4 and not p3 then
+        return
+    end
+
+    v2 = v22
+    v3 = v12
+    v1 = 0
+    diabox.CharacterName.Text = "<b>" .. v22.nameDisplay .. "</b>"
+    diabox.ImageBackground.CharacterImage.Image = v22.imageDisplay
+    diabox.TextBackground.Dialogue.Text = ""
+    diabox.Options.OptionClose.Visible = false
+
+    local count = 0
+
+    if v22.options then
+        for k, v in pairs(v22.options) do
+            count = count + 1
+        end
+    end
+
+    local v32 = v22.dialogueInfo()
+
+    Option1.Visible = false
+    Option2.Visible = false
+    Option3.Visible = false
+    Cont.Visible = false
+
+    local v42 = string.len(v32)
+    local v5 = false
+    local v6 = false
+    local v7 = false
+
+    diabox.Visible = true
+    Data.ImportantData.Stats.diaOpen = true
+    BuyUpgrade.DiaOpen()
+    Currencies.UpdateUIOverlay()
+    v4 = true
+
+    if v12.noClose then
+        diabox.Options.OptionClose.Visible = false
+    else
+        diabox.Options.OptionClose.Visible = true
+    end
+
+    Currencies.updateSettings()
+
+    while v1 < v42 and v22 ~= nil do
+        v1 = v1 + 1
+
+        local v9 = string.sub(v32, 0, v1)
+        local v122 = string.sub(v32, v1, v1)
+
+        if v122 == "<" then
+            v5 = true
+        end
+
+        if v122 == "\\" and not v5 then
+            v7 = true
+        end
+
+        diabox.TextBackground.Dialogue.Text = v9
+
+        if not (v5 or v7) then
+            task.wait(0.04 / (1 + Data.ImportantData.Stats.deltaTime))
+        end
+
+        if v5 and v122 == ">" and v6 then
+            v5 = false
+            v6 = false
+        elseif v5 and v122 == ">" then
+            v6 = true
+        end
+
+        if v7 and v122 == "n" then
+            v7 = false
+        end
+    end
+
+    diabox.TextBackground.Dialogue.Text = v32
+    Option1.Visible = if count >= 1 then v1 ~= 0 else false
+    Option2.Visible = if count >= 2 then v1 ~= 0 else false
+    Option3.Visible = if count >= 3 then v1 ~= 0 else false
+
+    if count >= 1 then
+        Option1.Info.Text = "<b>" .. v22.options[1].option() .. "</b>"
+    end
+
+    if count >= 2 then
+        Option2.Info.Text = "<b>" .. v22.options[2].option() .. "</b>"
+    end
+
+    if count >= 3 then
+        Option3.Info.Text = "<b>" .. v22.options[3].option() .. "</b>"
+    end
+
+    Cont.Visible = if count == 0 then true else false
+    Currencies.updateSettings()
+end
+function t.SkipDialogue() --[[ SkipDialogue | Line: 131 | Upvalues: v2 (ref), v1 (ref), Currencies (copy) ]]
+    if v2 == nil then
+        return
+    end
+
+    v1 = string.len((v2.dialogueInfo()))
+
+    if not (v2.automaticContinue and Currencies.getDisplay().diabox.Cont.Visible) then
+        return
+    end
+
+    v2.automaticContinue()
+end
+function t.SelectOption(p1) --[[ SelectOption | Line: 142 | Upvalues: v2 (ref) ]]
+    if v2 ~= nil then
+        v2.options[p1].effect()
+    end
+end
+function t.EndDialogue() --[[ EndDialogue | Line: 149 | Upvalues: Currencies (copy), v2 (ref), v3 (ref), v1 (ref), v4 (ref), Data (copy), BuyUpgrade (copy) ]]
+    local diabox = Currencies.getDisplay().diabox
+
+    if not diabox then
+        v2 = nil
+        v3 = nil
+        v1 = 0
+        v4 = false
+        Data.ImportantData.Stats.diaOpen = false
+        BuyUpgrade.DiaClose()
+        Currencies.updateSettings()
+        Currencies.UpdateUIOverlay()
+
+        return
+    end
+
+    diabox.Visible = false
+    v2 = nil
+    v3 = nil
+    v1 = 0
+    v4 = false
+    Data.ImportantData.Stats.diaOpen = false
+    BuyUpgrade.DiaClose()
+    Currencies.updateSettings()
+    Currencies.UpdateUIOverlay()
+end
+t.Dialogue = {
+    grassman = {
+        boxColor = Color3.new(0, 0.52549, 0),
+        [1] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 171 ]]
+                return "Well hello there my \"friend\"! How are you doing on this fine \"day\"?"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 176 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassman", 2, true)
+                    end,
+                    option = function() --[[ option | Line: 179 ]]
+                        return "Prestige Stats"
+                    end
+                },
+                {
+                    effect = function() --[[ effect | Line: 184 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassman", 4, true)
+                    end,
+                    option = function() --[[ option | Line: 187 ]]
+                        return "Talk"
+                    end
+                }
+            }
+        },
+        [2] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 204 | Upvalues: InfoStore (copy) ]]
+                local v1 = "Let\'s see here..." .. "\nYou have done:" .. "\n<font color=\"#00ffff\">" .. InfoStore.Resets.prestige.b .. " Prestiges</font>"
+
+                if InfoStore.Resets.crystallize.b > 0 then
+                    v1 = v1 .. "\n<font color=\"#ffb5ff\">" .. InfoStore.Resets.crystallize.b .. " Crystallizes</font>"
+                end
+
+                if InfoStore.Resets.steelie.b > 0 then
+                    v1 = v1 .. "\n<font color=\"#b5b5b5\">" .. InfoStore.Resets.steelie.b .. " Steelies</font>"
+                end
+
+                if InfoStore.Resets.galactic.b > 0 then
+                    v1 = v1 .. "\n<font color=\"#8c00ff\">" .. InfoStore.Resets.galactic.b .. " Galactics</font>"
+                end
+
+                if InfoStore.Resets.supernova.b > 0 then
+                    v1 = v1 .. "\n<font color=\"#ffff00\">" .. InfoStore.Resets.supernova.b .. " Supernovas</font>"
+                end
+
+                return v1
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 235 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassman", 3, true)
+                    end,
+                    option = function() --[[ option | Line: 238 ]]
+                        return "Thanks, Grassman!"
+                    end
+                }
+            }
+        },
+        [3] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 247 ]]
+                return "You are always welcome!"
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 250 | Upvalues: t (copy) ]]
+                return t.EndDialogue()
+            end
+        },
+        [4] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 257 ]]
+                return "What do you want to talk about?"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 262 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassman", 14, true)
+                    end,
+                    option = function() --[[ option | Line: 265 ]]
+                        return "Credits"
+                    end
+                },
+                {
+                    effect = function() --[[ effect | Line: 270 | Upvalues: InfoStore (copy), t (copy) ]]
+                        if InfoStore.Resets.anonymity.b > 0 then
+                            return t.SetDialogue("grassman", 5, true)
+                        end
+                    end,
+                    option = function() --[[ option | Line: 275 | Upvalues: InfoStore (copy) ]]
+                        if InfoStore.Resets.anonymity.b > 0 then
+                            return "Who is Anti-Grassman?"
+                        end
+
+                        return "???"
+                    end
+                },
+                {
+                    effect = function() --[[ effect | Line: 284 | Upvalues: InfoStore (copy), t (copy) ]]
+                        if InfoStore.Resets.galactic.b > 0 then
+                            return t.SetDialogue("grassman", 6, true)
+                        end
+                    end,
+                    option = function() --[[ option | Line: 289 | Upvalues: InfoStore (copy) ]]
+                        if InfoStore.Resets.galactic.b > 0 then
+                            return "Who is Spassman?"
+                        end
+
+                        return "???"
+                    end
+                }
+            }
+        },
+        [5] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 302 ]]
+                return "Oh, him? He\'s just a good old friend of mine! Not much of a talker I am afraid..."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 305 | Upvalues: t (copy) ]]
+                return t.EndDialogue()
+            end
+        },
+        [6] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 312 ]]
+                return "What a silly man! He only speaks nonsense and always tries to bring down the mood... I wouldn\'t trust him if I were you!"
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 315 | Upvalues: t (copy) ]]
+                return t.EndDialogue()
+            end
+        },
+        [7] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 322 ]]
+                return "What would you like me to do to your \"Save Data\"?"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 327 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassman", 8, true)
+                    end,
+                    option = function() --[[ option | Line: 330 ]]
+                        return "<font color=\"#ff0000\">(!) Hard Reset Save Data (!)</font>"
+                    end
+                },
+                {
+                    effect = function() --[[ effect | Line: 335 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassman", 12, true)
+                    end,
+                    option = function() --[[ option | Line: 338 ]]
+                        return "<font color=\"#00ffff\">Data Recovery</font>"
+                    end
+                },
+                {
+                    effect = function() --[[ effect | Line: 343 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassman", 15, true)
+                    end,
+                    option = function() --[[ option | Line: 346 ]]
+                        return "<font color=\"#ff00ff\">Reset Flowers</font>"
+                    end
+                }
+            }
+        },
+        [8] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 355 ]]
+                return "Are you sure you want me to wipe your save data? You will not be able to return from this!"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 360 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassman", 9, true)
+                    end,
+                    option = function() --[[ option | Line: 363 ]]
+                        return "<font color=\"#ff0000\">Yes!</font>"
+                    end
+                }
+            }
+        },
+        [9] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 372 ]]
+                return "Are you REALLY sure? All of your progress will disappear!"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 377 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassman", 10, true)
+                    end,
+                    option = function() --[[ option | Line: 380 ]]
+                        return "<font color=\"#ff0000\">Yes I am sure!</font>"
+                    end
+                }
+            }
+        },
+        [10] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 389 ]]
+                return "Are you REALLY REALLY REALLY sure?? This is your last warning!"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 394 | Upvalues: Data (copy), t (copy) ]]
+                        Data.ImportantData.Stats.resetData = true
+
+                        return t.SetDialogue("grassman", 11, true)
+                    end,
+                    option = function() --[[ option | Line: 398 ]]
+                        return "<font color=\"#ff0000\">Yes!!!!!</font>"
+                    end
+                }
+            }
+        },
+        [11] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 407 ]]
+                return "It has been done! Go ahead and leave the game then rejoin to start from scratch!"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 412 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassman", 3, true)
+                    end,
+                    option = function() --[[ option | Line: 415 ]]
+                        return "Thanks, Grassman!"
+                    end
+                }
+            }
+        },
+        [12] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 424 ]]
+                return "This is the DATA RECOVERY SYSTEM which will modify your save data to ROUGHLY where it should be based on your \"ROBLOX\" badges! This is only for if you have lost all of your data or want a head start after hard resetting!"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 429 | Upvalues: SaveObject (copy), t (copy) ]]
+                        SaveObject.RecoverData()
+
+                        return t.SetDialogue("grassman", 13, true)
+                    end,
+                    option = function() --[[ option | Line: 433 ]]
+                        return "<font color=\"#ff00ff\">Recover Data</font>"
+                    end
+                }
+            }
+        },
+        [13] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 442 ]]
+                return "Your data has been recovered! You will not be exactly where you were, but not all is lost!"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 447 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassman", 3, true)
+                    end,
+                    option = function() --[[ option | Line: 450 ]]
+                        return "Thanks, Grassman!"
+                    end
+                }
+            }
+        },
+        [14] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 459 ]]
+                return "Credit where credit is due!\nMusic producer: Dark_D04\nAccomplish and Planetoid Cap icon created by MrRedShark77\nSpassman and Planetoidman created by PlantMan\nWorld 1 help entries written by Stan\nWorld 2 help entries written by GrandDom"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 469 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassman", 3, true)
+                    end,
+                    option = function() --[[ option | Line: 472 ]]
+                        return "Thanks, Grassman!"
+                    end
+                }
+            }
+        },
+        [15] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 481 ]]
+                return "This is the FLOWER RESET SYSTEM which will RESET ALL FLOWERS, FLOWER UPGRADES, AND GOALS and gives flowers based on how many dailies you have claimed! THIS IS ONLY FOR PEOPLE WHO HAVE NOT BOUGHT FLOWERS! DO NOT DO THIS IF YOU HAVE BOUGHT FLOWERS! This will count as a respec."
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 486 | Upvalues: Data (copy), SaveObject (copy), t (copy) ]]
+                        if Data.ImportantData.Stats.Accomplish.fsTime >= 604800 then
+                            SaveObject.ResetFlowers()
+
+                            return t.SetDialogue("grassman", 16, true)
+                        end
+
+                        return t.SetDialogue("grassman", 17, true)
+                    end,
+                    option = function() --[[ option | Line: 494 ]]
+                        return "<font color=\"#ff00ff\">Reset Flowers</font>"
+                    end
+                }
+            }
+        },
+        [16] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 503 ]]
+                return "Your flowers has been reset!"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 508 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassman", 3, true)
+                    end,
+                    option = function() --[[ option | Line: 511 ]]
+                        return "Thanks, Grassman!"
+                    end
+                }
+            }
+        },
+        [17] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 520 ]]
+                return "You don\'t have a respec available!"
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 523 | Upvalues: t (copy) ]]
+                return t.EndDialogue()
+            end
+        }
+    },
+    antigrassman = {
+        boxColor = Color3.new(0.0313725, 0, 0.52549),
+        [1] = {
+            nameDisplay = "Anti-Grassman",
+            imageDisplay = "rbxassetid://10061146797",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 533 ]]
+                return "..."
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 538 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("antigrassman", 2, true)
+                    end,
+                    option = function() --[[ option | Line: 541 ]]
+                        return "Hello!"
+                    end
+                }
+            }
+        },
+        [2] = {
+            nameDisplay = "Anti-Grassman",
+            imageDisplay = "rbxassetid://10061146797",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 550 ]]
+                return "..."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 553 | Upvalues: t (copy) ]]
+                return t.EndDialogue()
+            end
+        }
+    },
+    spassman = {
+        boxColor = Color3.new(0/255, 0/255, 0/255),
+        [1] = {
+            nameDisplay = "Spassman",
+            imageDisplay = "rbxassetid://10061146344",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 563 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+                if not LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("gg"), LethalNum.new(1, 0)) then
+                    return "..."
+                end
+
+                if LethalNum.isGreaterE(CurrencyTypes.GetCurrencyAmt("gg"), LethalNum.new(1, 0)) then
+                    return "Restore the portal to the Grassland and defend the sacred land!"
+                end
+
+                return "We must fight back against the evil grass army!"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 576 | Upvalues: LethalNum (copy), CurrencyTypes (copy), t (copy) ]]
+                        if LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("gg"), LethalNum.new(1, 0)) then
+                            return t.EndDialogue()
+                        end
+
+                        return t.SetDialogue("spassman", 2, true)
+                    end,
+                    option = function() --[[ option | Line: 584 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+                        if LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("gg"), LethalNum.new(1, 0)) then
+                            return "Alright then"
+                        end
+
+                        return "Hello!"
+                    end
+                }
+            }
+        },
+        [2] = {
+            nameDisplay = "Spassman",
+            imageDisplay = "rbxassetid://10061146344",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 597 ]]
+                return "Today is not the time..."
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 602 | Upvalues: t (copy) ]]
+                        return t.EndDialogue()
+                    end,
+                    option = function() --[[ option | Line: 609 ]]
+                        return "..."
+                    end
+                }
+            }
+        }
+    },
+    spassman2 = {
+        boxColor = Color3.new(0/255, 0/255, 0/255),
+        [1] = {
+            nameDisplay = "Spassman",
+            imageDisplay = "rbxassetid://10061146344",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 625 ]]
+                return "..."
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 630 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("spassman2", 2, true)
+                    end,
+                    option = function() --[[ option | Line: 633 ]]
+                        return "Hello?"
+                    end
+                }
+            }
+        },
+        [2] = {
+            nameDisplay = "Spassman",
+            imageDisplay = "rbxassetid://10061146344",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 642 ]]
+                return "Welcome to The Void..."
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 647 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("spassman2", 3, true)
+                    end,
+                    option = function() --[[ option | Line: 650 ]]
+                        return "Thanks!"
+                    end
+                }
+            }
+        },
+        [3] = {
+            nameDisplay = "Spassman",
+            imageDisplay = "rbxassetid://10061146344",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 659 ]]
+                return "Here, you will find what was once lost, the key to the Grassland"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 664 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("spassman2", 4, true)
+                    end,
+                    option = function() --[[ option | Line: 667 ]]
+                        return "What are you talking about?"
+                    end
+                }
+            }
+        },
+        [4] = {
+            nameDisplay = "Spassman",
+            imageDisplay = "rbxassetid://10061146344",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 676 ]]
+                return "The Grassland is a sacred land for all of grass kind, yet there is an army of grass who seek to destroy it..."
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 681 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("spassman2", 5, true)
+                    end,
+                    option = function() --[[ option | Line: 684 ]]
+                        return "Who?"
+                    end
+                }
+            }
+        },
+        [5] = {
+            nameDisplay = "Spassman",
+            imageDisplay = "rbxassetid://10061146344",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 693 ]]
+                return "We are unsure as to who would want to destroy such a beautiful land, but I could make a guess..."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 696 | Upvalues: t (copy) ]]
+                return t.SetDialogue("spassman2", 6, true)
+            end
+        },
+        [6] = {
+            nameDisplay = "Spassman",
+            imageDisplay = "rbxassetid://10061146344",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 703 ]]
+                return "Grassman..."
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 708 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("spassman2", 7, true)
+                    end,
+                    option = function() --[[ option | Line: 711 ]]
+                        return "No!"
+                    end
+                }
+            }
+        },
+        [7] = {
+            nameDisplay = "Spassman",
+            imageDisplay = "rbxassetid://10061146344",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 720 ]]
+                return "Who else would be able to raise an army of grass? It is all clear to me now."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 723 | Upvalues: t (copy) ]]
+                return t.SetDialogue("spassman2", 8, true)
+            end
+        },
+        [8] = {
+            nameDisplay = "Spassman",
+            imageDisplay = "rbxassetid://10061146344",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 730 ]]
+                return "This is where you come in. You must travel through the wonderful worlds of the Grassland and rid the evil grass that plague them so..."
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 735 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("spassman2", 9, true)
+                    end,
+                    option = function() --[[ option | Line: 738 ]]
+                        return "How do I reach the Grassland?"
+                    end
+                }
+            }
+        },
+        [9] = {
+            nameDisplay = "Spassman",
+            imageDisplay = "rbxassetid://10061146344",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 747 ]]
+                return "The final Grasslands portal piece requires the Grassland Gem. I sense it has been lost here in The Void, such is the reason I brought you here."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 750 | Upvalues: t (copy) ]]
+                return t.SetDialogue("spassman2", 10, true)
+            end
+        },
+        [10] = {
+            nameDisplay = "Spassman",
+            imageDisplay = "rbxassetid://10061146344",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 757 ]]
+                return "Follow the light and you may find what we are looking for..."
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 762 | Upvalues: t (copy) ]]
+                        return t.EndDialogue()
+                    end,
+                    option = function() --[[ option | Line: 765 ]]
+                        return "Goodbye"
+                    end
+                }
+            }
+        }
+    },
+    grassmanBoss = {
+        boxColor = Color3.new(0.0313725, 0, 0.52549),
+        noClose = true,
+        [1] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 778 | Upvalues: Data (copy) ]]
+                Data.ImportantData.Stats.endSequence = true
+                workspace.Features.Boss.Dialogue1:PivotTo(CFrame.new(10000, 10000, 10000) * CFrame.Angles(0, 0, 0))
+                workspace.Features.Boss.Door:PivotTo(CFrame.new(53971.148, 9697.25, -33040.039) * CFrame.Angles(0, -1.5707963267948966, 0))
+
+                return "Well well well... look who finally showed up."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 785 | Upvalues: t (copy) ]]
+                return t.SetDialogue("grassmanBoss", 2, true)
+            end
+        },
+        [2] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 792 ]]
+                return "You must have a lot of questions..."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 795 | Upvalues: t (copy) ]]
+                return t.EndDialogue()
+            end
+        }
+    },
+    grassmanBoss2 = {
+        boxColor = Color3.new(0.0313725, 0, 0.52549),
+        noClose = true,
+        [1] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 806 ]]
+                workspace.Features.Boss.Dialogue2:PivotTo(CFrame.new(10000, 10000, 10000) * CFrame.Angles(0, 0, 0))
+
+                return "I personally would not get any closer if I were you."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 810 | Upvalues: t (copy) ]]
+                return t.EndDialogue()
+            end
+        }
+    },
+    grassmanBoss3 = {
+        boxColor = Color3.new(0.0313725, 0, 0.52549),
+        noClose = true,
+        [1] = {
+            nameDisplay = "Grassman?",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 821 ]]
+                workspace.Features.Boss.Dialogue3:PivotTo(CFrame.new(10000, 10000, 10000) * CFrame.Angles(0, 0, 0))
+
+                return "Oh well, I suppose there is no point in keeping up this charade."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 825 | Upvalues: t (copy) ]]
+                return t.SetDialogue("grassmanBoss3", 2, true)
+            end
+        },
+        [2] = {
+            nameDisplay = "Grassman??",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 832 ]]
+                return "You have done everything I needed you to do. You are useless to me now."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 835 | Upvalues: t (copy) ]]
+                return t.SetDialogue("grassmanBoss3", 3, true)
+            end
+        },
+        [3] = {
+            nameDisplay = "Grassman???",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 842 ]]
+                return "It is time for me to reveal who I truly am."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 845 | Upvalues: t (copy) ]]
+                return t.SetDialogue("grassmanBoss3", 4, true)
+            end
+        },
+        [4] = {
+            nameDisplay = "Man",
+            imageDisplay = "rbxassetid://14708507707",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 852 ]]
+                workspace.Features.Boss.GrassmanFake:PivotTo(CFrame.new(20000, 20000, 20000) * CFrame.Angles(0, 0, 0))
+                workspace.Features.Boss.ManREAL:PivotTo(CFrame.new(54239.141, 9693.096, -33041.539) * CFrame.Angles(0, math.pi, -1.5707963267948966))
+
+                return "BEHOLD! It was me the whole time!"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 859 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassmanBoss3", 5, true)
+                    end,
+                    option = function() --[[ option | Line: 862 ]]
+                        return "MAN?!"
+                    end
+                }
+            }
+        },
+        [5] = {
+            nameDisplay = "Man?",
+            imageDisplay = "rbxassetid://14708507707",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 871 ]]
+                return "Who? Oh sorry, wrong one..."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 874 | Upvalues: t (copy) ]]
+                return t.SetDialogue("grassmanBoss3", 6, true)
+            end
+        },
+        [6] = {
+            nameDisplay = "Spassman",
+            imageDisplay = "rbxassetid://10061146344",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 881 ]]
+                workspace.Features.Boss.ManREAL:PivotTo(CFrame.new(20000, 20000, 20000) * CFrame.Angles(0, 0, 0))
+                workspace.Features.Boss.SpacemanREAL:PivotTo(CFrame.new(54244.156, 9664.111, -33043.457) * CFrame.Angles(0, -1.5707963267948966, 0))
+
+                return "BEHOLD! It was ME the whole time!"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 889 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassmanBoss3", 7, true)
+                    end,
+                    option = function() --[[ option | Line: 892 ]]
+                        return "SPASSMAN!?"
+                    end
+                }
+            }
+        },
+        [7] = {
+            nameDisplay = "Spassman",
+            imageDisplay = "rbxassetid://10061146344",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 901 ]]
+                return "Yes... you were a fool and believed everything I said. Did you really think Grassman would try and destroy the Grassland?"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 906 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassmanBoss3", 8, true)
+                    end,
+                    option = function() --[[ option | Line: 909 ]]
+                        return "Yes"
+                    end
+                },
+                {
+                    effect = function() --[[ effect | Line: 914 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassmanBoss3", 9, true)
+                    end,
+                    option = function() --[[ option | Line: 917 ]]
+                        return "No"
+                    end
+                }
+            }
+        },
+        [8] = {
+            nameDisplay = "Spassman",
+            imageDisplay = "rbxassetid://10061146344",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 926 ]]
+                return "NO! OF COURSE NOT! IT IS THE MAN\'S HOME LAND! But it is a good thing you believed me since my plan went off flawlessly..."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 929 | Upvalues: t (copy) ]]
+                return t.SetDialogue("grassmanBoss3", 10, true)
+            end
+        },
+        [9] = {
+            nameDisplay = "Spassman",
+            imageDisplay = "rbxassetid://10061146344",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 936 ]]
+                return "And yet here you are... Destroying every one of Grassman\'s creations reducing his powers over this world..."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 939 | Upvalues: t (copy) ]]
+                return t.SetDialogue("grassmanBoss3", 10, true)
+            end
+        },
+        [10] = {
+            nameDisplay = "Spassman",
+            imageDisplay = "rbxassetid://10061146344",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 946 ]]
+                return "But I have been speaking long enough. It is time to say goodbye."
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 951 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassmanBoss3", 11, true)
+                    end,
+                    option = function() --[[ option | Line: 954 ]]
+                        return "No!"
+                    end
+                }
+            }
+        },
+        [11] = {
+            nameDisplay = "Spassman",
+            imageDisplay = "rbxassetid://10061146344",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 963 ]]
+                return "What, did you expect an epic boss fight or something..? Do you want a reward for helping me with my plans instead?"
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 966 | Upvalues: BuyUpgrade (copy), Data (copy), t (copy) ]]
+                BuyUpgrade.World1End()
+                Data.ImportantData.Misc.player.Character:PivotTo(CFrame.new(54172.641, 9670.343, -33042.043) * CFrame.Angles(0, -1.5707963267948966, 0))
+
+                return t.SetDialogue("grassmanBoss3", 12, true)
+            end
+        },
+        [12] = {
+            nameDisplay = "Spassman",
+            imageDisplay = "rbxassetid://10061146344",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 977 ]]
+                return "There, it is the only thing you deserve."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 980 | Upvalues: t (copy) ]]
+                workspace.Features.Boss.Trapdoor:PivotTo(CFrame.new(20000, 20000, 20000) * CFrame.Angles(0, 0, 0))
+
+                return t.SetDialogue("grassmanBoss3", 13, true)
+            end
+        },
+        [13] = {
+            nameDisplay = "Spassman",
+            imageDisplay = "rbxassetid://10061146344",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 990 ]]
+                return "Goodbye..."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 993 | Upvalues: t (copy) ]]
+                workspace.Features.Boss.TrapdoorInvis:PivotTo(CFrame.new(20000, 20000, 20000) * CFrame.Angles(0, 0, 0))
+
+                return t.EndDialogue()
+            end
+        }
+    },
+    grassmanS = {
+        boxColor = Color3.new(0, 0.52549, 0),
+        [1] = {
+            nameDisplay = "grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1004 ]]
+                return "well hello there my friend! how are you doing on this fineday?"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 1009 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassmanS", 1, true)
+                    end,
+                    option = function() --[[ option | Line: 1012 ]]
+                        return "hello"
+                    end
+                }
+            }
+        }
+    },
+    grassmanW2 = {
+        boxColor = Color3.new(0, 0.52549, 0),
+        [1] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1024 ]]
+                return "Looks like you are in a predicament friend!"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 1029 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassmanW2", 2, true)
+                    end,
+                    option = function() --[[ option | Line: 1032 ]]
+                        return "Prestige Stats"
+                    end
+                },
+                {
+                    effect = function() --[[ effect | Line: 1037 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassmanW2", 15, true)
+                    end,
+                    option = function() --[[ option | Line: 1040 ]]
+                        return "Lore"
+                    end
+                }
+            }
+        },
+        [15] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1049 ]]
+                return "lore"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 1054 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassmanW2", 4, true)
+                    end,
+                    option = function() --[[ option | Line: 1057 ]]
+                        return "Intro"
+                    end
+                },
+                {
+                    effect = function() --[[ effect | Line: 1062 | Upvalues: Data (copy), t (copy) ]]
+                        if Data.ImportantData.Stats.prog2 >= 2 or Data.ImportantData.Stats.prog2a >= 1 then
+                            return t.SetDialogue("grassmanW2", 16, true)
+                        end
+
+                        return t.SetDialogue("grassmanW2", 15, true)
+                    end,
+                    option = function() --[[ option | Line: 1069 | Upvalues: Data (copy) ]]
+                        if Data.ImportantData.Stats.prog2 >= 2 or Data.ImportantData.Stats.prog2a >= 1 then
+                            return "Desert"
+                        end
+
+                        return "???"
+                    end
+                },
+                {
+                    effect = function() --[[ effect | Line: 1078 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassmanW2", 21, true)
+                    end,
+                    option = function() --[[ option | Line: 1081 ]]
+                        return "More"
+                    end
+                }
+            }
+        },
+        [21] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1090 ]]
+                return "lore"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 1095 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassmanW2", 15, true)
+                    end,
+                    option = function() --[[ option | Line: 1102 ]]
+                        return "???"
+                    end
+                }
+            }
+        },
+        [2] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1115 | Upvalues: InfoStore (copy) ]]
+                local v1 = "Let\'s see here...\nYou have done:" .. "\n<font color=\"#bbff00\">" .. InfoStore.Resets.rune.b .. " Rune resets</font>"
+
+                if InfoStore.Resets.sapphire.b > 0 then
+                    v1 = v1 .. "\n<font color=\"#00c8ff\">" .. InfoStore.Resets.sapphire.b .. " Sapphire resets</font>"
+                end
+
+                if InfoStore.Resets.temple.b > 0 then
+                    v1 = v1 .. "\n<font color=\"#ffc6c6\">" .. InfoStore.Resets.temple.b .. " Awakens</font>"
+                end
+
+                if InfoStore.Resets.l4.b > 0 then
+                    v1 = v1 .. "\n<font color=\"#00ffa2\">" .. InfoStore.Resets.l4.b .. " True Awakens</font>"
+                end
+
+                if InfoStore.Resets.l5.b > 0 then
+                    v1 = v1 .. "\n<font color=\"#c7c7c7\">" .. InfoStore.Resets.l5.b .. " Great Rift resets</font>"
+                end
+
+                return v1
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 1135 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("grassmanW2", 3, true)
+                    end,
+                    option = function() --[[ option | Line: 1138 ]]
+                        return "Thanks, Grassman!"
+                    end
+                }
+            }
+        },
+        [3] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1147 ]]
+                return "You are welcome!"
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1150 | Upvalues: t (copy) ]]
+                return t.EndDialogue()
+            end
+        },
+        [4] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1157 ]]
+                return "It is very sad you trusted Spassman over me, but I am willing to forgive you!"
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1163 | Upvalues: InfoStore (copy), t (copy) ]]
+                if InfoStore.Resets.rune.b < 1 then
+                    return t.SetDialogue("grassmanW2", 5, true)
+                end
+
+                return t.EndDialogue()
+            end
+        },
+        [5] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1173 ]]
+                return "Welcome to The Forgotten World!"
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1176 | Upvalues: t (copy) ]]
+                return t.SetDialogue("grassmanW2", 6, true)
+            end
+        },
+        [6] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1183 ]]
+                return "If you are planning on defeating Spassman, you will need to collect the three legendary Grass Artifacts!"
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1186 | Upvalues: t (copy) ]]
+                return t.SetDialogue("grassmanW2", 7, true)
+            end
+        },
+        [7] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1193 ]]
+                return "One grass artifact is located in the cursed pits"
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1196 | Upvalues: t (copy) ]]
+                return t.SetDialogue("grassmanW2", 8, true)
+            end
+        },
+        [8] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1203 ]]
+                return "Another grass artifact is located somewhere far below the surface"
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1206 | Upvalues: t (copy) ]]
+                return t.SetDialogue("grassmanW2", 9, true)
+            end
+        },
+        [9] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1213 ]]
+                return "The final grass artifact is located in the skies"
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1216 | Upvalues: t (copy) ]]
+                return t.SetDialogue("grassmanW2", 10, true)
+            end
+        },
+        [10] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1223 ]]
+                return "There is one individual located in the desert who can help you find these artifacts, but there are a few problems!"
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1226 | Upvalues: t (copy) ]]
+                return t.SetDialogue("grassmanW2", 11, true)
+            end
+        },
+        [11] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1233 ]]
+                return "The desert is guarded by a dangerous sandstorm..! You will need to find a desert artifact to access the desert unharmed!"
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1236 | Upvalues: t (copy) ]]
+                return t.SetDialogue("grassmanW2", 12, true)
+            end
+        },
+        [12] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1243 ]]
+                return "The temple located in this jungle may contain a desert artifact, but the door is sealed shut..."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1246 | Upvalues: t (copy) ]]
+                return t.SetDialogue("grassmanW2", 13, true)
+            end
+        },
+        [13] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1253 ]]
+                return "There is an ancient device used to tear the fabric of reality just across the river here. You may be able to use it to open the temple somehow!"
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1256 | Upvalues: t (copy) ]]
+                return t.SetDialogue("grassmanW2", 14, true)
+            end
+        },
+        [14] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1263 ]]
+                return "Good luck!"
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1266 | Upvalues: t (copy) ]]
+                return t.EndDialogue()
+            end
+        },
+        [16] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1273 ]]
+                return "I see you made it to the desert and even calmed down the sandstorm! Good job!"
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1276 | Upvalues: t (copy) ]]
+                return t.SetDialogue("grassmanW2", 17, true)
+            end
+        },
+        [17] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1283 ]]
+                return "Now you just have to find the Cactus God!"
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1286 | Upvalues: t (copy) ]]
+                return t.SetDialogue("grassmanW2", 18, true)
+            end
+        },
+        [18] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1293 ]]
+                return "I seem to recall there being a rift in the upper temple that leads directly to him..."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1296 | Upvalues: t (copy) ]]
+                return t.SetDialogue("grassmanW2", 19, true)
+            end
+        },
+        [19] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1303 ]]
+                return "Try to find a way to the upper temple and begin your search there!"
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1306 | Upvalues: t (copy) ]]
+                return t.SetDialogue("grassmanW2", 20, true)
+            end
+        },
+        [20] = {
+            nameDisplay = "Grassman",
+            imageDisplay = "rbxassetid://10061146611",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1313 ]]
+                return "Oh! And remember to be nice to Cactus God. You may not like it but he is our best chance! :)"
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1316 | Upvalues: t (copy) ]]
+                return t.SetDialogue("grassmanW2", 14, true)
+            end
+        }
+    },
+    cactus = {
+        boxColor = Color3.new(0.0313725, 0, 0.52549),
+        noClose = true,
+        [1] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1327 | Upvalues: Data (copy) ]]
+                if Data.ImportantData.Stats.prog2 < 2 then
+                    return "bro what are you doing here"
+                end
+
+                if Data.ImportantData.Stats.prog2 >= 4 then
+                    return "You\'re still here?"
+                end
+
+                if Data.ImportantData.Stats.prog2 >= 3 then
+                    return "Oh, it\'s you."
+                end
+
+                if Data.ImportantData.Stats.prog2a >= 1 then
+                    return "Blah blah blah."
+                end
+
+                return "Who dares enter my domain?"
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1342 | Upvalues: Data (copy), t (copy), BuyUpgrade (copy) ]]
+                if Data.ImportantData.Stats.prog2 < 2 then
+                    return t.EndDialogue()
+                end
+
+                if Data.ImportantData.Stats.prog2 >= 4 then
+                    return t.SetDialogue("cactus", 15, true)
+                end
+
+                if Data.ImportantData.Stats.prog2 >= 3 then
+                    return t.SetDialogue("cactus", 13, true)
+                end
+
+                if Data.ImportantData.Stats.prog2a >= 1 then
+                    BuyUpgrade.ClientEvent({
+                        id = "w2Prog",
+                        num = 3
+                    })
+
+                    return t.SetDialogue("cactus", 13, true)
+                end
+
+                return t.SetDialogue("cactus", 2, true)
+            end
+        },
+        [13] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1362 ]]
+                return "What do you want?"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 1367 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("cactus", 14, true)
+                    end,
+                    option = function() --[[ option | Line: 1370 ]]
+                        return "Begin Trials"
+                    end
+                },
+                {
+                    effect = function() --[[ effect | Line: 1375 | Upvalues: t (copy) ]]
+                        return t.EndDialogue()
+                    end,
+                    option = function() --[[ option | Line: 1378 ]]
+                        return "Nevermind"
+                    end
+                }
+            }
+        },
+        [14] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1388 ]]
+                return "Go ahead."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1391 | Upvalues: BuyUpgrade (copy), Resets (copy), t (copy) ]]
+                BuyUpgrade.ClientEvent({
+                    id = "startCTrial"
+                })
+                Resets.ClearField("cactus")
+
+                return t.EndDialogue()
+            end
+        },
+        [15] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1400 ]]
+                return "I have done what you have asked. Get out of here."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1403 | Upvalues: t (copy) ]]
+                return t.EndDialogue()
+            end
+        },
+        [2] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1410 ]]
+                return "Only the most foolish of mortals would be dumb enough to face me: The greatest of all time."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1413 | Upvalues: t (copy) ]]
+                return t.SetDialogue("cactus", 3, true)
+            end
+        },
+        [3] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1420 ]]
+                return "Oh, but surely you have visited me for a reason regardless of how stupid it (or you) may be."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1423 | Upvalues: t (copy) ]]
+                return t.SetDialogue("cactus", 4, true)
+            end
+        },
+        [4] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1430 ]]
+                return "I am willing to hear you out, but only because I am incredibly merciful (and great)."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1433 | Upvalues: t (copy) ]]
+                return t.SetDialogue("cactus", 5, true)
+            end
+        },
+        [5] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1440 ]]
+                return "Why are you here?"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 1445 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("cactus", 6, true)
+                    end,
+                    option = function() --[[ option | Line: 1448 ]]
+                        return "Rift"
+                    end
+                }
+            }
+        },
+        [6] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1457 ]]
+                return "You are trying to break the fabric of reality in order to find three grass artifacts so you can defeat an evil man called Spassman because he is trying to take over the world?"
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 1462 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("cactus", 7, true)
+                    end,
+                    option = function() --[[ option | Line: 1465 ]]
+                        return "Yes"
+                    end
+                }
+            }
+        },
+        [7] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1474 ]]
+                return "Don\'t care."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1477 | Upvalues: t (copy) ]]
+                return t.SetDialogue("cactus", 8, true)
+            end
+        },
+        [8] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1484 ]]
+                return "However, you could convince me to care if you are willing to entertain me."
+            end,
+            options = {
+                {
+                    effect = function() --[[ effect | Line: 1489 | Upvalues: t (copy) ]]
+                        return t.SetDialogue("cactus", 9, true)
+                    end,
+                    option = function() --[[ option | Line: 1492 ]]
+                        return "What can I do?"
+                    end
+                }
+            }
+        },
+        [9] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1501 ]]
+                return "I set up these trials called Cactus Trials for any sucker who needs my help."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1504 | Upvalues: t (copy) ]]
+                return t.SetDialogue("cactus", 10, true)
+            end
+        },
+        [10] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1511 ]]
+                return "It\'s a very simple exchange. You play my fun trials and in return I MIGHT help you."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1514 | Upvalues: t (copy) ]]
+                return t.SetDialogue("cactus", 11, true)
+            end
+        },
+        [11] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1521 ]]
+                return "Do REALLY well and then we will see about opening that Rift."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1524 | Upvalues: t (copy) ]]
+                return t.SetDialogue("cactus", 12, true)
+            end
+        },
+        [12] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1531 ]]
+                return "Talk to me again once you are ready to begin the trials."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1534 | Upvalues: BuyUpgrade (copy), t (copy) ]]
+                BuyUpgrade.ClientEvent({
+                    id = "w2Prog",
+                    num = 3
+                })
+
+                return t.EndDialogue()
+            end
+        }
+    },
+    cactus2 = {
+        boxColor = Color3.new(0.0313725, 0, 0.52549),
+        noClose = true,
+        [1] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1546 | Upvalues: Data (copy) ]]
+                if Data.ImportantData.Stats.prog2a >= 1 then
+                    return "What a shocker."
+                end
+
+                return "Well."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1552 | Upvalues: Data (copy), BuyUpgrade (copy), t (copy) ]]
+                if Data.ImportantData.Stats.prog2a >= 1 then
+                    BuyUpgrade.ClientEvent({
+                        id = "w2Prog",
+                        num = 4
+                    })
+
+                    return t.SetDialogue("cactus2", 7, true)
+                end
+
+                return t.SetDialogue("cactus2", 2, true)
+            end
+        },
+        [2] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1563 ]]
+                return "Consider me slightly impressed."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1566 | Upvalues: t (copy) ]]
+                return t.SetDialogue("cactus2", 3, true)
+            end
+        },
+        [3] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1573 ]]
+                return "You completed my trials."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1576 | Upvalues: t (copy) ]]
+                return t.SetDialogue("cactus2", 4, true)
+            end
+        },
+        [4] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1583 ]]
+                return "I will open a portal that will take you closer to where you want to go."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1586 | Upvalues: BuyUpgrade (copy), t (copy) ]]
+                BuyUpgrade.ClientEvent({
+                    id = "w2Prog",
+                    num = 4
+                })
+
+                return t.SetDialogue("cactus2", 5, true)
+            end
+        },
+        [5] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1594 ]]
+                return "You will have to figure out the rest yourself."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1597 | Upvalues: t (copy) ]]
+                return t.SetDialogue("cactus2", 6, true)
+            end
+        },
+        [6] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1604 ]]
+                return "Now leave."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1607 | Upvalues: t (copy) ]]
+                return t.EndDialogue()
+            end
+        },
+        [7] = {
+            nameDisplay = "Cactus God",
+            imageDisplay = "rbxassetid://18799493052",
+            dialogueInfo = function() --[[ dialogueInfo | Line: 1614 ]]
+                return "The portal is open again."
+            end,
+            automaticContinue = function() --[[ automaticContinue | Line: 1617 | Upvalues: t (copy) ]]
+                return t.EndDialogue()
+            end
+        }
+    }
+}
+
+return t
