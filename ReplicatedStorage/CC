@@ -1,0 +1,164 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local CurrencyTypes = require(ReplicatedStorage.CurrencyTypes)
+local t = {
+    Creations = {
+        p = {
+            display = "Pure",
+            desc = "Complex Creations are special runs that temporarily disables all post true awaken upgrades and TAL 6, but allows access to the world of understanding which will help you progress faster and eventually finish the run. Depending on the complexity, some world of understanding features may be locked\n\nThis first complex creation is an incredibly simple creation so it won\'t take long to understand",
+            reward = "<font color=\"#00ff00\">Unlocks the Purity Chamber in the gauntlet</font>",
+            tier = 1,
+            complexity = 1,
+            completed = false,
+            icon = "rbxassetid://16263475399",
+            order = 1,
+            goal = LethalNum.new(1, 12),
+            reqText = function() --[[ reqText | Line: 14 | Upvalues: LethalNum (copy) ]]
+                return LethalNum.getString(LethalNum.new(1, 5)) .. " Max Creation Energy"
+            end,
+            req = function(p1) --[[ req | Line: 17 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+                if p1 then
+                    return LethalNum.isGreaterE(p1.Currency.curr.ce.cap, LethalNum.new(1, 5))
+                end
+
+                return LethalNum.isGreaterE(CurrencyTypes.Currencies.ce.cap or LethalNum.new(0, 0), LethalNum.new(1, 5))
+            end
+        },
+        r = {
+            display = "Heart",
+            desc = "It\'s a heart. You have no idea what it could possibly do\n\nYou\'ll start with some understanding",
+            reward = "<font color=\"#00ff00\">Permanently unlocks the Regeneration feature and the Life Chamber in the gauntlet</font>",
+            tier = 1,
+            complexity = 2,
+            completed = false,
+            icon = "rbxassetid://16263476259",
+            order = 2,
+            goal = LethalNum.new(1, 27),
+            reqText = function() --[[ reqText | Line: 35 | Upvalues: LethalNum (copy) ]]
+                return LethalNum.getString(LethalNum.new(1, 8)) .. " Max Creation Energy"
+            end,
+            req = function(p1) --[[ req | Line: 38 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+                if p1 then
+                    return LethalNum.isGreaterE(p1.Currency.curr.ce.cap, LethalNum.new(1, 8))
+                end
+
+                return LethalNum.isGreaterE(CurrencyTypes.Currencies.ce.cap or LethalNum.new(0, 0), LethalNum.new(1, 8))
+            end
+        },
+        t = {
+            display = "Triangle",
+            desc = "A deceptively simple yet complex shape that holds many secrets\n\nYou\'ll start with some understanding and breakthroughs",
+            reward = "<font color=\"#00ff00\">Triples tier 2 artifact cap and increases base drop by 1</font>",
+            tier = 1,
+            complexity = 3,
+            completed = false,
+            icon = "rbxassetid://18303475453",
+            order = 3,
+            goal = LethalNum.new(1, 36),
+            reqText = function() --[[ reqText | Line: 56 | Upvalues: LethalNum (copy) ]]
+                return LethalNum.getString(LethalNum.new(5, 11)) .. " Max Creation Energy"
+            end,
+            req = function(p1) --[[ req | Line: 59 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+                if p1 then
+                    return LethalNum.isGreaterE(p1.Currency.curr.ce.cap, LethalNum.new(5, 11))
+                end
+
+                return LethalNum.isGreaterE(CurrencyTypes.Currencies.ce.cap or LethalNum.new(0, 0), LethalNum.new(5, 11))
+            end
+        },
+        g = {
+            display = "Great",
+            desc = "A grand creation that shows a lot of potential. It is up to you to try and understand what that potential is\n\nYou\'ll start with some understanding and breakthroughs",
+            reward = "<font color=\"#00ff00\">Unlocks the Great Chamber in the temple gauntlet</font>",
+            tier = 1,
+            complexity = 4,
+            completed = false,
+            icon = "rbxassetid://18662842152",
+            order = 4,
+            goal = LethalNum.new(1, 65),
+            reqText = function() --[[ reqText | Line: 77 | Upvalues: LethalNum (copy) ]]
+                return LethalNum.getString(LethalNum.new(1, 18)) .. " Max Creation Energy"
+            end,
+            req = function(p1) --[[ req | Line: 80 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+                if p1 then
+                    return LethalNum.isGreaterE(p1.Currency.curr.ce.cap, LethalNum.new(1, 18))
+                end
+
+                return LethalNum.isGreaterE(CurrencyTypes.Currencies.ce.cap or LethalNum.new(0, 0), LethalNum.new(1, 18))
+            end
+        },
+        d = {
+            display = "Broken",
+            desc = "This broken heart was created following a great loss in an attempt to fill the void that has been left in its place. A deeper understanding of this creation may help you recover what you have lost as well\n\nYou\'ll start with some understanding, breakthroughs, and discoveries",
+            reward = "<font color=\"#00ff00\">Permanently unlocks the Degeneration feature (near destabilize)</font>",
+            tier = 1,
+            complexity = 5,
+            completed = false,
+            icon = "rbxassetid://18665980621",
+            order = 5,
+            goal = LethalNum.new(1, 75),
+            reqText = function() --[[ reqText | Line: 98 | Upvalues: LethalNum (copy) ]]
+                return LethalNum.getString(LethalNum.new(3, 25)) .. " Max Creation Energy"
+            end,
+            req = function(p1) --[[ req | Line: 101 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+                if p1 then
+                    return LethalNum.isGreaterE(p1.Currency.curr.ce.cap, LethalNum.new(3, 25))
+                end
+
+                return LethalNum.isGreaterE(CurrencyTypes.Currencies.ce.cap or LethalNum.new(0, 0), LethalNum.new(3, 25))
+            end
+        },
+        f = {
+            display = "Found",
+            desc = "What was lost has now been found. Understanding the past may help you find the night\n\nYou\'ll start with some understanding, breakthroughs, and discoveries",
+            reward = "<font color=\"#00ff00\">Permanently unlocks the Fossilize reset in the desert and a new desert gauntlet area</font>",
+            tier = 1,
+            complexity = 6,
+            completed = false,
+            icon = "rbxassetid://18690187098",
+            order = 6,
+            goal = LethalNum.new(1, 150),
+            reqText = function() --[[ reqText | Line: 119 | Upvalues: LethalNum (copy) ]]
+                return LethalNum.getString(LethalNum.new(1, 33)) .. " Max Creation Energy"
+            end,
+            req = function(p1) --[[ req | Line: 122 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+                if p1 then
+                    return LethalNum.isGreaterE(p1.Currency.curr.ce.cap, LethalNum.new(1, 33))
+                end
+
+                return LethalNum.isGreaterE(CurrencyTypes.Currencies.ce.cap or LethalNum.new(0, 0), LethalNum.new(1, 33))
+            end
+        }
+    }
+}
+
+function t.GetCCTier(p1) --[[ GetCCTier | Line: 207 | Upvalues: t (copy) ]]
+    if t.Creations[p1] then
+        return t.Creations[p1].tier
+    end
+
+    return 0
+end
+function t.GetCompleted(p1) --[[ GetCompleted | Line: 221 | Upvalues: t (copy) ]]
+    if t.Creations[p1] then
+        return t.Creations[p1].completed
+    end
+
+    return false
+end
+function t.GetGoal(p1) --[[ GetGoal | Line: 229 | Upvalues: t (copy), LethalNum (copy) ]]
+    if t.Creations[p1] then
+        return t.Creations[p1].goal
+    end
+
+    return LethalNum.new(1, 99999)
+end
+function t.GetUnlocked(p1) --[[ GetUnlocked | Line: 237 | Upvalues: t (copy) ]]
+    if t.Creations[p1] then
+        return t.Creations[p1].req()
+    end
+
+    return false
+end
+
+return t
