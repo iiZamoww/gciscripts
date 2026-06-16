@@ -1,0 +1,10 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Data = require(ReplicatedStorage.Data)
+local RunService = game:GetService("RunService")
+
+local function onStepped(p1, p2) --[[ onStepped | Line: 5 | Upvalues: Data (copy) ]]
+    Data.ImportantData.Stats.deltaTime = p2
+    Data.ImportantData.Events.animate:Fire()
+end
+
+RunService.Stepped:Connect(onStepped)
