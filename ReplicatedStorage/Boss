@@ -1,0 +1,14 @@
+return {
+    ResetBoss = function() --[[ ResetBoss | Line: 3 ]]
+        workspace.Features.Boss.GrassmanFake:PivotTo(CFrame.new(54242.801, 9677.25, -33042.039) * CFrame.Angles(0, -1.5707963267948966, 0))
+        workspace.Features.Boss.ManREAL:PivotTo(CFrame.new(20000, 20000, 20000) * CFrame.Angles(0, 0, 0))
+        workspace.Features.Boss.SpacemanREAL:PivotTo(CFrame.new(20000, 20000, 20000) * CFrame.Angles(0, 0, 0))
+        workspace.Features.Boss.Dialogue1:PivotTo(CFrame.new(53994.898, 9674.75, -33039.289) * CFrame.Angles(0, 1.5707963267948966, 0))
+        workspace.Features.Boss.Dialogue2:PivotTo(CFrame.new(54058.398, 9674.75, -33040.789) * CFrame.Angles(0, 1.5707963267948966, 0))
+        workspace.Features.Boss.Dialogue3:PivotTo(CFrame.new(54131.398, 9674.75, -33040.789) * CFrame.Angles(0, 1.5707963267948966, 0))
+        workspace.Features.Boss.Trapdoor:PivotTo(CFrame.new(54173.148, 9655.25, -33041.039) * CFrame.Angles(0, -1.5707963267948966, 0))
+        workspace.Features.Boss.TrapdoorInvis:PivotTo(CFrame.new(54173.148, 9655.25, -33041.039) * CFrame.Angles(0, -1.5707963267948966, 0))
+        workspace.Features.Boss.Door:PivotTo(CFrame.new(20000, 20000, 20000) * CFrame.Angles(0, 0, 0))
+        workspace.Features.Boss.Badge:PivotTo(CFrame.new(200000, 200000, 200000) * CFrame.Angles(0, 0, 0))
+    end
+}
