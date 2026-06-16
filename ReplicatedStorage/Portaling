@@ -1,0 +1,298 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Data = require(ReplicatedStorage.Data)
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local CurrencyTypes = require(ReplicatedStorage.CurrencyTypes)
+local InfoStore = require(ReplicatedStorage.InfoStore)
+local BuyUpgrade = require(ReplicatedStorage.BuyUpgrade)
+local t = {}
+local v1 = 0
+
+t.PortalingState = {
+    fighting = false,
+    updateSC = false,
+    stage = 1,
+    soulsDisabled = false,
+    soulsReset = false,
+    fightingSpeed = 1,
+    combatTime = 0,
+    enemyTime = 0,
+    soulsPenalty = LethalNum.new(0, 0),
+    soulsAdd = LethalNum.new(0, 0),
+    soulsMulti = LethalNum.new(1, 0),
+    enemyScaling = LethalNum.new(1, 1),
+    enemyHPScaling = LethalNum.new(1, 1),
+    playerStats = {
+        health = LethalNum.new(1, 2),
+        maxHealth = LethalNum.new(1, 2),
+        offense = LethalNum.new(1, 0),
+        defense = LethalNum.new(0, 0)
+    },
+    enemyStats = {
+        health = LethalNum.new(1, 5),
+        maxHealth = LethalNum.new(1, 5),
+        offense = LethalNum.new(1, 1),
+        defense = LethalNum.new(1, 2),
+        souls = LethalNum.new(0, 0)
+    }
+}
+
+local v2 = nil
+local v3 = nil
+local v4 = nil
+local v5 = nil
+local v6 = nil
+local v7 = nil
+local v8 = nil
+local v9 = nil
+local v10 = nil
+local v11 = nil
+local v12 = nil
+local v13 = nil
+local v14 = nil
+local v15 = nil
+local v16 = nil
+local v17 = nil
+
+function t.Portaling() --[[ Portaling | Line: 62 | Upvalues: v8 (ref), Data (copy), v2 (ref), v4 (ref), v3 (ref), v5 (ref), v7 (ref), v6 (ref), v9 (ref), v10 (ref), v11 (ref), v12 (ref), v13 (ref), v14 (ref), v15 (ref), v16 (ref), v17 (ref), t (copy), LethalNum (copy), v1 (ref) ]]
+    if not v8 then
+        v8 = Data.ImportantData.Misc.player.PlayerGui
+
+        if v8 then
+            v2 = Data.ImportantData.Misc.player.PlayerGui.Solarians.Portaling.ShopContainer.Player.SpeedBar.ProgressBar
+            v4 = Data.ImportantData.Misc.player.PlayerGui.Solarians.Portaling.ShopContainer.Player.HealthBar.Health
+            v3 = Data.ImportantData.Misc.player.PlayerGui.Solarians.Portaling.ShopContainer.Player.HealthBar.ProgressBar
+            v5 = Data.ImportantData.Misc.player.PlayerGui.Solarians.Portaling.ShopContainer.Enemy.SpeedBar.ProgressBar
+            v7 = Data.ImportantData.Misc.player.PlayerGui.Solarians.Portaling.ShopContainer.Enemy.HealthBar.Health
+            v6 = Data.ImportantData.Misc.player.PlayerGui.Solarians.Portaling.ShopContainer.Enemy.HealthBar.ProgressBar
+            v9 = Data.ImportantData.Misc.player.PlayerGui.Solarians.Portaling.ShopContainer.Player.Offense
+            v10 = Data.ImportantData.Misc.player.PlayerGui.Solarians.Portaling.ShopContainer.Player.Defense
+            v11 = Data.ImportantData.Misc.player.PlayerGui.Solarians.Portaling.ShopContainer.Enemy.Offense
+            v12 = Data.ImportantData.Misc.player.PlayerGui.Solarians.Portaling.ShopContainer.Enemy.Defense
+            v13 = Data.ImportantData.Misc.player.PlayerGui.Solarians.Portaling.ShopContainer.Enemy.Souls
+            v14 = Data.ImportantData.Misc.player.PlayerGui.Solarians.Portaling.ShopContainer.Stage
+            v15 = Data.ImportantData.Misc.player.PlayerGui.Solarians.Portaling.ShopContainer.BestStage
+            v16 = Data.ImportantData.Misc.player.PlayerGui.Solarians.Portaling.ShopContainer.Fight
+            v17 = Data.ImportantData.Misc.player.PlayerGui.Solarians.Portaling.ShopContainer.Stop
+        end
+    end
+
+    if t.PortalingState.fighting then
+        local v18 = 1
+
+        if Data.ImportantData.Stats.Accomplish.solTicks > 0 and not Data.ImportantData.Stats.calcMulti then
+            v18 = v18 * LethalNum.toNumber(Data.ImportantData.Stats.Accomplish.solTickSpeed)
+        end
+
+        if t.PortalingState.playerStats.offense.e >= t.PortalingState.enemyStats.health.e + 3 then
+            v18 = v18 * math.min(60, math.max(0, t.PortalingState.playerStats.offense.e - t.PortalingState.enemyStats.health.e) + 1)
+        end
+
+        local v42 = v18 * t.PortalingState.fightingSpeed
+        local PortalingState = t.PortalingState
+
+        PortalingState.combatTime = PortalingState.combatTime + v42 * 0.05
+
+        local PortalingState2 = t.PortalingState
+
+        PortalingState2.enemyTime = PortalingState2.enemyTime + v42 * 0.05
+
+        if t.PortalingState.combatTime >= 1 then
+            t.PortalingState.combatTime = 0
+            LethalNum.isGreaterE(LethalNum.subtract(t.PortalingState.playerStats.offense, t.PortalingState.enemyStats.defense), LethalNum.new(1, 0))
+
+            if LethalNum.isGreaterE(LethalNum.new(0, 0), t.PortalingState.enemyStats.health) then
+                t.PortalingState.enemyStats.health = LethalNum.new(0, 0)
+                t.EnemyDead()
+            end
+        end
+
+        if t.PortalingState.enemyTime >= 1 then
+            t.PortalingState.enemyTime = 0
+            LethalNum.isGreaterE(LethalNum.subtract(t.PortalingState.enemyStats.offense, t.PortalingState.playerStats.defense), LethalNum.new(1, 0))
+
+            if LethalNum.isGreaterE(LethalNum.new(0, 0), t.PortalingState.playerStats.health) then
+                t.PlayerDead()
+            end
+        end
+
+        v2.Size = UDim2.new(t.PortalingState.combatTime / 1, 0, 1, 0)
+        v5.Size = UDim2.new(t.PortalingState.enemyTime / 1, 0, 1, 0)
+    else
+        if LethalNum.isGreater(t.PortalingState.playerStats.health, t.PortalingState.playerStats.maxHealth) then
+            t.PortalingState.playerStats.health = LethalNum.copy(t.PortalingState.playerStats.maxHealth)
+        elseif LethalNum.isGreater(t.PortalingState.playerStats.maxHealth, t.PortalingState.playerStats.health) then
+            local v72 = LethalNum.divide(t.PortalingState.playerStats.maxHealth, 600)
+
+            if LethalNum.isGreater(LethalNum.new(1, 0), v72) then
+                v72 = LethalNum.new(1, 0)
+            end
+
+            t.PortalingState.playerStats.health = LethalNum.add(t.PortalingState.playerStats.health, v72)
+        end
+
+        if LethalNum.isGreater(t.PortalingState.enemyStats.health, t.PortalingState.enemyStats.maxHealth) then
+            t.PortalingState.enemyStats.health = LethalNum.copy(t.PortalingState.enemyStats.maxHealth)
+        elseif LethalNum.isGreater(t.PortalingState.enemyStats.maxHealth, t.PortalingState.enemyStats.health) then
+            t.PortalingState.enemyStats.health = LethalNum.add(t.PortalingState.enemyStats.health, LethalNum.divide(t.PortalingState.enemyStats.maxHealth, 400))
+        end
+    end
+
+    v1 = v1 + 0.05
+
+    if v1 >= 1 then
+        v1 = 0
+        t.UpdateStats()
+    end
+
+    if v8 then
+        v4.Text = LethalNum.getString(t.PortalingState.playerStats.health)
+        v7.Text = LethalNum.getString(t.PortalingState.enemyStats.health)
+        v3.Size = UDim2.new(math.min(1, LethalNum.toNumber(LethalNum.divide(t.PortalingState.playerStats.health, t.PortalingState.playerStats.maxHealth))), 0, 1, 0)
+        v6.Size = UDim2.new(math.min(1, LethalNum.toNumber(LethalNum.divide(t.PortalingState.enemyStats.health, t.PortalingState.enemyStats.maxHealth))), 0, 1, 0)
+    end
+
+    Data.ImportantData.Stats.currStage = t.PortalingState.stage
+end
+function t.EnemyDead() --[[ EnemyDead | Line: 167 | Upvalues: t (copy), Data (copy), LethalNum (copy), CurrencyTypes (copy) ]]
+    local PortalingState = t.PortalingState
+
+    PortalingState.stage = PortalingState.stage + 1
+
+    if t.PortalingState.stage > Data.ImportantData.Stats.bestStage then
+        Data.ImportantData.Stats.bestStage = t.PortalingState.stage
+    end
+
+    local v4 = LethalNum.floor((LethalNum.multiply(LethalNum.subtract(LethalNum.add(t.PortalingState.enemyStats.souls, t.PortalingState.soulsAdd), t.PortalingState.soulsPenalty), t.PortalingState.soulsMulti)))
+    local v5 = if t.PortalingState.soulsDisabled then LethalNum.new(0, 0) else v4
+
+    CurrencyTypes.AddCurrency("souls", v5)
+
+    if t.PortalingState.soulsReset then
+        Data.ImportantData.Stats.soulsTotal = LethalNum.add(Data.ImportantData.Stats.soulsTotal, v5)
+    end
+
+    if not LethalNum.isGreaterE(t.PortalingState.playerStats.offense, t.PortalingState.enemyStats.maxHealth) then
+        t.PortalingState.fighting = false
+    end
+
+    Data.ImportantData.Stats.calcMulti = true
+    t.PortalingState.updateSC = true
+    t.NewEnemyStats()
+    t.PortalingState.enemyTime = 0
+    t.UpdateStats()
+end
+function t.PlayerDead() --[[ PlayerDead | Line: 196 | Upvalues: t (copy), LethalNum (copy) ]]
+    t.PortalingState.fighting = false
+    t.PortalingState.playerStats.health = LethalNum.new(0, 0)
+    t.PortalingState.combatTime = 0
+    t.UpdateStats()
+end
+function t.UpdateStats() --[[ UpdateStats | Line: 203 | Upvalues: LethalNum (copy), t (copy), InfoStore (copy), Data (copy), v8 (ref), v9 (ref), v10 (ref), v11 (ref), v12 (ref), v13 (ref), v14 (ref), v15 (ref), v16 (ref), v17 (ref), CurrencyTypes (copy) ]]
+    local v1 = "<font color=\"#ff0000\">"
+    local v2 = "<font color=\"#00ff00\">"
+    local v3 = LethalNum.subtract(t.PortalingState.playerStats.offense, t.PortalingState.enemyStats.defense)
+    local v5 = LethalNum.divide(t.PortalingState.playerStats.health, (LethalNum.subtract(t.PortalingState.enemyStats.offense, t.PortalingState.playerStats.defense)))
+    local v6 = LethalNum.divide(t.PortalingState.enemyStats.health, v3)
+    local v7 = false
+    local v82, v92
+
+    if LethalNum.isGreaterE(t.PortalingState.playerStats.offense, t.PortalingState.enemyStats.defense) then
+        v82 = "<font color=\"#ffff00\">"
+
+        if LethalNum.isGreater(v5, v6) then
+            v92 = "<font color=\"#00ff00\">"
+
+            if InfoStore.Resets.starTier.a >= Data.ImportantData.Reqs.autofight or Data.ImportantData.UpgradeLevels.upgrades.l10a.level > 0 then
+                v7 = true
+            end
+        else
+            v92 = "<font color=\"#ffff00\">"
+        end
+
+        if LethalNum.isGreaterE(LethalNum.subtract(t.PortalingState.playerStats.offense, t.PortalingState.enemyStats.defense), t.PortalingState.enemyStats.health) then
+            v82 = "<font color=\"#ff0000\">"
+            v92 = "<font color=\"#ff00ff\">"
+        end
+    else
+        v82 = "<font color=\"#00ff00\">"
+        v92 = "<font color=\"#ff0000\">"
+    end
+
+    if LethalNum.isGreaterE(t.PortalingState.playerStats.health, t.PortalingState.enemyStats.offense) then
+        v2 = "<font color=\"#ffff00\">"
+        v1 = if LethalNum.isGreater(v5, v6) then "<font color=\"#00ff00\">" else "<font color=\"#ffff00\">"
+
+        if LethalNum.isGreaterE(t.PortalingState.playerStats.defense, t.PortalingState.enemyStats.offense) then
+            v1 = "<font color=\"#ff00ff\">"
+            v2 = "<font color=\"#ff0000\">"
+        end
+    end
+
+    if Data.ImportantData.Misc.toggles.autofight.state and (v7 and not t.PortalingState.fighting) then
+        t.StartFighting()
+    end
+
+    local v122 = LethalNum.floor((LethalNum.multiply(LethalNum.add(t.PortalingState.enemyStats.souls, t.PortalingState.soulsAdd), t.PortalingState.soulsMulti)))
+    local v132 = if t.PortalingState.soulsDisabled then LethalNum.new(0, 0) else v122
+
+    Data.ImportantData.Stats.soulG = v132
+
+    if not v8 then
+        CurrencyTypes.Levels.stage.highestLevel = Data.ImportantData.Stats.bestStage
+
+        return
+    end
+
+    v9.Text = v92 .. LethalNum.getString(t.PortalingState.playerStats.offense) .. "</font>"
+    v10.Text = v1 .. LethalNum.getString(t.PortalingState.playerStats.defense) .. "</font>"
+    v11.Text = v2 .. LethalNum.getString(t.PortalingState.enemyStats.offense) .. "</font>"
+    v12.Text = v82 .. LethalNum.getString(t.PortalingState.enemyStats.defense) .. "</font>"
+    v13.Text = LethalNum.getString(v132)
+    v14.Text = "Stage: " .. t.PortalingState.stage
+    v15.Text = "Best: " .. Data.ImportantData.Stats.bestStage
+    v16.Visible = not t.PortalingState.fighting
+    v17.Visible = t.PortalingState.fighting
+    CurrencyTypes.Levels.stage.highestLevel = Data.ImportantData.Stats.bestStage
+end
+function t.NewEnemyStats() --[[ NewEnemyStats | Line: 274 | Upvalues: t (copy), LethalNum (copy) ]]
+    local v1 = t.PortalingState.stage - 1
+    local v2 = LethalNum.multiply(LethalNum.new(3, 1), LethalNum.pow(t.PortalingState.enemyScaling, v1))
+    local v3 = LethalNum.multiply(LethalNum.new(1, 1), LethalNum.pow(t.PortalingState.enemyScaling, v1))
+    local v4 = LethalNum.multiply(LethalNum.new(3, 3), LethalNum.pow(t.PortalingState.enemyHPScaling, v1))
+    local v5 = LethalNum.new(t.PortalingState.stage, 0)
+
+    if t.PortalingState.stage >= 100 then
+        v2, v3, v4 = LethalNum.multiply(v2, LethalNum.pow(LethalNum.new(1, 3), (math.floor(t.PortalingState.stage / 100)))), LethalNum.multiply(v3, LethalNum.pow(LethalNum.new(1, 3), (math.floor(t.PortalingState.stage / 100)))), LethalNum.multiply(v4, LethalNum.pow(LethalNum.new(1, 3), (math.floor(t.PortalingState.stage / 100))))
+    end
+
+    if t.PortalingState.stage >= 999 then
+        v2, v3, v4 = LethalNum.multiply(v2, LethalNum.pow(LethalNum.new(1, 10), (math.floor((t.PortalingState.stage + 1) / 1000)))), LethalNum.multiply(v3, LethalNum.pow(LethalNum.new(1, 10), (math.floor((t.PortalingState.stage + 1) / 1000)))), LethalNum.multiply(v4, LethalNum.pow(LethalNum.new(1, 10), (math.floor((t.PortalingState.stage + 1) / 1000))))
+    end
+
+    if t.PortalingState.stage >= 9999 then
+        local v26 = LethalNum.multiply(v2, LethalNum.pow(LethalNum.new(1, 250), (math.floor((t.PortalingState.stage + 1) / 10000))))
+        local v29 = LethalNum.multiply(v3, LethalNum.pow(LethalNum.new(1, 250), (math.floor((t.PortalingState.stage + 1) / 10000))))
+
+        v4, v2, v3 = LethalNum.multiply(v4, LethalNum.pow(LethalNum.new(1, 250), (math.floor((t.PortalingState.stage + 1) / 10000)))), v26, v29
+    end
+
+    t.PortalingState.enemyStats.maxHealth = LethalNum.copy(v4)
+    t.PortalingState.enemyStats.health = LethalNum.copy(v4)
+    t.PortalingState.enemyStats.offense = LethalNum.copy(v2)
+    t.PortalingState.enemyStats.defense = LethalNum.copy(v3)
+    t.PortalingState.enemyStats.souls = LethalNum.copy(v5)
+end
+function t.StartFighting() --[[ StartFighting | Line: 309 | Upvalues: BuyUpgrade (copy) ]]
+    BuyUpgrade.StartFighting()
+end
+function t.AutoFight() --[[ AutoFight | Line: 318 | Upvalues: t (copy) ]]
+    t.PortalingState.fighting = true
+    t.UpdateStats()
+end
+function t.StopFighting() --[[ StopFighting | Line: 323 | Upvalues: t (copy) ]]
+    t.PortalingState.fighting = false
+    t.PortalingState.combatTime = 0
+    t.UpdateStats()
+end
+
+return t
