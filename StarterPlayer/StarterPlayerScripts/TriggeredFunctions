@@ -1,0 +1,228 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Data = require(ReplicatedStorage.Data)
+
+require(ReplicatedStorage.Multipliers)
+require(ReplicatedStorage.LethalNum)
+game:GetService("HttpService")
+
+local Currencies = require(ReplicatedStorage.Currencies)
+
+require(ReplicatedStorage.TabManager)
+require(ReplicatedStorage.CalculateTime)
+require(ReplicatedStorage.GrassTypes)
+require(ReplicatedStorage.Accomplishments)
+require(ReplicatedStorage.Format)
+require(ReplicatedStorage.Decelerate)
+require(ReplicatedStorage.PlayerInput)
+require(ReplicatedStorage.Upgrades)
+
+local ChangeVisual = require(ReplicatedStorage.ChangeVisual)
+
+game:GetService("BadgeService")
+
+local Players = game:GetService("Players")
+
+require(ReplicatedStorage.Planets)
+
+local Dialogue = require(ReplicatedStorage.Dialogue)
+
+require(ReplicatedStorage.Soundificator)
+
+local Resets = require(ReplicatedStorage.Resets)
+local GalaxyGen = require(ReplicatedStorage.GalaxyGen)
+local Fields = require(ReplicatedStorage.Fields)
+local PlanetRun = require(ReplicatedStorage.PlanetRun)
+local SingularityChart = require(ReplicatedStorage.SingularityChart)
+local TriggerFunction = ReplicatedStorage:WaitForChild("TriggerFunction")
+local TweenService = game:GetService("TweenService")
+local OfflineProgress = ReplicatedStorage.Remotes:WaitForChild("OfflineProgress")
+local GrowGrass = ReplicatedStorage.Remotes:WaitForChild("GrowGrass")
+
+local function trigger(p1, p2) --[[ trigger | Line: 32 | Upvalues: Dialogue (copy), ChangeVisual (copy), Data (copy), Resets (copy), Currencies (copy), GalaxyGen (copy), SingularityChart (copy) ]]
+    ({
+        dialogue = function(p1) --[[ Line: 35 | Upvalues: Dialogue (ref) ]]
+            Dialogue.SetDialogue(p1, 1, false)
+        end,
+        grassmanDialogue = function() --[[ Line: 38 | Upvalues: Dialogue (ref) ]]
+            Dialogue.SetDialogue("grassman", 1, false)
+        end,
+        antigrassmanDialogue = function() --[[ Line: 41 | Upvalues: Dialogue (ref) ]]
+            Dialogue.SetDialogue("antigrassman", 1, false)
+        end,
+        spassmanDialogue = function() --[[ Line: 44 | Upvalues: Dialogue (ref) ]]
+            Dialogue.SetDialogue("spassman", 1, false)
+        end,
+        spassmanDialogue2 = function() --[[ Line: 47 | Upvalues: Dialogue (ref) ]]
+            Dialogue.SetDialogue("spassman2", 1, false)
+        end,
+        toEarth = function() --[[ Line: 50 | Upvalues: ChangeVisual (ref), Data (ref), Resets (ref) ]]
+            ChangeVisual.ToEarth()
+
+            if not (Data.ImportantData.Stats.pDif > 0) then
+                return
+            end
+
+            Resets.ChangeDifficulty(0)
+        end,
+        toSpace = function() --[[ Line: 56 | Upvalues: ChangeVisual (ref) ]]
+            ChangeVisual.ToSpace()
+        end,
+        toPlanet = function() --[[ Line: 59 | Upvalues: ChangeVisual (ref) ]]
+            ChangeVisual.ToPlanet()
+        end,
+        toStar = function() --[[ Line: 62 | Upvalues: ChangeVisual (ref) ]]
+            ChangeVisual.ToStar()
+        end,
+        toVoid = function() --[[ Line: 65 | Upvalues: ChangeVisual (ref) ]]
+            ChangeVisual.ToVoid()
+        end,
+        toGrassland = function() --[[ Line: 68 | Upvalues: Data (ref), Resets (ref), ChangeVisual (ref) ]]
+            if Data.ImportantData.Stats.prog <= 0 then
+                Resets.FTGrassland()
+            else
+                ChangeVisual.ToGrassland()
+            end
+        end,
+        toDarkland = function() --[[ Line: 75 | Upvalues: ChangeVisual (ref) ]]
+            ChangeVisual.ToDarkland()
+        end,
+        toNull = function() --[[ Line: 78 | Upvalues: ChangeVisual (ref) ]]
+            ChangeVisual.ToNull()
+        end,
+        toCastle = function() --[[ Line: 81 | Upvalues: ChangeVisual (ref) ]]
+            ChangeVisual.ToCastle()
+        end,
+        toLoop = function() --[[ Line: 84 | Upvalues: ChangeVisual (ref) ]]
+            ChangeVisual.ToLoop()
+        end,
+        toBlue = function() --[[ Line: 87 | Upvalues: ChangeVisual (ref) ]]
+            ChangeVisual.ToBlue()
+        end,
+        updateServerStats = function(p1) --[[ Line: 90 | Upvalues: Currencies (ref) ]]
+            Currencies.updateServerStats(p1)
+        end,
+        startCombat = function(p1) --[[ Line: 93 | Upvalues: GalaxyGen (ref) ]]
+            GalaxyGen.EngageEnemy(p1.id, p1.obj, p1.level)
+        end,
+        startDungeon = function(p1) --[[ Line: 96 | Upvalues: GalaxyGen (ref) ]]
+            GalaxyGen.StartDungeon(p1.id, p1.level, p1.length, p1.difficulty, p1.nested)
+        end,
+        deselectSC = function(p1) --[[ Line: 99 | Upvalues: Data (ref), SingularityChart (ref) ]]
+            Data.ImportantData.Stats.unlockSelected = "none"
+            SingularityChart.UpdateSelected()
+            SingularityChart.UpdateSelected2()
+        end
+    })[p1](p2)
+end
+
+TriggerFunction.OnClientEvent:Connect(trigger)
+
+local function UpdateOfflineProgress(p1) --[[ UpdateOfflineProgress | Line: 133 | Upvalues: Currencies (copy) ]]
+    Currencies.getDisplay().offlineProgress.Visible = true
+    Currencies.getDisplay().offlineProgress.ScrollingFrame.OPDesc.Text = p1.i .. p1.e .. "</b>"
+
+    if not p1.w then
+        return
+    end
+
+    task.wait(30)
+    Currencies.getDisplay().offlineProgress.Visible = false
+end
+
+OfflineProgress.OnClientEvent:Connect(UpdateOfflineProgress)
+ReplicatedStorage.Remotes.SpawnBits.OnClientEvent:Connect(function() --[[ Line: 144 | Upvalues: PlanetRun (copy) ]]
+    PlanetRun.CreateBits()
+end)
+ReplicatedStorage.Remotes.SetCamera.OnClientEvent:Connect(function(p1) --[[ Line: 148 ]]
+    local Camera = workspace.Camera
+
+    Camera.CFrame = CFrame.Angles(math.rad(p1.X), math.rad(p1.Y), (math.rad(p1.Z)))
+end)
+ReplicatedStorage.Remotes.WorldNotify.OnClientEvent:Connect(function(p1, p2, p3) --[[ Line: 153 | Upvalues: ReplicatedStorage (copy), TweenService (copy) ]]
+    local v1 = ReplicatedStorage.Templates.Misc.WorldNotif:Clone()
+
+    v1.Position = p2
+
+    local Info = v1.Bill.Frame.Info
+
+    Info.Text = p1
+    Info.TextColor3 = p3
+    v1.Parent = workspace
+    task.wait(1)
+    TweenService:Create(Info, TweenInfo.new(0.5, Enum.EasingStyle.Cubic), {
+        TextTransparency = 1
+    }):Play()
+    TweenService:Create(Info.UIStroke, TweenInfo.new(0.5, Enum.EasingStyle.Cubic), {
+        Transparency = 1
+    }):Play()
+    task.delay(0.5, function() --[[ Line: 164 | Upvalues: v1 (copy) ]]
+        v1:Destroy()
+    end)
+end)
+
+local t = {
+    ["1"] = {
+        gui = "W1"
+    },
+    ["2"] = {
+        gui = "W2"
+    },
+    ["3"] = {
+        gui = "None"
+    },
+    ["8"] = {
+        gui = "COOL"
+    },
+    ["9"] = {
+        gui = "Quality"
+    },
+    ["0"] = {
+        gui = "None"
+    }
+}
+
+ReplicatedStorage.Remotes.ScreenGUIState.OnClientEvent:Connect(function(p1) --[[ Line: 189 | Upvalues: t (copy), Players (copy) ]]
+    if p1.id == "disableAll" then
+        for v1, v2 in t do
+            if v1 ~= "" .. p1.world then
+                local v3 = Players.LocalPlayer.PlayerGui:FindFirstChild(v2.gui)
+
+                if v3 then
+                    for v4, v5 in v3:GetChildren() do
+                        v5.Enabled = false
+                    end
+                end
+            end
+        end
+    end
+
+    if p1.id ~= "enable" then
+        return
+    end
+
+    local v6 = Players.LocalPlayer.PlayerGui:FindFirstChild(t["" .. p1.world].gui)
+
+    if not v6 then
+        return
+    end
+
+    for v7, v8 in v6:GetChildren() do
+        if v8.Name ~= "DisableInitial" then
+            v8.Enabled = true
+        end
+    end
+end)
+ReplicatedStorage.Remotes.Deselect.OnClientEvent:Connect(function() --[[ Line: 213 | Upvalues: Data (copy), SingularityChart (copy) ]]
+    Data.ImportantData.Stats.unlockSelected = "none"
+    SingularityChart.UpdateSelected()
+    SingularityChart.UpdateSelected2()
+end)
+GrowGrass.OnClientEvent:Connect(function(p1) --[[ Line: 220 | Upvalues: Fields (copy) ]]
+    local v1 = Fields.Fields[p1.field]
+
+    if not v1 then
+        return
+    end
+
+    v1.opGrow = p1.amount
+end)
