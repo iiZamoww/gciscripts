@@ -1,0 +1,947 @@
+local t = {}
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Format = require(ReplicatedStorage.Format)
+
+function t.correct(p1) --[[ correct | Line: 7 ]]
+    if type(p1) ~= "table" then
+        return
+    end
+
+    if p1.number then
+        p1.n = p1.number
+        p1.number = nil
+    end
+
+    if not p1.exponent then
+        return
+    end
+
+    p1.e = p1.exponent
+    p1.exponent = nil
+end
+function t.add(p1, p2) --[[ add | Line: 20 | Upvalues: t (copy) ]]
+    local v1 = 0
+
+    t.correct(p1)
+    t.correct(p2)
+
+    if p1 == nil or p2 == nil then
+        return t.new(0, 0)
+    end
+
+    local v2, v3
+
+    if type(p1) == "table" then
+        if p1.n == nil or p1 ~= p1 then
+            return t.new(0, 0)
+        end
+
+        local v6 = math.floor((math.log10((math.max(1, p1.n)))))
+
+        v2 = p1.n / 10 ^ v6
+        v3 = p1.e + v6
+    else
+        v3, v2 = math.floor((math.log10((math.max(1, p1))))), p1 % 10 / 10 ^ v1
+    end
+
+    local v10, v11
+
+    if type(p2) == "table" then
+        if p2.n == nil or p2 ~= p2 then
+            return t.new(0, 0)
+        end
+
+        local v14 = math.floor((math.log10((math.max(1, p2.n)))))
+
+        v10 = p2.n / 10 ^ v14
+        v11 = p2.e + v14
+    else
+        local v17 = math.floor((math.log10((math.max(1, p2)))))
+
+        v11 = v17
+        v10 = p2 / 10 ^ v17
+    end
+
+    local t2 = {
+        n = 0,
+        e = 0
+    }
+
+    if math.abs(v3 - v11) > 9 then
+        if v11 < v3 then
+            t2.n = v2
+            t2.e = v3
+        else
+            t2.n = v10
+            t2.e = v11
+        end
+    else
+        local v18 = math.abs(v3 - v11)
+
+        if v11 < v3 then
+            t2.n = v2 + v10 / 10 ^ v18
+            t2.e = v3
+        else
+            t2.n = v10 + v2 / 10 ^ v18
+            t2.e = v11
+        end
+
+        if t2.n > 9.999999999999998 then
+            local v19 = t2.n / 10
+
+            t2.e = t2.e + 1
+            t2.n = t2.n % 10
+            t2.n = v19
+        end
+    end
+
+    if t2.e == 0 and t2.n % 1 ~= 0 then
+        t2.n = math.round(t2.n)
+    end
+
+    t2.n = t2.n * 1000000000
+    t2.n = math.round(t2.n)
+    t2.n = t2.n / 1000000000
+
+    return t.normalize(t2)
+end
+function t.addDecimal(p1, p2) --[[ addDecimal | Line: 106 | Upvalues: t (copy) ]]
+    local v1 = 0
+
+    t.correct(p1)
+    t.correct(p2)
+
+    if p1 == nil or p2 == nil then
+        return t.new(0, 0)
+    end
+
+    local v2, v3
+
+    if type(p1) == "table" then
+        if p1.n == nil or p1 ~= p1 then
+            return t.new(0, 0)
+        end
+
+        local v6 = math.floor((math.log10((math.max(1, p1.n)))))
+
+        v2 = p1.n / 10 ^ v6
+        v3 = p1.e + v6
+    else
+        v3, v2 = math.floor((math.log10((math.max(1, p1))))), p1 % 10 / 10 ^ v1
+    end
+
+    local v10, v11
+
+    if type(p2) == "table" then
+        if p2.n == nil or p2 ~= p2 then
+            return t.new(0, 0)
+        end
+
+        local v14 = math.floor((math.log10((math.max(1, p2.n)))))
+
+        v10 = p2.n / 10 ^ v14
+        v11 = p2.e + v14
+    else
+        local v17 = math.floor((math.log10((math.max(1, p2)))))
+
+        v11 = v17
+        v10 = p2 / 10 ^ v17
+    end
+
+    local t2 = {
+        n = 0,
+        e = 0
+    }
+
+    if math.abs(v3 - v11) > 9 then
+        if v11 < v3 then
+            t2.n = v2
+            t2.e = v3
+        else
+            t2.n = v10
+            t2.e = v11
+        end
+    else
+        local v18 = math.abs(v3 - v11)
+
+        if v11 < v3 then
+            t2.n = v2 + v10 / 10 ^ v18
+            t2.e = v3
+        else
+            t2.n = v10 + v2 / 10 ^ v18
+            t2.e = v11
+        end
+
+        if t2.n > 9.999999999999998 then
+            local v19 = t2.n / 10
+
+            t2.e = t2.e + 1
+            t2.n = t2.n % 10
+            t2.n = v19
+        end
+    end
+
+    t2.n = t2.n * 1000000000
+    t2.n = t2.n / 1000000000
+
+    return t2
+end
+function t.subtract(p1, p2) --[[ subtract | Line: 183 | Upvalues: t (copy) ]]
+    t.correct(p1)
+    t.correct(p2)
+
+    if p1 == nil or p2 == nil then
+        return t.new(0, 0)
+    end
+
+    local v1, v2
+
+    if type(p1) == "table" then
+        if p1.n == nil or p1 ~= p1 then
+            return t.new(0, 0)
+        end
+
+        local v5 = math.floor((math.log10((math.max(1, p1.n)))))
+        local v7 = math.max(p1.n % 10)
+
+        v1 = p1.e + v5
+        v2 = v7
+    else
+        v1, v2 = math.floor((math.log10((math.max(1, p1))))), p1 % 10
+    end
+
+    local v11, v12
+
+    if type(p2) == "table" then
+        if p2.n == nil or p2 ~= p2 then
+            return t.new(0, 0)
+        end
+
+        local v15 = math.floor((math.log10((math.max(1, p2.n)))))
+        local v18 = math.max(if p2.n == 0 and p2.e == 0 then 0 else 1, p2.n % 10)
+
+        v11 = p2.e + v15
+        v12 = v18
+    else
+        v11, v12 = math.floor((math.log10((math.max(1, p2))))), p2 % 10
+    end
+
+    local t2 = {
+        n = 0,
+        e = 0
+    }
+    local v22, v23, v24, v25, v26, v27
+
+    if v1 <= v11 then
+        if not (v2 <= v12 and v1 <= v11 or v1 < v11) then
+            if math.abs(v1 - v11) > 9 then
+                if v11 < v1 then
+                    t2.n = v2
+                    t2.e = v1
+                else
+                    t2.n = 0
+                    t2.e = 0
+                end
+            else
+                v22 = math.abs(v1 - v11)
+
+                if v11 < v1 then
+                    t2.n = v2 - v12 / 10 ^ v22
+                    t2.e = v1
+                elseif v1 < v11 then
+                    t2.n = 0
+                    t2.e = 0
+                else
+                    if v2 - v12 < 0 then
+                        t2.n = math.abs(1 - (v2 - v12))
+                    else
+                        t2.n = v2 - v12
+                    end
+
+                    t2.e = v1
+                end
+
+                if t2.n < 1 and t2.e > 0 then
+                    if t2.n == 0 then
+                        t2.e = 0
+                    else
+                        v23 = t2.n * 1000000000
+                        v24 = math.log10(v23)
+                        v25 = 9 - math.floor(v24)
+                        t2.n = t2.n * 10 ^ v25
+                        t2.e = t2.e - v25
+                    end
+                end
+
+                if t2.e == 0 and t2.n % 1 ~= 0 then
+                    v26 = t2.n
+                    t2.n = math.round(v26)
+                end
+            end
+
+            t2.n = t2.n * 1000000000
+            v27 = t2.n
+            t2.n = math.round(v27)
+            t2.n = t2.n / 1000000000
+
+            return t.normalize(t2)
+        end
+
+        return t2
+    end
+
+    if math.abs(v1 - v11) > 9 then
+        if v11 < v1 then
+            t2.n = v2
+            t2.e = v1
+        else
+            t2.n = 0
+            t2.e = 0
+        end
+    else
+        v22 = math.abs(v1 - v11)
+
+        if v11 < v1 then
+            t2.n = v2 - v12 / 10 ^ v22
+            t2.e = v1
+        elseif v1 < v11 then
+            t2.n = 0
+            t2.e = 0
+        else
+            if v2 - v12 < 0 then
+                t2.n = math.abs(1 - (v2 - v12))
+            else
+                t2.n = v2 - v12
+            end
+
+            t2.e = v1
+        end
+
+        if t2.n < 1 and t2.e > 0 then
+            if t2.n == 0 then
+                t2.e = 0
+            else
+                v23 = t2.n * 1000000000
+                v24 = math.log10(v23)
+                v25 = 9 - math.floor(v24)
+                t2.n = t2.n * 10 ^ v25
+                t2.e = t2.e - v25
+            end
+        end
+
+        if t2.e == 0 and t2.n % 1 ~= 0 then
+            v26 = t2.n
+            t2.n = math.round(v26)
+        end
+    end
+
+    t2.n = t2.n * 1000000000
+    v27 = t2.n
+    t2.n = math.round(v27)
+    t2.n = t2.n / 1000000000
+
+    return t.normalize(t2)
+end
+function t.multiply(p1, p2) --[[ multiply | Line: 294 | Upvalues: t (copy) ]]
+    t.correct(p1)
+    t.correct(p2)
+
+    if p1 == nil or p2 == nil then
+        return t.new(0, 0)
+    end
+
+    local v1, v2
+
+    if type(p1) == "table" then
+        if p1.n == nil or p1 ~= p1 then
+            return t.new(0, 0)
+        end
+
+        local v5 = math.floor((math.log10((math.max(1, p1.n)))))
+
+        v1 = p1.n / 10 ^ v5
+        v2 = p1.e + v5
+    else
+        local v8 = math.floor((math.log10((math.max(1, p1)))))
+
+        v2 = v8
+        v1 = p1 / 10 ^ v8
+    end
+
+    local v9, v10
+
+    if type(p2) == "table" then
+        if p2.n == nil or p2 ~= p2 then
+            return t.new(0, 0)
+        end
+
+        local v13 = math.floor((math.log10((math.max(1, p2.n)))))
+
+        v9 = p2.n / 10 ^ v13
+        v10 = p2.e + v13
+    else
+        local v16 = math.floor((math.log10((math.max(1, p2)))))
+
+        v10 = v16
+        v9 = p2 / 10 ^ v16
+    end
+
+    local t2 = {
+        n = 0,
+        e = 0,
+        e = v2 + v10,
+        n = v1 * v9
+    }
+
+    if t2.n == 0 then
+        return t.new(0, 0)
+    end
+
+    if t2.n > 9.999999999999998 then
+        local v19 = math.floor((math.log10((math.max(1, t2.n)))))
+
+        t2.n = t2.n / 10 ^ v19
+        t2.e = t2.e + v19
+    end
+
+    if t2.n < 1 and (t2.e > 0 and t2.n > 0) then
+        local v22 = 9 - math.floor((math.log10(t2.n * 1000000000)))
+
+        math.floor((math.log10(t2.n)))
+        t2.n = t2.n * 10 ^ v22
+        t2.e = t2.e - v22
+    end
+
+    t2.n = t2.n * 1000000000
+    t2.n = t2.n / 1000000000
+
+    return t2
+end
+function t.divide(p1, p2) --[[ divide | Line: 368 | Upvalues: t (copy) ]]
+    local v1 = 0
+
+    t.correct(p1)
+    t.correct(p2)
+
+    if p1 == nil or p2 == nil then
+        return t.new(0, 0)
+    end
+
+    local v2, v3
+
+    if type(p1) == "table" then
+        if p1.n == nil or p1 ~= p1 then
+            return t.new(0, 0)
+        end
+
+        local v6 = math.floor((math.log10((math.max(1, p1.n)))))
+
+        v2 = p1.n / 10 ^ v6
+        v3 = p1.e + v6
+    else
+        v2, v3 = p1 / 10 ^ v1, math.floor((math.log10((math.max(1, p1)))))
+    end
+
+    local v10, v11
+
+    if type(p2) == "table" then
+        if p2.n == nil or p2 ~= p2 then
+            return t.new(0, 0)
+        end
+
+        local v14 = math.floor((math.log10((math.max(1, p2.n)))))
+
+        v10 = p2.n / 10 ^ v14
+        v11 = p2.e + v14
+    else
+        local v17 = math.floor((math.log10((math.max(1, p2)))))
+
+        v11 = v17
+        v10 = p2 / 10 ^ v17
+    end
+
+    local t2 = {
+        n = 0,
+        e = 0
+    }
+
+    if v2 == 0 and v3 == 0 then
+        return t2
+    end
+
+    math.abs(v3 - v11)
+    t2.e = v3 - v11
+    t2.n = v2 / v10
+
+    if t2.n < 1 and (t2.e > 0 and t2.n > 0) then
+        local v21 = 9 - math.floor((math.log10((math.max(1, t2.n * 1000000000)))))
+
+        math.floor((math.log10((math.max(1, t2.n)))))
+        t2.n = t2.n * 10 ^ v21
+        t2.e = t2.e - v21
+    end
+
+    t2.n = t2.n * 1000000000
+    t2.n = t2.n / 1000000000
+
+    return t2
+end
+function t.pow(p1, p2) --[[ pow | Line: 434 | Upvalues: t (copy) ]]
+    t.correct(p1)
+    t.correct(p2)
+
+    if p1 == nil or p2 == nil then
+        return t.new(0, 0)
+    end
+
+    local v1, v2
+
+    if type(p1) == "table" then
+        if p1.n == nil or p1 ~= p1 then
+            return t.new(0, 0)
+        end
+
+        local v5 = math.floor((math.log10((math.max(1, p1.n)))))
+
+        v1 = p1.n / 10 ^ v5
+        v2 = p1.e + v5
+    else
+        local v8 = math.floor((math.log10((math.max(1, p1)))))
+
+        v2 = v8
+        v1 = p1 / 10 ^ v8
+    end
+
+    local v9, v10
+
+    if type(p2) == "table" then
+        if p2.n == nil or p2 ~= p2 then
+            return t.new(0, 0)
+        end
+
+        local v13 = math.floor((math.log10((math.max(1, p2.n)))))
+
+        v9 = p2.n / 10 ^ v13
+        v10 = p2.e + v13
+    else
+        local v16 = math.floor((math.log10((math.max(1, p2)))))
+
+        v9 = p2 / 10 ^ v16
+        v10 = v16
+    end
+
+    local t2 = {
+        n = 0,
+        e = 0
+    }
+
+    if v9 == 0 and v10 == 0 then
+        t2.n = 1
+
+        return t2
+    end
+
+    t2.e = v2 * (v9 * 10 ^ v10)
+
+    local v17 = t2.e % 4
+
+    t2.e = t2.e - v17
+
+    local v18 = v9 * 10 ^ v10 / math.log(10, v1)
+
+    if v18 > 300 then
+        t2.n = v18 % 1 * 10
+        t2.e = t2.e + v18
+    else
+        t2.n = v1 ^ (v9 * 10 ^ v10)
+        t2.n = t2.n * 10 ^ v17
+    end
+
+    if t2.e % 1 ~= 0 then
+        t2.n = t2.n + 10 ^ (t2.e % 1) / 100
+        t2.e = t2.e - t2.e % 1
+    end
+
+    if t2.n > 9.999999999999998 then
+        local v21 = math.floor((math.log10(t2.n)))
+
+        t2.n = t2.n / 10 ^ v21
+        t2.e = t2.e + v21
+    end
+
+    t2.n = t2.n * 1000000000
+    t2.n = t2.n / 1000000000
+
+    return t2
+end
+function t.log(p1, p2) --[[ log | Line: 521 | Upvalues: t (copy) ]]
+    t.correct(p1)
+
+    if p1 == nil then
+        return t.new(0, 0)
+    end
+
+    local v1, v2
+
+    if type(p1) == "table" then
+        if p1.n == nil or p1 ~= p1 then
+            return t.new(0, 0)
+        end
+
+        local v5 = math.floor((math.log10((math.max(1, p1.n)))))
+
+        v1 = p1.n / 10 ^ v5
+        v2 = p1.e + v5
+    else
+        local v8 = math.floor((math.log10((math.max(1, p1)))))
+
+        v1 = p1 / 10 ^ v8
+        v2 = v8
+    end
+
+    if type(p2) == "table" then
+        local v11 = math.floor((math.log10((math.max(1, p2.n)))))
+        local _ = p2.n / 10 ^ v11
+        local _2 = p2.e + v11
+    else
+        local _ = p2 / 10 ^ math.floor((math.log10((math.max(1, p2)))))
+    end
+
+    local t2 = {
+        n = 0,
+        e = 0
+    }
+    local v14 = math.log(10, p2)
+
+    t2.n = math.log(v1, p2) + v14 * v2
+
+    if t2.n > 9.999999999999998 then
+        local v16 = math.floor((math.log10(t2.n)))
+
+        t2.n = t2.n / 10 ^ v16
+        t2.e = t2.e + v16
+    end
+
+    t2.n = t2.n * 1000000000
+    t2.n = t2.n / 1000000000
+
+    return t2
+end
+function t.isGreaterE(p1, p2) --[[ isGreaterE | Line: 584 | Upvalues: t (copy) ]]
+    t.correct(p1)
+    t.correct(p2)
+
+    local v1 = false
+    local v2 = false
+
+    if p1 == nil or p2 == nil then
+        return false
+    end
+
+    local v3, v4
+
+    if type(p1) == "table" then
+        if p1.n == nil or p1 ~= p1 then
+            return false
+        end
+
+        local v6 = math.floor((math.log10(p1.n)))
+
+        v3 = p1.n / 10 ^ v6
+        v4 = p1.e + v6
+        v1 = if p1.e == 0 then p1.n == 0 else false
+    else
+        local v9 = math.floor((math.log10(p1)))
+
+        v4 = v9
+        v3 = p1 % 10 / 10 ^ v9
+    end
+
+    local v10, v11
+
+    if type(p2) == "table" then
+        if p2.n == nil or p2 ~= p2 then
+            return false
+        end
+
+        local v13 = math.floor((math.log10(p2.n)))
+
+        v10 = p2.n / 10 ^ v13
+        v11 = p2.e + v13
+        v2 = if p2.e == 0 then p2.n == 0 else false
+    else
+        local v16 = math.floor((math.log10(p2)))
+
+        v11 = v16
+        v10 = p2 / 10 ^ v16
+    end
+
+    local v17 = false
+
+    if v1 and v2 then
+        return true
+    end
+
+    if v11 <= v4 then
+        if v11 < v4 then
+            return true
+        end
+
+        if v10 <= v3 then
+            return true
+        end
+    else
+        if v4 < v11 then
+            return false
+        end
+
+        if v10 <= v3 then
+            return true
+        end
+
+        v17 = false
+    end
+
+    return v17
+end
+function t.isGreater(p1, p2) --[[ isGreater | Line: 655 | Upvalues: t (copy) ]]
+    t.correct(p1)
+    t.correct(p2)
+
+    local v1, v2
+
+    if type(p1) == "table" then
+        if p1.n == nil or p1 ~= p1 then
+            return false
+        end
+
+        local v4 = math.floor((math.log10(p1.n)))
+
+        v1 = p1.n / 10 ^ v4
+        v2 = p1.e + v4
+    else
+        local v6 = math.floor((math.log10(p1)))
+
+        v2 = v6
+        v1 = p1 % 10 / 10 ^ v6
+    end
+
+    local v7, v8
+
+    if type(p2) == "table" then
+        if p2.n == nil or p2 ~= p2 then
+            return false
+        end
+
+        local v10 = math.floor((math.log10(p2.n)))
+
+        v7 = p2.n / 10 ^ v10
+        v8 = p2.e + v10
+    else
+        local v12 = math.floor((math.log10(p2)))
+
+        v8 = v12
+        v7 = p2 / 10 ^ v12
+    end
+
+    if p1.e == p2.e and p1.n == p2.n then
+        return false
+    end
+
+    if v8 < v2 then
+        return true
+    end
+
+    if v2 == v8 then
+        return v7 < v1
+    end
+
+    return false
+end
+function t.isEqual(p1, p2) --[[ isEqual | Line: 713 | Upvalues: t (copy) ]]
+    t.correct(p1)
+    t.correct(p2)
+
+    local v1, v2
+
+    if type(p1) == "table" then
+        if p1.n == nil or p1 ~= p1 then
+            return false
+        end
+
+        local v4 = math.floor((math.log10(p1.n)))
+
+        v1 = p1.n / 10 ^ v4
+        v2 = p1.e + v4
+    else
+        local v6 = math.floor((math.log10(p1)))
+
+        v1 = p1 % 10 / 10 ^ v6
+        v2 = v6
+    end
+
+    local v7, v8
+
+    if type(p2) == "table" then
+        if p2.n == nil or p2 ~= p2 then
+            return false
+        end
+
+        local v10 = math.floor((math.log10(p2.n)))
+
+        v7 = p2.n / 10 ^ v10
+        v8 = p2.e + v10
+    else
+        local v12 = math.floor((math.log10(p2)))
+
+        v7 = p2 / 10 ^ v12
+        v8 = v12
+    end
+
+    return v1 == v7 and v2 == v8
+end
+function t.floor(p1) --[[ floor | Line: 757 | Upvalues: t (copy) ]]
+    t.correct(p1)
+
+    if p1.n == nil then
+        return t.new(0, 0)
+    end
+
+    if p1.e < 9 then
+        local v1 = p1.n * 10 ^ p1.e
+
+        p1.n = (v1 - v1 % 1) / 10 ^ p1.e
+    end
+
+    if p1.n < 1 then
+        p1.n = p1.n * 10
+        p1.e = p1.e - 1
+    end
+
+    return p1
+end
+function t.ceil(p1) --[[ ceil | Line: 776 | Upvalues: t (copy) ]]
+    t.correct(p1)
+
+    if p1.n == nil then
+        return t.new(0, 0)
+    end
+
+    if p1.e <= 0 then
+        p1.n = math.ceil(p1.n)
+    else
+        p1.n = p1.n * 10
+        p1.n = math.ceil(p1.n)
+        p1.n = p1.n / 10
+    end
+
+    return p1
+end
+function t.max(p1, p2) --[[ max | Line: 794 | Upvalues: t (copy) ]]
+    if t.isGreater(p1, p2) then
+        return p1
+    end
+
+    return p2
+end
+function t.min(p1, p2) --[[ min | Line: 801 | Upvalues: t (copy) ]]
+    if t.isGreater(p2, p1) then
+        return p1
+    end
+
+    return p2
+end
+function t.normalize(p1) --[[ normalize | Line: 808 | Upvalues: t (copy) ]]
+    t.correct(p1)
+
+    if p1.n == nil then
+        return t.new(0, 0)
+    end
+
+    if p1.n ~= p1.n or p1.n < 0 then
+        return t.new(0, 0)
+    end
+
+    if p1.n >= 10 then
+        p1.n = p1.n / 10
+        p1.e = p1.e + 1
+    end
+
+    local t2 = {
+        n = p1.n
+    }
+
+    t2.e = math.floor(p1.e)
+
+    if t2.e < 0 then
+        t2.e = 0
+        t2.n = 0
+    end
+
+    if t2.e == 0 and t2.n % 1 ~= 0 then
+        t2.n = t2.n - t2.n % 1
+        t2.n = t2.n + 1
+    end
+
+    return t2
+end
+function t.toNumber(p1) --[[ toNumber | Line: 838 | Upvalues: t (copy) ]]
+    if p1 == nil then
+        return 1
+    end
+
+    if p1.n == nil then
+        return 0
+    end
+
+    local v1 = t.new(p1.n, p1.e)
+
+    v1.n = v1.n * 10 ^ p1.e
+
+    return v1.n
+end
+function t.new(p1, p2) --[[ new | Line: 850 ]]
+    local t = {
+        n = p1,
+        e = math.floor(p2)
+    }
+
+    if t.n >= 10 then
+        local v2 = math.floor((math.log10(t.n)))
+
+        t.e = t.e + v2
+        t.n = t.n / 10 ^ v2
+    end
+
+    return t
+end
+function t.copy(p1) --[[ copy | Line: 864 | Upvalues: t (copy) ]]
+    t.correct(p1)
+
+    return {
+        n = p1.n,
+        e = p1.e
+    }
+end
+function t.getString(p1) --[[ getString | Line: 874 | Upvalues: t (copy), Format (copy) ]]
+    t.correct(p1)
+
+    if p1 == nil then
+        return ""
+    end
+
+    if p1.n == 0 and p1.e == 0 then
+        return "0"
+    end
+
+    if p1.e < 2 and p1.n > 0 then
+        return "" .. Format.Format(math.max(1, p1.e * 10) * p1.n)
+    end
+
+    return "" .. Format.FormatLN(p1)
+end
+function t.test() --[[ test | Line: 898 | Upvalues: t (copy) ]]
+    print(t.pow(t.new(2, 10), 10))
+end
+
+return t
