@@ -1,0 +1,1683 @@
+game:GetService("Players")
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Data = require(ReplicatedStorage.Data)
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local CurrencyTypes = require(ReplicatedStorage.CurrencyTypes)
+local ChangeVisual = require(ReplicatedStorage.ChangeVisual)
+local Multipliers = require(ReplicatedStorage.Multipliers)
+local Notifications = require(ReplicatedStorage.Notifications)
+local InfoStore = require(ReplicatedStorage.InfoStore)
+local t = {}
+local GenericEvent = ReplicatedStorage.Remotes:WaitForChild("GenericEvent")
+
+t.Teles = {
+    anti = {
+        displayName = "Anti",
+        parent = 0,
+        icon = "rbxassetid://10910686103",
+        base = "rbxassetid://9318557610",
+        obj = nil,
+        order = 1,
+        world = 1,
+        pos = Vector2.new(-400, -300),
+        teleportPos = CFrame.new(-16990.5, -21, 74.5),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 30 ]]
+            return p1.UpgradeLevels.generic.decelerator.level > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 33 | Upvalues: Multipliers (copy) ]]
+            return Multipliers.getUpgradeLevel("decelerator") > 0
+        end
+    },
+    unnatural = {
+        displayName = "Unnatural",
+        parent = 0,
+        icon = "rbxassetid://10910686966",
+        base = "rbxassetid://9769180822",
+        obj = nil,
+        order = 2,
+        world = 1,
+        pos = Vector2.new(-400, -220),
+        teleportPos = CFrame.new(-27441.5, 372, 94),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 47 ]]
+            return p1.UpgradeLevels.generic.recelerator.level > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 50 | Upvalues: Multipliers (copy) ]]
+            return Multipliers.getUpgradeLevel("recelerator") > 0
+        end
+    },
+    pr = {
+        displayName = "Planet Run",
+        parent = 0,
+        icon = "rbxassetid://17653967100",
+        base = "rbxassetid://10427780381",
+        obj = nil,
+        order = -90,
+        world = 1,
+        pos = Vector2.new(-300, 0),
+        teleportPos = CFrame.new(1881.5, -24983.5, 20162.5),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 64 ]]
+            return if p1.UpgradeLevels.generic.TSpr.level > 0 then true else p1.Stats.gameWon
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 67 | Upvalues: Multipliers (copy), Data (copy) ]]
+            return if Multipliers.getUpgradeLevel("TSpr") > 0 then true else Data.ImportantData.Stats.gameWon
+        end
+    },
+    field = {
+        displayName = "Field",
+        parent = 0,
+        icon = "rbxassetid://8566935398",
+        base = "rbxassetid://8566935278",
+        obj = nil,
+        order = 0,
+        world = 1,
+        pos = Vector2.new(0, -70),
+        teleportPos = CFrame.new(-13.5, -21, 71.5),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 81 ]]
+            return true
+        end
+    },
+    hubw1 = {
+        displayName = "Hub",
+        parent = 0,
+        icon = "rbxassetid://17275566784",
+        base = "rbxassetid://17275613674",
+        obj = nil,
+        order = -50,
+        world = 1,
+        pos = Vector2.new(-50, -200),
+        teleportPos = CFrame.new(183, 33.75, -127.501),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 109 ]]
+            return p1.Stats.gameWon
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 112 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.gameWon
+        end
+    },
+    city = {
+        displayName = "City",
+        parent = 0,
+        icon = "rbxassetid://8566935066",
+        base = "rbxassetid://8624760400",
+        obj = nil,
+        order = 3,
+        world = 1,
+        pos = Vector2.new(-120, 50),
+        teleportPos = CFrame.new(-178.5, -21, 129.5),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 126 ]]
+            return p1.Currency.resets.prestige.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 129 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.prestige.b > 0
+        end
+    },
+    industrial = {
+        displayName = "Industrial Zone",
+        parent = 0,
+        icon = "rbxassetid://9301948498",
+        base = "rbxassetid://9301071550",
+        obj = nil,
+        order = 4,
+        world = 1,
+        pos = Vector2.new(200, -50),
+        teleportPos = CFrame.new(261.5, -21, 56.5) * CFrame.Angles(0, -1.3089969389957472, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 159 | Upvalues: LethalNum (copy) ]]
+            return LethalNum.isGreaterE(p1.Currency.curr.charge.totalAmount, LethalNum.new(1, 0))
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 162 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+            return LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("charge"), LethalNum.new(1, 0))
+        end
+    },
+    gci = {
+        displayName = "Portals",
+        parent = 0,
+        icon = "rbxassetid://10675022080",
+        base = "rbxassetid://11315218948",
+        obj = nil,
+        order = 4,
+        world = 1,
+        pos = Vector2.new(200, -50),
+        teleportPos = CFrame.new(183, -9, 41.5) * CFrame.Angles(0, -1.5707963267948966, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 176 ]]
+            return p1.Stats.prog >= 1
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 179 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.prog >= 1
+        end
+    },
+    toLoop = {
+        displayName = "Loop Tower",
+        parent = 0,
+        icon = "rbxassetid://14971591023",
+        base = "rbxassetid://14971561399",
+        mapLocation = "loop",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 6,
+        world = 1,
+        pos = Vector2.new(-300, -180),
+        camChange = function() --[[ camChange | Line: 192 ]]
+            return workspace.Island:WaitForChild("CamPos").LoopCam
+        end,
+        cameraAngle = CFrame.Angles(1.5707963267948966, 1.5707963267948966, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 197 ]]
+            return p1.Currency.resets.loop1.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 200 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.loop1.b > 0
+        end
+    },
+    toGL3 = {
+        displayName = "Grassland",
+        parent = 0,
+        icon = "rbxassetid://12427321408",
+        base = "rbxassetid://12427738151",
+        mapLocation = "grassland",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 18,
+        world = 1,
+        pos = Vector2.new(-300, -90),
+        camChange = function() --[[ camChange | Line: 215 ]]
+            return workspace.Island:WaitForChild("CamPos").GLCam
+        end,
+        cameraAngle = CFrame.Angles(0, 0, 1.5707963267948966),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 220 ]]
+            return p1.Currency.resets.loop2.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 223 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.loop2.b > 0
+        end
+    },
+    toIsland3 = {
+        displayName = "The Island",
+        parent = 4,
+        icon = "rbxassetid://10427780055",
+        base = "rbxassetid://9769181886",
+        mapLocation = "normal",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 1,
+        pos = Vector2.new(-450, 0),
+        camChange = function() --[[ camChange | Line: 238 ]]
+            return workspace.Island:WaitForChild("CamPos").IslandCam
+        end,
+        cameraAngle = CFrame.Angles(0, 0, 1.5707963267948966),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 243 ]]
+            return p1.Currency.resets.loop2.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 246 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.loop2.b > 0
+        end
+    },
+    toSpace = {
+        displayName = "Space",
+        parent = 0,
+        icon = "rbxassetid://10104888999",
+        base = "rbxassetid://9301071550",
+        mapLocation = "space",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 1,
+        pos = Vector2.new(210, -230),
+        camChange = function() --[[ camChange | Line: 307 ]]
+            return workspace.Island:WaitForChild("CamPos").SpaceCam
+        end,
+        cameraAngle = CFrame.Angles(0, 0, 1.5707963267948966),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 312 ]]
+            return p1.Currency.resets.galactic.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 315 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.galactic.b > 0
+        end
+    },
+    space = {
+        displayName = "Star Platform",
+        parent = 1,
+        icon = "rbxassetid://9729566702",
+        base = "rbxassetid://9737687479",
+        obj = nil,
+        order = 11,
+        world = 1,
+        pos = Vector2.new(190, 100),
+        teleportPos = CFrame.new(535.303, 4095.329, 551.373) * CFrame.Angles(0, 0, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 331 ]]
+            return p1.Currency.resets.galactic.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 334 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.galactic.b > 0
+        end
+    },
+    dark = {
+        displayName = "Dark Forest",
+        parent = 1,
+        icon = "rbxassetid://9821096393",
+        base = "rbxassetid://9821095923",
+        obj = nil,
+        order = 13,
+        world = 1,
+        pos = Vector2.new(-80, -80),
+        teleportPos = CFrame.new(324.274, 4092.329, 134.406) * CFrame.Angles(0, 0, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 348 ]]
+            return p1.Currency.resets.sacrifice.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 351 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.sacrifice.b > 0
+        end
+    },
+    light = {
+        displayName = "Light Forest",
+        parent = 1,
+        icon = "rbxassetid://10494759883",
+        base = "rbxassetid://10494762755",
+        obj = nil,
+        order = 14,
+        world = 1,
+        pos = Vector2.new(-390, -250),
+        teleportPos = CFrame.new(-91.334, 4092.579, -20.27) * CFrame.Angles(0, 0.7853981633974483, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 365 ]]
+            return if p1.Stats.innerRingsBroken > 0 then true else p1.Currency.resets.supernova.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 368 | Upvalues: Data (copy), InfoStore (copy) ]]
+            return if Data.ImportantData.Stats.innerRingsBroken > 0 then true else InfoStore.Resets.supernova.b > 0
+        end
+    },
+    star2 = {
+        displayName = "Star",
+        parent = 1,
+        icon = "rbxassetid://10985298823",
+        base = "rbxassetid://10985314749",
+        mapLocation = "star",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 15,
+        world = 1,
+        pos = Vector2.new(300, -200),
+        camChange = function() --[[ camChange | Line: 381 ]]
+            return workspace.Island:WaitForChild("CamPos").StarCam
+        end,
+        cameraAngle = CFrame.Angles(0, 0, 1.5707963267948966),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 386 ]]
+            return p1.Currency.resets.supernova.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 389 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.supernova.b > 0
+        end
+    },
+    star3 = {
+        displayName = "Star",
+        parent = 4,
+        icon = "rbxassetid://10985298823",
+        base = "rbxassetid://10985314749",
+        mapLocation = "star",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 15,
+        world = 1,
+        pos = Vector2.new(-330, 80),
+        camChange = function() --[[ camChange | Line: 404 ]]
+            return workspace.Island:WaitForChild("CamPos").StarCam
+        end,
+        cameraAngle = CFrame.Angles(0, 0, 1.5707963267948966),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 409 ]]
+            return p1.Currency.resets.supernova.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 412 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.supernova.b > 0
+        end
+    },
+    toSpace3 = {
+        displayName = "Space",
+        parent = 3,
+        icon = "rbxassetid://10104888999",
+        base = "rbxassetid://9301071550",
+        mapLocation = "space",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 1,
+        pos = Vector2.new(190, -250),
+        camChange = function() --[[ camChange | Line: 427 ]]
+            return workspace.Island:WaitForChild("CamPos").SpaceCam
+        end,
+        cameraAngle = CFrame.Angles(0, 0, 1.5707963267948966),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 432 ]]
+            return true
+        end
+    },
+    star = {
+        displayName = "Star",
+        parent = 3,
+        icon = "rbxassetid://10985298823",
+        base = "rbxassetid://10985314749",
+        obj = nil,
+        order = 15,
+        world = 1,
+        pos = Vector2.new(60, -250),
+        teleportPos = CFrame.new(-963.181, 4399.766, -1820.172) * CFrame.Angles(0, -2.6179938779914944, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 448 ]]
+            return p1.Currency.resets.supernova.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 451 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.supernova.b > 0
+        end
+    },
+    sol = {
+        displayName = "Solarians",
+        parent = 3,
+        icon = "rbxassetid://11657984988",
+        base = "rbxassetid://10985314749",
+        obj = nil,
+        order = 16,
+        world = 1,
+        pos = Vector2.new(-170, 0),
+        teleportPos = CFrame.new(-1165.397, 4404.249, -1573.75) * CFrame.Angles(0, -2.6179938779914944, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 465 ]]
+            return p1.Stats.bestStage >= 2
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 468 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 2
+        end
+    },
+    chal = {
+        displayName = "Challenges",
+        parent = 3,
+        icon = "rbxassetid://11773366474",
+        base = "rbxassetid://10985314749",
+        obj = nil,
+        order = 17,
+        world = 1,
+        pos = Vector2.new(170, 20),
+        teleportPos = CFrame.new(-880.404, 4404.25, -1569.127) * CFrame.Angles(0, -1.0471975511965976, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 482 ]]
+            return p1.Stats.bestStage >= 14
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 485 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.bestStage >= 14
+        end
+    },
+    toGL2 = {
+        displayName = "Grassland",
+        parent = 3,
+        icon = "rbxassetid://12427321408",
+        base = "rbxassetid://12427738151",
+        mapLocation = "grassland",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 18,
+        world = 1,
+        pos = Vector2.new(-170, -80),
+        camChange = function() --[[ camChange | Line: 498 ]]
+            return workspace.Island:WaitForChild("CamPos").GLCam
+        end,
+        cameraAngle = CFrame.Angles(0, 0, 1.5707963267948966),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 503 ]]
+            return if p1.Stats.prog >= 1 then true else p1.Currency.resets.loop2.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 506 | Upvalues: Data (copy), InfoStore (copy) ]]
+            return if Data.ImportantData.Stats.prog >= 1 then true else InfoStore.Resets.loop2.b > 0
+        end
+    },
+    toGL = {
+        displayName = "Grassland",
+        parent = 4,
+        icon = "rbxassetid://12427321408",
+        base = "rbxassetid://12427738151",
+        obj = nil,
+        order = 18,
+        world = 1,
+        pos = Vector2.new(-330, -40),
+        teleportPos = CFrame.new(26764.148, 9353.752, -31231.791) * CFrame.Angles(0, 1.5707963267948966, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 522 ]]
+            return if p1.Stats.prog >= 1 then true else p1.Currency.resets.loop2.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 525 | Upvalues: Data (copy), InfoStore (copy) ]]
+            return if Data.ImportantData.Stats.prog >= 1 then true else InfoStore.Resets.loop2.b > 0
+        end
+    },
+    syn = {
+        displayName = "Synthesis",
+        parent = 4,
+        icon = "rbxassetid://13037658334",
+        base = "rbxassetid://11315218948",
+        obj = nil,
+        order = 19,
+        world = 1,
+        pos = Vector2.new(-270, -120),
+        teleportPos = CFrame.new(257.7, 9.35, 11362.098) * CFrame.Angles(0, -1.5707963267948966, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 539 ]]
+            return p1.Stats.prog >= 2
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 542 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.prog >= 2
+        end
+    },
+    toIsland = {
+        displayName = "The Island",
+        parent = 1,
+        icon = "rbxassetid://10427780055",
+        base = "rbxassetid://9769181886",
+        mapLocation = "normal",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 1,
+        pos = Vector2.new(-60, 130),
+        camChange = function() --[[ camChange | Line: 555 ]]
+            return workspace.Island:WaitForChild("CamPos").IslandCam
+        end,
+        cameraAngle = CFrame.Angles(0, 0, 1.5707963267948966),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 560 ]]
+            return p1.Currency.resets.galactic.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 563 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.galactic.b > 0
+        end
+    },
+    toSpace2 = {
+        displayName = "Space",
+        parent = 2,
+        icon = "rbxassetid://10104888999",
+        base = "rbxassetid://9301071550",
+        mapLocation = "space",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 1,
+        pos = Vector2.new(350, -250),
+        camChange = function() --[[ camChange | Line: 578 ]]
+            return workspace.Island:WaitForChild("CamPos").SpaceCam
+        end,
+        cameraAngle = CFrame.Angles(0, 0, 1.5707963267948966),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 583 ]]
+            return true
+        end
+    },
+    toPlanetoid = {
+        displayName = "The Planetoid",
+        parent = 1,
+        icon = "rbxassetid://9729567321",
+        base = "rbxassetid://10027051696",
+        mapLocation = "planet",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 1,
+        pos = Vector2.new(80, 80),
+        camChange = function() --[[ camChange | Line: 598 ]]
+            return workspace.Island:WaitForChild("CamPos").PlanetCam
+        end,
+        cameraAngle = CFrame.Angles(0, 0, 1.5707963267948966),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 603 | Upvalues: Data (copy) ]]
+            return if p1.Currency.resets.zeroghgs.a >= Data.ImportantData.Reqs.pt then not p1.Currency.curr.perks2.infinity else false
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 606 | Upvalues: InfoStore (copy), Data (copy), CurrencyTypes (copy) ]]
+            return if InfoStore.Resets.zeroghgs.a >= Data.ImportantData.Reqs.pt then not CurrencyTypes.GetInfinity("perks2") else false
+        end
+    },
+    astro = {
+        displayName = "Astrolabe",
+        parent = 2,
+        icon = "rbxassetid://10399802957",
+        base = "rbxassetid://10399803252",
+        obj = nil,
+        order = 22,
+        world = 1,
+        pos = Vector2.new(-300, 150),
+        teleportPos = CFrame.new(-1051.495, 5057.05, 3399.501),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 622 | Upvalues: Data (copy) ]]
+            return if p1.Currency.resets.astrolabe.b > 0 and p1.Currency.resets.zeroghgs.a >= Data.ImportantData.Reqs.pt then not p1.Currency.curr.perks2.infinity else false
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 625 | Upvalues: InfoStore (copy), Data (copy), CurrencyTypes (copy) ]]
+            return if InfoStore.Resets.astrolabe.b > 0 and InfoStore.Resets.zeroghgs.a >= Data.ImportantData.Reqs.pt then not CurrencyTypes.GetInfinity("perks2") else false
+        end
+    },
+    quadrant = {
+        displayName = "Planetary",
+        parent = 2,
+        icon = "rbxassetid://10427780055",
+        base = "rbxassetid://10427779768",
+        obj = nil,
+        order = 23,
+        world = 1,
+        pos = Vector2.new(250, -30),
+        teleportPos = CFrame.new(-364.495, 5059.149, 3225.501) * CFrame.Angles(0, -1.3089969389957472, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 639 | Upvalues: Data (copy) ]]
+            return if p1.Currency.resets.planetary.b > 0 and p1.Currency.resets.zeroghgs.a >= Data.ImportantData.Reqs.pt then not p1.Currency.curr.perks2.infinity else false
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 642 | Upvalues: InfoStore (copy), Data (copy), CurrencyTypes (copy) ]]
+            return if InfoStore.Resets.planetary.b > 0 and InfoStore.Resets.zeroghgs.a >= Data.ImportantData.Reqs.pt then not CurrencyTypes.GetInfinity("perks2") else false
+        end
+    },
+    field2 = {
+        displayName = "Field",
+        parent = 2,
+        icon = "rbxassetid://9729567321",
+        base = "rbxassetid://10027051696",
+        obj = nil,
+        order = 21,
+        world = 1,
+        pos = Vector2.new(20, -10),
+        teleportPos = CFrame.new(-617.495, 5060, 3308.501),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 656 | Upvalues: Data (copy) ]]
+            return if p1.Currency.resets.zeroghgs.a >= Data.ImportantData.Reqs.pt then not p1.Currency.curr.perks2.infinity else false
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 659 | Upvalues: InfoStore (copy), Data (copy), CurrencyTypes (copy) ]]
+            return if InfoStore.Resets.zeroghgs.a >= Data.ImportantData.Reqs.pt then not CurrencyTypes.GetInfinity("perks2") else false
+        end
+    },
+    toIslandL = {
+        displayName = "The Island",
+        parent = 5,
+        icon = "rbxassetid://10427780055",
+        base = "rbxassetid://9769181886",
+        mapLocation = "normal",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 400,
+        world = 1,
+        pos = Vector2.new(-130, 180),
+        camChange = function() --[[ camChange | Line: 688 ]]
+            return workspace.Island:WaitForChild("CamPos").IslandCam
+        end,
+        cameraAngle = CFrame.Angles(0, 0, 1.5707963267948966),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 693 ]]
+            return true
+        end
+    },
+    loop1 = {
+        displayName = "Floor 1",
+        parent = 5,
+        icon = "rbxassetid://14971591023",
+        base = "rbxassetid://14971561399",
+        obj = nil,
+        order = 401,
+        world = 1,
+        pos = Vector2.new(0, 180),
+        teleportPos = CFrame.new(27250.264, 8024.5, -123001.586),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 709 ]]
+            return p1.Currency.resets.loop1.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 712 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.loop1.b > 0
+        end
+    },
+    loop2 = {
+        displayName = "Floor 2",
+        parent = 5,
+        icon = "rbxassetid://14971590924",
+        base = "rbxassetid://14971561399",
+        obj = nil,
+        order = 402,
+        world = 1,
+        pos = Vector2.new(0, 80),
+        teleportPos = CFrame.new(27250.264, 8124.5, -123001.586),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 726 ]]
+            return p1.Currency.resets.loop2.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 729 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.loop2.b > 0
+        end
+    },
+    loop3 = {
+        displayName = "Floor 3",
+        parent = 5,
+        icon = "rbxassetid://14971590760",
+        base = "rbxassetid://14971561399",
+        obj = nil,
+        order = 403,
+        world = 1,
+        pos = Vector2.new(0, -20),
+        teleportPos = CFrame.new(27250.264, 8224.5, -123001.586),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 743 ]]
+            return p1.Currency.resets.loop3.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 746 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.loop3.b > 0
+        end
+    },
+    blue = {
+        displayName = "Blue",
+        parent = 5,
+        icon = "rbxassetid://14949095375",
+        base = "rbxassetid://14949095628",
+        obj = nil,
+        order = 410,
+        world = 1,
+        pos = Vector2.new(-130, -20),
+        teleportPos = CFrame.new(-3729.5, 9546.6, -119847.5),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 760 ]]
+            return p1.Currency.resets.loop3.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 763 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.loop3.b > 0
+        end
+    },
+    loop4 = {
+        displayName = "Floor 4",
+        parent = 5,
+        icon = "rbxassetid://14971590634",
+        base = "rbxassetid://14971561399",
+        obj = nil,
+        order = 404,
+        world = 1,
+        pos = Vector2.new(0, -120),
+        teleportPos = CFrame.new(27250.264, 8324.5, -123001.586),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 777 ]]
+            return p1.Currency.resets.loop4.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 780 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.loop4.b > 0
+        end
+    },
+    loop5 = {
+        displayName = "Floor 5",
+        parent = 5,
+        icon = "rbxassetid://14971590498",
+        base = "rbxassetid://14971561399",
+        obj = nil,
+        order = 405,
+        world = 1,
+        pos = Vector2.new(0, -220),
+        teleportPos = CFrame.new(27250.264, 8424.5, -123001.586),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 794 ]]
+            return p1.Currency.resets.loop5.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 797 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.loop5.b > 0
+        end
+    },
+    jungle = {
+        displayName = "Field",
+        parent = 10,
+        icon = "rbxassetid://8566935398",
+        base = "rbxassetid://13979642978",
+        obj = nil,
+        order = 0,
+        world = 2,
+        pos = Vector2.new(-300, -50),
+        teleportPos = CFrame.new(32935.934, -23.5, 87.75),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 814 ]]
+            return true
+        end
+    },
+    hubw2 = {
+        displayName = "Hub",
+        parent = 10,
+        icon = "rbxassetid://17275566784",
+        base = "rbxassetid://17275613674",
+        obj = nil,
+        order = -50,
+        world = 2,
+        pos = Vector2.new(-150, -50),
+        teleportPos = CFrame.new(33101.934, -13.5, -32.25),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 828 ]]
+            return true
+        end
+    },
+    un = {
+        displayName = "Understand",
+        parent = 10,
+        icon = "rbxassetid://16162282124",
+        base = "rbxassetid://16162442704",
+        obj = nil,
+        order = 90,
+        world = 2,
+        pos = Vector2.new(-300, -150),
+        teleportPos = CFrame.new(38225.07, -97, 15876.699),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 842 ]]
+            return false
+        end
+    },
+    rune = {
+        displayName = "Rune",
+        parent = 10,
+        icon = "rbxassetid://13984721039",
+        base = "rbxassetid://13984721422",
+        obj = nil,
+        order = 1,
+        world = 2,
+        pos = Vector2.new(0, -50),
+        teleportPos = CFrame.new(32756.934, -23.5, 63.75),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 856 ]]
+            return p1.Currency.resets.rune.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 859 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.rune.b > 0
+        end
+    },
+    temple = {
+        displayName = "Temple Chart",
+        parent = 10,
+        icon = "rbxassetid://14197197554",
+        base = "rbxassetid://14197216395",
+        obj = nil,
+        order = 2,
+        world = 2,
+        pos = Vector2.new(150, -50),
+        teleportPos = CFrame.new(32933.934, -23.5, 247.75),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 873 ]]
+            return p1.Currency.resets.awaken.a > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 876 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.awaken.a > 0
+        end
+    },
+    inst = {
+        displayName = "Stability",
+        parent = 10,
+        icon = "rbxassetid://14439692548",
+        base = "rbxassetid://14439706532",
+        obj = nil,
+        order = 3,
+        world = 2,
+        pos = Vector2.new(-300, 90),
+        teleportPos = CFrame.new(33363.934, -23.5, 41.75),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 890 ]]
+            return p1.UpgradeLevels.generic.bridge.level > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 893 | Upvalues: Multipliers (copy) ]]
+            return Multipliers.getUpgradeLevel("bridge") > 0
+        end
+    },
+    toCavern = {
+        displayName = "Cavern",
+        parent = 10,
+        icon = "rbxassetid://14465483046",
+        base = "rbxassetid://14465482829",
+        mapLocation = "cavern",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 2,
+        pos = Vector2.new(-150, -190),
+        camChange = function() --[[ camChange | Line: 906 ]]
+            return workspace.Features.W2:WaitForChild("W2Cams").CavernCam
+        end,
+        cameraAngle = CFrame.Angles(1.5707963267948966, 0, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 911 | Upvalues: LethalNum (copy) ]]
+            return p1.UpgradeLevels.generic.bridge2.level > 0 and LethalNum.isGreaterE(p1.Currency.curr.mush.totalAmount, LethalNum.new(1, 0)) or p1.Currency.resets.trueAwaken.a > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 914 | Upvalues: Multipliers (copy), LethalNum (copy), CurrencyTypes (copy), InfoStore (copy) ]]
+            return Multipliers.getUpgradeLevel("bridge2") > 0 and LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("mush"), LethalNum.new(1, 0)) or InfoStore.Resets.trueAwaken.a > 0
+        end
+    },
+    toInt1 = {
+        displayName = "Intersection",
+        parent = 10,
+        icon = "rbxassetid://14586738531",
+        base = "rbxassetid://14586738201",
+        mapLocation = "chamber",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 2,
+        pos = Vector2.new(-300, -190),
+        camChange = function() --[[ camChange | Line: 929 ]]
+            return workspace.Features.W2:WaitForChild("W2Cams").IntCam
+        end,
+        cameraAngle = CFrame.Angles(1.5707963267948966, 0, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 934 | Upvalues: LethalNum (copy) ]]
+            return LethalNum.isGreaterE(p1.Currency.curr.gGrass.totalAmount, LethalNum.new(1, 0)) or p1.Currency.resets.rift.a >= 1
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 937 | Upvalues: LethalNum (copy), CurrencyTypes (copy), InfoStore (copy) ]]
+            return LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("gGrass"), LethalNum.new(1, 0)) or InfoStore.Resets.rift.a >= 1
+        end
+    },
+    toTemple1 = {
+        displayName = "Temple",
+        parent = 10,
+        icon = "rbxassetid://17787412242",
+        base = "rbxassetid://14797835311",
+        mapLocation = "temple",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 2,
+        pos = Vector2.new(0, -190),
+        camChange = function() --[[ camChange | Line: 952 ]]
+            return workspace.Features.W2:WaitForChild("W2Cams").TempleCam
+        end,
+        cameraAngle = CFrame.Angles(1.5707963267948966, 0, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 957 ]]
+            return p1.Currency.resets.trueAwaken.a > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 960 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.trueAwaken.a > 0
+        end
+    },
+    toDes1 = {
+        displayName = "Desert",
+        parent = 10,
+        icon = "rbxassetid://18305824550",
+        base = "rbxassetid://18305830277",
+        mapLocation = "desert",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 2,
+        pos = Vector2.new(150, -190),
+        camChange = function() --[[ camChange | Line: 975 ]]
+            return workspace.Features.W2:WaitForChild("W2Cams").DesertCam
+        end,
+        cameraAngle = CFrame.Angles(1.5707963267948966, 0, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 980 | Upvalues: LethalNum (copy) ]]
+            return LethalNum.isGreaterE(p1.Currency.curr.cactus.totalAmount, LethalNum.new(1, 0))
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 983 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+            return LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("cactus"), LethalNum.new(1, 0))
+        end
+    },
+    doom = {
+        displayName = "The Place",
+        parent = 10,
+        icon = "rbxassetid://18954794022",
+        base = "rbxassetid://18954794022",
+        obj = nil,
+        order = -900,
+        world = 2,
+        pos = Vector2.new(300, -190),
+        teleportPos = CFrame.new(48299.438, 63.3, -1118.252),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 999 ]]
+            return p1.Currency.resets.scam2.a > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1002 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.scam2.a > 0
+        end
+    },
+    toJungle = {
+        displayName = "Jungle",
+        parent = 11,
+        icon = "rbxassetid://13984721039",
+        base = "rbxassetid://13984721422",
+        mapLocation = "jungle",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 2,
+        pos = Vector2.new(-150, -190),
+        camChange = function() --[[ camChange | Line: 1017 ]]
+            return workspace.Features.W2:WaitForChild("W2Cams").NeoIslandCam
+        end,
+        cameraAngle = CFrame.Angles(1.5707963267948966, 0, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1022 ]]
+            return true
+        end
+    },
+    mush = {
+        displayName = "Mushrooms",
+        parent = 11,
+        icon = "rbxassetid://14465483046",
+        base = "rbxassetid://14465482829",
+        obj = nil,
+        order = 11,
+        world = 2,
+        pos = Vector2.new(-300, -50),
+        teleportPos = CFrame.new(33606.934, -0.5, 746.75),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1038 | Upvalues: LethalNum (copy) ]]
+            return if p1.UpgradeLevels.generic.bridge2.level > 0 then LethalNum.isGreaterE(p1.Currency.curr.mush.totalAmount, LethalNum.new(1, 0)) or p1.Stats.prog2a >= 1 else false
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1041 | Upvalues: Multipliers (copy), LethalNum (copy), CurrencyTypes (copy), Data (copy) ]]
+            return if Multipliers.getUpgradeLevel("bridge2") > 0 then LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("mush"), LethalNum.new(1, 0)) or Data.ImportantData.Stats.prog2a >= 1 else false
+        end
+    },
+    bulb = {
+        displayName = "Bulb",
+        parent = 11,
+        icon = "rbxassetid://14502832315",
+        base = "rbxassetid://14502832584",
+        obj = nil,
+        order = 12,
+        world = 2,
+        pos = Vector2.new(-150, -50),
+        teleportPos = CFrame.new(33844.934, -0.5, 646.75),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1055 ]]
+            return if p1.Currency.resets.bulb.a > 0 or p1.Currency.resets.absorb.a > 0 then true elseif p1.Stats.prog2a >= 1 then p1.UpgradeLevels.generic.b4.level > 0 else false
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1058 | Upvalues: InfoStore (copy), Data (copy), Multipliers (copy) ]]
+            return if InfoStore.Resets.bulb.a > 0 or InfoStore.Resets.absorb.a > 0 then true elseif Data.ImportantData.Stats.prog2a >= 1 then Multipliers.getUpgradeLevel("b4") > 0 else false
+        end
+    },
+    tree = {
+        displayName = "Tree",
+        parent = 11,
+        icon = "rbxassetid://14602637033",
+        base = "rbxassetid://14602636590",
+        obj = nil,
+        order = 13,
+        world = 2,
+        pos = Vector2.new(0, -50),
+        teleportPos = CFrame.new(33944.934, 47, 807.25),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1072 ]]
+            return p1.Currency.resets.absorb.a > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1075 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.absorb.a > 0
+        end
+    },
+    toInt2 = {
+        displayName = "Intersection",
+        parent = 11,
+        icon = "rbxassetid://14586738531",
+        base = "rbxassetid://14586738201",
+        mapLocation = "chamber",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 2,
+        pos = Vector2.new(-300, -190),
+        camChange = function() --[[ camChange | Line: 1088 ]]
+            return workspace.Features.W2:WaitForChild("W2Cams").IntCam
+        end,
+        cameraAngle = CFrame.Angles(1.5707963267948966, 0, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1093 | Upvalues: LethalNum (copy) ]]
+            return LethalNum.isGreaterE(p1.Currency.curr.gGrass.totalAmount, LethalNum.new(1, 1)) or p1.Currency.resets.rift.a >= 1
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1096 | Upvalues: LethalNum (copy), CurrencyTypes (copy), InfoStore (copy) ]]
+            return LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("gGrass"), LethalNum.new(1, 1)) or InfoStore.Resets.rift.a >= 1
+        end
+    },
+    toJungle2 = {
+        displayName = "Jungle",
+        parent = 12,
+        icon = "rbxassetid://13984721039",
+        base = "rbxassetid://13984721422",
+        mapLocation = "jungle",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 2,
+        pos = Vector2.new(-300, -190),
+        camChange = function() --[[ camChange | Line: 1113 ]]
+            return workspace.Features.W2:WaitForChild("W2Cams").NeoIslandCam
+        end,
+        cameraAngle = CFrame.Angles(1.5707963267948966, 0, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1118 ]]
+            return true
+        end
+    },
+    toCavern2 = {
+        displayName = "Cavern",
+        parent = 12,
+        icon = "rbxassetid://14465483046",
+        base = "rbxassetid://14465482829",
+        mapLocation = "cavern",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 2,
+        pos = Vector2.new(-150, -190),
+        camChange = function() --[[ camChange | Line: 1133 ]]
+            return workspace.Features.W2:WaitForChild("W2Cams").CavernCam
+        end,
+        cameraAngle = CFrame.Angles(1.5707963267948966, 0, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1138 | Upvalues: LethalNum (copy) ]]
+            return LethalNum.isGreaterE(p1.Currency.curr.mush.totalAmount, LethalNum.new(1, 0))
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1141 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+            return LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("mush"), LethalNum.new(1, 0))
+        end
+    },
+    toTemple2 = {
+        displayName = "Temple",
+        parent = 12,
+        icon = "rbxassetid://17787412242",
+        base = "rbxassetid://14797835311",
+        mapLocation = "temple",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 2,
+        pos = Vector2.new(0, -190),
+        camChange = function() --[[ camChange | Line: 1156 ]]
+            return workspace.Features.W2:WaitForChild("W2Cams").TempleCam
+        end,
+        cameraAngle = CFrame.Angles(1.5707963267948966, 0, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1161 ]]
+            return p1.Currency.resets.trueAwaken.a > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1164 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.trueAwaken.a > 0
+        end
+    },
+    toDes2 = {
+        displayName = "Desert",
+        parent = 12,
+        icon = "rbxassetid://18305824550",
+        base = "rbxassetid://18305830277",
+        mapLocation = "desert",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 2,
+        pos = Vector2.new(150, -190),
+        camChange = function() --[[ camChange | Line: 1179 ]]
+            return workspace.Features.W2:WaitForChild("W2Cams").DesertCam
+        end,
+        cameraAngle = CFrame.Angles(1.5707963267948966, 0, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1184 | Upvalues: LethalNum (copy) ]]
+            return LethalNum.isGreaterE(p1.Currency.curr.cactus.totalAmount, LethalNum.new(1, 0))
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1187 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+            return LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("cactus"), LethalNum.new(1, 0))
+        end
+    },
+    gg = {
+        displayName = "Field",
+        parent = 12,
+        icon = "rbxassetid://14586738531",
+        base = "rbxassetid://14586738201",
+        obj = nil,
+        order = 111,
+        world = 2,
+        pos = Vector2.new(-300, -50),
+        teleportPos = CFrame.new(34452.684, -347, 26433.75),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1203 | Upvalues: LethalNum (copy) ]]
+            return LethalNum.isGreaterE(p1.Currency.curr.gGrass.totalAmount, LethalNum.new(1, 0))
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1206 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+            return LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("gGrass"), LethalNum.new(1, 0))
+        end
+    },
+    ["2_collapse"] = {
+        displayName = "Collapse",
+        parent = 12,
+        icon = "rbxassetid://18139272770",
+        base = "rbxassetid://14586738201",
+        obj = nil,
+        order = 112,
+        world = 2,
+        pos = Vector2.new(-150, -50),
+        teleportPos = CFrame.new(34361.184, -105, 26898.25),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1220 ]]
+            return if p1.Currency.resets.collapse.a > 0 or p1.Currency.resets.destabilize.a > 0 then true else p1.Currency.resets.midnight2.a > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1223 | Upvalues: InfoStore (copy) ]]
+            return if InfoStore.Resets.collapse.a > 0 or InfoStore.Resets.destabilize.a > 0 then true else InfoStore.Resets.midnight2.a > 0
+        end
+    },
+    ["2_destabilize"] = {
+        displayName = "Destabilize",
+        parent = 12,
+        icon = "rbxassetid://18643597954",
+        base = "rbxassetid://14586738201",
+        obj = nil,
+        order = 113,
+        world = 2,
+        pos = Vector2.new(0, -50),
+        teleportPos = CFrame.new(35098.684, -102.5, 26175.75),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1237 ]]
+            return if p1.Currency.resets.destabilize.a > 0 or p1.Currency.resets.midnight2.a > 0 then true elseif p1.Stats.prog2a >= 1 then p1.Currency.levels.ilevel.level >= 100 else false
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1240 | Upvalues: InfoStore (copy), Data (copy), CurrencyTypes (copy) ]]
+            return if InfoStore.Resets.destabilize.a > 0 or InfoStore.Resets.midnight2.a > 0 then true elseif Data.ImportantData.Stats.prog2a >= 1 then CurrencyTypes.Levels.ilevel.level >= 100 else false
+        end
+    },
+    ["2_rift"] = {
+        displayName = "Great Rift",
+        parent = 12,
+        icon = "rbxassetid://18954793847",
+        base = "rbxassetid://18954794022",
+        obj = nil,
+        order = 155,
+        world = 2,
+        pos = Vector2.new(150, -50),
+        teleportPos = CFrame.new(34371.184, 1036, 26143.75),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1254 ]]
+            return p1.Currency.resets.rift.a > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1257 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.rift.a > 0
+        end
+    },
+    toInt4 = {
+        displayName = "Intersection",
+        parent = 14,
+        icon = "rbxassetid://14586738531",
+        base = "rbxassetid://14586738201",
+        mapLocation = "chamber",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 2,
+        pos = Vector2.new(-300, -190),
+        camChange = function() --[[ camChange | Line: 1272 ]]
+            return workspace.Features.W2:WaitForChild("W2Cams").IntCam
+        end,
+        cameraAngle = CFrame.Angles(1.5707963267948966, 0, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1277 ]]
+            return true
+        end
+    },
+    toJungle4 = {
+        displayName = "Jungle",
+        parent = 14,
+        icon = "rbxassetid://13984721039",
+        base = "rbxassetid://13984721422",
+        mapLocation = "jungle",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 2,
+        pos = Vector2.new(-150, -190),
+        camChange = function() --[[ camChange | Line: 1292 ]]
+            return workspace.Features.W2:WaitForChild("W2Cams").NeoIslandCam
+        end,
+        cameraAngle = CFrame.Angles(1.5707963267948966, 0, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1297 ]]
+            return true
+        end
+    },
+    toDes3 = {
+        displayName = "Desert",
+        parent = 14,
+        icon = "rbxassetid://18305824550",
+        base = "rbxassetid://18305830277",
+        mapLocation = "desert",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 2,
+        pos = Vector2.new(0, -190),
+        camChange = function() --[[ camChange | Line: 1312 ]]
+            return workspace.Features.W2:WaitForChild("W2Cams").DesertCam
+        end,
+        cameraAngle = CFrame.Angles(1.5707963267948966, 0, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1317 | Upvalues: LethalNum (copy) ]]
+            return LethalNum.isGreaterE(p1.Currency.curr.cactus.totalAmount, LethalNum.new(1, 0))
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1320 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+            return LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("cactus"), LethalNum.new(1, 0))
+        end
+    },
+    hall = {
+        displayName = "Hall",
+        parent = 14,
+        icon = "rbxassetid://17787412242",
+        base = "rbxassetid://14797835311",
+        obj = nil,
+        order = 120,
+        world = 2,
+        pos = Vector2.new(-300, -50),
+        teleportPos = CFrame.new(30764.934, 4.5, 526.75),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1336 ]]
+            return p1.Currency.resets.trueAwaken.a > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1339 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.trueAwaken.a > 0
+        end
+    },
+    ut = {
+        displayName = "Upper Temple",
+        parent = 14,
+        icon = "rbxassetid://18669194082",
+        base = "rbxassetid://18643595592",
+        obj = nil,
+        order = 121,
+        world = 2,
+        pos = Vector2.new(-150, -50),
+        teleportPos = CFrame.new(33469.125, 3580.6, 6815.895),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1353 | Upvalues: LethalNum (copy) ]]
+            return LethalNum.isGreaterE(p1.Currency.curr.starFragment.totalAmount, LethalNum.new(1, 0)) or (if p1.Stats.prog2a >= 1 then p1.Currency.resets.sandstorm.a >= 15 else false)
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1356 | Upvalues: LethalNum (copy), CurrencyTypes (copy), Data (copy), InfoStore (copy) ]]
+            return LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("starFragment"), LethalNum.new(1, 0)) or (if Data.ImportantData.Stats.prog2a >= 1 then InfoStore.Resets.sandstorm.a >= 15 else false)
+        end
+    },
+    twi = {
+        displayName = "Twilight",
+        parent = 14,
+        icon = "rbxassetid://18643596946",
+        base = "rbxassetid://18643597131",
+        obj = nil,
+        order = 122,
+        world = 2,
+        pos = Vector2.new(0, -50),
+        teleportPos = CFrame.new(33714.563, 3618.56, 7006.346),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1370 ]]
+            return if p1.Currency.resets.twilight2.a > 0 then true else p1.Currency.resets.midnight2.a > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1373 | Upvalues: InfoStore (copy) ]]
+            return if InfoStore.Resets.twilight2.a > 0 then true else InfoStore.Resets.midnight2.a > 0
+        end
+    },
+    mid = {
+        displayName = "Midnight",
+        parent = 14,
+        icon = "rbxassetid://18643597355",
+        base = "rbxassetid://18643597521",
+        obj = nil,
+        order = 123,
+        world = 2,
+        pos = Vector2.new(150, -50),
+        teleportPos = CFrame.new(33915.125, 3642.149, 6720.895),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1387 ]]
+            return p1.Currency.resets.midnight2.a > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1390 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.midnight2.a > 0
+        end
+    },
+    toInt3 = {
+        displayName = "Intersection",
+        parent = 13,
+        icon = "rbxassetid://14586738531",
+        base = "rbxassetid://14586738201",
+        mapLocation = "chamber",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 2,
+        pos = Vector2.new(-300, -190),
+        camChange = function() --[[ camChange | Line: 1405 ]]
+            return workspace.Features.W2:WaitForChild("W2Cams").IntCam
+        end,
+        cameraAngle = CFrame.Angles(1.5707963267948966, 0, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1410 ]]
+            return p1.Stats.prog2 >= 2
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1413 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.prog2 >= 2
+        end
+    },
+    toJungle3 = {
+        displayName = "Jungle",
+        parent = 13,
+        icon = "rbxassetid://13984721039",
+        base = "rbxassetid://13984721422",
+        mapLocation = "jungle",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 2,
+        pos = Vector2.new(-150, -190),
+        camChange = function() --[[ camChange | Line: 1428 ]]
+            return workspace.Features.W2:WaitForChild("W2Cams").NeoIslandCam
+        end,
+        cameraAngle = CFrame.Angles(1.5707963267948966, 0, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1433 ]]
+            return p1.Stats.prog2 >= 2
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1436 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.prog2 >= 2
+        end
+    },
+    toTemple3 = {
+        displayName = "Temple",
+        parent = 13,
+        icon = "rbxassetid://17787412242",
+        base = "rbxassetid://14797835311",
+        mapLocation = "temple",
+        ignoreCamera = true,
+        noPin = true,
+        obj = nil,
+        order = 10,
+        world = 2,
+        pos = Vector2.new(0, -190),
+        camChange = function() --[[ camChange | Line: 1451 ]]
+            return workspace.Features.W2:WaitForChild("W2Cams").TempleCam
+        end,
+        cameraAngle = CFrame.Angles(1.5707963267948966, 0, 0),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1456 ]]
+            return p1.Stats.prog2 >= 2
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1459 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.prog2 >= 2
+        end
+    },
+    desert = {
+        displayName = "Field",
+        parent = 13,
+        icon = "rbxassetid://18305824550",
+        base = "rbxassetid://18305830277",
+        obj = nil,
+        order = 151,
+        world = 2,
+        pos = Vector2.new(-300, -50),
+        teleportPos = CFrame.new(34627.434, -22.25, -1255.75),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1475 ]]
+            return p1.Stats.prog2 >= 1
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1478 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.prog2 >= 1
+        end
+    },
+    gauntletD = {
+        displayName = "D-Gauntlet",
+        parent = 13,
+        icon = "rbxassetid://18345865789",
+        base = "rbxassetid://18427012579",
+        obj = nil,
+        order = 152,
+        world = 2,
+        pos = Vector2.new(-150, -50),
+        teleportPos = CFrame.new(34912.434, -22.25, -1039.25),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1492 ]]
+            return p1.Stats.prog2 >= 2
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1495 | Upvalues: Data (copy) ]]
+            return Data.ImportantData.Stats.prog2 >= 2
+        end
+    },
+    fossilize = {
+        displayName = "Fossilize",
+        parent = 13,
+        icon = "rbxassetid://18694581721",
+        base = "rbxassetid://18694581520",
+        obj = nil,
+        order = 153,
+        world = 2,
+        pos = Vector2.new(0, -50),
+        teleportPos = CFrame.new(34854.184, -20, -760),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1509 ]]
+            return p1.Currency.resets.fossilize.b > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1512 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.fossilize.b > 0
+        end
+    },
+    cactus = {
+        displayName = "Cactus God",
+        parent = 13,
+        icon = "rbxassetid://18805368755",
+        base = "rbxassetid://18805504326",
+        obj = nil,
+        order = 154,
+        world = 2,
+        pos = Vector2.new(150, -50),
+        teleportPos = CFrame.new(34667.684, -387.25, -1506.5),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1526 ]]
+            return if p1.Stats.prog2 >= 3 then true elseif p1.Stats.prog2a >= 1 then p1.Currency.resets.midnight2.a >= 6 else false
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1529 | Upvalues: Data (copy), InfoStore (copy) ]]
+            return if Data.ImportantData.Stats.prog2 >= 3 then true elseif Data.ImportantData.Stats.prog2a >= 1 then InfoStore.Resets.midnight2.a >= 6 else false
+        end
+    },
+    ["9_F1"] = {
+        displayName = "Floor 1",
+        parent = 90,
+        icon = "rbxassetid://18409981883",
+        base = "rbxassetid://18409983132",
+        obj = nil,
+        order = 0,
+        world = 9,
+        pos = Vector2.new(-300, -50),
+        teleportPos = CFrame.new(-15301.7, 28295.65, -30764.803),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1545 ]]
+            return true
+        end
+    },
+    ["9_F2"] = {
+        displayName = "Floor 2",
+        parent = 90,
+        icon = "rbxassetid://18409978531",
+        base = "rbxassetid://18409980625",
+        obj = nil,
+        order = 1,
+        world = 9,
+        pos = Vector2.new(-150, -50),
+        teleportPos = CFrame.new(-15301.7, 28795.65, -30764.803),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1559 ]]
+            return p1.Currency.resets.F1L3.b >= 10
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1562 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.F1L3.b >= 10
+        end
+    },
+    ["9_F3"] = {
+        displayName = "Floor 3",
+        parent = 90,
+        icon = "rbxassetid://18409976223",
+        base = "rbxassetid://18409977696",
+        obj = nil,
+        order = 2,
+        world = 9,
+        pos = Vector2.new(0, -50),
+        teleportPos = CFrame.new(-15301.7, 29295.65, -30764.803),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1576 ]]
+            return p1.Currency.resets.F2L3.b >= 10
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1579 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.F2L3.b >= 10
+        end
+    },
+    ["9_F4"] = {
+        displayName = "Floor 4",
+        parent = 90,
+        icon = "rbxassetid://18409973598",
+        base = "rbxassetid://18410206117",
+        obj = nil,
+        order = 3,
+        world = 9,
+        pos = Vector2.new(150, -50),
+        teleportPos = CFrame.new(-15301.7, 29795.65, -30764.803),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1593 ]]
+            return p1.Currency.resets.F3L3.b >= 10
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1596 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.F3L3.b >= 10
+        end
+    },
+    ["9_F5"] = {
+        displayName = "Floor 5",
+        parent = 90,
+        icon = "rbxassetid://18409969761",
+        base = "rbxassetid://18409971714",
+        obj = nil,
+        order = 4,
+        world = 9,
+        pos = Vector2.new(300, -50),
+        teleportPos = CFrame.new(-15301.7, 30295.65, -30764.803),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1610 ]]
+            return p1.Currency.resets.F4L3.b >= 10
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1613 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.F4L3.b >= 10
+        end
+    },
+    ["8_main"] = {
+        displayName = "field",
+        parent = 80,
+        icon = "rbxassetid://17467447179",
+        base = "rbxassetid://17467472895",
+        obj = nil,
+        order = 0,
+        world = 8,
+        pos = Vector2.new(-300, -50),
+        teleportPos = CFrame.new(-15300.7, 28298.65, -15275.803),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1630 ]]
+            return true
+        end
+    },
+    ["8_brick"] = {
+        displayName = "brick house",
+        parent = 80,
+        icon = "rbxassetid://17511915944",
+        base = "rbxassetid://17512130847",
+        obj = nil,
+        order = 1,
+        world = 8,
+        pos = Vector2.new(-150, -50),
+        teleportPos = CFrame.new(-15798.7, 27708.65, -15919.803),
+        visibleCondition = function(p1) --[[ visibleCondition | Line: 1644 ]]
+            return p1.UpgradeLevels.generic["8_brick"].level > 0
+        end,
+        visibleConditionC = function() --[[ visibleConditionC | Line: 1647 | Upvalues: Multipliers (copy) ]]
+            return Multipliers.getUpgradeLevel("8_brick") > 0
+        end
+    }
+}
+function t.LocationChange(p1) --[[ LocationChange | Line: 1656 | Upvalues: ChangeVisual (copy), GenericEvent (copy) ]]
+    ChangeVisual.Change("anti")
+    GenericEvent:FireServer({
+        id = "changeLocation",
+        location = p1
+    })
+end
+
+local v1 = true
+
+function t.Teleport(p1) --[[ Teleport | Line: 1662 | Upvalues: t (copy), Data (copy), v1 (ref), GenericEvent (copy), ChangeVisual (copy), Notifications (copy) ]]
+    if (t.Teles[p1].world or 1) ~= Data.ImportantData.Stats.world then
+        return
+    end
+
+    if not v1 then
+        return
+    end
+
+    if not Data.ImportantData.Stats.saveLoaded then
+        return
+    end
+
+    if Data.ImportantData.Stats.tslsu >= 3 then
+        return
+    end
+
+    if Data.ImportantData.Stats.world == 2 and Data.ImportantData.Stats.cTrial > 0 then
+        return
+    end
+
+    v1 = false
+
+    if t.Teles[p1].teleportPos then
+        GenericEvent:FireServer({
+            id = "mapTeleport",
+            teleId = p1
+        })
+    end
+
+    if t.Teles[p1].camChange then
+        Data.ImportantData.Stats.mapLocation = t.Teles[p1].mapLocation or "normal"
+
+        local v12 = t.Teles[p1].camChange()
+
+        ChangeVisual.SetCamera(v12, t.Teles[p1].cameraAngle or CFrame.Angles(1.5707963267948966, 0, 0))
+    end
+
+    if not (t.Teles[p1].ignoreCamera or Data.ImportantData.Misc.player.PlayerGui.MobileUI.UI.Currency.Visible) then
+        Data.ImportantData.Stats.mapLocation = "none"
+        ChangeVisual.ReturnCamera()
+    end
+
+    Notifications.ClearNotifs()
+
+    if not t.Teles[p1].noPin then
+        task.wait(1)
+    end
+
+    v1 = true
+end
+function t.UpdateTeles() --[[ UpdateTeles | Line: 1703 | Upvalues: Data (copy), t (copy) ]]
+    local v1 = (Data.ImportantData.Stats.world ~= 2 or not (Data.ImportantData.Stats.cTrial > 0)) and true or false
+
+    for k, v in pairs(Data.ImportantData.Stats.telePins) do
+        if v.obj then
+            if v.tele == "none" then
+                v.obj.Visible = false
+
+                continue
+            end
+
+            local v2 = t.Teles[v.tele]
+            local v3 = if v2.visibleConditionC then not v2.visibleConditionC() else false
+
+            if v.objIcon.Image ~= v2.icon or (v.objBase.Image ~= v2.base or v.cannot ~= v3) then
+                v.objBase.Image = v2.base
+                v.objIcon.Image = v2.icon
+                v.objText.Text = v2.displayName
+                v.objText.TextColor3 = v3 and Color3.new(0.439216, 0.439216, 0.439216) or Color3.new(255/255, 255/255, 255/255)
+                v.objBase.ImageTransparency = if v3 then 0.5 else 0
+                v.objIcon.ImageTransparency = if v3 then 0.5 else 0
+            end
+
+            v.cannot = v3
+            v.obj.Teleporter.Id.Value = v.tele
+            v.obj.LayoutOrder = v2.order
+            v.obj.Visible = v1
+        end
+    end
+
+    for k, v in pairs(t.Teles) do
+        if v.obj then
+            v.obj.Pin.Icon.Image = "rbxassetid://11638472092"
+        end
+    end
+
+    for k, v in pairs(Data.ImportantData.Stats.telePins) do
+        for k2, v2 in pairs(t.Teles) do
+            if v.tele == k2 then
+                v2.obj.Pin.Icon.Image = "rbxassetid://11638472275"
+            end
+        end
+    end
+end
+function t.HideShowTeles() --[[ HideShowTeles | Line: 1752 | Upvalues: Data (copy), t (copy) ]]
+    local world = Data.ImportantData.Stats.world
+
+    for k, v in pairs(t.Teles) do
+        if v.obj then
+            v.obj.Visible = v.v and (if world == v.world then true else false)
+        end
+    end
+end
+function t.AutoRemovePins() --[[ AutoRemovePins | Line: 1760 | Upvalues: Data (copy), t (copy) ]]
+    for k, v in pairs(Data.ImportantData.Stats.telePins) do
+        if v.tele ~= "none" and (t.Teles[v.tele] ~= nil and not t.Teles[v.tele].v) then
+            v.tele = "none"
+        end
+    end
+
+    t.UpdateTeles()
+end
+function t.Unpin(p1, p2) --[[ Unpin | Line: 1771 | Upvalues: Data (copy), GenericEvent (copy) ]]
+    local v1 = Data.ImportantData.Stats.telePins["" .. p2]
+
+    if not (v1 and v1.cannot) then
+        return
+    end
+
+    GenericEvent:FireServer({
+        id = "pin",
+        t = "tele",
+        pid = p1
+    })
+end
+function t.PinTele(p1) --[[ PinTele | Line: 1778 | Upvalues: GenericEvent (copy) ]]
+    GenericEvent:FireServer({
+        id = "pin",
+        t = "tele",
+        pid = p1
+    })
+end
+
+return t
