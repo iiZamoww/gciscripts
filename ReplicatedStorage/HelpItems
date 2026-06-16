@@ -1,0 +1,921 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local InfoStore = require(ReplicatedStorage.InfoStore)
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local Data = require(ReplicatedStorage.Data)
+local CurrencyTypes = require(ReplicatedStorage.CurrencyTypes)
+local Multipliers = require(ReplicatedStorage.Multipliers)
+
+return {
+    Items = {
+        intro = {
+            display = "Introduction",
+            menu = "Intro",
+            order = 1,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 15 ]]
+                return true
+            end,
+            color = Color3.new(255/255, 255/255, 255/255)
+        },
+        flowers = {
+            display = "Flowers",
+            menu = "Flowers",
+            order = 2,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 25 ]]
+                return true
+            end,
+            color = Color3.new(255/255, 255/255, 255/255)
+        },
+        upgrades = {
+            display = "Upgrades",
+            menu = "Upgrades",
+            order = 3,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 35 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+                return LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("grass"), LethalNum.new(1, 0))
+            end,
+            color = Color3.new(255/255, 255/255, 255/255)
+        },
+        perks = {
+            display = "Perks",
+            menu = "Perks",
+            order = 4,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 45 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+                return LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("perks"), LethalNum.new(1, 0))
+            end,
+            color = Color3.new(255/255, 255/255, 255/255)
+        },
+        automation = {
+            display = "Automation",
+            menu = "Automation",
+            order = 5,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 55 | Upvalues: CurrencyTypes (copy) ]]
+                return CurrencyTypes.Levels.level.highestLevel >= 5
+            end,
+            color = Color3.new(255/255, 255/255, 255/255)
+        },
+        prestige = {
+            display = "Prestige",
+            menu = "Prestige",
+            order = 6,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 65 | Upvalues: CurrencyTypes (copy) ]]
+                return CurrencyTypes.Levels.level.highestLevel >= 31
+            end,
+            color = Color3.new(0/255, 255/255, 255/255)
+        },
+        tiers = {
+            display = "Tiers & Platinum",
+            menu = "Tiers",
+            order = 7,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 75 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.prestige.b > 0
+            end,
+            color = Color3.new(0/255, 255/255, 255/255)
+        },
+        crystallize = {
+            display = "Crystallize",
+            menu = "Crystallize",
+            order = 8,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 85 | Upvalues: CurrencyTypes (copy) ]]
+                return CurrencyTypes.Levels.level.highestLevel >= 101
+            end,
+            color = Color3.new(255/255, 0/255, 255/255)
+        },
+        accomplishments = {
+            display = "Accomplishments",
+            menu = "Accomplishments",
+            order = 9,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 95 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.crystallize.b > 0
+            end,
+            color = Color3.new(255/255, 0/255, 255/255)
+        },
+        grasshop = {
+            display = "Grasshop",
+            menu = "Grasshop",
+            order = 10,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 105 | Upvalues: CurrencyTypes (copy) ]]
+                return CurrencyTypes.Levels.level.highestLevel >= 201
+            end,
+            color = Color3.new(0/255, 255/255, 0/255)
+        },
+        steelie = {
+            display = "Steelie",
+            menu = "Steelie",
+            order = 11,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 115 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.grasshop.b >= 8
+            end,
+            color = Color3.new(0/255, 255/255, 0/255)
+        },
+        charger = {
+            display = "Charger",
+            menu = "Charger",
+            order = 12,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 125 | Upvalues: Multipliers (copy) ]]
+                return Multipliers.getUpgradeLevel("charger") > 0
+            end,
+            color = Color3.new(0/255, 255/255, 0/255)
+        },
+        anti = {
+            display = "Anti-Realm",
+            menu = "AntiRealm",
+            order = 13,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 135 | Upvalues: Multipliers (copy) ]]
+                return Multipliers.getUpgradeLevel("decelerator") > 0
+            end,
+            color = Color3.new(0/255, 255/255, 0/255)
+        },
+        anonymity = {
+            display = "Anonymity",
+            menu = "Anonymity",
+            order = 14,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 145 | Upvalues: CurrencyTypes (copy) ]]
+                return CurrencyTypes.Levels.antiLevel.highestLevel >= 31
+            end,
+            color = Color3.new(0/255, 255/255, 0/255)
+        },
+        liquefy = {
+            display = "Liquefy",
+            menu = "Liquefy",
+            order = 15,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 155 | Upvalues: CurrencyTypes (copy) ]]
+                return CurrencyTypes.Levels.antiLevel.highestLevel >= 101
+            end,
+            color = Color3.new(0/255, 255/255, 0/255)
+        },
+        refinery = {
+            display = "Rocket Fuel",
+            menu = "RocketFuel",
+            order = 16,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 165 | Upvalues: Multipliers (copy) ]]
+                return Multipliers.getUpgradeLevel("refinery") > 0
+            end,
+            color = Color3.new(0/255, 255/255, 0/255)
+        },
+        rocket = {
+            display = "Rocket Parts",
+            menu = "RocketParts",
+            order = 17,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 175 | Upvalues: Multipliers (copy) ]]
+                return Multipliers.getUpgradeLevel("launchPad") > 0
+            end,
+            color = Color3.new(0/255, 255/255, 0/255)
+        },
+        galactic = {
+            display = "Galactic",
+            menu = "Galactic",
+            order = 18,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 185 | Upvalues: InfoStore (copy) ]]
+                return if InfoStore.Resets.rocketPart.a >= 10 then true else InfoStore.Resets.galactic.b > 0
+            end,
+            color = Color3.new(0.717647, 0, 1)
+        },
+        agh = {
+            display = "AGH Milestones",
+            menu = "AGH",
+            order = 19,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 195 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.galactic.b > 0
+            end,
+            color = Color3.new(0.717647, 0, 1)
+        },
+        grassskip = {
+            display = "Grass-Skip",
+            menu = "GrassSkip",
+            order = 20,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 205 | Upvalues: CurrencyTypes (copy), InfoStore (copy) ]]
+                return if CurrencyTypes.Levels.antiLevel.highestLevel >= 201 then InfoStore.Resets.galactic.b > 0 else false
+            end,
+            color = Color3.new(0.717647, 0, 1)
+        },
+        funify = {
+            display = "Funify",
+            menu = "Funify",
+            order = 21,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 215 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.grassskip.b >= 8
+            end,
+            color = Color3.new(0.717647, 0, 1)
+        },
+        aghgs = {
+            display = "AGHGS Milestones",
+            menu = "AGHGS",
+            order = 22,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 225 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.lowestgh.a <= 0
+            end,
+            color = Color3.new(0.717647, 0, 1)
+        },
+        sacrifice = {
+            display = "Sacrifice",
+            menu = "Sacrifice",
+            order = 23,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 235 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.zeroghgs.a >= 18
+            end,
+            color = Color3.new(0.717647, 0, 1)
+        },
+        recelerator = {
+            display = "Recelerator",
+            menu = "Recelerator",
+            order = 24,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 245 | Upvalues: Multipliers (copy) ]]
+                return Multipliers.getUpgradeLevel("recelerator") > 0
+            end,
+            color = Color3.new(0.717647, 0, 1)
+        },
+        vaporizer = {
+            display = "Vaporizer",
+            menu = "Vaporizer",
+            order = 25,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 255 | Upvalues: CurrencyTypes (copy) ]]
+                return CurrencyTypes.Levels.unLevel.highestLevel >= 101
+            end,
+            color = Color3.new(0.717647, 0, 1)
+        },
+        planetoid = {
+            display = "The Planetoid",
+            menu = "Planetoid",
+            order = 26,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 265 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.zeroghgs.a >= 30
+            end,
+            color = Color3.new(0.717647, 0, 1)
+        },
+        astrolabe = {
+            display = "Astrolabe",
+            menu = "Astrolabe",
+            order = 27,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 275 | Upvalues: CurrencyTypes (copy) ]]
+                return CurrencyTypes.Levels.planetLevel.highestLevel >= 31
+            end,
+            color = Color3.new(0.717647, 0, 1)
+        },
+        quadrant = {
+            display = "Quadrant",
+            menu = "Quadrant",
+            order = 28,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 285 | Upvalues: CurrencyTypes (copy) ]]
+                return CurrencyTypes.Levels.planetLevel.highestLevel >= 101
+            end,
+            color = Color3.new(0.717647, 0, 1)
+        },
+        darkTree = {
+            display = "Dark Tree",
+            menu = "DarkTree",
+            order = 29,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 295 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.zeroghgs.a >= 36
+            end,
+            color = Color3.new(0.717647, 0, 1)
+        },
+        ringBreak = {
+            display = "Ring Break",
+            menu = "RingBreak",
+            order = 30,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 305 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.zeroghgs.a >= 45
+            end,
+            color = Color3.new(0.717647, 0, 1)
+        },
+        lightForest = {
+            display = "Light Forest",
+            menu = "LightForest",
+            order = 31,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 315 | Upvalues: Data (copy) ]]
+                return Data.ImportantData.Stats.innerRingsBroken > 0
+            end,
+            color = Color3.new(0.717647, 0, 1)
+        },
+        planetary = {
+            display = "Planetary",
+            menu = "Planetary",
+            order = 32,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 325 | Upvalues: CurrencyTypes (copy), Data (copy) ]]
+                return if CurrencyTypes.Levels.planetLevel.highestLevel >= 201 then Data.ImportantData.Stats.innerRingsBroken > 0 else false
+            end,
+            color = Color3.new(0.717647, 0, 1)
+        },
+        planetaryTrials = {
+            display = "Planetary Trials",
+            menu = "PlanetaryTrials",
+            order = 33,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 335 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.pt.a >= 6
+            end,
+            color = Color3.new(0.717647, 0, 1)
+        },
+        lunar = {
+            display = "Lunar Obelisk",
+            menu = "LunarObelisk",
+            order = 34,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 345 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.grassJump.b >= 6
+            end,
+            color = Color3.new(0.717647, 0, 1)
+        },
+        constellation = {
+            display = "Constellation",
+            menu = "Constellation",
+            order = 35,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 355 | Upvalues: CurrencyTypes (copy) ]]
+                return CurrencyTypes.Levels.planetLevel.highestLevel >= 301
+            end,
+            color = Color3.new(0.717647, 0, 1)
+        },
+        arcs = {
+            display = "Arcs",
+            menu = "Arcs",
+            order = 36,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 365 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+                return LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("lines"), LethalNum.new(1, 16))
+            end,
+            color = Color3.new(0.717647, 0, 1)
+        },
+        darkCharger = {
+            display = "Dark Charger",
+            menu = "DarkCharger",
+            order = 37,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 375 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.grassJump.b >= 18
+            end,
+            color = Color3.new(0.717647, 0, 1)
+        },
+        theStar = {
+            display = "The Star",
+            menu = "TheStar",
+            order = 38,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 385 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.grassJump.b >= 35
+            end,
+            color = Color3.new(0.717647, 0, 1)
+        },
+        supernova = {
+            display = "Supernova",
+            menu = "Supernova",
+            order = 39,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 395 | Upvalues: Data (copy), InfoStore (copy) ]]
+                return if Data.ImportantData.Stats.starTier > 0 then true else InfoStore.Resets.starTier.a > 0
+            end,
+            color = Color3.new(1, 0.647059, 0)
+        },
+        snt2 = {
+            display = "SNT 2",
+            menu = "SNT2",
+            order = 40,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 405 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.starTier.a >= 2
+            end,
+            color = Color3.new(1, 0.647059, 0)
+        },
+        snt3 = {
+            display = "SNT 3",
+            menu = "SNT3",
+            order = 41,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 415 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.starTier.a >= 3
+            end,
+            color = Color3.new(1, 0.647059, 0)
+        },
+        snt4 = {
+            display = "SNT 4",
+            menu = "SNT4",
+            order = 42,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 425 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.starTier.a >= 4
+            end,
+            color = Color3.new(1, 0.647059, 0)
+        },
+        snt5 = {
+            display = "SNT 5",
+            menu = "SNT5",
+            order = 43,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 435 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.starTier.a >= 5
+            end,
+            color = Color3.new(1, 0.647059, 0)
+        },
+        solarians = {
+            display = "Solarians",
+            menu = "Solarians",
+            order = 44,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 445 | Upvalues: Multipliers (copy) ]]
+                return Multipliers.getSCLevel("sol") > 0
+            end,
+            color = Color3.new(1, 0.647059, 0)
+        },
+        compression = {
+            display = "Sol Compression",
+            menu = "Compression",
+            order = 45,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 455 | Upvalues: Data (copy) ]]
+                return Data.ImportantData.Stats.bestStage >= 10
+            end,
+            color = Color3.new(1, 0.647059, 0)
+        },
+        challenges = {
+            display = "Solarian Challenges",
+            menu = "Challenges",
+            order = 46,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 465 | Upvalues: Data (copy) ]]
+                return Data.ImportantData.Stats.bestStage >= 14
+            end,
+            color = Color3.new(1, 0.647059, 0)
+        },
+        adv = {
+            display = "The Advanced Star",
+            menu = "Advanced",
+            order = 47,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 475 | Upvalues: Data (copy) ]]
+                return Data.ImportantData.Stats.bestStage >= 20
+            end,
+            color = Color3.new(1, 0.647059, 0)
+        },
+        sunset = {
+            display = "Sunset",
+            menu = "Sunset",
+            order = 48,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 485 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.starTier.a >= 6
+            end,
+            color = Color3.new(1, 0.647059, 0)
+        },
+        portal = {
+            display = "Portal Pieces",
+            menu = "Portal",
+            order = 49,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 495 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.starTier.a >= 7
+            end,
+            color = Color3.new(1, 0.647059, 0)
+        },
+        grassland0 = {
+            display = "Grassland",
+            menu = "Grassland0",
+            order = 50,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 505 | Upvalues: Data (copy) ]]
+                return Data.ImportantData.Stats.prog >= 1
+            end,
+            color = Color3.new(1, 0.647059, 0)
+        },
+        grassland1 = {
+            display = "Grassland Cont.",
+            menu = "Grassland1",
+            order = 50.1,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 515 | Upvalues: Data (copy) ]]
+                return Data.ImportantData.Stats.prog >= 1
+            end,
+            color = Color3.new(1, 0.647059, 0)
+        },
+        grassland2 = {
+            display = "Early Dungeons",
+            menu = "Grassland2",
+            order = 51,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 525 | Upvalues: Data (copy) ]]
+                return Data.ImportantData.Stats.prog >= 1
+            end,
+            color = Color3.new(1, 0.647059, 0)
+        },
+        synthesis = {
+            display = "Synthesis",
+            menu = "Synthesis",
+            order = 52,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 535 | Upvalues: Data (copy) ]]
+                return if Data.ImportantData.UpgradeLevels.dungeonStats.sandruin.highestCleared >= 4 then Data.ImportantData.Stats.bestStage >= 140 else false
+            end,
+            color = Color3.new(1, 0.647059, 0)
+        },
+        twilight = {
+            display = "Twilight",
+            menu = "Twilight",
+            order = 53,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 545 | Upvalues: InfoStore (copy), Data (copy) ]]
+                return if InfoStore.Resets.starTier.a >= 8 then Data.ImportantData.Stats.bestStage >= 140 else false
+            end,
+            color = Color3.new(1, 0.647059, 0)
+        },
+        grassland3 = {
+            display = "Late Dungeons",
+            menu = "Grassland3",
+            order = 54,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 555 | Upvalues: Data (copy), LethalNum (copy), CurrencyTypes (copy) ]]
+                return if Data.ImportantData.UpgradeLevels.dungeonStats.mountain.highestCleared >= 4 then LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("souls3"), LethalNum.new(1, 0)) else false
+            end,
+            color = Color3.new(1, 0.647059, 0)
+        },
+        snt11 = {
+            display = "SNT 11",
+            menu = "SNT11",
+            order = 55,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 565 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.starTier.a >= 11
+            end,
+            color = Color3.new(1, 0.647059, 0)
+        },
+        snt13 = {
+            display = "SNT 13",
+            menu = "SNT13",
+            order = 56,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 575 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.starTier.a >= 13
+            end,
+            color = Color3.new(1, 0.647059, 0)
+        },
+        ["end"] = {
+            display = "The End",
+            menu = "End",
+            order = 57,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 585 | Upvalues: Data (copy) ]]
+                return Data.ImportantData.Stats.bestStage >= 1000
+            end,
+            color = Color3.new(0/255, 0/255, 0/255)
+        },
+        loop = {
+            display = "Loop",
+            menu = "Loop",
+            order = 58,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 595 | Upvalues: Data (copy) ]]
+                return Data.ImportantData.Stats.gameWon
+            end,
+            color = Color3.new(0.690196, 0.690196, 0.690196)
+        },
+        loop2 = {
+            display = "Mega Loop",
+            menu = "MegaLoop",
+            order = 59,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 605 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.loop2.b > 0
+            end,
+            color = Color3.new(0, 0.627451, 0)
+        },
+        grassland4 = {
+            display = "D11",
+            menu = "Grassland4",
+            order = 60,
+            world = 1,
+            unlockReq = function() --[[ unlockReq | Line: 615 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.loop2.b > 0
+            end,
+            color = Color3.new(0, 0.627451, 0)
+        },
+        ["2_intro"] = {
+            display = "World 2",
+            menu = "Intro2",
+            order = 1,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 634 ]]
+                return true
+            end,
+            color = Color3.new(0.25098, 0.627451, 0)
+        },
+        ["2_tier"] = {
+            display = "Jungle Tier & Regrowth",
+            menu = "JTier",
+            order = 2,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 644 ]]
+                return true
+            end,
+            color = Color3.new(0.25098, 0.627451, 0)
+        },
+        ["2_rune"] = {
+            display = "Runes & Rubies",
+            menu = "Runes",
+            order = 3,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 654 | Upvalues: CurrencyTypes (copy) ]]
+                return CurrencyTypes.Levels.jlevel.highestLevel >= 30
+            end,
+            color = Color3.new(0.439216, 0.627451, 0)
+        },
+        ["2_sapphire"] = {
+            display = "Sapphires",
+            menu = "Sapphires",
+            order = 4,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 664 | Upvalues: CurrencyTypes (copy) ]]
+                return CurrencyTypes.Levels.jlevel.highestLevel >= 120
+            end,
+            color = Color3.new(0, 0.219608, 0.627451)
+        },
+        ["2_awaken"] = {
+            display = "Awaken",
+            menu = "Awaken",
+            order = 5,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 674 | Upvalues: CurrencyTypes (copy) ]]
+                return CurrencyTypes.Levels.jlevel.highestLevel >= 200
+            end,
+            color = Color3.new(0.537255, 0.827451, 0)
+        },
+        ["2_stab"] = {
+            display = "Stability Device",
+            menu = "Stability",
+            order = 6,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 684 | Upvalues: Multipliers (copy) ]]
+                return Multipliers.getUpgradeLevel("bridge") > 0
+            end,
+            color = Color3.new(0.537255, 0.827451, 0)
+        },
+        ["2_cavern"] = {
+            display = "Cavern",
+            menu = "Cavern",
+            order = 7,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 694 | Upvalues: Multipliers (copy) ]]
+                return Multipliers.getUpgradeLevel("bridge2") > 0
+            end,
+            color = Color3.new(0.537255, 0.827451, 0)
+        },
+        ["2_bulbs"] = {
+            display = "Bulbs",
+            menu = "Bulbs",
+            order = 8,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 704 | Upvalues: CurrencyTypes (copy) ]]
+                return CurrencyTypes.Levels.clevel.highestLevel >= 100
+            end,
+            color = Color3.new(0.537255, 0.827451, 0)
+        },
+        ["2_int"] = {
+            display = "Intersection",
+            menu = "Intersection",
+            order = 9,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 714 | Upvalues: Multipliers (copy) ]]
+                return Multipliers.getUpgradeLevel("bridge3") > 0
+            end,
+            color = Color3.new(0.537255, 0.827451, 0)
+        },
+        ["2_absorb"] = {
+            display = "Absorb",
+            menu = "Absorb",
+            order = 10,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 724 | Upvalues: Multipliers (copy) ]]
+                return Multipliers.getUpgradeLevel("b4") > 0
+            end,
+            color = Color3.new(0.537255, 0.827451, 0)
+        },
+        ["2_trueAwaken"] = {
+            display = "True Awaken",
+            menu = "TrueAwaken",
+            order = 11,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 734 | Upvalues: Multipliers (copy) ]]
+                return Multipliers.getUpgradeLevel("b5") > 0
+            end,
+            color = Color3.new(0, 0.827451, 0.52549)
+        },
+        ["2_gauntlet"] = {
+            display = "The Gauntlet",
+            menu = "Gauntlet",
+            order = 12,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 744 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.trueAwaken.a >= 2
+            end,
+            color = Color3.new(0, 0.827451, 0.52549)
+        },
+        ["2_collapse"] = {
+            display = "Collapse",
+            menu = "Collapse",
+            order = 13,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 754 | Upvalues: CurrencyTypes (copy) ]]
+                return CurrencyTypes.Levels.ilevel.highestLevel >= 30
+            end,
+            color = Color3.new(0, 0.827451, 0.52549)
+        },
+        ["2_CC"] = {
+            display = "Complex Creations",
+            menu = "CC",
+            order = 14,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 764 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.trueAwaken.a >= 6
+            end,
+            color = Color3.new(0, 0.827451, 0.52549)
+        },
+        ["2_regen"] = {
+            display = "Regeneration",
+            menu = "Regeneration",
+            order = 15,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 774 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Store.regen
+            end,
+            color = Color3.new(0, 0.827451, 0.52549)
+        },
+        ["2_stack"] = {
+            display = "Stack",
+            menu = "Stack",
+            order = 16,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 784 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.trueAwaken.a >= 10
+            end,
+            color = Color3.new(0, 0.827451, 0.52549)
+        },
+        ["2_desert"] = {
+            display = "The Desert",
+            menu = "Desert",
+            order = 17,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 794 | Upvalues: Data (copy) ]]
+                return Data.ImportantData.Stats.prog2 >= 1
+            end,
+            color = Color3.new(0.835294, 0.796078, 0.509804)
+        },
+        ["2_sandstorm"] = {
+            display = "Sandstorm",
+            menu = "Sandstorm",
+            order = 18,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 804 | Upvalues: CurrencyTypes (copy) ]]
+                return CurrencyTypes.Levels.dlevel.highestLevel >= 40
+            end,
+            color = Color3.new(0.835294, 0.796078, 0.509804)
+        },
+        ["2_gauntlet2"] = {
+            display = "The Desert Gauntlet",
+            menu = "Gauntlet2",
+            order = 19,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 814 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.sandstorm.b >= 2
+            end,
+            color = Color3.new(0.835294, 0.796078, 0.509804)
+        },
+        ["2_destabilize"] = {
+            display = "Destabilize",
+            menu = "Destabilize",
+            order = 20,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 824 | Upvalues: InfoStore (copy), CurrencyTypes (copy) ]]
+                return if InfoStore.Resets.sandstorm.b >= 11 then CurrencyTypes.Levels.ilevel.highestLevel >= 100 else false
+            end,
+            color = Color3.new(0.835294, 0.796078, 0.509804)
+        },
+        ["2_degen"] = {
+            display = "Degeneration",
+            menu = "Degeneration",
+            order = 21,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 834 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Store.degen
+            end,
+            color = Color3.new(0.835294, 0.796078, 0.509804)
+        },
+        ["2_upperTemple"] = {
+            display = "The Upper Temple",
+            menu = "UpperTemple",
+            order = 22,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 844 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.sandstorm.b >= 15
+            end,
+            color = Color3.new(0.835294, 0.796078, 0.509804)
+        },
+        ["2_twilight"] = {
+            display = "Twilight",
+            menu = "TwilightW2",
+            order = 23,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 854 | Upvalues: CurrencyTypes (copy) ]]
+                return CurrencyTypes.Levels.utlevel.highestLevel >= 30
+            end,
+            color = Color3.new(0.835294, 0.796078, 0.509804)
+        },
+        ["2_fossilize"] = {
+            display = "Fossilize",
+            menu = "Fossilize",
+            order = 24,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 864 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Store.found
+            end,
+            color = Color3.new(0.835294, 0.796078, 0.509804)
+        },
+        ["2_midnight"] = {
+            display = "Midnight",
+            menu = "MidnightW2",
+            order = 25,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 874 | Upvalues: CurrencyTypes (copy) ]]
+                return CurrencyTypes.Levels.utlevel.highestLevel >= 100
+            end,
+            color = Color3.new(0.835294, 0.796078, 0.509804)
+        },
+        ["2_cactusTrial"] = {
+            display = "Cactus Trials",
+            menu = "CactusTrials",
+            order = 26,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 884 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.midnight2.b >= 6
+            end,
+            color = Color3.new(0.835294, 0.796078, 0.509804)
+        },
+        ["2_ct3"] = {
+            display = "Tier 3",
+            menu = "CT3",
+            order = 27,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 894 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.midnight2.b >= 15
+            end,
+            color = Color3.new(0.835294, 0.796078, 0.509804)
+        },
+        ["2_greatRift"] = {
+            display = "The Great Rift",
+            menu = "GreatRift",
+            order = 28,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 904 | Upvalues: Data (copy) ]]
+                return Data.ImportantData.Stats.prog2 >= 4
+            end,
+            color = Color3.new(0.0862745, 0.0862745, 0.0862745)
+        },
+        ["2_gauntlet3"] = {
+            display = "The Rift Gauntlet",
+            menu = "Gauntlet3",
+            order = 29,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 914 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.rift.a >= 2
+            end,
+            color = Color3.new(0.0862745, 0.0862745, 0.0862745)
+        },
+        ["2_grl5"] = {
+            display = "GRL 5",
+            menu = "GRL5",
+            order = 30,
+            world = 2,
+            unlockReq = function() --[[ unlockReq | Line: 924 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.rift.a >= 5
+            end,
+            color = Color3.new(0.0862745, 0.0862745, 0.0862745)
+        }
+    }
+}
