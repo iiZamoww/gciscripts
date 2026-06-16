@@ -1,0 +1,77 @@
+local t = {}
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Data = require(ReplicatedStorage.Data)
+
+require(ReplicatedStorage.Multipliers)
+require(ReplicatedStorage.LethalNum)
+game:GetService("HttpService")
+
+local Currencies = require(ReplicatedStorage.Currencies)
+local TabManager = require(ReplicatedStorage.TabManager)
+
+require(ReplicatedStorage.CalculateTime)
+require(ReplicatedStorage.GrassTypes)
+require(ReplicatedStorage.Accomplishments)
+require(ReplicatedStorage.Format)
+require(ReplicatedStorage.Decelerate)
+
+local PlayerInput = require(ReplicatedStorage.PlayerInput)
+
+require(ReplicatedStorage.Upgrades)
+require(ReplicatedStorage.ChangeVisual)
+game:GetService("BadgeService")
+game:GetService("Players")
+require(ReplicatedStorage.Planets)
+require(ReplicatedStorage.TreeItems)
+require(ReplicatedStorage.LunarItems)
+require(ReplicatedStorage.ConstellationGrid)
+
+local Soundificator = require(ReplicatedStorage.Soundificator)
+
+require(ReplicatedStorage.DailyReward)
+require(ReplicatedStorage.Goals)
+require(ReplicatedStorage.Star)
+require(ReplicatedStorage.CurrencyTypes)
+require(ReplicatedStorage.SingularityChart)
+require(ReplicatedStorage.Solarians)
+require(ReplicatedStorage.Portaling)
+require(ReplicatedStorage.SolarChallenges)
+require(ReplicatedStorage.MapTeles)
+require(ReplicatedStorage.GalaxyGen)
+require(ReplicatedStorage.Synthesis)
+
+local InfoStore = require(ReplicatedStorage.InfoStore)
+local Resets = require(ReplicatedStorage.Resets)
+local PlaceVersion = game.PlaceVersion
+
+saveLoaded = false
+function t.loadSaveString() --[[ loadSaveString | Line: 43 | Upvalues: Soundificator (copy), PlayerInput (copy), Data (copy), Currencies (copy), InfoStore (copy), TabManager (copy), Resets (copy) ]]
+    Soundificator.UpdateVolume()
+
+    local v1, _ = PlayerInput.getInputType()
+
+    Data.ImportantData.Stats.inputType = v1
+    Currencies.getDisplay().ui.Visible = true
+
+    if InfoStore.Resets.grasshop.b < 1 then
+        Currencies.getDisplay().tut.Parent.Visible = true
+    end
+
+    Currencies.UpdateGameProgress()
+    Data.ImportantData.Events.mastery:Fire()
+    Data.ImportantData.Events.synth:Fire()
+    TabManager.menus.saveFiles.Visible = false
+    Currencies.Displays.versionBox.Visible = true
+    Currencies.Displays.versionTitle.Text = "<b>Version " .. Data.ImportantData.Stats.gameVersion .. "</b>"
+    Currencies.UpdateVersion()
+    Currencies.Displays.versionInfo.Text = "<b><font color=\"#00ffff\">Relevant Changes</font>\n- Bug fixes 3\n\n<font color=\"#00ffff\">v0.9 - Awakening</font>\n- Added New Areas\n- Added New Features\n- Added New Music\n- Lots of bug fixes\n- Most things are now calculated server side increasing performance significantly at the cost of slight update delays depending on your connection\n- Added the Planet Run side minigame (Unlocked in The Star)\n- Added consumable Boosts as well as the rare flowers currency\n- Added World 2 (Formerly known as universe 2)\n- Rebalanced World 1 (Formerly known as universe 1)\n- Redesigned a few World 1 areas\n- Removed Universe 2 place\n- Added the \"Best Save\" save recovery option which loads a backup of your best mainline (World 1-2 not including loops) progression save\n- Solarians board slightly reworked\n- Compression slightly reworked\n- Improved grassland luck\n- Removed the Not a Scam reset\n\n<font color=\"#00ffff\">v0.8.1a</font>\n- Fixed them bugs\n- NERFED blue accomplishments\n- Touch-grass?\n\n<font color=\"#00ffff\">v0.8.1 - Loop</font>\n- Added multiple layers of loop (U1)\n- Reworked loop multi to not be an exponential increase past 10 (U1)\n- New game progress bar shows next major unlock (U1)\n- Max currency & teleport pins raised to 20 (U1)\n- Added autobuy settings (requires galactic) for tuning how much an autobuyer can spend (U1)\n- Redesigned popups to be less intrusive\n- Added right click basic/chart upgrades to buy max\n- Many bug fixes\n\n<font color=\"#00ffff\">v0.8 - Regrowth</font>\n- The Ending\n- Some New Areas\n- New Features\n- Added an experimental save modifiers system\n- Rebalanced early game\n- Rebalanced solarians\n- Improved grassland boss drop rates\n- Bug fixes\n\n<font color=\"#00ffff\">v0.7a</font>\n- Fixed dm before charge centralize\n- Possible fix for planetoid TW\n- Fixed unusual data trigger\n\n<font color=\"#00ffff\">v0.7 - Grassland</font>\n- Two New Areas\n- New Features\n- New Music\n- Save Slots\n- New Save Recovery System\n- Completely rebalanced a certain late game feature and expanded it significantly\n- More balanced early game\n- Reworked constellation slightly\n- Bug fixes\n\n<font color=\"#00ffff\">v0.6 - Supernova</font>\n- Added The fifth reset layer\n- New Area\n- New Features\n- New Music\n- Early game rebalancing\n- Slightly rebalanced a certain late game feature\n- Bug fixes\n\n<font color=\"#00ffff\">v0.5 - The Planetoid</font>\n- New Area\n- New Features\n- New Resets\n- New Music\n- New late game Minigame\n- Reworked a certain feature\n- Rebalancing\n- Bug fixes\n\n<font color=\"#00ffff\">0.5d</font>\n- Fixed anti upgrades resetting again\n- More misc bug fixes\n\n<font color=\"#00ffff\">v0.4 - Revamp</font>\n- Changed the map a bit\n- Added goals to earn flowers\n- Added time warp for you to spend those flowers\n- Balancing changes early game\n- Music\n- Added post sacrifice things\n- City and forest teleporter\n- Data recovery fully implemented\n- Flower respec added\n- Added more stats and settings\n- Added a normality clouds upgrade\n- Added a rings generator and planetoids score system\n- Added a goal for planetoids d1 score\n- Fixed old data not working properly\n- Fixed building badges not being awarded\n- Fixed stellar and ring tp upgrades not working properly\n\n<font color=\"#00ffff\">v0.3 - Galactic</font>\n- Added the Galactic reset layer\n- Multiple new features unlocked from galactic called Astral, Moonstone, Star Chart and Anti-GrassHop (AGH) Milestones\n- Added more tiers\n- Added two new resets to the Anti-Realm, Grass-Skip and Funify (post-galactic)\n- Added more rocket fuel upgrades (post-galactic)\n- Added hide UI setting\n- Added stat display settings\n\n<font color=\"#00ffff\">v0.2.7</font>\n- Completely rebalanced rocket fuel\n- Rebalanced rocket fuel again\n- Rebalanced rocket fuel once again...\n- Rebalanced rocket fuel upgrades\n\n<font color=\"#00ffff\">v0.2.6</font>\n- Added a grasshop counter replacing tier\n- Added a toggle for rocket fuel production\n- Added a few more icons\n- Added info for first ever steelie\n- Added flowers to currency list\n- Fixed anonymity speedrun timer resetting on decelerate\n- Fixed perks not being awarded properly\n- Fixed powerhouse reward\n- Perks no longer reset on decelerate\n- Factory Buy Next\n- Various bug fixes\n\n<font color=\"#00ffff\">v0.2.5</font>\n- Added a version info box\n- Rebalanced decelerate divider to not scale\n- Added a grow speed display underneath cap\n- Fixed incorrect charge stats display</b>"
+    saveLoaded = true
+    task.wait(0.3)
+    Resets.ClearField("main")
+    TabManager.ShowHideTabs()
+end
+function t.isLoaded() --[[ isLoaded | Line: 291 ]]
+    return saveLoaded
+end
+
+return t
