@@ -1,0 +1,35 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Data = require(ReplicatedStorage.Data)
+
+require(ReplicatedStorage.CommonFunctions)
+
+local TabManager = require(ReplicatedStorage.TabManager)
+local LocalPlayer = game:GetService("Players").LocalPlayer
+local TweenService = game:GetService("TweenService")
+local ChangeWorld = ReplicatedStorage.Remotes:WaitForChild("ChangeWorld")
+local v1 = true
+
+function Change(p1) --[[ Change | Line: 12 | Upvalues: v1 (ref), TabManager (copy), Data (copy) ]]
+    if v1 then
+        local destination = p1.destination
+
+        TabManager.HideAll()
+        Data.ImportantData.Stats.init = true
+        v1 = false
+        coroutine.resume((coroutine.create(Sweep)))
+    end
+end
+function Sweep() --[[ Sweep | Line: 26 | Upvalues: LocalPlayer (copy), TweenService (copy), v1 (ref) ]]
+    local WorldChange = LocalPlayer.PlayerGui.MobileUI.WorldChange
+
+    WorldChange.Position = UDim2.new(-2, 0, 0.5, 0)
+    TweenService:Create(WorldChange, TweenInfo.new(1, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {
+        Position = UDim2.new(0, 0, 0.5, 0)
+    }):Play()
+    task.wait(2)
+    TweenService:Create(WorldChange, TweenInfo.new(1, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {
+        Position = UDim2.new(1, 0, 0.5, 0)
+    }):Play()
+    v1 = true
+end
+ChangeWorld.OnClientEvent:Connect(Change)
