@@ -1,0 +1,430 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local Data = require(ReplicatedStorage.Data)
+
+require(ReplicatedStorage.Format)
+
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local Notifications = require(ReplicatedStorage.Notifications)
+local Currencies = require(ReplicatedStorage.Currencies)
+local Planets = require(ReplicatedStorage.Planets)
+local CurrencyTypes = require(ReplicatedStorage.CurrencyTypes)
+local InfoStore = require(ReplicatedStorage.InfoStore)
+local t = {
+    UpdateGoals = function() --[[ UpdateGoals | Line: 15 ]] end
+}
+local v1 = false
+
+function t.ClaimGoal(p1) --[[ ClaimGoal | Line: 53 | Upvalues: v1 (ref), t (copy), Players (copy), LethalNum (copy), CurrencyTypes (copy), Notifications (copy), Currencies (copy) ]]
+    if v1 then
+        return
+    end
+
+    v1 = true
+
+    local v12 = t.Goals[p1]
+
+    if t.GetGoalCount(p1) > v12.currentLevel then
+        v12.stat()
+
+        if t.GetCondition(p1) then
+            v12.currentLevel = v12.currentLevel + 1
+
+            local v2 = t.GetReward(p1)
+
+            if Players.LocalPlayer.MembershipType == Enum.MembershipType.Premium then
+                v2 = LethalNum.multiply(v2, 1.1)
+            end
+
+            CurrencyTypes.AddCurrency("flowers", v2)
+            Notifications.earnageText("goal", "+" .. LethalNum.getString(v2), 30, "rbxassetid://9561512733", v2, true)
+            Currencies.updateFlowers()
+            t.UpdateGoals()
+        end
+    end
+
+    v1 = false
+end
+function t.GetReward(p1) --[[ GetReward | Line: 87 | Upvalues: t (copy), LethalNum (copy) ]]
+    local v1 = t.Goals[p1]
+
+    return LethalNum.add(v1.baseReward, LethalNum.multiply(v1.rewardIncPerLevel, LethalNum.new(v1.currentLevel, 0)))
+end
+function t.GetCondition(p1) --[[ GetCondition | Line: 91 | Upvalues: t (copy), LethalNum (copy) ]]
+    local v1 = t.Goals[p1]
+    local v2 = v1.stat()
+
+    if v1.currentLevel >= t.GetGoalCount(p1) then
+        return false
+    end
+
+    if typeof(v2) == "table" then
+        return LethalNum.isGreaterE(v2, v1.reqs[v1.currentLevel])
+    end
+
+    return v1.reqs[v1.currentLevel] <= v2
+end
+function t.GetGoalCount(p1) --[[ GetGoalCount | Line: 106 | Upvalues: t (copy) ]]
+    local v1 = t.Goals[p1]
+
+    if v1.goalCount == 0 then
+        local count = 0
+
+        for k, v in pairs(v1.reqs) do
+            count = count + 1
+        end
+
+        v1.goalCount = count
+    end
+
+    return v1.goalCount
+end
+Data.ImportantData.Events.updateUpgrades.Event:Connect(t.UpdateGoals)
+t.Goals = {
+    grass = {
+        order = 0,
+        currentLevel = 0,
+        object = nil,
+        img = "rbxassetid://8566935398",
+        statName = "Grass",
+        goalCount = 0,
+        baseReward = LethalNum.new(1, 2),
+        rewardIncPerLevel = LethalNum.new(1, 1),
+        stat = function() --[[ stat | Line: 129 | Upvalues: CurrencyTypes (copy) ]]
+            return CurrencyTypes.GetCurrencyTotal("grass")
+        end,
+        visibleCondition = function() --[[ visibleCondition | Line: 132 ]]
+            return true
+        end,
+        reqs = {
+            [0] = LethalNum.new(1, 6),
+            [1] = LethalNum.new(1, 12),
+            [2] = LethalNum.new(1, 18),
+            [3] = LethalNum.new(1, 24),
+            [4] = LethalNum.new(1, 27),
+            [5] = LethalNum.new(1, 33),
+            [6] = LethalNum.new(1, 40),
+            [7] = LethalNum.new(1, 50),
+            [8] = LethalNum.new(1, 60),
+            [9] = LethalNum.new(1, 70),
+            [10] = LethalNum.new(1, 80),
+            [11] = LethalNum.new(1, 90),
+            [12] = LethalNum.new(1, 100)
+        }
+    },
+    pp = {
+        order = 2,
+        currentLevel = 0,
+        object = nil,
+        img = "rbxassetid://8566935066",
+        statName = "PP",
+        goalCount = 0,
+        centralize = "pp",
+        baseReward = LethalNum.new(1, 2),
+        rewardIncPerLevel = LethalNum.new(1, 1),
+        stat = function() --[[ stat | Line: 160 | Upvalues: CurrencyTypes (copy) ]]
+            return CurrencyTypes.GetCurrencyTotal("pp")
+        end,
+        visibleCondition = function() --[[ visibleCondition | Line: 163 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.prestige.b > 0
+        end,
+        reqs = {
+            [0] = LethalNum.new(1, 3),
+            [1] = LethalNum.new(1, 6),
+            [2] = LethalNum.new(1, 9),
+            [3] = LethalNum.new(1, 15),
+            [4] = LethalNum.new(1, 21),
+            [5] = LethalNum.new(1, 27),
+            [6] = LethalNum.new(1, 33),
+            [7] = LethalNum.new(1, 40),
+            [8] = LethalNum.new(1, 50),
+            [9] = LethalNum.new(1, 60),
+            [10] = LethalNum.new(1, 70),
+            [11] = LethalNum.new(1, 80),
+            [12] = LethalNum.new(1, 90)
+        }
+    },
+    level = {
+        order = 1,
+        currentLevel = 0,
+        object = nil,
+        img = "rbxassetid://8690392280",
+        statName = "Highest Level",
+        goalCount = 0,
+        baseReward = LethalNum.new(1, 2),
+        rewardIncPerLevel = LethalNum.new(1, 2),
+        stat = function() --[[ stat | Line: 192 | Upvalues: CurrencyTypes (copy) ]]
+            return CurrencyTypes.Levels.level.highestLevel
+        end,
+        visibleCondition = function() --[[ visibleCondition | Line: 195 ]]
+            return true
+        end,
+        reqs = {
+            [0] = 100,
+            [1] = 200,
+            [2] = 300,
+            [3] = 400,
+            [4] = 500,
+            [5] = 600,
+            [6] = 700,
+            [7] = 800,
+            [8] = 900,
+            [9] = 1000
+        }
+    },
+    crystals = {
+        order = 3,
+        currentLevel = 0,
+        object = nil,
+        img = "rbxassetid://9281596403",
+        statName = "Crystals",
+        goalCount = 0,
+        centralize = "crystals",
+        baseReward = LethalNum.new(1, 2),
+        rewardIncPerLevel = LethalNum.new(1, 1),
+        stat = function() --[[ stat | Line: 220 | Upvalues: CurrencyTypes (copy) ]]
+            return CurrencyTypes.GetCurrencyTotal("crystals")
+        end,
+        visibleCondition = function() --[[ visibleCondition | Line: 223 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.crystallize.b > 0
+        end,
+        reqs = {
+            [0] = LethalNum.new(1, 3),
+            [1] = LethalNum.new(1, 6),
+            [2] = LethalNum.new(1, 9),
+            [3] = LethalNum.new(1, 15),
+            [4] = LethalNum.new(1, 21),
+            [5] = LethalNum.new(1, 27),
+            [6] = LethalNum.new(1, 33),
+            [7] = LethalNum.new(1, 40),
+            [8] = LethalNum.new(1, 50),
+            [9] = LethalNum.new(1, 60),
+            [10] = LethalNum.new(1, 70),
+            [11] = LethalNum.new(1, 80),
+            [12] = LethalNum.new(1, 90)
+        }
+    },
+    steel = {
+        order = 5,
+        currentLevel = 0,
+        object = nil,
+        img = "rbxassetid://9932698337",
+        statName = "Steel",
+        goalCount = 0,
+        centralize = "steel",
+        baseReward = LethalNum.new(1, 2),
+        rewardIncPerLevel = LethalNum.new(1, 1),
+        stat = function() --[[ stat | Line: 252 | Upvalues: CurrencyTypes (copy) ]]
+            return CurrencyTypes.GetCurrencyTotal("steel")
+        end,
+        visibleCondition = function() --[[ visibleCondition | Line: 255 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.steelie.b > 0
+        end,
+        reqs = {
+            [0] = LethalNum.new(1, 3),
+            [1] = LethalNum.new(1, 6),
+            [2] = LethalNum.new(1, 9),
+            [3] = LethalNum.new(1, 15),
+            [4] = LethalNum.new(1, 21),
+            [5] = LethalNum.new(1, 27),
+            [6] = LethalNum.new(1, 33),
+            [7] = LethalNum.new(1, 40),
+            [8] = LethalNum.new(1, 50),
+            [9] = LethalNum.new(1, 60),
+            [10] = LethalNum.new(1, 70),
+            [11] = LethalNum.new(1, 80),
+            [12] = LethalNum.new(1, 90)
+        }
+    },
+    grasshop = {
+        order = 4,
+        currentLevel = 0,
+        object = nil,
+        img = "rbxassetid://9805259105",
+        statName = "Grasshop",
+        goalCount = 0,
+        baseReward = LethalNum.new(1, 2),
+        rewardIncPerLevel = LethalNum.new(1, 1),
+        stat = function() --[[ stat | Line: 284 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.grasshop.a
+        end,
+        visibleCondition = function() --[[ visibleCondition | Line: 287 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.grasshop.b > 0
+        end,
+        reqs = {
+            [0] = 10,
+            [1] = 20,
+            [2] = 30,
+            [3] = 40,
+            [4] = 50,
+            [5] = 60,
+            [6] = 70,
+            [7] = 80,
+            [8] = 90,
+            [9] = 100,
+            [10] = 110,
+            [11] = 120,
+            [12] = 130
+        }
+    },
+    ["grass-skip"] = {
+        order = 14,
+        currentLevel = 0,
+        object = nil,
+        img = "rbxassetid://9853362154",
+        statName = "Grass-Skip",
+        goalCount = 0,
+        baseReward = LethalNum.new(1, 2),
+        rewardIncPerLevel = LethalNum.new(1, 1),
+        stat = function() --[[ stat | Line: 315 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.grassskip.a
+        end,
+        visibleCondition = function() --[[ visibleCondition | Line: 318 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.grassskip.b > 0
+        end,
+        reqs = {
+            [0] = 10,
+            [1] = 20,
+            [2] = 30,
+            [3] = 40,
+            [4] = 50,
+            [5] = 60,
+            [6] = 70,
+            [7] = 80,
+            [8] = 90,
+            [9] = 100,
+            [10] = 110,
+            [11] = 120,
+            [12] = 130
+        }
+    },
+    fun = {
+        order = 15,
+        currentLevel = 0,
+        object = nil,
+        img = "rbxassetid://9752019198",
+        statName = "Fun",
+        goalCount = 0,
+        centralize = "fun",
+        baseReward = LethalNum.new(1, 2),
+        rewardIncPerLevel = LethalNum.new(1, 1),
+        stat = function() --[[ stat | Line: 346 | Upvalues: CurrencyTypes (copy) ]]
+            return CurrencyTypes.GetCurrencyTotal("fun")
+        end,
+        visibleCondition = function() --[[ visibleCondition | Line: 349 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.funify.b > 0
+        end,
+        reqs = {
+            [0] = LethalNum.new(1, 3),
+            [1] = LethalNum.new(1, 6),
+            [2] = LethalNum.new(1, 9),
+            [3] = LethalNum.new(1, 15),
+            [4] = LethalNum.new(1, 21),
+            [5] = LethalNum.new(1, 27),
+            [6] = LethalNum.new(1, 33),
+            [7] = LethalNum.new(1, 40),
+            [8] = LethalNum.new(1, 50),
+            [9] = LethalNum.new(1, 60),
+            [10] = LethalNum.new(1, 70),
+            [11] = LethalNum.new(1, 80),
+            [12] = LethalNum.new(1, 90)
+        }
+    },
+    stars = {
+        order = 16,
+        currentLevel = 0,
+        object = nil,
+        img = "rbxassetid://9729566702",
+        statName = "Stars",
+        goalCount = 0,
+        centralize = "stars",
+        baseReward = LethalNum.new(2, 2),
+        rewardIncPerLevel = LethalNum.new(2, 1),
+        stat = function() --[[ stat | Line: 378 | Upvalues: CurrencyTypes (copy) ]]
+            return CurrencyTypes.GetCurrencyTotal("stars")
+        end,
+        visibleCondition = function() --[[ visibleCondition | Line: 381 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.galactic.b > 0
+        end,
+        reqs = {
+            [0] = LethalNum.new(1, 3),
+            [1] = LethalNum.new(1, 6),
+            [2] = LethalNum.new(1, 9),
+            [3] = LethalNum.new(1, 15),
+            [4] = LethalNum.new(1, 21),
+            [5] = LethalNum.new(1, 27),
+            [6] = LethalNum.new(1, 33),
+            [7] = LethalNum.new(1, 40),
+            [8] = LethalNum.new(1, 50),
+            [9] = LethalNum.new(1, 60),
+            [10] = LethalNum.new(1, 70),
+            [11] = LethalNum.new(1, 80),
+            [12] = LethalNum.new(1, 90)
+        }
+    },
+    dm = {
+        order = 17,
+        currentLevel = 0,
+        object = nil,
+        img = "rbxassetid://9821096393",
+        statName = "Dark Matter",
+        goalCount = 0,
+        centralize = "darkMatter",
+        baseReward = LethalNum.new(2, 2),
+        rewardIncPerLevel = LethalNum.new(2, 1),
+        stat = function() --[[ stat | Line: 410 | Upvalues: CurrencyTypes (copy) ]]
+            return CurrencyTypes.GetCurrencyTotal("darkMatter")
+        end,
+        visibleCondition = function() --[[ visibleCondition | Line: 413 | Upvalues: InfoStore (copy) ]]
+            return InfoStore.Resets.sacrifice.b > 0
+        end,
+        reqs = {
+            [0] = LethalNum.new(1, 3),
+            [1] = LethalNum.new(1, 6),
+            [2] = LethalNum.new(1, 9),
+            [3] = LethalNum.new(1, 12),
+            [4] = LethalNum.new(1, 15),
+            [5] = LethalNum.new(1, 21),
+            [6] = LethalNum.new(1, 27),
+            [7] = LethalNum.new(1, 33),
+            [8] = LethalNum.new(1, 39),
+            [9] = LethalNum.new(1, 50),
+            [10] = LethalNum.new(1, 60),
+            [11] = LethalNum.new(1, 70),
+            [12] = LethalNum.new(1, 80)
+        }
+    },
+    pl1 = {
+        order = 18,
+        currentLevel = 0,
+        object = nil,
+        img = "rbxassetid://9729567321",
+        statName = "Planetoid Best Rings",
+        goalCount = 0,
+        baseReward = LethalNum.new(2, 2),
+        rewardIncPerLevel = LethalNum.new(5, 1),
+        stat = function() --[[ stat | Line: 442 | Upvalues: Planets (copy) ]]
+            return Planets.Planets.planetoid[1].bestScore
+        end,
+        visibleCondition = function() --[[ visibleCondition | Line: 445 | Upvalues: InfoStore (copy), Data (copy) ]]
+            return InfoStore.Resets.zeroghgs.a >= Data.ImportantData.Reqs.pt
+        end,
+        reqs = {
+            [0] = LethalNum.new(1, 2),
+            [1] = LethalNum.new(1, 3),
+            [2] = LethalNum.new(1, 5),
+            [3] = LethalNum.new(1, 7),
+            [4] = LethalNum.new(1, 10),
+            [5] = LethalNum.new(1, 13),
+            [6] = LethalNum.new(1, 16),
+            [7] = LethalNum.new(1, 20),
+            [8] = LethalNum.new(1, 24),
+            [9] = LethalNum.new(1, 28),
+            [10] = LethalNum.new(1, 33),
+            [11] = LethalNum.new(1, 38),
+            [12] = LethalNum.new(1, 43)
+        }
+    }
+}
+
+return t
