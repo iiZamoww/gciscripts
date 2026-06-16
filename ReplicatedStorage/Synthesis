@@ -1,0 +1,413 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LethalNum = require(ReplicatedStorage.LethalNum)
+local Data = require(ReplicatedStorage.Data)
+local CurrencyTypes = require(ReplicatedStorage.CurrencyTypes)
+local TabManager = require(ReplicatedStorage.TabManager)
+local Notifications = require(ReplicatedStorage.Notifications)
+local Multipliers = require(ReplicatedStorage.Multipliers)
+local CommonFunctions = require(ReplicatedStorage.CommonFunctions)
+local InfoStore = require(ReplicatedStorage.InfoStore)
+local t = {
+    SynthesisSlots = {
+        {
+            current = "none",
+            tier = 0,
+            level = 0,
+            progress = LethalNum.new(0, 0),
+            levelProgress = LethalNum.new(0, 0)
+        },
+        {
+            current = "none",
+            tier = 0,
+            level = 0,
+            unlockText = "Reach Supernova Tier 9",
+            progress = LethalNum.new(0, 0),
+            levelProgress = LethalNum.new(0, 0),
+            unlockCondition = function() --[[ unlockCondition | Line: 27 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.starTier.a >= 9
+            end
+        },
+        {
+            current = "none",
+            tier = 0,
+            level = 0,
+            unlockText = "Reach Supernova Tier 10",
+            progress = LethalNum.new(0, 0),
+            levelProgress = LethalNum.new(0, 0),
+            unlockCondition = function() --[[ unlockCondition | Line: 38 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.starTier.a >= 10
+            end
+        },
+        {
+            current = "none",
+            tier = 0,
+            level = 0,
+            unlockText = "Stage 500",
+            progress = LethalNum.new(0, 0),
+            levelProgress = LethalNum.new(0, 0),
+            unlockCondition = function() --[[ unlockCondition | Line: 49 | Upvalues: Data (copy) ]]
+                return Data.ImportantData.Stats.bestStage >= 500
+            end
+        },
+        {
+            current = "none",
+            tier = 0,
+            level = 0,
+            unlockText = "Stage 1000",
+            progress = LethalNum.new(0, 0),
+            levelProgress = LethalNum.new(0, 0),
+            unlockCondition = function() --[[ unlockCondition | Line: 60 | Upvalues: Data (copy) ]]
+                return Data.ImportantData.Stats.bestStage >= 1000
+            end
+        },
+        {
+            current = "none",
+            tier = 0,
+            level = 0,
+            unlockText = "Stage 1500",
+            progress = LethalNum.new(0, 0),
+            levelProgress = LethalNum.new(0, 0),
+            unlockCondition = function() --[[ unlockCondition | Line: 71 | Upvalues: Data (copy) ]]
+                return Data.ImportantData.Stats.bestStage >= 1500
+            end
+        },
+        {
+            current = "none",
+            tier = 0,
+            level = 0,
+            unlockText = "Stage 2500",
+            progress = LethalNum.new(0, 0),
+            levelProgress = LethalNum.new(0, 0),
+            unlockCondition = function() --[[ unlockCondition | Line: 82 | Upvalues: Data (copy) ]]
+                return Data.ImportantData.Stats.bestStage >= 2500
+            end
+        },
+        {
+            current = "none",
+            tier = 0,
+            level = 0,
+            unlockText = "Stage 5000",
+            progress = LethalNum.new(0, 0),
+            levelProgress = LethalNum.new(0, 0),
+            unlockCondition = function() --[[ unlockCondition | Line: 93 | Upvalues: Data (copy) ]]
+                return Data.ImportantData.Stats.bestStage >= 5000
+            end
+        }
+    },
+    SynthesisItems = {
+        cs = {
+            displayName = "Corruption Shard",
+            costCurr = "cs",
+            resource = "cs",
+            object = "Crystal",
+            order = 1,
+            speedType = 1,
+            multiType = 1,
+            cost = LethalNum.new(0, 0),
+            baseGrow = LethalNum.new(1.5, 3),
+            xpMulti = LethalNum.new(1, 0)
+        },
+        fs = {
+            displayName = "Flare Shard",
+            costCurr = "cs",
+            resource = "fs",
+            object = "Crystal2",
+            order = 2,
+            speedType = 1,
+            multiType = 1,
+            cost = LethalNum.new(1, 4),
+            baseGrow = LethalNum.new(1, 5),
+            xpMulti = LethalNum.new(8, 1),
+            unlockCondition = function() --[[ unlockCondition | Line: 124 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+                return LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("souls3"), LethalNum.new(1, 0))
+            end
+        },
+        gb = {
+            displayName = "Empty Gem",
+            costCurr = "cs",
+            resource = "gb",
+            object = "Crystal3",
+            order = 3,
+            speedType = 1,
+            multiType = 1,
+            cost = LethalNum.new(1, 5),
+            baseGrow = LethalNum.new(1, 6),
+            xpMulti = LethalNum.new(1.2, 3),
+            unlockCondition = function() --[[ unlockCondition | Line: 139 | Upvalues: LethalNum (copy), CurrencyTypes (copy) ]]
+                return LethalNum.isGreaterE(CurrencyTypes.GetCurrencyTotal("souls3"), LethalNum.new(1, 0))
+            end
+        },
+        mp = {
+            displayName = "Looplets (wip)",
+            costCurr = "cs",
+            resource = "loop1",
+            object = "Crystal3",
+            order = 4,
+            speedType = 2,
+            multiType = 2,
+            singleGen = true,
+            cost = LethalNum.new(1, 100),
+            baseGrow = LethalNum.new(7.2, 55),
+            baseMulti = LethalNum.new(1, 0),
+            xpMulti = LethalNum.new(1.2, 3),
+            unlockCondition = function() --[[ unlockCondition | Line: 156 | Upvalues: InfoStore (copy) ]]
+                return InfoStore.Resets.loop4.b > 0
+            end
+        }
+    }
+}
+
+function t.GetSynRate(p1, p2) --[[ GetSynRate | Line: 162 | Upvalues: t (copy), Multipliers (copy), LethalNum (copy), Data (copy) ]]
+    local v1 = t.SynthesisSlots[p1]
+    local current = v1.current
+    local tier = v1.tier
+    local level = v1.level
+    local v2 = Multipliers.getMulti()
+
+    if p2 then
+        local v3 = p2.UpgradeLevels.synthesis[p1]
+
+        current = v3.c
+
+        local t2 = v3.t
+        local l = v3.l
+
+        v2 = p2.Multipliers
+    end
+
+    local v4 = LethalNum.new(1, 2)
+    local v5 = 1
+
+    if current == nil then
+        current = "none"
+    end
+
+    if current ~= "none" then
+        v5 = t.SynthesisItems[current].speedType or 1
+    end
+
+    if p2 then
+        if p2.Stats.Accomplish.solTicks > 0 then
+            v4 = LethalNum.multiply(v4, p2.Stats.Accomplish.solTickSpeed)
+        end
+    elseif Data.ImportantData.Stats.Accomplish.solTicks > 0 then
+        v4 = LethalNum.multiply(v4, Data.ImportantData.Stats.Accomplish.solTickSpeed)
+    end
+
+    if v5 == 1 then
+        local v8 = LethalNum.multiply(v4, v2.spdSyn)
+
+        if p2 then
+            return LethalNum.multiply(v8, p2.Temp.synSpd)
+        end
+
+        v4 = LethalNum.multiply(v8, Data.ImportantData.Stats.synSpd)
+    end
+
+    return v4
+end
+function t.GetSynMulti(p1, p2) --[[ GetSynMulti | Line: 209 | Upvalues: t (copy), Multipliers (copy), LethalNum (copy) ]]
+    local v1 = t.SynthesisSlots[p1]
+    local current = v1.current
+    local tier = v1.tier
+    local level = v1.level
+    local v2 = Multipliers.getMulti()
+
+    if p2 then
+        local v3 = p2.UpgradeLevels.synthesis[p1]
+
+        current = v3.c
+        tier = v3.t
+        level = v3.l
+        v2 = p2.Multipliers
+    end
+
+    local v4 = LethalNum.new(0, 0)
+    local v5 = LethalNum.new(5, 0)
+    local v6
+
+    if current == "none" then
+        v6 = 1
+    else
+        v6 = t.SynthesisItems[current].multiType or 1
+        v5 = t.SynthesisItems[current].baseMulti or LethalNum.new(5, 0)
+    end
+
+    if tier > 0 then
+        local v9 = LethalNum.multiply(LethalNum.copy(v5), LethalNum.pow(LethalNum.new(5, 0), tier - 1))
+
+        if v6 == 1 then
+            v4 = if v2[current .. "Syn"] == nil then v9 else LethalNum.multiply(v9, v2[current .. "Syn"])
+
+            if level > 0 then
+                v4 = LethalNum.multiply(v4, LethalNum.pow(LethalNum.new(1.06, 0), level))
+            end
+        else
+            v4 = v9
+        end
+    end
+
+    return LethalNum.floor(v4)
+end
+function t.GetSynGen(p1, p2) --[[ GetSynGen | Line: 249 | Upvalues: t (copy), LethalNum (copy) ]]
+    local current = t.SynthesisSlots[p1].current
+
+    if p2 then
+        current = p2.UpgradeLevels.synthesis[p1].c
+    end
+
+    if current == "none" then
+        return LethalNum.new(1, 0)
+    end
+
+    return t.SynthesisItems[current].baseMulti
+end
+function t.GetSynGoal(p1, p2) --[[ GetSynGoal | Line: 264 | Upvalues: t (copy), LethalNum (copy) ]]
+    local v1 = t.SynthesisSlots[p1]
+    local current = v1.current
+    local tier = v1.tier
+
+    if p2 then
+        local v2 = p2.UpgradeLevels.synthesis[p1]
+
+        current = v2.c
+        tier = v2.t
+    end
+
+    local v3 = LethalNum.copy(t.SynthesisItems[current].baseGrow)
+
+    if tier > 0 then
+        v3 = LethalNum.multiply(v3, LethalNum.pow(LethalNum.new(6, 0), tier))
+    end
+
+    return v3
+end
+function t.GetSynLevelGoal(p1, p2) --[[ GetSynLevelGoal | Line: 284 | Upvalues: t (copy), LethalNum (copy) ]]
+    local v1 = t.SynthesisSlots[p1]
+    local current = v1.current
+    local level = v1.level
+
+    if p2 then
+        local v2 = p2.UpgradeLevels.synthesis[p1]
+
+        current = v2.c
+        level = v2.l
+    end
+
+    local v3 = LethalNum.new(1, 3)
+
+    if level > 0 then
+        v3 = LethalNum.multiply(v3, LethalNum.pow(LethalNum.new(1.2, 0), level))
+    end
+
+    if current == "none" or not t.SynthesisItems[current].singleGen then
+        return v3
+    end
+
+    return t.SynthesisItems[current].baseGrow
+end
+function t.GenerationSynthesis(p1) --[[ GenerationSynthesis | Line: 309 | Upvalues: t (copy), LethalNum (copy), CurrencyTypes (copy) ]]
+    local v1 = t.SynthesisSlots[p1]
+    local v3 = LethalNum.floor((t.GetSynGen(p1)))
+    local v4 = t.GetSynLevelGoal(p1)
+    local v5 = LethalNum.floor(LethalNum.divide(v1.progress, v4))
+
+    if not LethalNum.isGreaterE(v5, LethalNum.new(1, 0)) then
+        return
+    end
+
+    CurrencyTypes.AddCurrency(t.SynthesisItems[v1.current].resource, LethalNum.multiply(v3, v5))
+    v1.progress = LethalNum.subtract(v1.progress, LethalNum.multiply(v5, v4))
+    v1.tier = 0
+end
+function t.CompleteSynthesis(p1) --[[ CompleteSynthesis | Line: 324 | Upvalues: t (copy), LethalNum (copy), CurrencyTypes (copy), Notifications (copy), Data (copy) ]]
+    local v1 = t.SynthesisSlots[p1]
+
+    if v1.current == "none" then
+        return
+    end
+
+    local singleGen = t.SynthesisItems[v1.current].singleGen
+    local v3 = LethalNum.floor((t.GetSynMulti(p1)))
+    local resource = t.SynthesisItems[v1.current].resource
+
+    CurrencyTypes.AddCurrency(resource, v3)
+    Notifications.earnageText("<font color=\"#ffffff\">+" .. LethalNum.getString(v3) .. "</font>", UDim2.new(UDim.new(0.6 + Random.new():NextNumber(-10, 10) / 100, 0), UDim.new(8.5, 0)), 0.8, 0.6, 15, 30, 1, CurrencyTypes.Currencies[resource].icon)
+
+    if v1.tier > 0 then
+        local v5 = LethalNum.multiply(LethalNum.multiply(LethalNum.pow(LethalNum.new(5, 0), v1.tier), LethalNum.new(5, 1)), t.SynthesisItems[v1.current].xpMulti)
+        local v6 = t.GetSynLevelGoal(p1)
+
+        v1.levelProgress = LethalNum.add(v1.levelProgress, v5)
+
+        while LethalNum.isGreaterE(v1.levelProgress, v6) do
+            v1.levelProgress = LethalNum.subtract(v1.levelProgress, v6)
+            v1.level = v1.level + 1
+            v6 = t.GetSynLevelGoal(p1)
+        end
+    end
+
+    Data.ImportantData.Events.synth:Fire()
+    v1.tier = 0
+    v1.progress = LethalNum.new(0, 0)
+    v1.current = "none"
+    t.UpdateSyn()
+end
+function t.Colorize(p1) --[[ Colorize | Line: 360 ]]
+    local v1 = Color3.new(255/255, 255/255, 255/255)
+    local v2 = p1 % 55
+    local sum
+
+    if v2 > 5 and v2 <= 15 then
+        sum = v2 - 5
+        v1 = Color3.new(1 - sum * 0.1, 1, 1 - sum * 0.1)
+    else
+        sum = v2
+    end
+
+    if v2 > 15 and v2 <= 25 then
+        sum = sum - 15
+        v1 = Color3.new(0, 1, 0.5 + sum * 0.05)
+    end
+
+    if v2 > 25 and v2 <= 35 then
+        sum = sum - 25
+        v1 = Color3.new(0 + sum * 0.05, 1 - sum * 0.1, 1)
+    end
+
+    if v2 > 35 and v2 <= 45 then
+        sum = sum - 35
+        v1 = Color3.new(0.5 + sum * 0.05, 0 + sum * 0.05, 1)
+    end
+
+    if v2 > 45 then
+        v1 = Color3.new(1, 0.5 + (sum - 45) * 0.1, 1)
+    end
+
+    return v1
+end
+function t.UpdateSyn() --[[ UpdateSyn | Line: 388 | Upvalues: TabManager (copy), Data (copy), t (copy), CommonFunctions (copy), CurrencyTypes (copy) ]]
+    local synpM = TabManager.menus.synpM
+
+    if Data.ImportantData.Stats.synSelected == "none" then
+        synpM.SelectedText.Text = "Selected: None"
+    else
+        local v1 = t.SynthesisItems[Data.ImportantData.Stats.synSelected]
+
+        synpM.SelectedText.Text = "Selected: " .. CommonFunctions.canAffordText(CurrencyTypes.GetCurrencyAmt(v1.costCurr), v1.cost) .. t.SynthesisItems[Data.ImportantData.Stats.synSelected].displayName .. "</font>"
+    end
+
+    for k, v in pairs(t.SynthesisItems) do
+        if v.unlockCondition then
+            v.obj.Visible = v.unlockCondition()
+
+            continue
+        end
+
+        v.obj.Visible = true
+    end
+
+    TabManager.UpdateSynth()
+end
+
+return t
