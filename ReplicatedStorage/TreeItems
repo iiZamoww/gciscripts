@@ -1,0 +1,59 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LethalNum = require(ReplicatedStorage.LethalNum)
+
+return {
+    Items = {
+        grass = {
+            img = "rbxassetid://8566935398",
+            info = "Grass",
+            level = LethalNum.new(0, 0)
+        },
+        xp = {
+            img = "rbxassetid://8690392280",
+            info = "XP",
+            level = LethalNum.new(0, 0)
+        },
+        tp = {
+            img = "rbxassetid://8566934708",
+            info = "TP",
+            level = LethalNum.new(0, 0)
+        },
+        fun = {
+            img = "rbxassetid://9752019198",
+            info = "Fun",
+            cent = "fun",
+            level = LethalNum.new(0, 0)
+        },
+        oil = {
+            img = "rbxassetid://9333103268",
+            info = "Oil",
+            cent = "oil",
+            level = LethalNum.new(0, 0)
+        },
+        planetarium = {
+            img = "rbxassetid://9729567321",
+            info = "Planetarium",
+            level = LethalNum.new(0, 0)
+        },
+        cp = {
+            img = "rbxassetid://10025816906",
+            info = "Cosmic",
+            level = LethalNum.new(0, 0)
+        }
+    },
+    GetBonus = function(p1, p2) --[[ GetBonus | Line: 51 | Upvalues: LethalNum (copy) ]]
+        local v1 = p1.UpgradeLevels.tree[p2]
+
+        if not v1 then
+            return LethalNum.new(1, 0)
+        end
+
+        local v2 = LethalNum.add(v1.a, LethalNum.new(1, 0))
+
+        if LethalNum.isGreater(v2, LethalNum.new(1, 200)) then
+            v2 = LethalNum.new(1, 200)
+        end
+
+        return v2
+    end
+}
