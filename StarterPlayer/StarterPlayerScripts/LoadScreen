@@ -1,0 +1,12 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Data = require(ReplicatedStorage.Data)
+local CommonFunctions = require(ReplicatedStorage.CommonFunctions)
+local UnfadeLoad = ReplicatedStorage.Remotes:WaitForChild("UnfadeLoad")
+
+function Loaded() --[[ Loaded | Line: 8 | Upvalues: Data (copy), CommonFunctions (copy) ]]
+    if Data.ImportantData.GrassObjects.loadScreen then
+        CommonFunctions.fade(Data.ImportantData.GrassObjects.loadScreen, 1, false, "frame")
+        CommonFunctions.fade(Data.ImportantData.GrassObjects.loadScreenText, 1, false, "text")
+    end
+end
+UnfadeLoad.OnClientEvent:Connect(Loaded)
